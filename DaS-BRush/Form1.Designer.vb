@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class Form1
+Partial Class frmForm1
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -25,6 +25,7 @@ Partial Class Form1
         Me.tabs = New System.Windows.Forms.TabControl()
         Me.tabMain = New System.Windows.Forms.TabPage()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.lblPlaytime = New System.Windows.Forms.Label()
         Me.lblHP = New System.Windows.Forms.Label()
         Me.lblStam = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
@@ -92,11 +93,33 @@ Partial Class Form1
         Me.btnFuncExecute = New System.Windows.Forms.Button()
         Me.cmbFuncName = New System.Windows.Forms.ComboBox()
         Me.tabBosses = New System.Windows.Forms.TabPage()
+        Me.btnBossKnightArtorias = New System.Windows.Forms.Button()
+        Me.btnBossIronGolem = New System.Windows.Forms.Button()
+        Me.btnBossGwyn = New System.Windows.Forms.Button()
+        Me.btnBossGravelordNito = New System.Windows.Forms.Button()
+        Me.btnBossGapingDragon = New System.Windows.Forms.Button()
+        Me.btnBossFourKings = New System.Windows.Forms.Button()
+        Me.btnBossOandS = New System.Windows.Forms.Button()
+        Me.btnBossDemonFiresage = New System.Windows.Forms.Button()
+        Me.btnBossDarkSunGwyndolin = New System.Windows.Forms.Button()
+        Me.btnBossCrossbreedPriscilla = New System.Windows.Forms.Button()
+        Me.btnBossChaosWitchQuelaag = New System.Windows.Forms.Button()
+        Me.btnBossCentipedeDemon = New System.Windows.Forms.Button()
+        Me.btnBossBedOfChaos = New System.Windows.Forms.Button()
+        Me.btnBossCeaselessDischarge = New System.Windows.Forms.Button()
+        Me.btnBossBellGargoyles = New System.Windows.Forms.Button()
+        Me.btnBossCapraDemon = New System.Windows.Forms.Button()
+        Me.btnBossPinwheel = New System.Windows.Forms.Button()
         Me.btnBossAsylumDemon = New System.Windows.Forms.Button()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.lblRelease = New System.Windows.Forms.Label()
-        Me.btnBossPinwheel = New System.Windows.Forms.Button()
-        Me.lblPlaytime = New System.Windows.Forms.Label()
+        Me.btnBossManus = New System.Windows.Forms.Button()
+        Me.btnBossMoonlightButterfly = New System.Windows.Forms.Button()
+        Me.btnBossSanctuaryGuardian = New System.Windows.Forms.Button()
+        Me.btnBossSeath = New System.Windows.Forms.Button()
+        Me.btnBossStrayDemon = New System.Windows.Forms.Button()
+        Me.btnBossSif = New System.Windows.Forms.Button()
+        Me.btnBossTaurusDemon = New System.Windows.Forms.Button()
         Me.tabs.SuspendLayout()
         Me.tabMain.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
@@ -131,7 +154,6 @@ Partial Class Form1
         Me.tabs.Controls.Add(Me.tabStats)
         Me.tabs.Controls.Add(Me.tabLUA)
         Me.tabs.Controls.Add(Me.tabBosses)
-        Me.tabs.Enabled = False
         Me.tabs.Location = New System.Drawing.Point(12, 34)
         Me.tabs.Name = "tabs"
         Me.tabs.SelectedIndex = 0
@@ -161,6 +183,15 @@ Partial Class Form1
         Me.GroupBox2.TabIndex = 48
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Status"
+        '
+        'lblPlaytime
+        '
+        Me.lblPlaytime.AutoSize = True
+        Me.lblPlaytime.Location = New System.Drawing.Point(13, 63)
+        Me.lblPlaytime.Name = "lblPlaytime"
+        Me.lblPlaytime.Size = New System.Drawing.Size(33, 13)
+        Me.lblPlaytime.TabIndex = 43
+        Me.lblPlaytime.Text = "Time:"
         '
         'lblHP
         '
@@ -787,6 +818,29 @@ Partial Class Form1
         '
         'tabBosses
         '
+        Me.tabBosses.Controls.Add(Me.btnBossTaurusDemon)
+        Me.tabBosses.Controls.Add(Me.btnBossSif)
+        Me.tabBosses.Controls.Add(Me.btnBossStrayDemon)
+        Me.tabBosses.Controls.Add(Me.btnBossSeath)
+        Me.tabBosses.Controls.Add(Me.btnBossSanctuaryGuardian)
+        Me.tabBosses.Controls.Add(Me.btnBossMoonlightButterfly)
+        Me.tabBosses.Controls.Add(Me.btnBossManus)
+        Me.tabBosses.Controls.Add(Me.btnBossKnightArtorias)
+        Me.tabBosses.Controls.Add(Me.btnBossIronGolem)
+        Me.tabBosses.Controls.Add(Me.btnBossGwyn)
+        Me.tabBosses.Controls.Add(Me.btnBossGravelordNito)
+        Me.tabBosses.Controls.Add(Me.btnBossGapingDragon)
+        Me.tabBosses.Controls.Add(Me.btnBossFourKings)
+        Me.tabBosses.Controls.Add(Me.btnBossOandS)
+        Me.tabBosses.Controls.Add(Me.btnBossDemonFiresage)
+        Me.tabBosses.Controls.Add(Me.btnBossDarkSunGwyndolin)
+        Me.tabBosses.Controls.Add(Me.btnBossCrossbreedPriscilla)
+        Me.tabBosses.Controls.Add(Me.btnBossChaosWitchQuelaag)
+        Me.tabBosses.Controls.Add(Me.btnBossCentipedeDemon)
+        Me.tabBosses.Controls.Add(Me.btnBossBedOfChaos)
+        Me.tabBosses.Controls.Add(Me.btnBossCeaselessDischarge)
+        Me.tabBosses.Controls.Add(Me.btnBossBellGargoyles)
+        Me.tabBosses.Controls.Add(Me.btnBossCapraDemon)
         Me.tabBosses.Controls.Add(Me.btnBossPinwheel)
         Me.tabBosses.Controls.Add(Me.btnBossAsylumDemon)
         Me.tabBosses.Location = New System.Drawing.Point(4, 22)
@@ -796,9 +850,166 @@ Partial Class Form1
         Me.tabBosses.Text = "Bosses"
         Me.tabBosses.UseVisualStyleBackColor = True
         '
+        'btnBossKnightArtorias
+        '
+        Me.btnBossKnightArtorias.Enabled = False
+        Me.btnBossKnightArtorias.Location = New System.Drawing.Point(194, 155)
+        Me.btnBossKnightArtorias.Name = "btnBossKnightArtorias"
+        Me.btnBossKnightArtorias.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossKnightArtorias.TabIndex = 65
+        Me.btnBossKnightArtorias.Text = "Knight Artorias"
+        Me.btnBossKnightArtorias.UseVisualStyleBackColor = False
+        '
+        'btnBossIronGolem
+        '
+        Me.btnBossIronGolem.Location = New System.Drawing.Point(194, 126)
+        Me.btnBossIronGolem.Name = "btnBossIronGolem"
+        Me.btnBossIronGolem.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossIronGolem.TabIndex = 64
+        Me.btnBossIronGolem.Text = "Iron Golem"
+        Me.btnBossIronGolem.UseVisualStyleBackColor = False
+        '
+        'btnBossGwyn
+        '
+        Me.btnBossGwyn.Location = New System.Drawing.Point(194, 97)
+        Me.btnBossGwyn.Name = "btnBossGwyn"
+        Me.btnBossGwyn.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossGwyn.TabIndex = 63
+        Me.btnBossGwyn.Text = "Gwyn"
+        Me.btnBossGwyn.UseVisualStyleBackColor = False
+        '
+        'btnBossGravelordNito
+        '
+        Me.btnBossGravelordNito.Location = New System.Drawing.Point(194, 68)
+        Me.btnBossGravelordNito.Name = "btnBossGravelordNito"
+        Me.btnBossGravelordNito.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossGravelordNito.TabIndex = 62
+        Me.btnBossGravelordNito.Text = "Gravelord Nito"
+        Me.btnBossGravelordNito.UseVisualStyleBackColor = False
+        '
+        'btnBossGapingDragon
+        '
+        Me.btnBossGapingDragon.Location = New System.Drawing.Point(3, 387)
+        Me.btnBossGapingDragon.Name = "btnBossGapingDragon"
+        Me.btnBossGapingDragon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossGapingDragon.TabIndex = 61
+        Me.btnBossGapingDragon.Text = "Gaping Dragon"
+        Me.btnBossGapingDragon.UseVisualStyleBackColor = False
+        '
+        'btnBossFourKings
+        '
+        Me.btnBossFourKings.Location = New System.Drawing.Point(3, 358)
+        Me.btnBossFourKings.Name = "btnBossFourKings"
+        Me.btnBossFourKings.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossFourKings.TabIndex = 60
+        Me.btnBossFourKings.Text = "Four Kings"
+        Me.btnBossFourKings.UseVisualStyleBackColor = False
+        '
+        'btnBossOandS
+        '
+        Me.btnBossOandS.Enabled = False
+        Me.btnBossOandS.Location = New System.Drawing.Point(194, 242)
+        Me.btnBossOandS.Name = "btnBossOandS"
+        Me.btnBossOandS.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossOandS.TabIndex = 59
+        Me.btnBossOandS.Text = "Ornstein and Smough"
+        Me.btnBossOandS.UseVisualStyleBackColor = False
+        '
+        'btnBossDemonFiresage
+        '
+        Me.btnBossDemonFiresage.Location = New System.Drawing.Point(3, 329)
+        Me.btnBossDemonFiresage.Name = "btnBossDemonFiresage"
+        Me.btnBossDemonFiresage.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossDemonFiresage.TabIndex = 58
+        Me.btnBossDemonFiresage.Text = "Demon Firesage"
+        Me.btnBossDemonFiresage.UseVisualStyleBackColor = False
+        '
+        'btnBossDarkSunGwyndolin
+        '
+        Me.btnBossDarkSunGwyndolin.Location = New System.Drawing.Point(3, 300)
+        Me.btnBossDarkSunGwyndolin.Name = "btnBossDarkSunGwyndolin"
+        Me.btnBossDarkSunGwyndolin.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossDarkSunGwyndolin.TabIndex = 57
+        Me.btnBossDarkSunGwyndolin.Text = "Dark Sun Gwyndolin"
+        Me.btnBossDarkSunGwyndolin.UseVisualStyleBackColor = False
+        '
+        'btnBossCrossbreedPriscilla
+        '
+        Me.btnBossCrossbreedPriscilla.Location = New System.Drawing.Point(3, 271)
+        Me.btnBossCrossbreedPriscilla.Name = "btnBossCrossbreedPriscilla"
+        Me.btnBossCrossbreedPriscilla.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossCrossbreedPriscilla.TabIndex = 56
+        Me.btnBossCrossbreedPriscilla.Text = "Crossbreed Priscilla"
+        Me.btnBossCrossbreedPriscilla.UseVisualStyleBackColor = False
+        '
+        'btnBossChaosWitchQuelaag
+        '
+        Me.btnBossChaosWitchQuelaag.Location = New System.Drawing.Point(3, 242)
+        Me.btnBossChaosWitchQuelaag.Name = "btnBossChaosWitchQuelaag"
+        Me.btnBossChaosWitchQuelaag.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossChaosWitchQuelaag.TabIndex = 55
+        Me.btnBossChaosWitchQuelaag.Text = "Chaos Witch Quelaag"
+        Me.btnBossChaosWitchQuelaag.UseVisualStyleBackColor = False
+        '
+        'btnBossCentipedeDemon
+        '
+        Me.btnBossCentipedeDemon.Location = New System.Drawing.Point(3, 213)
+        Me.btnBossCentipedeDemon.Name = "btnBossCentipedeDemon"
+        Me.btnBossCentipedeDemon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossCentipedeDemon.TabIndex = 54
+        Me.btnBossCentipedeDemon.Text = "Centipede Demon"
+        Me.btnBossCentipedeDemon.UseVisualStyleBackColor = False
+        '
+        'btnBossBedOfChaos
+        '
+        Me.btnBossBedOfChaos.Location = New System.Drawing.Point(3, 97)
+        Me.btnBossBedOfChaos.Name = "btnBossBedOfChaos"
+        Me.btnBossBedOfChaos.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossBedOfChaos.TabIndex = 53
+        Me.btnBossBedOfChaos.Text = "Bed of Chaos"
+        Me.btnBossBedOfChaos.UseVisualStyleBackColor = False
+        '
+        'btnBossCeaselessDischarge
+        '
+        Me.btnBossCeaselessDischarge.Enabled = False
+        Me.btnBossCeaselessDischarge.Location = New System.Drawing.Point(3, 184)
+        Me.btnBossCeaselessDischarge.Name = "btnBossCeaselessDischarge"
+        Me.btnBossCeaselessDischarge.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossCeaselessDischarge.TabIndex = 52
+        Me.btnBossCeaselessDischarge.Text = "Ceaseless Discharge"
+        Me.btnBossCeaselessDischarge.UseVisualStyleBackColor = False
+        '
+        'btnBossBellGargoyles
+        '
+        Me.btnBossBellGargoyles.Enabled = False
+        Me.btnBossBellGargoyles.Location = New System.Drawing.Point(3, 126)
+        Me.btnBossBellGargoyles.Name = "btnBossBellGargoyles"
+        Me.btnBossBellGargoyles.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossBellGargoyles.TabIndex = 51
+        Me.btnBossBellGargoyles.Text = "Bell Gargoyles"
+        Me.btnBossBellGargoyles.UseVisualStyleBackColor = False
+        '
+        'btnBossCapraDemon
+        '
+        Me.btnBossCapraDemon.Location = New System.Drawing.Point(3, 155)
+        Me.btnBossCapraDemon.Name = "btnBossCapraDemon"
+        Me.btnBossCapraDemon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossCapraDemon.TabIndex = 50
+        Me.btnBossCapraDemon.Text = "Capra Demon"
+        Me.btnBossCapraDemon.UseVisualStyleBackColor = False
+        '
+        'btnBossPinwheel
+        '
+        Me.btnBossPinwheel.Location = New System.Drawing.Point(194, 271)
+        Me.btnBossPinwheel.Name = "btnBossPinwheel"
+        Me.btnBossPinwheel.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossPinwheel.TabIndex = 49
+        Me.btnBossPinwheel.Text = "Pinwheel"
+        Me.btnBossPinwheel.UseVisualStyleBackColor = False
+        '
         'btnBossAsylumDemon
         '
-        Me.btnBossAsylumDemon.Location = New System.Drawing.Point(13, 15)
+        Me.btnBossAsylumDemon.Location = New System.Drawing.Point(3, 68)
         Me.btnBossAsylumDemon.Name = "btnBossAsylumDemon"
         Me.btnBossAsylumDemon.Size = New System.Drawing.Size(160, 23)
         Me.btnBossAsylumDemon.TabIndex = 48
@@ -824,25 +1035,71 @@ Partial Class Form1
         Me.lblRelease.TabIndex = 5
         Me.lblRelease.Text = "Nothing"
         '
-        'btnBossPinwheel
+        'btnBossManus
         '
-        Me.btnBossPinwheel.Location = New System.Drawing.Point(13, 44)
-        Me.btnBossPinwheel.Name = "btnBossPinwheel"
-        Me.btnBossPinwheel.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossPinwheel.TabIndex = 49
-        Me.btnBossPinwheel.Text = "Pinwheel"
-        Me.btnBossPinwheel.UseVisualStyleBackColor = False
+        Me.btnBossManus.Location = New System.Drawing.Point(194, 184)
+        Me.btnBossManus.Name = "btnBossManus"
+        Me.btnBossManus.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossManus.TabIndex = 66
+        Me.btnBossManus.Text = "Manus"
+        Me.btnBossManus.UseVisualStyleBackColor = False
         '
-        'lblPlaytime
+        'btnBossMoonlightButterfly
         '
-        Me.lblPlaytime.AutoSize = True
-        Me.lblPlaytime.Location = New System.Drawing.Point(13, 63)
-        Me.lblPlaytime.Name = "lblPlaytime"
-        Me.lblPlaytime.Size = New System.Drawing.Size(33, 13)
-        Me.lblPlaytime.TabIndex = 43
-        Me.lblPlaytime.Text = "Time:"
+        Me.btnBossMoonlightButterfly.Location = New System.Drawing.Point(194, 213)
+        Me.btnBossMoonlightButterfly.Name = "btnBossMoonlightButterfly"
+        Me.btnBossMoonlightButterfly.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossMoonlightButterfly.TabIndex = 67
+        Me.btnBossMoonlightButterfly.Text = "Moonlight Butterfly"
+        Me.btnBossMoonlightButterfly.UseVisualStyleBackColor = False
         '
-        'Form1
+        'btnBossSanctuaryGuardian
+        '
+        Me.btnBossSanctuaryGuardian.Enabled = False
+        Me.btnBossSanctuaryGuardian.Location = New System.Drawing.Point(194, 300)
+        Me.btnBossSanctuaryGuardian.Name = "btnBossSanctuaryGuardian"
+        Me.btnBossSanctuaryGuardian.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossSanctuaryGuardian.TabIndex = 68
+        Me.btnBossSanctuaryGuardian.Text = "Sanctuary Guardian"
+        Me.btnBossSanctuaryGuardian.UseVisualStyleBackColor = False
+        '
+        'btnBossSeath
+        '
+        Me.btnBossSeath.Location = New System.Drawing.Point(194, 329)
+        Me.btnBossSeath.Name = "btnBossSeath"
+        Me.btnBossSeath.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossSeath.TabIndex = 69
+        Me.btnBossSeath.Text = "Seath"
+        Me.btnBossSeath.UseVisualStyleBackColor = False
+        '
+        'btnBossStrayDemon
+        '
+        Me.btnBossStrayDemon.Location = New System.Drawing.Point(194, 387)
+        Me.btnBossStrayDemon.Name = "btnBossStrayDemon"
+        Me.btnBossStrayDemon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossStrayDemon.TabIndex = 70
+        Me.btnBossStrayDemon.Text = "Stray Demon"
+        Me.btnBossStrayDemon.UseVisualStyleBackColor = False
+        '
+        'btnBossSif
+        '
+        Me.btnBossSif.Location = New System.Drawing.Point(194, 358)
+        Me.btnBossSif.Name = "btnBossSif"
+        Me.btnBossSif.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossSif.TabIndex = 71
+        Me.btnBossSif.Text = "Sif"
+        Me.btnBossSif.UseVisualStyleBackColor = False
+        '
+        'btnBossTaurusDemon
+        '
+        Me.btnBossTaurusDemon.Location = New System.Drawing.Point(194, 416)
+        Me.btnBossTaurusDemon.Name = "btnBossTaurusDemon"
+        Me.btnBossTaurusDemon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossTaurusDemon.TabIndex = 72
+        Me.btnBossTaurusDemon.Text = "Taurus Demon"
+        Me.btnBossTaurusDemon.UseVisualStyleBackColor = False
+        '
+        'frmForm1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -850,7 +1107,7 @@ Partial Class Form1
         Me.Controls.Add(Me.Label22)
         Me.Controls.Add(Me.lblRelease)
         Me.Controls.Add(Me.tabs)
-        Me.Name = "Form1"
+        Me.Name = "frmForm1"
         Me.Text = "BRush! With Death!"
         Me.tabs.ResumeLayout(False)
         Me.tabMain.ResumeLayout(False)
@@ -959,4 +1216,27 @@ Partial Class Form1
     Friend WithEvents btnBossAsylumDemon As Button
     Friend WithEvents btnBossPinwheel As Button
     Friend WithEvents lblPlaytime As Label
+    Friend WithEvents btnBossCapraDemon As Button
+    Friend WithEvents btnBossBellGargoyles As Button
+    Friend WithEvents btnBossCeaselessDischarge As Button
+    Friend WithEvents btnBossBedOfChaos As Button
+    Friend WithEvents btnBossCentipedeDemon As Button
+    Friend WithEvents btnBossChaosWitchQuelaag As Button
+    Friend WithEvents btnBossCrossbreedPriscilla As Button
+    Friend WithEvents btnBossDarkSunGwyndolin As Button
+    Friend WithEvents btnBossDemonFiresage As Button
+    Friend WithEvents btnBossOandS As Button
+    Friend WithEvents btnBossFourKings As Button
+    Friend WithEvents btnBossGapingDragon As Button
+    Friend WithEvents btnBossGravelordNito As Button
+    Friend WithEvents btnBossGwyn As Button
+    Friend WithEvents btnBossIronGolem As Button
+    Friend WithEvents btnBossKnightArtorias As Button
+    Friend WithEvents btnBossManus As Button
+    Friend WithEvents btnBossMoonlightButterfly As Button
+    Friend WithEvents btnBossSanctuaryGuardian As Button
+    Friend WithEvents btnBossSeath As Button
+    Friend WithEvents btnBossStrayDemon As Button
+    Friend WithEvents btnBossSif As Button
+    Friend WithEvents btnBossTaurusDemon As Button
 End Class
