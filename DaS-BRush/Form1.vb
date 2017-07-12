@@ -575,7 +575,6 @@ Public Class Form1
     End Sub
 
     Private Sub BossAsylum()
-
         ShowHUD(False)
         FadeOut()
 
@@ -591,6 +590,8 @@ Public Class Form1
         Thread.Sleep(2000)
         FadeIn()
         ShowHUD(True)
+
+        ClearPlaytime()
     End Sub
     Private Sub BossPinwheel()
         ShowHUD(False)
@@ -627,6 +628,10 @@ Public Class Form1
         WriteFloat(tmpptr + &H274, 0)
         WriteFloat(tmpptr + &H278, 0)
 
+    End Sub
+    Private Sub ClearPlaytime()
+        Dim tmpPtr As IntPtr = ReadIntPtr(&H1378700)
+        WriteUInt32(tmpPtr + &H68, 0)
     End Sub
     Private Sub WaitForLoad()
         Dim tmpptr As UInteger

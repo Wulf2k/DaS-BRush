@@ -96,6 +96,7 @@ Partial Class Form1
         Me.Label22 = New System.Windows.Forms.Label()
         Me.lblRelease = New System.Windows.Forms.Label()
         Me.btnBossPinwheel = New System.Windows.Forms.Button()
+        Me.lblPlaytime = New System.Windows.Forms.Label()
         Me.tabs.SuspendLayout()
         Me.tabMain.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
@@ -151,6 +152,7 @@ Partial Class Form1
         '
         'GroupBox2
         '
+        Me.GroupBox2.Controls.Add(Me.lblPlaytime)
         Me.GroupBox2.Controls.Add(Me.lblHP)
         Me.GroupBox2.Controls.Add(Me.lblStam)
         Me.GroupBox2.Location = New System.Drawing.Point(7, 10)
@@ -831,6 +833,15 @@ Partial Class Form1
         Me.btnBossPinwheel.Text = "Pinwheel"
         Me.btnBossPinwheel.UseVisualStyleBackColor = False
         '
+        'lblPlaytime
+        '
+        Me.lblPlaytime.AutoSize = True
+        Me.lblPlaytime.Location = New System.Drawing.Point(13, 63)
+        Me.lblPlaytime.Name = "lblPlaytime"
+        Me.lblPlaytime.Size = New System.Drawing.Size(33, 13)
+        Me.lblPlaytime.TabIndex = 43
+        Me.lblPlaytime.Text = "Time:"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -947,4 +958,5 @@ Partial Class Form1
     Friend WithEvents tabBosses As TabPage
     Friend WithEvents btnBossAsylumDemon As Button
     Friend WithEvents btnBossPinwheel As Button
+    Friend WithEvents lblPlaytime As Label
 End Class
