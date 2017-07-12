@@ -596,8 +596,7 @@ Public Class Form1
         ShowHUD(False)
         FadeOut()
 
-        WarpNextStage_Bonfire(1300999
-)
+        WarpNextStage_Bonfire(1300999)
 
         Thread.Sleep(1000)
 
