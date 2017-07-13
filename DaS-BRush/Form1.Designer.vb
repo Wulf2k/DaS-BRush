@@ -93,6 +93,13 @@ Partial Class frmForm1
         Me.btnFuncExecute = New System.Windows.Forms.Button()
         Me.cmbFuncName = New System.Windows.Forms.ComboBox()
         Me.tabBosses = New System.Windows.Forms.TabPage()
+        Me.btnBossTaurusDemon = New System.Windows.Forms.Button()
+        Me.btnBossSif = New System.Windows.Forms.Button()
+        Me.btnBossStrayDemon = New System.Windows.Forms.Button()
+        Me.btnBossSeath = New System.Windows.Forms.Button()
+        Me.btnBossSanctuaryGuardian = New System.Windows.Forms.Button()
+        Me.btnBossMoonlightButterfly = New System.Windows.Forms.Button()
+        Me.btnBossManus = New System.Windows.Forms.Button()
         Me.btnBossKnightArtorias = New System.Windows.Forms.Button()
         Me.btnBossIronGolem = New System.Windows.Forms.Button()
         Me.btnBossGwyn = New System.Windows.Forms.Button()
@@ -113,13 +120,7 @@ Partial Class frmForm1
         Me.btnBossAsylumDemon = New System.Windows.Forms.Button()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.lblRelease = New System.Windows.Forms.Label()
-        Me.btnBossManus = New System.Windows.Forms.Button()
-        Me.btnBossMoonlightButterfly = New System.Windows.Forms.Button()
-        Me.btnBossSanctuaryGuardian = New System.Windows.Forms.Button()
-        Me.btnBossSeath = New System.Windows.Forms.Button()
-        Me.btnBossStrayDemon = New System.Windows.Forms.Button()
-        Me.btnBossSif = New System.Windows.Forms.Button()
-        Me.btnBossTaurusDemon = New System.Windows.Forms.Button()
+        Me.btnBossBlackDragonKalameet = New System.Windows.Forms.Button()
         Me.tabs.SuspendLayout()
         Me.tabMain.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
@@ -818,6 +819,7 @@ Partial Class frmForm1
         '
         'tabBosses
         '
+        Me.tabBosses.Controls.Add(Me.btnBossBlackDragonKalameet)
         Me.tabBosses.Controls.Add(Me.btnBossTaurusDemon)
         Me.tabBosses.Controls.Add(Me.btnBossSif)
         Me.tabBosses.Controls.Add(Me.btnBossStrayDemon)
@@ -849,6 +851,69 @@ Partial Class frmForm1
         Me.tabBosses.TabIndex = 5
         Me.tabBosses.Text = "Bosses"
         Me.tabBosses.UseVisualStyleBackColor = True
+        '
+        'btnBossTaurusDemon
+        '
+        Me.btnBossTaurusDemon.Location = New System.Drawing.Point(194, 416)
+        Me.btnBossTaurusDemon.Name = "btnBossTaurusDemon"
+        Me.btnBossTaurusDemon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossTaurusDemon.TabIndex = 72
+        Me.btnBossTaurusDemon.Text = "Taurus Demon"
+        Me.btnBossTaurusDemon.UseVisualStyleBackColor = False
+        '
+        'btnBossSif
+        '
+        Me.btnBossSif.Location = New System.Drawing.Point(194, 358)
+        Me.btnBossSif.Name = "btnBossSif"
+        Me.btnBossSif.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossSif.TabIndex = 71
+        Me.btnBossSif.Text = "Sif"
+        Me.btnBossSif.UseVisualStyleBackColor = False
+        '
+        'btnBossStrayDemon
+        '
+        Me.btnBossStrayDemon.Location = New System.Drawing.Point(194, 387)
+        Me.btnBossStrayDemon.Name = "btnBossStrayDemon"
+        Me.btnBossStrayDemon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossStrayDemon.TabIndex = 70
+        Me.btnBossStrayDemon.Text = "Stray Demon"
+        Me.btnBossStrayDemon.UseVisualStyleBackColor = False
+        '
+        'btnBossSeath
+        '
+        Me.btnBossSeath.Location = New System.Drawing.Point(194, 329)
+        Me.btnBossSeath.Name = "btnBossSeath"
+        Me.btnBossSeath.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossSeath.TabIndex = 69
+        Me.btnBossSeath.Text = "Seath"
+        Me.btnBossSeath.UseVisualStyleBackColor = False
+        '
+        'btnBossSanctuaryGuardian
+        '
+        Me.btnBossSanctuaryGuardian.Location = New System.Drawing.Point(194, 300)
+        Me.btnBossSanctuaryGuardian.Name = "btnBossSanctuaryGuardian"
+        Me.btnBossSanctuaryGuardian.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossSanctuaryGuardian.TabIndex = 68
+        Me.btnBossSanctuaryGuardian.Text = "Sanctuary Guardian"
+        Me.btnBossSanctuaryGuardian.UseVisualStyleBackColor = False
+        '
+        'btnBossMoonlightButterfly
+        '
+        Me.btnBossMoonlightButterfly.Location = New System.Drawing.Point(194, 213)
+        Me.btnBossMoonlightButterfly.Name = "btnBossMoonlightButterfly"
+        Me.btnBossMoonlightButterfly.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossMoonlightButterfly.TabIndex = 67
+        Me.btnBossMoonlightButterfly.Text = "Moonlight Butterfly"
+        Me.btnBossMoonlightButterfly.UseVisualStyleBackColor = False
+        '
+        'btnBossManus
+        '
+        Me.btnBossManus.Location = New System.Drawing.Point(194, 184)
+        Me.btnBossManus.Name = "btnBossManus"
+        Me.btnBossManus.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossManus.TabIndex = 66
+        Me.btnBossManus.Text = "Manus"
+        Me.btnBossManus.UseVisualStyleBackColor = False
         '
         'btnBossKnightArtorias
         '
@@ -889,7 +954,7 @@ Partial Class frmForm1
         '
         'btnBossGapingDragon
         '
-        Me.btnBossGapingDragon.Location = New System.Drawing.Point(3, 387)
+        Me.btnBossGapingDragon.Location = New System.Drawing.Point(3, 416)
         Me.btnBossGapingDragon.Name = "btnBossGapingDragon"
         Me.btnBossGapingDragon.Size = New System.Drawing.Size(160, 23)
         Me.btnBossGapingDragon.TabIndex = 61
@@ -898,7 +963,7 @@ Partial Class frmForm1
         '
         'btnBossFourKings
         '
-        Me.btnBossFourKings.Location = New System.Drawing.Point(3, 358)
+        Me.btnBossFourKings.Location = New System.Drawing.Point(3, 387)
         Me.btnBossFourKings.Name = "btnBossFourKings"
         Me.btnBossFourKings.Size = New System.Drawing.Size(160, 23)
         Me.btnBossFourKings.TabIndex = 60
@@ -917,7 +982,7 @@ Partial Class frmForm1
         '
         'btnBossDemonFiresage
         '
-        Me.btnBossDemonFiresage.Location = New System.Drawing.Point(3, 329)
+        Me.btnBossDemonFiresage.Location = New System.Drawing.Point(3, 358)
         Me.btnBossDemonFiresage.Name = "btnBossDemonFiresage"
         Me.btnBossDemonFiresage.Size = New System.Drawing.Size(160, 23)
         Me.btnBossDemonFiresage.TabIndex = 58
@@ -926,7 +991,7 @@ Partial Class frmForm1
         '
         'btnBossDarkSunGwyndolin
         '
-        Me.btnBossDarkSunGwyndolin.Location = New System.Drawing.Point(3, 300)
+        Me.btnBossDarkSunGwyndolin.Location = New System.Drawing.Point(3, 329)
         Me.btnBossDarkSunGwyndolin.Name = "btnBossDarkSunGwyndolin"
         Me.btnBossDarkSunGwyndolin.Size = New System.Drawing.Size(160, 23)
         Me.btnBossDarkSunGwyndolin.TabIndex = 57
@@ -935,7 +1000,7 @@ Partial Class frmForm1
         '
         'btnBossCrossbreedPriscilla
         '
-        Me.btnBossCrossbreedPriscilla.Location = New System.Drawing.Point(3, 271)
+        Me.btnBossCrossbreedPriscilla.Location = New System.Drawing.Point(3, 300)
         Me.btnBossCrossbreedPriscilla.Name = "btnBossCrossbreedPriscilla"
         Me.btnBossCrossbreedPriscilla.Size = New System.Drawing.Size(160, 23)
         Me.btnBossCrossbreedPriscilla.TabIndex = 56
@@ -944,7 +1009,7 @@ Partial Class frmForm1
         '
         'btnBossChaosWitchQuelaag
         '
-        Me.btnBossChaosWitchQuelaag.Location = New System.Drawing.Point(3, 242)
+        Me.btnBossChaosWitchQuelaag.Location = New System.Drawing.Point(3, 271)
         Me.btnBossChaosWitchQuelaag.Name = "btnBossChaosWitchQuelaag"
         Me.btnBossChaosWitchQuelaag.Size = New System.Drawing.Size(160, 23)
         Me.btnBossChaosWitchQuelaag.TabIndex = 55
@@ -953,7 +1018,7 @@ Partial Class frmForm1
         '
         'btnBossCentipedeDemon
         '
-        Me.btnBossCentipedeDemon.Location = New System.Drawing.Point(3, 213)
+        Me.btnBossCentipedeDemon.Location = New System.Drawing.Point(3, 242)
         Me.btnBossCentipedeDemon.Name = "btnBossCentipedeDemon"
         Me.btnBossCentipedeDemon.Size = New System.Drawing.Size(160, 23)
         Me.btnBossCentipedeDemon.TabIndex = 54
@@ -972,7 +1037,7 @@ Partial Class frmForm1
         'btnBossCeaselessDischarge
         '
         Me.btnBossCeaselessDischarge.Enabled = False
-        Me.btnBossCeaselessDischarge.Location = New System.Drawing.Point(3, 184)
+        Me.btnBossCeaselessDischarge.Location = New System.Drawing.Point(3, 213)
         Me.btnBossCeaselessDischarge.Name = "btnBossCeaselessDischarge"
         Me.btnBossCeaselessDischarge.Size = New System.Drawing.Size(160, 23)
         Me.btnBossCeaselessDischarge.TabIndex = 52
@@ -991,7 +1056,7 @@ Partial Class frmForm1
         '
         'btnBossCapraDemon
         '
-        Me.btnBossCapraDemon.Location = New System.Drawing.Point(3, 155)
+        Me.btnBossCapraDemon.Location = New System.Drawing.Point(3, 184)
         Me.btnBossCapraDemon.Name = "btnBossCapraDemon"
         Me.btnBossCapraDemon.Size = New System.Drawing.Size(160, 23)
         Me.btnBossCapraDemon.TabIndex = 50
@@ -1035,69 +1100,15 @@ Partial Class frmForm1
         Me.lblRelease.TabIndex = 5
         Me.lblRelease.Text = "Nothing"
         '
-        'btnBossManus
+        'btnBossBlackDragonKalameet
         '
-        Me.btnBossManus.Location = New System.Drawing.Point(194, 184)
-        Me.btnBossManus.Name = "btnBossManus"
-        Me.btnBossManus.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossManus.TabIndex = 66
-        Me.btnBossManus.Text = "Manus"
-        Me.btnBossManus.UseVisualStyleBackColor = False
-        '
-        'btnBossMoonlightButterfly
-        '
-        Me.btnBossMoonlightButterfly.Location = New System.Drawing.Point(194, 213)
-        Me.btnBossMoonlightButterfly.Name = "btnBossMoonlightButterfly"
-        Me.btnBossMoonlightButterfly.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossMoonlightButterfly.TabIndex = 67
-        Me.btnBossMoonlightButterfly.Text = "Moonlight Butterfly"
-        Me.btnBossMoonlightButterfly.UseVisualStyleBackColor = False
-        '
-        'btnBossSanctuaryGuardian
-        '
-        Me.btnBossSanctuaryGuardian.Enabled = False
-        Me.btnBossSanctuaryGuardian.Location = New System.Drawing.Point(194, 300)
-        Me.btnBossSanctuaryGuardian.Name = "btnBossSanctuaryGuardian"
-        Me.btnBossSanctuaryGuardian.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossSanctuaryGuardian.TabIndex = 68
-        Me.btnBossSanctuaryGuardian.Text = "Sanctuary Guardian"
-        Me.btnBossSanctuaryGuardian.UseVisualStyleBackColor = False
-        '
-        'btnBossSeath
-        '
-        Me.btnBossSeath.Location = New System.Drawing.Point(194, 329)
-        Me.btnBossSeath.Name = "btnBossSeath"
-        Me.btnBossSeath.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossSeath.TabIndex = 69
-        Me.btnBossSeath.Text = "Seath"
-        Me.btnBossSeath.UseVisualStyleBackColor = False
-        '
-        'btnBossStrayDemon
-        '
-        Me.btnBossStrayDemon.Location = New System.Drawing.Point(194, 387)
-        Me.btnBossStrayDemon.Name = "btnBossStrayDemon"
-        Me.btnBossStrayDemon.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossStrayDemon.TabIndex = 70
-        Me.btnBossStrayDemon.Text = "Stray Demon"
-        Me.btnBossStrayDemon.UseVisualStyleBackColor = False
-        '
-        'btnBossSif
-        '
-        Me.btnBossSif.Location = New System.Drawing.Point(194, 358)
-        Me.btnBossSif.Name = "btnBossSif"
-        Me.btnBossSif.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossSif.TabIndex = 71
-        Me.btnBossSif.Text = "Sif"
-        Me.btnBossSif.UseVisualStyleBackColor = False
-        '
-        'btnBossTaurusDemon
-        '
-        Me.btnBossTaurusDemon.Location = New System.Drawing.Point(194, 416)
-        Me.btnBossTaurusDemon.Name = "btnBossTaurusDemon"
-        Me.btnBossTaurusDemon.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossTaurusDemon.TabIndex = 72
-        Me.btnBossTaurusDemon.Text = "Taurus Demon"
-        Me.btnBossTaurusDemon.UseVisualStyleBackColor = False
+        Me.btnBossBlackDragonKalameet.Enabled = False
+        Me.btnBossBlackDragonKalameet.Location = New System.Drawing.Point(3, 155)
+        Me.btnBossBlackDragonKalameet.Name = "btnBossBlackDragonKalameet"
+        Me.btnBossBlackDragonKalameet.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossBlackDragonKalameet.TabIndex = 73
+        Me.btnBossBlackDragonKalameet.Text = "Black Dragon Kalameet"
+        Me.btnBossBlackDragonKalameet.UseVisualStyleBackColor = False
         '
         'frmForm1
         '
@@ -1239,4 +1250,5 @@ Partial Class frmForm1
     Friend WithEvents btnBossStrayDemon As Button
     Friend WithEvents btnBossSif As Button
     Friend WithEvents btnBossTaurusDemon As Button
+    Friend WithEvents btnBossBlackDragonKalameet As Button
 End Class

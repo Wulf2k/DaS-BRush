@@ -14,6 +14,7 @@ Public Class frmForm1
     'Test O&S warp to fight trigger, then immediate warp to solid ground.
 
     'Test Moonlight Butterfy fight
+    'Set tails to be pre-cut to avoid drops
 
 
     Private WithEvents refTimer As New System.Windows.Forms.Timer()
@@ -496,6 +497,8 @@ Public Class frmForm1
         bytes = {&H55, &H8B, &HEC, &H50, &HB8, 0, 0, 0, 0, &H50, &HB8, 0, 0, 0, 0, &H50, &HB8, 0, 0, 0, 0, &H50, &HB8, 0, 0, 0, 0, &H50, &HB8, 0, 0, 0, 0, &H50, &HE8, 0, 0, 0, 0, &H58, &H58, &H58, &H58, &H58, &H58, &H8B, &HE5, &H5D, &HC3}
 
         For i As Integer = 4 To 0 Step -1
+            If LUAparams(i) = "False" Then LUAparams(i) = 0
+            If LUAparams(i) = "True" Then LUAparams(i) = 1
             If LUAparams(i).Contains(".") Then
                 bytes2 = BitConverter.GetBytes(Convert.ToSingle(LUAparams(i)))
             Else
@@ -511,6 +514,11 @@ Public Class frmForm1
         CreateRemoteThread(_targetProcessHandle, 0, 0, funcPtr, 0, 0, 0)
     End Sub
 
+
+
+    Private Sub SetEventFlag(ByVal flag As Integer, state As Boolean)
+        funcCall("SetEventFlag", {flag, state, 0, 0, 0})
+    End Sub
     Private Sub Warp(ByVal entityID As Integer, point As Integer)
         funcCall("Warp", {entityID, point, 0, 0, 0})
     End Sub
@@ -568,6 +576,8 @@ Public Class frmForm1
 
         For i = 0 To 33
             val = val - 0.03
+            val = val - 0.03
+            val = val - 0.03
             WFloat(tmpptr + &H270, val)
             WFloat(tmpptr + &H274, val)
             WFloat(tmpptr + &H278, val)
@@ -623,6 +633,7 @@ Public Class frmForm1
 
 
     Private Sub BossAsylum()
+
         StandardTransition(1810998, 1812997)
         ClearPlaytime()
     End Sub
@@ -652,74 +663,99 @@ Public Class frmForm1
 
     End Sub
     Private Sub BossBellGargoyles()
+        SetEventFlag(3, False)
         'StandardTransition()
     End Sub
+    Private Sub BossBlackDragonKalameet()
+        SetEventFlag(11210004, False)
+        'StandardTransition(1210998, )
+    End Sub
     Private Sub BossCapraDemon()
+        SetEventFlag(11010902, False)
         StandardTransition(1010998, 1012887)
     End Sub
     Private Sub BossCeaselessDischarge()
+        SetEventFlag(11410900, False)
         'StandardTransition()
     End Sub
     Private Sub BossCentipedeDemon()
+        SetEventFlag(11410901, False)
         StandardTransition(1410998, 1412896)
     End Sub
     Private Sub BossChaosWitchQuelaag()
+        SetEventFlag(9, False)
         StandardTransition(1400980, 1402997)
     End Sub
     Private Sub BossCrossbreedPriscilla()
+        SetEventFlag(4, False)
         StandardTransition(1102961, 1102997)
     End Sub
     Private Sub BossDarkSunGwyndolin()
+        SetEventFlag(11510900, False)
         StandardTransition(1510982, 1512896)
     End Sub
     Private Sub BossDemonFiresage()
+        SetEventFlag(11410410, False)
         StandardTransition(1410998, 1412416)
     End Sub
     Private Sub BossFourKings()
+        SetEventFlag(13, False)
         StandardTransition(1600999, 1602996)
     End Sub
     Private Sub BossGapingDragon()
+        SetEventFlag(2, False)
         StandardTransition(1000999, 1002997)
     End Sub
     Private Sub BossGravelordNito()
+        SetEventFlag(7, False)
         StandardTransition(1310998, 1312110)
     End Sub
     Private Sub BossGwyn()
+        SetEventFlag(15, False)
         StandardTransition(1800999, 1802996)
     End Sub
     Private Sub BossIronGolem()
+        SetEventFlag(11, False)
         StandardTransition(1500999, 1502997)
     End Sub
     Private Sub BossKnightArtorias()
+        SetEventFlag(11210001, False)
         'StandardTransition()
     End Sub
-
-
     Private Sub BossManus()
+        SetEventFlag(11210002, False)
         StandardTransition(1210982, 1212997)
     End Sub
     Private Sub BossMoonlightButterfly()
+        SetEventFlag(11200900, False)
         StandardTransition(1200999, 1202245)
     End Sub
     Private Sub BossOAndS()
+        SetEventFlag(12, False)
         'StandardTransition()
     End Sub
     Private Sub BossPinwheel()
+        SetEventFlag(6, False)
         StandardTransition(1300999, 1302999)
     End Sub
     Private Sub BossSanctuaryGuardian()
-        'StandardTransition()
+        SetEventFlag(11210000, False)
+        StandardTransition(1210998, 1212886)
     End Sub
     Private Sub BossSeath()
+        SetEventFlag(14, False)
         StandardTransition(1700999, 1702997)
     End Sub
     Private Sub BossSif()
+        SetEventFlag(5, False)
         StandardTransition(1200999, 1202999)
     End Sub
     Private Sub BossStrayDemon()
+        SetEventFlag(11810900, False)
         StandardTransition(1810998, 1812996)
     End Sub
     Private Sub BossTaurusDemon()
+        SetEventFlag(11010901, False)
         StandardTransition(1010998, 1012897)
     End Sub
 
@@ -738,6 +774,11 @@ Public Class frmForm1
     End Sub
     Private Sub btnBossBellGargoyles_Click(sender As Object, e As EventArgs) Handles btnBossBellGargoyles.Click
         trd = New Thread(AddressOf BossBellGargoyles)
+        trd.IsBackground = True
+        trd.Start()
+    End Sub
+    Private Sub btnBossBlackDragonKalameet_Click(sender As Object, e As EventArgs) Handles btnBossBlackDragonKalameet.Click
+        trd = New Thread(AddressOf BossBlackDragonKalameet)
         trd.IsBackground = True
         trd.Start()
     End Sub
@@ -851,4 +892,6 @@ Public Class frmForm1
         trd.IsBackground = True
         trd.Start()
     End Sub
+
+
 End Class
