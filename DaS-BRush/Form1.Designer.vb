@@ -93,6 +93,7 @@ Partial Class frmForm1
         Me.btnFuncExecute = New System.Windows.Forms.Button()
         Me.cmbFuncName = New System.Windows.Forms.ComboBox()
         Me.tabBosses = New System.Windows.Forms.TabPage()
+        Me.btnBossBlackDragonKalameet = New System.Windows.Forms.Button()
         Me.btnBossTaurusDemon = New System.Windows.Forms.Button()
         Me.btnBossSif = New System.Windows.Forms.Button()
         Me.btnBossStrayDemon = New System.Windows.Forms.Button()
@@ -120,7 +121,7 @@ Partial Class frmForm1
         Me.btnBossAsylumDemon = New System.Windows.Forms.Button()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.lblRelease = New System.Windows.Forms.Label()
-        Me.btnBossBlackDragonKalameet = New System.Windows.Forms.Button()
+        Me.btnTest = New System.Windows.Forms.Button()
         Me.tabs.SuspendLayout()
         Me.tabMain.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
@@ -819,6 +820,7 @@ Partial Class frmForm1
         '
         'tabBosses
         '
+        Me.tabBosses.Controls.Add(Me.btnTest)
         Me.tabBosses.Controls.Add(Me.btnBossBlackDragonKalameet)
         Me.tabBosses.Controls.Add(Me.btnBossTaurusDemon)
         Me.tabBosses.Controls.Add(Me.btnBossSif)
@@ -851,6 +853,15 @@ Partial Class frmForm1
         Me.tabBosses.TabIndex = 5
         Me.tabBosses.Text = "Bosses"
         Me.tabBosses.UseVisualStyleBackColor = True
+        '
+        'btnBossBlackDragonKalameet
+        '
+        Me.btnBossBlackDragonKalameet.Location = New System.Drawing.Point(3, 155)
+        Me.btnBossBlackDragonKalameet.Name = "btnBossBlackDragonKalameet"
+        Me.btnBossBlackDragonKalameet.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossBlackDragonKalameet.TabIndex = 73
+        Me.btnBossBlackDragonKalameet.Text = "Black Dragon Kalameet"
+        Me.btnBossBlackDragonKalameet.UseVisualStyleBackColor = False
         '
         'btnBossTaurusDemon
         '
@@ -917,7 +928,6 @@ Partial Class frmForm1
         '
         'btnBossKnightArtorias
         '
-        Me.btnBossKnightArtorias.Enabled = False
         Me.btnBossKnightArtorias.Location = New System.Drawing.Point(194, 155)
         Me.btnBossKnightArtorias.Name = "btnBossKnightArtorias"
         Me.btnBossKnightArtorias.Size = New System.Drawing.Size(160, 23)
@@ -972,7 +982,6 @@ Partial Class frmForm1
         '
         'btnBossOandS
         '
-        Me.btnBossOandS.Enabled = False
         Me.btnBossOandS.Location = New System.Drawing.Point(194, 242)
         Me.btnBossOandS.Name = "btnBossOandS"
         Me.btnBossOandS.Size = New System.Drawing.Size(160, 23)
@@ -1036,7 +1045,6 @@ Partial Class frmForm1
         '
         'btnBossCeaselessDischarge
         '
-        Me.btnBossCeaselessDischarge.Enabled = False
         Me.btnBossCeaselessDischarge.Location = New System.Drawing.Point(3, 213)
         Me.btnBossCeaselessDischarge.Name = "btnBossCeaselessDischarge"
         Me.btnBossCeaselessDischarge.Size = New System.Drawing.Size(160, 23)
@@ -1046,7 +1054,6 @@ Partial Class frmForm1
         '
         'btnBossBellGargoyles
         '
-        Me.btnBossBellGargoyles.Enabled = False
         Me.btnBossBellGargoyles.Location = New System.Drawing.Point(3, 126)
         Me.btnBossBellGargoyles.Name = "btnBossBellGargoyles"
         Me.btnBossBellGargoyles.Size = New System.Drawing.Size(160, 23)
@@ -1100,15 +1107,14 @@ Partial Class frmForm1
         Me.lblRelease.TabIndex = 5
         Me.lblRelease.Text = "Nothing"
         '
-        'btnBossBlackDragonKalameet
+        'btnTest
         '
-        Me.btnBossBlackDragonKalameet.Enabled = False
-        Me.btnBossBlackDragonKalameet.Location = New System.Drawing.Point(3, 155)
-        Me.btnBossBlackDragonKalameet.Name = "btnBossBlackDragonKalameet"
-        Me.btnBossBlackDragonKalameet.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossBlackDragonKalameet.TabIndex = 73
-        Me.btnBossBlackDragonKalameet.Text = "Black Dragon Kalameet"
-        Me.btnBossBlackDragonKalameet.UseVisualStyleBackColor = False
+        Me.btnTest.Location = New System.Drawing.Point(107, 18)
+        Me.btnTest.Name = "btnTest"
+        Me.btnTest.Size = New System.Drawing.Size(160, 23)
+        Me.btnTest.TabIndex = 74
+        Me.btnTest.Text = "Test button"
+        Me.btnTest.UseVisualStyleBackColor = False
         '
         'frmForm1
         '
@@ -1251,4 +1257,5 @@ Partial Class frmForm1
     Friend WithEvents btnBossSif As Button
     Friend WithEvents btnBossTaurusDemon As Button
     Friend WithEvents btnBossBlackDragonKalameet As Button
+    Friend WithEvents btnTest As Button
 End Class

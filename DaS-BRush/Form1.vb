@@ -6,15 +6,20 @@ Public Class frmForm1
 
     'TODO:
     'Check equipment durability
-    'Get Artorias WarpID
-    'Get Ceaseless WarpID
-    'Get Gargoyle's WarpID
-    'Get Kalameet's WarpID
-    'Get Sanctuary Guardians WarpID
-    'Test O&S warp to fight trigger, then immediate warp to solid ground.
+
 
     'Test Moonlight Butterfy fight
     'Set tails to be pre-cut to avoid drops
+    'Hide Ciarin after artorias kill
+    'Ceaseless, proper flags
+    'Asylum/Stray demon, proper flags
+    'Bell Gargoyles, proper entrance flags
+    'Bed of Chaos, reset flags
+    'Trim down Kalameet flags
+    'Find Gwyndolin flags to reset him
+    'Disable channeler during Gaping Dragon
+
+
 
 
     Private WithEvents refTimer As New System.Windows.Forms.Timer()
@@ -512,6 +517,7 @@ Public Class frmForm1
         Array.Copy(bytes2, 0, bytes, bytJmp, bytes2.Length)
         WriteProcessMemory(_targetProcessHandle, funcPtr, bytes, 1024, 0)
         CreateRemoteThread(_targetProcessHandle, 0, 0, funcPtr, 0, 0, 0)
+        Thread.Sleep(5)
     End Sub
 
 
@@ -527,6 +533,12 @@ Public Class frmForm1
     End Sub
     Private Sub WarpNextStage_Bonfire(ByVal bonfireID As Integer)
         funcCall("WarpNextStage_Bonfire", {bonfireID, 0, 0, 0, 0})
+    End Sub
+    Private Sub Warp_Coords(ByVal x As Single, y As Single, z As Single)
+        WFloat(charmapdataptr + &HD0, x)
+        WFloat(charmapdataptr + &HD4, y)
+        WFloat(charmapdataptr + &HD8, z)
+        WBytes(charmapdataptr + &HC8, {1})
     End Sub
 
     Private Sub BlackScreen()
@@ -584,6 +596,9 @@ Public Class frmForm1
             Thread.Sleep(33)
         Next
     End Sub
+    Private Sub HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
+    End Sub
     Private Sub ShowHUD(ByVal state As Boolean)
         Dim tmpptr As UInteger
         tmpptr = RUInt32(&H1378700)
@@ -615,6 +630,8 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
+        HealSelf()
+
         WarpNextStage_Bonfire(bonfireID)
 
         Thread.Sleep(1000)
@@ -633,8 +650,35 @@ Public Class frmForm1
 
 
     Private Sub BossAsylum()
+        SetEventFlag(16, False)
 
-        StandardTransition(1810998, 1812997)
+
+        'Non-standard due to co-ords warp
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+        HealSelf()
+
+        WarpNextStage_Bonfire(1810998)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+
+        Thread.Sleep(200)
+        'facing 180 degrees
+        Warp_Coords(3.15, 198.15, -6)
+
+
+        Thread.Sleep(1800)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
+
+
+
         ClearPlaytime()
     End Sub
     Private Sub BossBedOfChaos()
@@ -644,6 +688,7 @@ Public Class frmForm1
         PlayerHide(True)
         ShowHUD(False)
         FadeOut()
+        HealSelf()
 
         WarpNextStage_Bonfire(1410980)
 
@@ -664,19 +709,102 @@ Public Class frmForm1
     End Sub
     Private Sub BossBellGargoyles()
         SetEventFlag(3, False)
-        'StandardTransition()
+
+
+
+        'Non-standard due to co-ords warp
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+        HealSelf()
+
+        WarpNextStage_Bonfire(1010998)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+
+        Thread.Sleep(200)
+        'facing 0 degrees
+        Warp_Coords(10.8, 48.92, 87.26)
+
+
+        Thread.Sleep(1800)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
     End Sub
     Private Sub BossBlackDragonKalameet()
         SetEventFlag(11210004, False)
-        'StandardTransition(1210998, )
+
+        SetEventFlag(121, False)
+        SetEventFlag(11210539, True)
+        SetEventFlag(11210535, True)
+        SetEventFlag(11210067, False)
+        SetEventFlag(11210066, False)
+        SetEventFlag(11210056, True)
+
+        SetEventFlag(1821, True)
+        SetEventFlag(11210592, True)
+
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+        HealSelf()
+
+        WarpNextStage_Bonfire(1210998)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+
+        Thread.Sleep(200)
+        'facing 107 degrees
+        Warp_Coords(876.04, -344.73, 749.75)
+
+
+        Thread.Sleep(1800)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
     End Sub
     Private Sub BossCapraDemon()
         SetEventFlag(11010902, False)
         StandardTransition(1010998, 1012887)
     End Sub
     Private Sub BossCeaselessDischarge()
-        SetEventFlag(11410900, False)
-        'StandardTransition()
+        SetEventFlag(11410900, False) 'Boss death flag
+        SetEventFlag(11415378, True) 'Boss hostile flag
+        SetEventFlag(11415373, False)
+        SetEventFlag(51410180, False) 'Corpse Loot reset
+
+        'Non-standard due to co-ords warp
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+        HealSelf()
+
+        WarpNextStage_Bonfire(1410998)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+
+        Thread.Sleep(200)
+        'facing 30 degrees
+        Warp_Coords(402.45, -278.15, 15.5)
+
+
+        Thread.Sleep(1800)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
     End Sub
     Private Sub BossCentipedeDemon()
         SetEventFlag(11410901, False)
@@ -687,7 +815,9 @@ Public Class frmForm1
         StandardTransition(1400980, 1402997)
     End Sub
     Private Sub BossCrossbreedPriscilla()
-        SetEventFlag(4, False)
+        SetEventFlag(4, False) 'Boss Death flag
+        SetEventFlag(1691, True) 'Boss Hostile flag
+        SetEventFlag(11100531, False) 'Boss Disabled flag
         StandardTransition(1102961, 1102997)
     End Sub
     Private Sub BossDarkSunGwyndolin()
@@ -720,7 +850,31 @@ Public Class frmForm1
     End Sub
     Private Sub BossKnightArtorias()
         SetEventFlag(11210001, False)
-        'StandardTransition()
+
+
+        'Non-standard due to co-ords warp
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+        HealSelf()
+
+        WarpNextStage_Bonfire(1210998)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+
+        Thread.Sleep(200)
+        'facing 75.8 degrees
+        Warp_Coords(1034.11, -330.0, 810.68)
+
+
+        Thread.Sleep(1800)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
     End Sub
     Private Sub BossManus()
         SetEventFlag(11210002, False)
@@ -728,11 +882,71 @@ Public Class frmForm1
     End Sub
     Private Sub BossMoonlightButterfly()
         SetEventFlag(11200900, False)
-        StandardTransition(1200999, 1202245)
+        SetEventFlag(11205383, False)
+        'StandardTransition(1200999, 1202245)
+
+        'Non-standard due to flags
+        'timing of warp/flags matters
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+        HealSelf()
+
+        WarpNextStage_Bonfire(1200999)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+
+
+
+
+        Thread.Sleep(200)
+        Warp_Coords(181.39, 7.53, 29.01)
+        Thread.Sleep(1000)
+        SetEventFlag(11205383, True)
+
+        Warp_Coords(178.82, 8.12, 30.77)
+
+
+
+        Thread.Sleep(1000)
+        FadeIn()
+        ShowHUD(True)
+
+        PlayerHide(False)
+
     End Sub
     Private Sub BossOAndS()
         SetEventFlag(12, False)
-        'StandardTransition()
+
+
+
+        'Non-standard due to co-ords warp
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+        HealSelf()
+
+        WarpNextStage_Bonfire(1510998)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+
+        Thread.Sleep(200)
+        'facing 90 degrees
+        Warp_Coords(539.9, 142.6, 254.79)
+
+
+        Thread.Sleep(1800)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
     End Sub
     Private Sub BossPinwheel()
         SetEventFlag(6, False)
@@ -740,7 +954,33 @@ Public Class frmForm1
     End Sub
     Private Sub BossSanctuaryGuardian()
         SetEventFlag(11210000, False)
-        StandardTransition(1210998, 1212886)
+
+
+        'Non-standard due to co-ords warp
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+        HealSelf()
+
+        WarpNextStage_Bonfire(1210998)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+
+
+        Thread.Sleep(200)
+        'facing = 45 deg
+        Warp_Coords(931.82, -318.63, 472.45)
+
+
+        Thread.Sleep(1800)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
+
     End Sub
     Private Sub BossSeath()
         SetEventFlag(14, False)
@@ -893,5 +1133,7 @@ Public Class frmForm1
         trd.Start()
     End Sub
 
-
+    Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
+        Warp_Coords(894.34, -329.27, 451.5)
+    End Sub
 End Class
