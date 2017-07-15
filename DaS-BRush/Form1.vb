@@ -7,19 +7,11 @@ Public Class frmForm1
     'TODO:
     'Check equipment durability
 
-
-    'Test Moonlight Butterfy fight
     'Set tails to be pre-cut to avoid drops
     'Hide Ciarin after artorias kill
-    'Ceaseless, proper flags
-    'Asylum/Stray demon, proper flags
-    'Bell Gargoyles, proper entrance flags
-    'Bed of Chaos, reset flags
+    'Ceaseless, proper flags (done?  Confirm new game)
+    'Bed of Chaos, reset platform-collapsing
     'Trim down Kalameet flags
-    'Find Gwyndolin flags to reset him
-    'Disable channeler during Gaping Dragon
-
-
 
 
     Private WithEvents refTimer As New System.Windows.Forms.Timer()
@@ -408,8 +400,18 @@ Public Class frmForm1
         charmapdataptr = RInt32(charptr1 + &H28)
         charposdataptr = RInt32(charmapdataptr + &H1C)
 
+        Dim SoulTimer As TimeSpan
+        Dim Souls As Integer
+        Dim msPlayed As Integer
+        'souls = charptr2 + &H8C
 
+        msPlayed = RInt32(gamestatsptr + &H68)
 
+        'TimeSpan.TryParse(TimeSpan.FromMilliseconds(msPlayed), SoulTimer)
+        SoulTimer = TimeSpan.FromMilliseconds(msPlayed)
+        Souls = SoulTimer.Days * 1000000 + SoulTimer.Hours * 10000 + SoulTimer.Minutes * 100 + SoulTimer.Seconds
+
+        WInt32(charptr2 + &H8C, Souls)
 
         Select Case tabs.SelectedIndex
             Case 0
@@ -638,6 +640,7 @@ Public Class frmForm1
 
         WaitForLoad()
         BlackScreen()
+        PlayerHide(True)
 
         Warp(10000, warpID)
 
@@ -650,7 +653,10 @@ Public Class frmForm1
 
 
     Private Sub BossAsylum()
-        SetEventFlag(16, False)
+        SetEventFlag(16, False) 'Boss Death Flag
+        SetEventFlag(11810000, False) 'Tutorial Complete Flag
+        SetEventFlag(11815395, True) 'Boss at lower position
+
 
 
         'Non-standard due to co-ords warp
@@ -666,11 +672,12 @@ Public Class frmForm1
 
         WaitForLoad()
         BlackScreen()
+        PlayerHide(True)
 
         Thread.Sleep(200)
         'facing 180 degrees
         Warp_Coords(3.15, 198.15, -6)
-
+        SetEventFlag(11815390, True)
 
         Thread.Sleep(1800)
         FadeIn()
@@ -682,6 +689,13 @@ Public Class frmForm1
         ClearPlaytime()
     End Sub
     Private Sub BossBedOfChaos()
+        SetEventFlag(10, False) 'Boss 
+
+        SetEventFlag(11410000, False)
+        SetEventFlag(11410200, False) 'Center Platform flag
+        SetEventFlag(11410291, False) 'Arm flag
+        SetEventFlag(11410292, False) 'Arm flag
+
         'non-standard transition to allow quit-out
         'warp before fog gate to set last solid position
 
@@ -696,6 +710,7 @@ Public Class frmForm1
 
         WaitForLoad()
         BlackScreen()
+        PlayerHide(True)
 
         Warp(10000, 1412998)
         Thread.Sleep(200)
@@ -708,7 +723,8 @@ Public Class frmForm1
 
     End Sub
     Private Sub BossBellGargoyles()
-        SetEventFlag(3, False)
+        SetEventFlag(3, False) 'Boss Death Flag
+        SetEventFlag(11010000, False) 'Boss Cinematic Viewed Flag
 
 
 
@@ -725,13 +741,19 @@ Public Class frmForm1
 
         WaitForLoad()
         BlackScreen()
+        PlayerHide(True)
 
         Thread.Sleep(200)
+
+        SetEventFlag(11015390, True) 'Boss Fog Used
+        SetEventFlag(11015393, True) 'Boss Area Entered
+        Thread.Sleep(200)
+
         'facing 0 degrees
         Warp_Coords(10.8, 48.92, 87.26)
 
 
-        Thread.Sleep(1800)
+        Thread.Sleep(1600)
         FadeIn()
         ShowHUD(True)
         PlayerHide(False)
@@ -761,6 +783,7 @@ Public Class frmForm1
 
         WaitForLoad()
         BlackScreen()
+        PlayerHide(True)
 
         Thread.Sleep(200)
         'facing 107 degrees
@@ -778,9 +801,12 @@ Public Class frmForm1
     End Sub
     Private Sub BossCeaselessDischarge()
         SetEventFlag(11410900, False) 'Boss death flag
-        SetEventFlag(11415378, True) 'Boss hostile flag
-        SetEventFlag(11415373, False)
-        SetEventFlag(51410180, False) 'Corpse Loot reset
+        SetEventFlag(51410180, True) 'Corpse Loot reset
+
+        SetEventFlag(11415385, True)
+        SetEventFlag(11415378, True)
+        SetEventFlag(11415373, True)
+        SetEventFlag(11415372, True)
 
         'Non-standard due to co-ords warp
 
@@ -795,13 +821,19 @@ Public Class frmForm1
 
         WaitForLoad()
         BlackScreen()
+        PlayerHide(True)
 
         Thread.Sleep(200)
+
+        Warp_Coords(250.53, -283.15, 72.1)
+        Thread.Sleep(300)
         'facing 30 degrees
         Warp_Coords(402.45, -278.15, 15.5)
 
 
-        Thread.Sleep(1800)
+
+
+        Thread.Sleep(1500)
         FadeIn()
         ShowHUD(True)
         PlayerHide(False)
@@ -821,7 +853,9 @@ Public Class frmForm1
         StandardTransition(1102961, 1102997)
     End Sub
     Private Sub BossDarkSunGwyndolin()
-        SetEventFlag(11510900, False)
+        SetEventFlag(11510900, False) 'Boss Death Flag
+        SetEventFlag(11510523, False) 'Boss Disabled Flag
+
         StandardTransition(1510982, 1512896)
     End Sub
     Private Sub BossDemonFiresage()
@@ -833,7 +867,8 @@ Public Class frmForm1
         StandardTransition(1600999, 1602996)
     End Sub
     Private Sub BossGapingDragon()
-        SetEventFlag(2, False)
+        SetEventFlag(2, False) 'Boss Death Flag
+        SetEventFlag(11000853, True) 'Channeler Death Flag
         StandardTransition(1000999, 1002997)
     End Sub
     Private Sub BossGravelordNito()
@@ -845,7 +880,8 @@ Public Class frmForm1
         StandardTransition(1800999, 1802996)
     End Sub
     Private Sub BossIronGolem()
-        SetEventFlag(11, False)
+        SetEventFlag(11, False) 'Boss Death Flag
+        SetEventFlag(11500865, True) 'Bomb-Tossing Giant Death Flag
         StandardTransition(1500999, 1502997)
     End Sub
     Private Sub BossKnightArtorias()
@@ -865,6 +901,7 @@ Public Class frmForm1
 
         WaitForLoad()
         BlackScreen()
+        PlayerHide(True)
 
         Thread.Sleep(200)
         'facing 75.8 degrees
@@ -899,6 +936,7 @@ Public Class frmForm1
 
         WaitForLoad()
         BlackScreen()
+        PlayerHide(True)
 
 
 
@@ -937,6 +975,7 @@ Public Class frmForm1
 
         WaitForLoad()
         BlackScreen()
+        PlayerHide(True)
 
         Thread.Sleep(200)
         'facing 90 degrees
@@ -969,6 +1008,7 @@ Public Class frmForm1
 
         WaitForLoad()
         BlackScreen()
+        PlayerHide(True)
 
 
         Thread.Sleep(200)
@@ -984,6 +1024,8 @@ Public Class frmForm1
     End Sub
     Private Sub BossSeath()
         SetEventFlag(14, False)
+        SetEventFlag(11700000, False)
+
         StandardTransition(1700999, 1702997)
     End Sub
     Private Sub BossSif()
@@ -991,6 +1033,7 @@ Public Class frmForm1
         StandardTransition(1200999, 1202999)
     End Sub
     Private Sub BossStrayDemon()
+        SetEventFlag(11810000, True)
         SetEventFlag(11810900, False)
         StandardTransition(1810998, 1812996)
     End Sub
