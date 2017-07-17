@@ -13,11 +13,22 @@ Public Class frmForm1
     'Bed of Chaos, reset platform-collapsing
     'Trim down Kalameet flags
 
+    'Redo "WaitForxDeath" subs so that it monitors an event flag generically
+    'instead of hardcoded one-offs
+
+    'Check Sif trigger
+    'Grant ring for 4K fight
+    'Reported that Nito's underground sword attack doesn't work
+    'Reported Ornstein failed grab
+    'Reported 3x Sanctuary Guardians
+    'Reported Kaathe Present for 4K
+    'Gwyn can open with a different attack
 
     Private WithEvents refTimer As New System.Windows.Forms.Timer()
     Public Declare Function GetAsyncKeyState Lib "user32" (ByVal vKey As Integer) As Short
 
     Private trd As Thread
+    Private soulTimer As Thread
 
 
     Private Declare Function OpenProcess Lib "kernel32.dll" (ByVal dwDesiredAcess As UInt32, ByVal bInheritHandle As Boolean, ByVal dwProcessId As Int32) As IntPtr
@@ -37,8 +48,6 @@ Public Class frmForm1
     Public Const PROCESS_ALL_ACCESS = &H1F0FFF
 
     Dim isHooked As Boolean = False
-
-
 
     Dim clsFuncNames As New Hashtable
     Dim clsFuncLocs As New Hashtable
@@ -84,6 +93,8 @@ Public Class frmForm1
     Dim bonfireptr As UInteger
 
     Dim funcPtr As UInteger
+    Dim dropPtr As UInteger
+
 
     Dim delay As Integer = 33
 
@@ -154,14 +165,7 @@ Public Class frmForm1
         cllItemCatsIDs = {clsWeaponsIDs, clsArmorIDs, clsRingsIDs, clsGoodsIDs}
 
 
-        '-----------------------Function names-----------------------
-        nameList = ParseItems(clsFuncNames, clsFuncLocs, My.Resources.FuncLocs)
-        For Each func In nameList
-            cmbFuncName.Items.Add(func)
-        Next
-        cmbFuncName.SelectedItem = "PlayAnimation"
-
-
+        ParseItems(clsFuncNames, clsFuncLocs, My.Resources.FuncLocs)
         '-----------------------Bonfires-----------------------
         nameList = ParseItems(clsBonfires, clsBonfiresIDs, My.Resources.Bonfires)
         For Each bonfire In nameList
@@ -189,8 +193,6 @@ Public Class frmForm1
         ParseItems(clsRings, clsRingsIDs, My.Resources.Rings)
         ParseItems(clsGoods, clsGoodsIDs, My.Resources.Goods)
 
-
-        cmbItemCat.SelectedIndex = 0
     End Sub
 
     Public Function ParseItems(ByRef cls As Hashtable, ByRef clsIDs As Hashtable, ByRef txt As String) As List(Of String)
@@ -349,11 +351,12 @@ Public Class frmForm1
         refTimer.Interval = delay
         refTimer.Enabled = True
 
+
         If ScanForProcess("DARK SOULS", True) Then
             'Check if this process is even Dark Souls
             checkDarkSoulsVersion()
             If isHooked Then
-
+                dropAlloc()
                 funcAlloc()
             End If
         End If
@@ -364,6 +367,10 @@ Public Class frmForm1
     Private Sub funcAlloc()
         Dim TargetBufferSize = 1024
         funcPtr = VirtualAllocEx(_targetProcessHandle, 0, TargetBufferSize, MEM_COMMIT, PAGE_READWRITE)
+    End Sub
+    Private Sub dropAlloc()
+        Dim TargetBufferSize = 1024
+        dropPtr = VirtualAllocEx(_targetProcessHandle, 0, TargetBufferSize, MEM_COMMIT, PAGE_READWRITE)
     End Sub
 
     Private Sub checkDarkSoulsVersion()
@@ -383,6 +390,25 @@ Public Class frmForm1
 
     Private Sub refTimer_Tick() Handles refTimer.Tick
 
+
+
+        If Not trd Is Nothing Then
+
+            If trd.ThreadState = &H10 Then
+                gbBosses.Visible = True
+                btnBeginBossRush.Enabled = True
+                btnBeginReverseRush.Enabled = True
+            Else
+                gbBosses.Visible = False
+                btnBeginBossRush.Enabled = False
+                btnBeginReverseRush.Enabled = False
+            End If
+        Else
+            gbBosses.Visible = True
+            btnBeginBossRush.Enabled = True
+            btnBeginReverseRush.Enabled = True
+        End If
+
         checkDarkSoulsVersion()
 
         If Not isHooked Then
@@ -400,21 +426,11 @@ Public Class frmForm1
         charmapdataptr = RInt32(charptr1 + &H28)
         charposdataptr = RInt32(charmapdataptr + &H1C)
 
-        Dim SoulTimer As TimeSpan
-        Dim Souls As Integer
-        Dim msPlayed As Integer
-        'souls = charptr2 + &H8C
 
-        msPlayed = RInt32(gamestatsptr + &H68)
 
-        'TimeSpan.TryParse(TimeSpan.FromMilliseconds(msPlayed), SoulTimer)
-        SoulTimer = TimeSpan.FromMilliseconds(msPlayed)
-        Souls = SoulTimer.Days * 1000000 + SoulTimer.Hours * 10000 + SoulTimer.Minutes * 100 + SoulTimer.Seconds
-
-        WInt32(charptr2 + &H8C, Souls)
 
         Select Case tabs.SelectedIndex
-            Case 0
+            Case 1
                 playerHP = RInt32(charptr1 + &H2D4)
                 playerMaxHP = RInt32(charptr1 + &H2D8)
 
@@ -493,7 +509,52 @@ Public Class frmForm1
 
 
 
+    Private Sub DropItem(ByVal cat As String, item As String, num As Integer)
+        Dim TargetBufferSize = 1024
+        Dim Rtn As Integer
 
+        Dim bytes() As Byte
+        Dim bytes2() As Byte
+
+        Dim bytcat As Integer = &H1
+        Dim bytitem As Integer = &H6
+        Dim bytcount As Integer = &H10
+        Dim bytptr1 As Integer = &H15
+        Dim bytptr2 As Integer = &H32
+        Dim bytjmp As Integer = &H38
+
+        bytes = {&HBD, 0, 0, 0, 0, &HBB, &HF0, &H0, &H0, &H0, &HB9, &HFF, &HFF, &HFF, &HFF, &HBA, 0, 0, 0, 0, &HA1, &HD0, &H86, &H37, &H1, &H89, &HA8, &H28, &H8, &H0, &H0, &H89, &H98, &H2C, &H8, &H0, &H0, &H89, &H88, &H30, &H8, &H0, &H0, &H89, &H90, &H34, &H8, &H0, &H0, &HA1, &HBC, &HD6, &H37, &H1, &H50, &HE8, 0, 0, 0, 0, &HC3}
+
+        'cllItemCatsIDs(clsItemCatsIDs("Weapons") / &H10000000)("Target Shield+15"))
+
+        bytes2 = BitConverter.GetBytes(Convert.ToInt32(clsItemCatsIDs(cat)))
+        Array.Copy(bytes2, 0, bytes, bytcat, bytes2.Length)
+
+        Dim tmpCat As Integer
+        tmpCat = Convert.ToInt32(clsItemCatsIDs(cat) / &H10000000)
+        If tmpCat = 4 Then tmpCat = 3
+
+        bytes2 = BitConverter.GetBytes(Convert.ToInt32(cllItemCatsIDs(tmpCat)(item)))
+        Array.Copy(bytes2, 0, bytes, bytitem, bytes2.Length)
+
+        bytes2 = BitConverter.GetBytes(Convert.ToInt32(num))
+        Array.Copy(bytes2, 0, bytes, bytcount, bytes2.Length)
+
+        bytes2 = BitConverter.GetBytes(Convert.ToInt32(&H13786D0))
+        Array.Copy(bytes2, 0, bytes, bytptr1, bytes2.Length)
+
+        bytes2 = BitConverter.GetBytes(Convert.ToInt32(&H137D6BC))
+        Array.Copy(bytes2, 0, bytes, bytptr2, bytes2.Length)
+
+        bytes2 = BitConverter.GetBytes(Convert.ToInt32(0 - ((dropPtr + &H3C) - (&HDC8C60))))
+        Array.Copy(bytes2, 0, bytes, bytjmp, bytes2.Length)
+
+        Rtn = WriteProcessMemory(_targetProcessHandle, dropPtr, bytes, TargetBufferSize, 0)
+        'MsgBox(Hex(dropPtr))
+        CreateRemoteThread(_targetProcessHandle, 0, 0, dropPtr, 0, 0, 0)
+
+        Thread.Sleep(5)
+    End Sub
     Private Sub funcCall(ByRef func As String, LUAparams() As String)
         Dim bytes() As Byte
         Dim bytes2() As Byte
@@ -519,7 +580,7 @@ Public Class frmForm1
         Array.Copy(bytes2, 0, bytes, bytJmp, bytes2.Length)
         WriteProcessMemory(_targetProcessHandle, funcPtr, bytes, 1024, 0)
         CreateRemoteThread(_targetProcessHandle, 0, 0, funcPtr, 0, 0, 0)
-        Thread.Sleep(5)
+        Thread.Sleep(2)
     End Sub
 
 
@@ -598,6 +659,24 @@ Public Class frmForm1
             Thread.Sleep(33)
         Next
     End Sub
+    Private Sub FlashRed(ByVal ms As Integer)
+        Dim tmpptr As UInteger
+        tmpptr = RUInt32(&H1378520)
+        tmpptr = RUInt32(tmpptr + &H10)
+
+        WBytes(tmpptr + &H26D, {1})
+
+        Dim val As Single = 1.0
+
+        WFloat(tmpptr + &H270, 5.0)
+        WFloat(tmpptr + &H274, 1.0)
+        WFloat(tmpptr + &H278, 1.0)
+        Thread.Sleep(ms)
+
+
+        WBytes(tmpptr + &H26D, {0})
+
+    End Sub
     Private Sub HealSelf()
         funcCall("SetHp", {10000, "1.0", 0, 0, 0})
     End Sub
@@ -610,6 +689,17 @@ Public Class frmForm1
     End Sub
     Private Sub PlayerHide(ByVal state As Boolean)
         WBytes(&H13784E7, {state})
+    End Sub
+    Private Sub PlayerSwoll(ByVal val As Single)
+        Dim tmpptr As Integer
+        tmpptr = RInt32(&H1378700)
+        tmpptr = RInt32(tmpptr + 8)
+
+        WFloat(tmpptr + &H2B0, val / 3)
+        WFloat(tmpptr + &H2B4, val / 3)
+        WFloat(tmpptr + &H2B8, val * 1.3)
+        WFloat(tmpptr + &H2BC, val)
+
     End Sub
     Private Sub WaitForLoad()
         Dim tmpptr As UInteger
@@ -683,10 +773,6 @@ Public Class frmForm1
         FadeIn()
         ShowHUD(True)
         PlayerHide(False)
-
-
-
-        ClearPlaytime()
     End Sub
     Private Sub BossBedOfChaos()
         SetEventFlag(10, False) 'Boss 
@@ -1042,141 +1128,728 @@ Public Class frmForm1
         StandardTransition(1010998, 1012897)
     End Sub
 
+    Private Sub BeginBossRush()
+
+        soulTimer = New Thread(AddressOf BeginSoulTimer)
+        soulTimer.IsBackground = True
+
+        DropItem("Weapons", "Dark Hand+5", 1)
+        DropItem("Weapons", "Dark Hand+5", 1)
+        DropItem("Armor", "Traveling Boots", 1)
+        DropItem("Armor", "Helm of Favor", 1)
+
+        DropItem("Goods", "Dung Pie", 99)
+
+        DropItem("Rings", "Covenant of Artorias", 1)
 
 
 
-    Private Sub btnBossAsylumDemon_Click(sender As Object, e As EventArgs) Handles btnBossAsylumDemon.Click
+        PlayerSwoll(-4)
+
+
+
+        FlashRed(3000)
+        Thread.Sleep(3000)
+
+        FlashRed(2000)
+        Thread.Sleep(2000)
+
+        FlashRed(1000)
+        Thread.Sleep(1000)
+
+
+        For i = 0 To 30
+            FlashRed(33)
+            Thread.Sleep(33)
+        Next
+
+
+
+
+        soulTimer.Start()
+        ClearPlaytime()
+
+        BossAsylum()
+        WaitForBossDeath(0, &H8000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-3.66)
+
+        BossTaurusDemon()
+        WaitForBossDeath(&HF70, &H4000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-3.33)
+
+        BossBellGargoyles()
+        WaitForBossDeath(0, &H10000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-3)
+
+        BossCapraDemon()
+        WaitForBossDeath(&HF70, &H2000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-2.66)
+
+        BossGapingDragon()
+        WaitForBossDeath(0, &H20000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-2.33)
+
+        BossMoonlightButterfly()
+        WaitForBossDeath(&H1E70, &H8000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-2)
+
+        BossSif()
+        WaitForBossDeath(0, &H4000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-1.66)
+
+        BossChaosWitchQuelaag()
+        WaitForBossDeath(0, &H400000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-1.33)
+
+        BossStrayDemon()
+        WaitForBossDeath(&H5A70, &H8000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-1)
+
+        BossIronGolem()
+        WaitForBossDeath(0, &H100000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-0.66)
+
+        BossOAndS()
+        WaitForBossDeath(0, &H80000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-0.33)
+
+        BossPinwheel()
+        WaitForBossDeath(0, &H2000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(0)
+
+        BossGravelordNito()
+        WaitForBossDeath(0, &H1000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(0.33)
+
+        BossSanctuaryGuardian()
+        WaitForBossDeath(&H2300, &H80000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(0.66)
+
+        BossKnightArtorias()
+        WaitForBossDeath(&H2300, &H40000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(1)
+
+        BossManus()
+        WaitForBossDeath(&H2300, &H20000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(1.66)
+
+        BossCeaselessDischarge()
+        WaitForBossDeath(&H3C70, &H8000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(2)
+
+        BossDemonFiresage()
+        WaitForBossDeath(&H3C30, &H20)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(2.33)
+
+        BossCentipedeDemon()
+        WaitForBossDeath(&H3C70, &H4000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(2.66)
+
+        BossBlackDragonKalameet()
+        WaitForBossDeath(&H2300, &H8000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(3)
+
+        BossSeath()
+        WaitForBossDeath(0, &H20000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(3.33)
+
+        BossFourKings()
+        WaitForBossDeath(0, &H40000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(3.66)
+
+        BossCrossbreedPriscilla()
+        WaitForBossDeath(0, &H8000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(4)
+
+        BossDarkSunGwyndolin()
+        WaitForBossDeath(&H4670, &H8000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(4.33)
+
+        BossGwyn()
+        WaitForBossDeath(0, &H10000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(6)
+
+
+        For i = 0 To 30
+            FlashRed(33)
+            Thread.Sleep(33)
+        Next
+
+        soulTimer.Abort()
+    End Sub
+    Private Sub BeginReverseBossRush()
+        'Reverse Boss Order
+        'Gwyn
+        'Dark Sun Gwyndolin
+        'Crossbreed Priscilla
+        'Four Kings
+        'Seath
+        'Black Dragon Kalameet
+        'Centipede Demon
+        'Demon Firesage
+        'Ceaseless Discharge
+        'Manus
+        'Knight Artorias
+        'Sanctuary Guardian
+        'Gravelord Nito
+        'Pinwheel
+        'Ornstein And Smough
+        'Iron Golem
+        'Stray Demon
+        'Chaos Witch Quelaag
+        'Sif
+        'Moonlight Butterfly
+        'Gaping Dragon
+        'Capra Demon
+        'Bell Gargoyles
+        'Taurus Demon
+        'Asylum Demon
+
+
+
+        soulTimer = New Thread(AddressOf BeginSoulTimer)
+        soulTimer.IsBackground = True
+
+        DropItem("Weapons", "Dark Hand+5", 1)
+        DropItem("Weapons", "Dark Hand+5", 1)
+        DropItem("Armor", "Traveling Boots", 1)
+        DropItem("Armor", "Helm of Favor", 1)
+
+        DropItem("Goods", "Dung Pie", 99)
+
+        DropItem("Rings", "Covenant of Artorias", 1)
+
+
+
+        PlayerSwoll(-4)
+
+
+
+        FlashRed(3000)
+        Thread.Sleep(3000)
+
+        FlashRed(2000)
+        Thread.Sleep(2000)
+
+        FlashRed(1000)
+        Thread.Sleep(1000)
+
+
+        For i = 0 To 30
+            FlashRed(33)
+            Thread.Sleep(33)
+        Next
+
+
+        BossGwyn()
+        ClearPlaytime()
+
+
+        soulTimer.Start()
+        WaitForBossDeath(0, &H10000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-3.66)
+
+        BossDarkSunGwyndolin()
+        WaitForBossDeath(&H4670, &H8000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-3.33)
+
+        BossCrossbreedPriscilla()
+        WaitForBossDeath(0, &H8000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-3)
+
+        BossFourKings()
+        WaitForBossDeath(0, &H40000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-2.66)
+
+        BossSeath()
+        WaitForBossDeath(0, &H20000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-2.33)
+
+        BossBlackDragonKalameet()
+        WaitForBossDeath(&H2300, &H8000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-2)
+
+        BossCentipedeDemon()
+        WaitForBossDeath(&H3C70, &H4000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-1.66)
+
+        BossDemonFiresage()
+        WaitForBossDeath(&H3C30, &H20)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-1.33)
+
+        BossCeaselessDischarge()
+        WaitForBossDeath(&H3C70, &H8000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-1)
+
+        BossManus()
+        WaitForBossDeath(&H2300, &H20000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-0.66)
+
+        BossKnightArtorias()
+        WaitForBossDeath(&H2300, &H40000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(-0.33)
+
+        BossSanctuaryGuardian()
+        WaitForBossDeath(&H2300, &H80000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(0)
+
+        BossGravelordNito()
+        WaitForBossDeath(0, &H1000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(0.33)
+
+        BossPinwheel()
+        WaitForBossDeath(0, &H2000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(0.66)
+
+        BossOAndS()
+        WaitForBossDeath(0, &H80000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(1)
+
+        BossIronGolem()
+        WaitForBossDeath(0, &H100000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(1.66)
+
+        BossStrayDemon()
+        WaitForBossDeath(&H5A70, &H8000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(2)
+
+        BossChaosWitchQuelaag()
+        WaitForBossDeath(0, &H400000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(2.33)
+
+        BossSif()
+        WaitForBossDeath(0, &H4000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(2.66)
+
+        BossMoonlightButterfly()
+        WaitForBossDeath(&H1E70, &H8000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(3)
+
+        BossGapingDragon()
+        WaitForBossDeath(0, &H20000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(3.33)
+
+        BossCapraDemon()
+        WaitForBossDeath(&HF70, &H2000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(3.66)
+
+        BossBellGargoyles()
+        WaitForBossDeath(0, &H10000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(4)
+
+        BossTaurusDemon()
+        WaitForBossDeath(&HF70, &H4000000)
+        Thread.Sleep(5000)
+
+        PlayerSwoll(4.33)
+
+        BossAsylum()
+        WaitForBossDeath(0, &H8000)
+        Thread.Sleep(5000)
+
+        For i = 0 To 30
+            FlashRed(33)
+            Thread.Sleep(33)
+        Next
+
+        soulTimer.Abort()
+
+        PlayerSwoll(6)
+
+    End Sub
+
+    Private Sub WaitForAsylumDeath()
+        Dim eventPtr As Integer
+        eventPtr = RInt32(&H137D7D4)
+        eventPtr = RInt32(eventPtr)
+
+        Dim hpPtr As Integer
+        hpPtr = RInt32(&H137DC70)
+        hpPtr = RInt32(hpPtr + 4)
+        hpPtr = RInt32(hpPtr)
+        hpPtr = hpPtr + &H2D4
+
+        Dim bossdead As Boolean = False
+        Dim selfdead As Boolean = False
+
+        While Not (bossdead Or selfdead)
+            bossdead = (RInt32(eventPtr) And &H8000)
+            selfdead = (RInt32(hpPtr) = 0)
+
+            Thread.Sleep(33)
+        End While
+
+        If bossdead Then
+
+        End If
+        If selfdead Then
+            trd.Abort()
+        End If
+
+    End Sub
+    Private Sub WaitForBossDeath(ByVal boost As Integer, match As Integer)
+        Dim eventPtr As Integer
+        eventPtr = RInt32(&H137D7D4)
+        eventPtr = RInt32(eventPtr)
+
+        Dim hpPtr As Integer
+        hpPtr = RInt32(&H137DC70)
+        hpPtr = RInt32(hpPtr + 4)
+        hpPtr = RInt32(hpPtr)
+        hpPtr = hpPtr + &H2D4
+
+        Dim bossdead As Boolean = False
+        Dim selfdead As Boolean = False
+
+        While Not (bossdead Or selfdead)
+            bossdead = (RInt32(eventPtr + boost) And match)
+            selfdead = (RInt32(hpPtr) = 0)
+            Console.WriteLine(Hex(eventPtr) & " - " & Hex(RInt32(eventPtr)))
+            Thread.Sleep(33)
+        End While
+
+        If bossdead Then
+
+        End If
+        If selfdead Then
+            soulTimer.Abort()
+            trd.Abort()
+        End If
+
+    End Sub
+
+
+
+
+    Private Sub btnBossAsylumDemon_Click(sender As Object, e As EventArgs) Handles btnBossAsylumDemon.Click, Button1.Click
         trd = New Thread(AddressOf BossAsylum)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossBedOfChaos_Click(sender As Object, e As EventArgs) Handles btnBossBedOfChaos.Click
+    Private Sub btnBossBedOfChaos_Click(sender As Object, e As EventArgs) Handles btnBossBedOfChaos.Click, Button6.Click
         trd = New Thread(AddressOf BossBedOfChaos)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossBellGargoyles_Click(sender As Object, e As EventArgs) Handles btnBossBellGargoyles.Click
+    Private Sub btnBossBellGargoyles_Click(sender As Object, e As EventArgs) Handles btnBossBellGargoyles.Click, Button4.Click
         trd = New Thread(AddressOf BossBellGargoyles)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossBlackDragonKalameet_Click(sender As Object, e As EventArgs) Handles btnBossBlackDragonKalameet.Click
+    Private Sub btnBossBlackDragonKalameet_Click(sender As Object, e As EventArgs) Handles btnBossBlackDragonKalameet.Click, Button26.Click
         trd = New Thread(AddressOf BossBlackDragonKalameet)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossCapraDemon_Click(sender As Object, e As EventArgs) Handles btnBossCapraDemon.Click
+    Private Sub btnBossCapraDemon_Click(sender As Object, e As EventArgs) Handles btnBossCapraDemon.Click, Button3.Click
         trd = New Thread(AddressOf BossCapraDemon)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossCeaselessDischarge_Click(sender As Object, e As EventArgs) Handles btnBossCeaselessDischarge.Click
+    Private Sub btnBossCeaselessDischarge_Click(sender As Object, e As EventArgs) Handles btnBossCeaselessDischarge.Click, Button5.Click
         trd = New Thread(AddressOf BossCeaselessDischarge)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossCentipedeDemon_Click(sender As Object, e As EventArgs) Handles btnBossCentipedeDemon.Click
+    Private Sub btnBossCentipedeDemon_Click(sender As Object, e As EventArgs) Handles btnBossCentipedeDemon.Click, Button7.Click
         trd = New Thread(AddressOf BossCentipedeDemon)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossChaosWitchQuelaag_Click(sender As Object, e As EventArgs) Handles btnBossChaosWitchQuelaag.Click
+    Private Sub btnBossChaosWitchQuelaag_Click(sender As Object, e As EventArgs) Handles btnBossChaosWitchQuelaag.Click, Button8.Click
         trd = New Thread(AddressOf BossChaosWitchQuelaag)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossCrossbreedPriscilla_Click(sender As Object, e As EventArgs) Handles btnBossCrossbreedPriscilla.Click
+    Private Sub btnBossCrossbreedPriscilla_Click(sender As Object, e As EventArgs) Handles btnBossCrossbreedPriscilla.Click, Button9.Click
         trd = New Thread(AddressOf BossCrossbreedPriscilla)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossDarkSunGwyndolin_Click(sender As Object, e As EventArgs) Handles btnBossDarkSunGwyndolin.Click
+    Private Sub btnBossDarkSunGwyndolin_Click(sender As Object, e As EventArgs) Handles btnBossDarkSunGwyndolin.Click, Button10.Click
         trd = New Thread(AddressOf BossDarkSunGwyndolin)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossDemonFiresage_Click(sender As Object, e As EventArgs) Handles btnBossDemonFiresage.Click
+    Private Sub btnBossDemonFiresage_Click(sender As Object, e As EventArgs) Handles btnBossDemonFiresage.Click, Button11.Click
         trd = New Thread(AddressOf BossDemonFiresage)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossFourKings_Click(sender As Object, e As EventArgs) Handles btnBossFourKings.Click
+    Private Sub btnBossFourKings_Click(sender As Object, e As EventArgs) Handles btnBossFourKings.Click, Button13.Click
         trd = New Thread(AddressOf BossFourKings)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossGapingDragon_Click(sender As Object, e As EventArgs) Handles btnBossGapingDragon.Click
+    Private Sub btnBossGapingDragon_Click(sender As Object, e As EventArgs) Handles btnBossGapingDragon.Click, Button14.Click
         trd = New Thread(AddressOf BossGapingDragon)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossGravelordNito_Click(sender As Object, e As EventArgs) Handles btnBossGravelordNito.Click
+    Private Sub btnBossGravelordNito_Click(sender As Object, e As EventArgs) Handles btnBossGravelordNito.Click, Button15.Click
         trd = New Thread(AddressOf BossGravelordNito)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossGwyn_Click(sender As Object, e As EventArgs) Handles btnBossGwyn.Click
+    Private Sub btnBossGwyn_Click(sender As Object, e As EventArgs) Handles btnBossGwyn.Click, Button16.Click
         trd = New Thread(AddressOf BossGwyn)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossIronGolem_Click(sender As Object, e As EventArgs) Handles btnBossIronGolem.Click
+    Private Sub btnBossIronGolem_Click(sender As Object, e As EventArgs) Handles btnBossIronGolem.Click, Button17.Click
         trd = New Thread(AddressOf BossIronGolem)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossKnightArtorias_Click(sender As Object, e As EventArgs) Handles btnBossKnightArtorias.Click
+    Private Sub btnBossKnightArtorias_Click(sender As Object, e As EventArgs) Handles btnBossKnightArtorias.Click, Button18.Click
         trd = New Thread(AddressOf BossKnightArtorias)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossManus_Click(sender As Object, e As EventArgs) Handles btnBossManus.Click
+    Private Sub btnBossManus_Click(sender As Object, e As EventArgs) Handles btnBossManus.Click, Button19.Click
         trd = New Thread(AddressOf BossManus)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossMoonlightButterfly_Click(sender As Object, e As EventArgs) Handles btnBossMoonlightButterfly.Click
+    Private Sub btnBossMoonlightButterfly_Click(sender As Object, e As EventArgs) Handles btnBossMoonlightButterfly.Click, Button20.Click
         trd = New Thread(AddressOf BossMoonlightButterfly)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossOandS_Click(sender As Object, e As EventArgs) Handles btnBossOandS.Click
+    Private Sub btnBossOandS_Click(sender As Object, e As EventArgs) Handles btnBossOandS.Click, Button12.Click
         trd = New Thread(AddressOf BossOAndS)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossPinwheel_Click(sender As Object, e As EventArgs) Handles btnBossPinwheel.Click
+    Private Sub btnBossPinwheel_Click(sender As Object, e As EventArgs) Handles btnBossPinwheel.Click, Button2.Click
         trd = New Thread(AddressOf BossPinwheel)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossSanctuaryGuardian_Click(sender As Object, e As EventArgs) Handles btnBossSanctuaryGuardian.Click
+    Private Sub btnBossSanctuaryGuardian_Click(sender As Object, e As EventArgs) Handles btnBossSanctuaryGuardian.Click, Button21.Click
         trd = New Thread(AddressOf BossSanctuaryGuardian)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossSeath_Click(sender As Object, e As EventArgs) Handles btnBossSeath.Click
+    Private Sub btnBossSeath_Click(sender As Object, e As EventArgs) Handles btnBossSeath.Click, Button22.Click
         trd = New Thread(AddressOf BossSeath)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossSif_Click(sender As Object, e As EventArgs) Handles btnBossSif.Click
+    Private Sub btnBossSif_Click(sender As Object, e As EventArgs) Handles btnBossSif.Click, Button24.Click
         trd = New Thread(AddressOf BossSif)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossStrayDemon_Click(sender As Object, e As EventArgs) Handles btnBossStrayDemon.Click
+    Private Sub btnBossStrayDemon_Click(sender As Object, e As EventArgs) Handles btnBossStrayDemon.Click, Button23.Click
         trd = New Thread(AddressOf BossStrayDemon)
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub btnBossTaurusDemon_Click(sender As Object, e As EventArgs) Handles btnBossTaurusDemon.Click
+    Private Sub btnBossTaurusDemon_Click(sender As Object, e As EventArgs) Handles btnBossTaurusDemon.Click, Button25.Click
         trd = New Thread(AddressOf BossTaurusDemon)
         trd.IsBackground = True
         trd.Start()
     End Sub
 
+
+    Private Sub btnBeginBossRush_Click(sender As Object, e As EventArgs) Handles btnBeginBossRush.Click
+        trd = New Thread(AddressOf BeginBossRush)
+        trd.IsBackground = True
+        trd.Start()
+    End Sub
+    Private Sub btnBeginReverseRush_Click(sender As Object, e As EventArgs) Handles btnBeginReverseRush.Click
+        trd = New Thread(AddressOf BeginReverseBossRush)
+        trd.IsBackground = True
+        trd.Start()
+    End Sub
+    Private Sub BeginSoulTimer()
+
+        gamestatsptr = RUInt32(&H1378700)
+
+        Dim SoulTimer As TimeSpan
+        Dim Souls As Integer
+        Dim msPlayed As Integer
+        'souls = charptr2 + &H8C
+
+        Do
+            msPlayed = RInt32(gamestatsptr + &H68)
+            SoulTimer = TimeSpan.FromMilliseconds(msPlayed)
+            Souls = SoulTimer.Days * 1000000 + SoulTimer.Hours * 10000 + SoulTimer.Minutes * 100 + SoulTimer.Seconds
+
+            WInt32(charptr2 + &H8C, Souls)
+            Thread.Sleep(33)
+        Loop
+    End Sub
+
+    Private Sub btnDonate_Click(sender As Object, e As EventArgs) Handles btnDonate.Click
+        Dim webAddress As String = "http://paypal.me/wulf2k/"
+        Process.Start(webAddress)
+    End Sub
+
+    Private Sub btnReconnect_Click(sender As Object, e As EventArgs) Handles btnReconnect.Click
+        If ScanForProcess("DARK SOULS", True) Then
+            'Check if this process is even Dark Souls
+            checkDarkSoulsVersion()
+            If isHooked Then
+                dropAlloc()
+                funcAlloc()
+            End If
+        End If
+    End Sub
+
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
-        Warp_Coords(894.34, -329.27, 451.5)
+
+        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
+
+
+
+
+
+
+    End Sub
+
+    Private Sub btnTestTheAppleMan_Click(sender As Object, e As EventArgs) Handles btnTestTheAppleMan.Click
+        SetEventFlag(3, False) 'Boss Death Flag
+        SetEventFlag(11010000, False) 'Boss Cinematic Viewed Flag
+
+        FadeOut()
+        Warp_Coords(10.8, 48.92, 87.26)
+
+
+
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
+    End Sub
+
+    Private Sub btnTestSomeRedYeti_Click(sender As Object, e As EventArgs) Handles btnTestSomeRedYeti.Click
+        SetEventFlag(11010902, False)
+        'StandardTransition(1010998, 1012887)
+
+
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1010998)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
+        BlackScreen()
+        PlayerHide(True)
+
+        Warp(10000, 1012887)
+        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
+
+        Thread.Sleep(2000)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
+
+
+
+
     End Sub
 End Class

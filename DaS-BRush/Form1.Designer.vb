@@ -23,6 +23,61 @@ Partial Class frmForm1
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.tabs = New System.Windows.Forms.TabControl()
+        Me.tabBosses = New System.Windows.Forms.TabPage()
+        Me.gbBosses = New System.Windows.Forms.GroupBox()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.Button26 = New System.Windows.Forms.Button()
+        Me.btnBossAsylumDemon = New System.Windows.Forms.Button()
+        Me.btnBossPinwheel = New System.Windows.Forms.Button()
+        Me.Button25 = New System.Windows.Forms.Button()
+        Me.btnBossCapraDemon = New System.Windows.Forms.Button()
+        Me.btnBossBlackDragonKalameet = New System.Windows.Forms.Button()
+        Me.Button2 = New System.Windows.Forms.Button()
+        Me.Button24 = New System.Windows.Forms.Button()
+        Me.btnBossBellGargoyles = New System.Windows.Forms.Button()
+        Me.btnBossTaurusDemon = New System.Windows.Forms.Button()
+        Me.Button3 = New System.Windows.Forms.Button()
+        Me.Button23 = New System.Windows.Forms.Button()
+        Me.btnBossCeaselessDischarge = New System.Windows.Forms.Button()
+        Me.btnBossSif = New System.Windows.Forms.Button()
+        Me.Button4 = New System.Windows.Forms.Button()
+        Me.Button22 = New System.Windows.Forms.Button()
+        Me.btnBossBedOfChaos = New System.Windows.Forms.Button()
+        Me.btnBossStrayDemon = New System.Windows.Forms.Button()
+        Me.Button5 = New System.Windows.Forms.Button()
+        Me.Button21 = New System.Windows.Forms.Button()
+        Me.btnBossCentipedeDemon = New System.Windows.Forms.Button()
+        Me.btnBossSeath = New System.Windows.Forms.Button()
+        Me.Button6 = New System.Windows.Forms.Button()
+        Me.Button20 = New System.Windows.Forms.Button()
+        Me.btnBossChaosWitchQuelaag = New System.Windows.Forms.Button()
+        Me.btnBossSanctuaryGuardian = New System.Windows.Forms.Button()
+        Me.Button7 = New System.Windows.Forms.Button()
+        Me.Button19 = New System.Windows.Forms.Button()
+        Me.btnBossCrossbreedPriscilla = New System.Windows.Forms.Button()
+        Me.btnBossMoonlightButterfly = New System.Windows.Forms.Button()
+        Me.Button8 = New System.Windows.Forms.Button()
+        Me.Button18 = New System.Windows.Forms.Button()
+        Me.btnBossDarkSunGwyndolin = New System.Windows.Forms.Button()
+        Me.btnBossManus = New System.Windows.Forms.Button()
+        Me.Button9 = New System.Windows.Forms.Button()
+        Me.Button17 = New System.Windows.Forms.Button()
+        Me.btnBossDemonFiresage = New System.Windows.Forms.Button()
+        Me.btnBossKnightArtorias = New System.Windows.Forms.Button()
+        Me.Button10 = New System.Windows.Forms.Button()
+        Me.Button16 = New System.Windows.Forms.Button()
+        Me.btnBossOandS = New System.Windows.Forms.Button()
+        Me.btnBossIronGolem = New System.Windows.Forms.Button()
+        Me.Button11 = New System.Windows.Forms.Button()
+        Me.Button15 = New System.Windows.Forms.Button()
+        Me.btnBossFourKings = New System.Windows.Forms.Button()
+        Me.btnBossGwyn = New System.Windows.Forms.Button()
+        Me.Button12 = New System.Windows.Forms.Button()
+        Me.Button14 = New System.Windows.Forms.Button()
+        Me.btnBossGapingDragon = New System.Windows.Forms.Button()
+        Me.btnBossGravelordNito = New System.Windows.Forms.Button()
+        Me.Button13 = New System.Windows.Forms.Button()
+        Me.btnBeginReverseRush = New System.Windows.Forms.Button()
         Me.tabMain = New System.Windows.Forms.TabPage()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.lblPlaytime = New System.Windows.Forms.Label()
@@ -44,13 +99,6 @@ Partial Class frmForm1
         Me.lblZpos = New System.Windows.Forms.Label()
         Me.lblYpos = New System.Windows.Forms.Label()
         Me.lblXpos = New System.Windows.Forms.Label()
-        Me.tabItems = New System.Windows.Forms.TabPage()
-        Me.Label29 = New System.Windows.Forms.Label()
-        Me.Label28 = New System.Windows.Forms.Label()
-        Me.nmbItemCount = New System.Windows.Forms.NumericUpDown()
-        Me.cmbItemName = New System.Windows.Forms.ComboBox()
-        Me.cmbItemCat = New System.Windows.Forms.ComboBox()
-        Me.btnDropItem = New System.Windows.Forms.Button()
         Me.tabStats = New System.Windows.Forms.TabPage()
         Me.Label18 = New System.Windows.Forms.Label()
         Me.nmbIndictments = New System.Windows.Forms.NumericUpDown()
@@ -80,54 +128,25 @@ Partial Class frmForm1
         Me.nmbPhantomType = New System.Windows.Forms.NumericUpDown()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.nmbHumanity = New System.Windows.Forms.NumericUpDown()
-        Me.tabLUA = New System.Windows.Forms.TabPage()
-        Me.lblLastPointer = New System.Windows.Forms.Label()
-        Me.Label23 = New System.Windows.Forms.Label()
-        Me.Label21 = New System.Windows.Forms.Label()
-        Me.Label20 = New System.Windows.Forms.Label()
-        Me.txtFuncParam5 = New System.Windows.Forms.TextBox()
-        Me.txtFuncParam4 = New System.Windows.Forms.TextBox()
-        Me.txtFuncParam3 = New System.Windows.Forms.TextBox()
-        Me.txtFuncParam2 = New System.Windows.Forms.TextBox()
-        Me.txtFuncParam1 = New System.Windows.Forms.TextBox()
-        Me.btnFuncExecute = New System.Windows.Forms.Button()
-        Me.cmbFuncName = New System.Windows.Forms.ComboBox()
-        Me.tabBosses = New System.Windows.Forms.TabPage()
-        Me.btnBossBlackDragonKalameet = New System.Windows.Forms.Button()
-        Me.btnBossTaurusDemon = New System.Windows.Forms.Button()
-        Me.btnBossSif = New System.Windows.Forms.Button()
-        Me.btnBossStrayDemon = New System.Windows.Forms.Button()
-        Me.btnBossSeath = New System.Windows.Forms.Button()
-        Me.btnBossSanctuaryGuardian = New System.Windows.Forms.Button()
-        Me.btnBossMoonlightButterfly = New System.Windows.Forms.Button()
-        Me.btnBossManus = New System.Windows.Forms.Button()
-        Me.btnBossKnightArtorias = New System.Windows.Forms.Button()
-        Me.btnBossIronGolem = New System.Windows.Forms.Button()
-        Me.btnBossGwyn = New System.Windows.Forms.Button()
-        Me.btnBossGravelordNito = New System.Windows.Forms.Button()
-        Me.btnBossGapingDragon = New System.Windows.Forms.Button()
-        Me.btnBossFourKings = New System.Windows.Forms.Button()
-        Me.btnBossOandS = New System.Windows.Forms.Button()
-        Me.btnBossDemonFiresage = New System.Windows.Forms.Button()
-        Me.btnBossDarkSunGwyndolin = New System.Windows.Forms.Button()
-        Me.btnBossCrossbreedPriscilla = New System.Windows.Forms.Button()
-        Me.btnBossChaosWitchQuelaag = New System.Windows.Forms.Button()
-        Me.btnBossCentipedeDemon = New System.Windows.Forms.Button()
-        Me.btnBossBedOfChaos = New System.Windows.Forms.Button()
-        Me.btnBossCeaselessDischarge = New System.Windows.Forms.Button()
-        Me.btnBossBellGargoyles = New System.Windows.Forms.Button()
-        Me.btnBossCapraDemon = New System.Windows.Forms.Button()
-        Me.btnBossPinwheel = New System.Windows.Forms.Button()
-        Me.btnBossAsylumDemon = New System.Windows.Forms.Button()
+        Me.tabTests = New System.Windows.Forms.TabPage()
+        Me.btnTestTheAppleMan = New System.Windows.Forms.Button()
+        Me.btnTest = New System.Windows.Forms.Button()
+        Me.tabDonate = New System.Windows.Forms.TabPage()
+        Me.btnDonate = New System.Windows.Forms.Button()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.lblRelease = New System.Windows.Forms.Label()
-        Me.btnTest = New System.Windows.Forms.Button()
+        Me.btnReconnect = New System.Windows.Forms.Button()
+        Me.btnBeginBossRush = New System.Windows.Forms.Button()
+        Me.btnTestSomeRedYeti = New System.Windows.Forms.Button()
         Me.tabs.SuspendLayout()
+        Me.tabBosses.SuspendLayout()
+        Me.gbBosses.SuspendLayout()
         Me.tabMain.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
-        Me.tabItems.SuspendLayout()
-        CType(Me.nmbItemCount, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabStats.SuspendLayout()
         CType(Me.nmbIndictments, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nmbSoulLevel, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -142,8 +161,8 @@ Partial Class frmForm1
         CType(Me.nmbTeamType, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nmbPhantomType, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nmbHumanity, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.tabLUA.SuspendLayout()
-        Me.tabBosses.SuspendLayout()
+        Me.tabTests.SuspendLayout()
+        Me.tabDonate.SuspendLayout()
         Me.SuspendLayout()
         '
         'tabs
@@ -151,16 +170,566 @@ Partial Class frmForm1
         Me.tabs.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tabs.Controls.Add(Me.tabMain)
-        Me.tabs.Controls.Add(Me.tabItems)
-        Me.tabs.Controls.Add(Me.tabStats)
-        Me.tabs.Controls.Add(Me.tabLUA)
         Me.tabs.Controls.Add(Me.tabBosses)
+        Me.tabs.Controls.Add(Me.tabMain)
+        Me.tabs.Controls.Add(Me.tabStats)
+        Me.tabs.Controls.Add(Me.tabTests)
+        Me.tabs.Controls.Add(Me.tabDonate)
         Me.tabs.Location = New System.Drawing.Point(12, 34)
         Me.tabs.Name = "tabs"
         Me.tabs.SelectedIndex = 0
-        Me.tabs.Size = New System.Drawing.Size(392, 479)
+        Me.tabs.Size = New System.Drawing.Size(389, 472)
         Me.tabs.TabIndex = 4
+        '
+        'tabBosses
+        '
+        Me.tabBosses.Controls.Add(Me.btnBeginBossRush)
+        Me.tabBosses.Controls.Add(Me.gbBosses)
+        Me.tabBosses.Controls.Add(Me.btnBeginReverseRush)
+        Me.tabBosses.Location = New System.Drawing.Point(4, 22)
+        Me.tabBosses.Name = "tabBosses"
+        Me.tabBosses.Size = New System.Drawing.Size(381, 446)
+        Me.tabBosses.TabIndex = 5
+        Me.tabBosses.Text = "Bosses"
+        Me.tabBosses.UseVisualStyleBackColor = True
+        '
+        'gbBosses
+        '
+        Me.gbBosses.Controls.Add(Me.Button1)
+        Me.gbBosses.Controls.Add(Me.Button26)
+        Me.gbBosses.Controls.Add(Me.btnBossAsylumDemon)
+        Me.gbBosses.Controls.Add(Me.btnBossPinwheel)
+        Me.gbBosses.Controls.Add(Me.Button25)
+        Me.gbBosses.Controls.Add(Me.btnBossCapraDemon)
+        Me.gbBosses.Controls.Add(Me.btnBossBlackDragonKalameet)
+        Me.gbBosses.Controls.Add(Me.Button2)
+        Me.gbBosses.Controls.Add(Me.Button24)
+        Me.gbBosses.Controls.Add(Me.btnBossBellGargoyles)
+        Me.gbBosses.Controls.Add(Me.btnBossTaurusDemon)
+        Me.gbBosses.Controls.Add(Me.Button3)
+        Me.gbBosses.Controls.Add(Me.Button23)
+        Me.gbBosses.Controls.Add(Me.btnBossCeaselessDischarge)
+        Me.gbBosses.Controls.Add(Me.btnBossSif)
+        Me.gbBosses.Controls.Add(Me.Button4)
+        Me.gbBosses.Controls.Add(Me.Button22)
+        Me.gbBosses.Controls.Add(Me.btnBossBedOfChaos)
+        Me.gbBosses.Controls.Add(Me.btnBossStrayDemon)
+        Me.gbBosses.Controls.Add(Me.Button5)
+        Me.gbBosses.Controls.Add(Me.Button21)
+        Me.gbBosses.Controls.Add(Me.btnBossCentipedeDemon)
+        Me.gbBosses.Controls.Add(Me.btnBossSeath)
+        Me.gbBosses.Controls.Add(Me.Button6)
+        Me.gbBosses.Controls.Add(Me.Button20)
+        Me.gbBosses.Controls.Add(Me.btnBossChaosWitchQuelaag)
+        Me.gbBosses.Controls.Add(Me.btnBossSanctuaryGuardian)
+        Me.gbBosses.Controls.Add(Me.Button7)
+        Me.gbBosses.Controls.Add(Me.Button19)
+        Me.gbBosses.Controls.Add(Me.btnBossCrossbreedPriscilla)
+        Me.gbBosses.Controls.Add(Me.btnBossMoonlightButterfly)
+        Me.gbBosses.Controls.Add(Me.Button8)
+        Me.gbBosses.Controls.Add(Me.Button18)
+        Me.gbBosses.Controls.Add(Me.btnBossDarkSunGwyndolin)
+        Me.gbBosses.Controls.Add(Me.btnBossManus)
+        Me.gbBosses.Controls.Add(Me.Button9)
+        Me.gbBosses.Controls.Add(Me.Button17)
+        Me.gbBosses.Controls.Add(Me.btnBossDemonFiresage)
+        Me.gbBosses.Controls.Add(Me.btnBossKnightArtorias)
+        Me.gbBosses.Controls.Add(Me.Button10)
+        Me.gbBosses.Controls.Add(Me.Button16)
+        Me.gbBosses.Controls.Add(Me.btnBossOandS)
+        Me.gbBosses.Controls.Add(Me.btnBossIronGolem)
+        Me.gbBosses.Controls.Add(Me.Button11)
+        Me.gbBosses.Controls.Add(Me.Button15)
+        Me.gbBosses.Controls.Add(Me.btnBossFourKings)
+        Me.gbBosses.Controls.Add(Me.btnBossGwyn)
+        Me.gbBosses.Controls.Add(Me.Button12)
+        Me.gbBosses.Controls.Add(Me.Button14)
+        Me.gbBosses.Controls.Add(Me.btnBossGapingDragon)
+        Me.gbBosses.Controls.Add(Me.btnBossGravelordNito)
+        Me.gbBosses.Controls.Add(Me.Button13)
+        Me.gbBosses.Location = New System.Drawing.Point(3, 43)
+        Me.gbBosses.Name = "gbBosses"
+        Me.gbBosses.Size = New System.Drawing.Size(369, 400)
+        Me.gbBosses.TabIndex = 76
+        Me.gbBosses.TabStop = False
+        Me.gbBosses.Text = "Bosses"
+        '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(6, 19)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(160, 23)
+        Me.Button1.TabIndex = 48
+        Me.Button1.Text = "Asylum Demon"
+        Me.Button1.UseVisualStyleBackColor = False
+        '
+        'Button26
+        '
+        Me.Button26.Location = New System.Drawing.Point(6, 106)
+        Me.Button26.Name = "Button26"
+        Me.Button26.Size = New System.Drawing.Size(160, 23)
+        Me.Button26.TabIndex = 73
+        Me.Button26.Text = "Black Dragon Kalameet"
+        Me.Button26.UseVisualStyleBackColor = False
+        '
+        'btnBossAsylumDemon
+        '
+        Me.btnBossAsylumDemon.Location = New System.Drawing.Point(6, 19)
+        Me.btnBossAsylumDemon.Name = "btnBossAsylumDemon"
+        Me.btnBossAsylumDemon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossAsylumDemon.TabIndex = 48
+        Me.btnBossAsylumDemon.Text = "Asylum Demon"
+        Me.btnBossAsylumDemon.UseVisualStyleBackColor = False
+        '
+        'btnBossPinwheel
+        '
+        Me.btnBossPinwheel.Location = New System.Drawing.Point(197, 222)
+        Me.btnBossPinwheel.Name = "btnBossPinwheel"
+        Me.btnBossPinwheel.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossPinwheel.TabIndex = 49
+        Me.btnBossPinwheel.Text = "Pinwheel"
+        Me.btnBossPinwheel.UseVisualStyleBackColor = False
+        '
+        'Button25
+        '
+        Me.Button25.Location = New System.Drawing.Point(197, 367)
+        Me.Button25.Name = "Button25"
+        Me.Button25.Size = New System.Drawing.Size(160, 23)
+        Me.Button25.TabIndex = 72
+        Me.Button25.Text = "Taurus Demon"
+        Me.Button25.UseVisualStyleBackColor = False
+        '
+        'btnBossCapraDemon
+        '
+        Me.btnBossCapraDemon.Location = New System.Drawing.Point(6, 135)
+        Me.btnBossCapraDemon.Name = "btnBossCapraDemon"
+        Me.btnBossCapraDemon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossCapraDemon.TabIndex = 50
+        Me.btnBossCapraDemon.Text = "Capra Demon"
+        Me.btnBossCapraDemon.UseVisualStyleBackColor = False
+        '
+        'btnBossBlackDragonKalameet
+        '
+        Me.btnBossBlackDragonKalameet.Location = New System.Drawing.Point(6, 106)
+        Me.btnBossBlackDragonKalameet.Name = "btnBossBlackDragonKalameet"
+        Me.btnBossBlackDragonKalameet.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossBlackDragonKalameet.TabIndex = 73
+        Me.btnBossBlackDragonKalameet.Text = "Black Dragon Kalameet"
+        Me.btnBossBlackDragonKalameet.UseVisualStyleBackColor = False
+        '
+        'Button2
+        '
+        Me.Button2.Location = New System.Drawing.Point(197, 222)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(160, 23)
+        Me.Button2.TabIndex = 49
+        Me.Button2.Text = "Pinwheel"
+        Me.Button2.UseVisualStyleBackColor = False
+        '
+        'Button24
+        '
+        Me.Button24.Location = New System.Drawing.Point(197, 309)
+        Me.Button24.Name = "Button24"
+        Me.Button24.Size = New System.Drawing.Size(160, 23)
+        Me.Button24.TabIndex = 71
+        Me.Button24.Text = "Sif"
+        Me.Button24.UseVisualStyleBackColor = False
+        '
+        'btnBossBellGargoyles
+        '
+        Me.btnBossBellGargoyles.Location = New System.Drawing.Point(6, 77)
+        Me.btnBossBellGargoyles.Name = "btnBossBellGargoyles"
+        Me.btnBossBellGargoyles.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossBellGargoyles.TabIndex = 51
+        Me.btnBossBellGargoyles.Text = "Bell Gargoyles"
+        Me.btnBossBellGargoyles.UseVisualStyleBackColor = False
+        '
+        'btnBossTaurusDemon
+        '
+        Me.btnBossTaurusDemon.Location = New System.Drawing.Point(197, 367)
+        Me.btnBossTaurusDemon.Name = "btnBossTaurusDemon"
+        Me.btnBossTaurusDemon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossTaurusDemon.TabIndex = 72
+        Me.btnBossTaurusDemon.Text = "Taurus Demon"
+        Me.btnBossTaurusDemon.UseVisualStyleBackColor = False
+        '
+        'Button3
+        '
+        Me.Button3.Location = New System.Drawing.Point(6, 135)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(160, 23)
+        Me.Button3.TabIndex = 50
+        Me.Button3.Text = "Capra Demon"
+        Me.Button3.UseVisualStyleBackColor = False
+        '
+        'Button23
+        '
+        Me.Button23.Location = New System.Drawing.Point(197, 338)
+        Me.Button23.Name = "Button23"
+        Me.Button23.Size = New System.Drawing.Size(160, 23)
+        Me.Button23.TabIndex = 70
+        Me.Button23.Text = "Stray Demon"
+        Me.Button23.UseVisualStyleBackColor = False
+        '
+        'btnBossCeaselessDischarge
+        '
+        Me.btnBossCeaselessDischarge.Location = New System.Drawing.Point(6, 164)
+        Me.btnBossCeaselessDischarge.Name = "btnBossCeaselessDischarge"
+        Me.btnBossCeaselessDischarge.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossCeaselessDischarge.TabIndex = 52
+        Me.btnBossCeaselessDischarge.Text = "Ceaseless Discharge"
+        Me.btnBossCeaselessDischarge.UseVisualStyleBackColor = False
+        '
+        'btnBossSif
+        '
+        Me.btnBossSif.Location = New System.Drawing.Point(197, 309)
+        Me.btnBossSif.Name = "btnBossSif"
+        Me.btnBossSif.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossSif.TabIndex = 71
+        Me.btnBossSif.Text = "Sif"
+        Me.btnBossSif.UseVisualStyleBackColor = False
+        '
+        'Button4
+        '
+        Me.Button4.Location = New System.Drawing.Point(6, 77)
+        Me.Button4.Name = "Button4"
+        Me.Button4.Size = New System.Drawing.Size(160, 23)
+        Me.Button4.TabIndex = 51
+        Me.Button4.Text = "Bell Gargoyles"
+        Me.Button4.UseVisualStyleBackColor = False
+        '
+        'Button22
+        '
+        Me.Button22.Location = New System.Drawing.Point(197, 280)
+        Me.Button22.Name = "Button22"
+        Me.Button22.Size = New System.Drawing.Size(160, 23)
+        Me.Button22.TabIndex = 69
+        Me.Button22.Text = "Seath"
+        Me.Button22.UseVisualStyleBackColor = False
+        '
+        'btnBossBedOfChaos
+        '
+        Me.btnBossBedOfChaos.Location = New System.Drawing.Point(6, 48)
+        Me.btnBossBedOfChaos.Name = "btnBossBedOfChaos"
+        Me.btnBossBedOfChaos.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossBedOfChaos.TabIndex = 53
+        Me.btnBossBedOfChaos.Text = "Bed of Chaos"
+        Me.btnBossBedOfChaos.UseVisualStyleBackColor = False
+        '
+        'btnBossStrayDemon
+        '
+        Me.btnBossStrayDemon.Location = New System.Drawing.Point(197, 338)
+        Me.btnBossStrayDemon.Name = "btnBossStrayDemon"
+        Me.btnBossStrayDemon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossStrayDemon.TabIndex = 70
+        Me.btnBossStrayDemon.Text = "Stray Demon"
+        Me.btnBossStrayDemon.UseVisualStyleBackColor = False
+        '
+        'Button5
+        '
+        Me.Button5.Location = New System.Drawing.Point(6, 164)
+        Me.Button5.Name = "Button5"
+        Me.Button5.Size = New System.Drawing.Size(160, 23)
+        Me.Button5.TabIndex = 52
+        Me.Button5.Text = "Ceaseless Discharge"
+        Me.Button5.UseVisualStyleBackColor = False
+        '
+        'Button21
+        '
+        Me.Button21.Location = New System.Drawing.Point(197, 251)
+        Me.Button21.Name = "Button21"
+        Me.Button21.Size = New System.Drawing.Size(160, 23)
+        Me.Button21.TabIndex = 68
+        Me.Button21.Text = "Sanctuary Guardian"
+        Me.Button21.UseVisualStyleBackColor = False
+        '
+        'btnBossCentipedeDemon
+        '
+        Me.btnBossCentipedeDemon.Location = New System.Drawing.Point(6, 193)
+        Me.btnBossCentipedeDemon.Name = "btnBossCentipedeDemon"
+        Me.btnBossCentipedeDemon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossCentipedeDemon.TabIndex = 54
+        Me.btnBossCentipedeDemon.Text = "Centipede Demon"
+        Me.btnBossCentipedeDemon.UseVisualStyleBackColor = False
+        '
+        'btnBossSeath
+        '
+        Me.btnBossSeath.Location = New System.Drawing.Point(197, 280)
+        Me.btnBossSeath.Name = "btnBossSeath"
+        Me.btnBossSeath.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossSeath.TabIndex = 69
+        Me.btnBossSeath.Text = "Seath"
+        Me.btnBossSeath.UseVisualStyleBackColor = False
+        '
+        'Button6
+        '
+        Me.Button6.Location = New System.Drawing.Point(6, 48)
+        Me.Button6.Name = "Button6"
+        Me.Button6.Size = New System.Drawing.Size(160, 23)
+        Me.Button6.TabIndex = 53
+        Me.Button6.Text = "Bed of Chaos"
+        Me.Button6.UseVisualStyleBackColor = False
+        '
+        'Button20
+        '
+        Me.Button20.Location = New System.Drawing.Point(197, 164)
+        Me.Button20.Name = "Button20"
+        Me.Button20.Size = New System.Drawing.Size(160, 23)
+        Me.Button20.TabIndex = 67
+        Me.Button20.Text = "Moonlight Butterfly"
+        Me.Button20.UseVisualStyleBackColor = False
+        '
+        'btnBossChaosWitchQuelaag
+        '
+        Me.btnBossChaosWitchQuelaag.Location = New System.Drawing.Point(6, 222)
+        Me.btnBossChaosWitchQuelaag.Name = "btnBossChaosWitchQuelaag"
+        Me.btnBossChaosWitchQuelaag.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossChaosWitchQuelaag.TabIndex = 55
+        Me.btnBossChaosWitchQuelaag.Text = "Chaos Witch Quelaag"
+        Me.btnBossChaosWitchQuelaag.UseVisualStyleBackColor = False
+        '
+        'btnBossSanctuaryGuardian
+        '
+        Me.btnBossSanctuaryGuardian.Location = New System.Drawing.Point(197, 251)
+        Me.btnBossSanctuaryGuardian.Name = "btnBossSanctuaryGuardian"
+        Me.btnBossSanctuaryGuardian.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossSanctuaryGuardian.TabIndex = 68
+        Me.btnBossSanctuaryGuardian.Text = "Sanctuary Guardian"
+        Me.btnBossSanctuaryGuardian.UseVisualStyleBackColor = False
+        '
+        'Button7
+        '
+        Me.Button7.Location = New System.Drawing.Point(6, 193)
+        Me.Button7.Name = "Button7"
+        Me.Button7.Size = New System.Drawing.Size(160, 23)
+        Me.Button7.TabIndex = 54
+        Me.Button7.Text = "Centipede Demon"
+        Me.Button7.UseVisualStyleBackColor = False
+        '
+        'Button19
+        '
+        Me.Button19.Location = New System.Drawing.Point(197, 135)
+        Me.Button19.Name = "Button19"
+        Me.Button19.Size = New System.Drawing.Size(160, 23)
+        Me.Button19.TabIndex = 66
+        Me.Button19.Text = "Manus"
+        Me.Button19.UseVisualStyleBackColor = False
+        '
+        'btnBossCrossbreedPriscilla
+        '
+        Me.btnBossCrossbreedPriscilla.Location = New System.Drawing.Point(6, 251)
+        Me.btnBossCrossbreedPriscilla.Name = "btnBossCrossbreedPriscilla"
+        Me.btnBossCrossbreedPriscilla.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossCrossbreedPriscilla.TabIndex = 56
+        Me.btnBossCrossbreedPriscilla.Text = "Crossbreed Priscilla"
+        Me.btnBossCrossbreedPriscilla.UseVisualStyleBackColor = False
+        '
+        'btnBossMoonlightButterfly
+        '
+        Me.btnBossMoonlightButterfly.Location = New System.Drawing.Point(197, 164)
+        Me.btnBossMoonlightButterfly.Name = "btnBossMoonlightButterfly"
+        Me.btnBossMoonlightButterfly.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossMoonlightButterfly.TabIndex = 67
+        Me.btnBossMoonlightButterfly.Text = "Moonlight Butterfly"
+        Me.btnBossMoonlightButterfly.UseVisualStyleBackColor = False
+        '
+        'Button8
+        '
+        Me.Button8.Location = New System.Drawing.Point(6, 222)
+        Me.Button8.Name = "Button8"
+        Me.Button8.Size = New System.Drawing.Size(160, 23)
+        Me.Button8.TabIndex = 55
+        Me.Button8.Text = "Chaos Witch Quelaag"
+        Me.Button8.UseVisualStyleBackColor = False
+        '
+        'Button18
+        '
+        Me.Button18.Location = New System.Drawing.Point(197, 106)
+        Me.Button18.Name = "Button18"
+        Me.Button18.Size = New System.Drawing.Size(160, 23)
+        Me.Button18.TabIndex = 65
+        Me.Button18.Text = "Knight Artorias"
+        Me.Button18.UseVisualStyleBackColor = False
+        '
+        'btnBossDarkSunGwyndolin
+        '
+        Me.btnBossDarkSunGwyndolin.Location = New System.Drawing.Point(6, 280)
+        Me.btnBossDarkSunGwyndolin.Name = "btnBossDarkSunGwyndolin"
+        Me.btnBossDarkSunGwyndolin.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossDarkSunGwyndolin.TabIndex = 57
+        Me.btnBossDarkSunGwyndolin.Text = "Dark Sun Gwyndolin"
+        Me.btnBossDarkSunGwyndolin.UseVisualStyleBackColor = False
+        '
+        'btnBossManus
+        '
+        Me.btnBossManus.Location = New System.Drawing.Point(197, 135)
+        Me.btnBossManus.Name = "btnBossManus"
+        Me.btnBossManus.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossManus.TabIndex = 66
+        Me.btnBossManus.Text = "Manus"
+        Me.btnBossManus.UseVisualStyleBackColor = False
+        '
+        'Button9
+        '
+        Me.Button9.Location = New System.Drawing.Point(6, 251)
+        Me.Button9.Name = "Button9"
+        Me.Button9.Size = New System.Drawing.Size(160, 23)
+        Me.Button9.TabIndex = 56
+        Me.Button9.Text = "Crossbreed Priscilla"
+        Me.Button9.UseVisualStyleBackColor = False
+        '
+        'Button17
+        '
+        Me.Button17.Location = New System.Drawing.Point(197, 77)
+        Me.Button17.Name = "Button17"
+        Me.Button17.Size = New System.Drawing.Size(160, 23)
+        Me.Button17.TabIndex = 64
+        Me.Button17.Text = "Iron Golem"
+        Me.Button17.UseVisualStyleBackColor = False
+        '
+        'btnBossDemonFiresage
+        '
+        Me.btnBossDemonFiresage.Location = New System.Drawing.Point(6, 309)
+        Me.btnBossDemonFiresage.Name = "btnBossDemonFiresage"
+        Me.btnBossDemonFiresage.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossDemonFiresage.TabIndex = 58
+        Me.btnBossDemonFiresage.Text = "Demon Firesage"
+        Me.btnBossDemonFiresage.UseVisualStyleBackColor = False
+        '
+        'btnBossKnightArtorias
+        '
+        Me.btnBossKnightArtorias.Location = New System.Drawing.Point(197, 106)
+        Me.btnBossKnightArtorias.Name = "btnBossKnightArtorias"
+        Me.btnBossKnightArtorias.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossKnightArtorias.TabIndex = 65
+        Me.btnBossKnightArtorias.Text = "Knight Artorias"
+        Me.btnBossKnightArtorias.UseVisualStyleBackColor = False
+        '
+        'Button10
+        '
+        Me.Button10.Location = New System.Drawing.Point(6, 280)
+        Me.Button10.Name = "Button10"
+        Me.Button10.Size = New System.Drawing.Size(160, 23)
+        Me.Button10.TabIndex = 57
+        Me.Button10.Text = "Dark Sun Gwyndolin"
+        Me.Button10.UseVisualStyleBackColor = False
+        '
+        'Button16
+        '
+        Me.Button16.Location = New System.Drawing.Point(197, 48)
+        Me.Button16.Name = "Button16"
+        Me.Button16.Size = New System.Drawing.Size(160, 23)
+        Me.Button16.TabIndex = 63
+        Me.Button16.Text = "Gwyn"
+        Me.Button16.UseVisualStyleBackColor = False
+        '
+        'btnBossOandS
+        '
+        Me.btnBossOandS.Location = New System.Drawing.Point(197, 193)
+        Me.btnBossOandS.Name = "btnBossOandS"
+        Me.btnBossOandS.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossOandS.TabIndex = 59
+        Me.btnBossOandS.Text = "Ornstein and Smough"
+        Me.btnBossOandS.UseVisualStyleBackColor = False
+        '
+        'btnBossIronGolem
+        '
+        Me.btnBossIronGolem.Location = New System.Drawing.Point(197, 77)
+        Me.btnBossIronGolem.Name = "btnBossIronGolem"
+        Me.btnBossIronGolem.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossIronGolem.TabIndex = 64
+        Me.btnBossIronGolem.Text = "Iron Golem"
+        Me.btnBossIronGolem.UseVisualStyleBackColor = False
+        '
+        'Button11
+        '
+        Me.Button11.Location = New System.Drawing.Point(6, 309)
+        Me.Button11.Name = "Button11"
+        Me.Button11.Size = New System.Drawing.Size(160, 23)
+        Me.Button11.TabIndex = 58
+        Me.Button11.Text = "Demon Firesage"
+        Me.Button11.UseVisualStyleBackColor = False
+        '
+        'Button15
+        '
+        Me.Button15.Location = New System.Drawing.Point(197, 19)
+        Me.Button15.Name = "Button15"
+        Me.Button15.Size = New System.Drawing.Size(160, 23)
+        Me.Button15.TabIndex = 62
+        Me.Button15.Text = "Gravelord Nito"
+        Me.Button15.UseVisualStyleBackColor = False
+        '
+        'btnBossFourKings
+        '
+        Me.btnBossFourKings.Location = New System.Drawing.Point(6, 338)
+        Me.btnBossFourKings.Name = "btnBossFourKings"
+        Me.btnBossFourKings.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossFourKings.TabIndex = 60
+        Me.btnBossFourKings.Text = "Four Kings"
+        Me.btnBossFourKings.UseVisualStyleBackColor = False
+        '
+        'btnBossGwyn
+        '
+        Me.btnBossGwyn.Location = New System.Drawing.Point(197, 48)
+        Me.btnBossGwyn.Name = "btnBossGwyn"
+        Me.btnBossGwyn.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossGwyn.TabIndex = 63
+        Me.btnBossGwyn.Text = "Gwyn"
+        Me.btnBossGwyn.UseVisualStyleBackColor = False
+        '
+        'Button12
+        '
+        Me.Button12.Location = New System.Drawing.Point(197, 193)
+        Me.Button12.Name = "Button12"
+        Me.Button12.Size = New System.Drawing.Size(160, 23)
+        Me.Button12.TabIndex = 59
+        Me.Button12.Text = "Ornstein and Smough"
+        Me.Button12.UseVisualStyleBackColor = False
+        '
+        'Button14
+        '
+        Me.Button14.Location = New System.Drawing.Point(6, 367)
+        Me.Button14.Name = "Button14"
+        Me.Button14.Size = New System.Drawing.Size(160, 23)
+        Me.Button14.TabIndex = 61
+        Me.Button14.Text = "Gaping Dragon"
+        Me.Button14.UseVisualStyleBackColor = False
+        '
+        'btnBossGapingDragon
+        '
+        Me.btnBossGapingDragon.Location = New System.Drawing.Point(6, 367)
+        Me.btnBossGapingDragon.Name = "btnBossGapingDragon"
+        Me.btnBossGapingDragon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossGapingDragon.TabIndex = 61
+        Me.btnBossGapingDragon.Text = "Gaping Dragon"
+        Me.btnBossGapingDragon.UseVisualStyleBackColor = False
+        '
+        'btnBossGravelordNito
+        '
+        Me.btnBossGravelordNito.Location = New System.Drawing.Point(197, 19)
+        Me.btnBossGravelordNito.Name = "btnBossGravelordNito"
+        Me.btnBossGravelordNito.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossGravelordNito.TabIndex = 62
+        Me.btnBossGravelordNito.Text = "Gravelord Nito"
+        Me.btnBossGravelordNito.UseVisualStyleBackColor = False
+        '
+        'Button13
+        '
+        Me.Button13.Location = New System.Drawing.Point(6, 338)
+        Me.Button13.Name = "Button13"
+        Me.Button13.Size = New System.Drawing.Size(160, 23)
+        Me.Button13.TabIndex = 60
+        Me.Button13.Text = "Four Kings"
+        Me.Button13.UseVisualStyleBackColor = False
+        '
+        'btnBeginReverseRush
+        '
+        Me.btnBeginReverseRush.Location = New System.Drawing.Point(200, 14)
+        Me.btnBeginReverseRush.Name = "btnBeginReverseRush"
+        Me.btnBeginReverseRush.Size = New System.Drawing.Size(160, 23)
+        Me.btnBeginReverseRush.TabIndex = 75
+        Me.btnBeginReverseRush.Text = "Begin Reverse Rush"
+        Me.btnBeginReverseRush.UseVisualStyleBackColor = False
         '
         'tabMain
         '
@@ -170,7 +739,7 @@ Partial Class frmForm1
         Me.tabMain.Location = New System.Drawing.Point(4, 22)
         Me.tabMain.Name = "tabMain"
         Me.tabMain.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabMain.Size = New System.Drawing.Size(384, 453)
+        Me.tabMain.Size = New System.Drawing.Size(381, 446)
         Me.tabMain.TabIndex = 0
         Me.tabMain.Text = "Player"
         '
@@ -372,77 +941,6 @@ Partial Class frmForm1
         Me.lblXpos.Text = "(X POS)"
         Me.lblXpos.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'tabItems
-        '
-        Me.tabItems.AutoScroll = True
-        Me.tabItems.Controls.Add(Me.Label29)
-        Me.tabItems.Controls.Add(Me.Label28)
-        Me.tabItems.Controls.Add(Me.nmbItemCount)
-        Me.tabItems.Controls.Add(Me.cmbItemName)
-        Me.tabItems.Controls.Add(Me.cmbItemCat)
-        Me.tabItems.Controls.Add(Me.btnDropItem)
-        Me.tabItems.Location = New System.Drawing.Point(4, 22)
-        Me.tabItems.Name = "tabItems"
-        Me.tabItems.Size = New System.Drawing.Size(384, 453)
-        Me.tabItems.TabIndex = 3
-        Me.tabItems.Text = "Items"
-        '
-        'Label29
-        '
-        Me.Label29.AutoSize = True
-        Me.Label29.Location = New System.Drawing.Point(38, 45)
-        Me.Label29.Name = "Label29"
-        Me.Label29.Size = New System.Drawing.Size(30, 13)
-        Me.Label29.TabIndex = 52
-        Me.Label29.Text = "Item:"
-        Me.Label29.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        '
-        'Label28
-        '
-        Me.Label28.AutoSize = True
-        Me.Label28.Location = New System.Drawing.Point(16, 20)
-        Me.Label28.Name = "Label28"
-        Me.Label28.Size = New System.Drawing.Size(52, 13)
-        Me.Label28.TabIndex = 51
-        Me.Label28.Text = "Category:"
-        Me.Label28.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        '
-        'nmbItemCount
-        '
-        Me.nmbItemCount.Location = New System.Drawing.Point(326, 43)
-        Me.nmbItemCount.Name = "nmbItemCount"
-        Me.nmbItemCount.Size = New System.Drawing.Size(47, 20)
-        Me.nmbItemCount.TabIndex = 50
-        Me.nmbItemCount.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'cmbItemName
-        '
-        Me.cmbItemName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cmbItemName.FormattingEnabled = True
-        Me.cmbItemName.Location = New System.Drawing.Point(74, 42)
-        Me.cmbItemName.Name = "cmbItemName"
-        Me.cmbItemName.Size = New System.Drawing.Size(246, 21)
-        Me.cmbItemName.TabIndex = 49
-        '
-        'cmbItemCat
-        '
-        Me.cmbItemCat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cmbItemCat.FormattingEnabled = True
-        Me.cmbItemCat.Items.AddRange(New Object() {"Weapons", "Armor", "Rings", "Goods"})
-        Me.cmbItemCat.Location = New System.Drawing.Point(74, 16)
-        Me.cmbItemCat.Name = "cmbItemCat"
-        Me.cmbItemCat.Size = New System.Drawing.Size(299, 21)
-        Me.cmbItemCat.TabIndex = 48
-        '
-        'btnDropItem
-        '
-        Me.btnDropItem.Location = New System.Drawing.Point(213, 69)
-        Me.btnDropItem.Name = "btnDropItem"
-        Me.btnDropItem.Size = New System.Drawing.Size(160, 23)
-        Me.btnDropItem.TabIndex = 47
-        Me.btnDropItem.Text = "Spawn Item(DropItem)"
-        Me.btnDropItem.UseVisualStyleBackColor = False
-        '
         'tabStats
         '
         Me.tabStats.AutoScroll = True
@@ -476,7 +974,7 @@ Partial Class frmForm1
         Me.tabStats.Controls.Add(Me.nmbHumanity)
         Me.tabStats.Location = New System.Drawing.Point(4, 22)
         Me.tabStats.Name = "tabStats"
-        Me.tabStats.Size = New System.Drawing.Size(384, 453)
+        Me.tabStats.Size = New System.Drawing.Size(381, 446)
         Me.tabStats.TabIndex = 2
         Me.tabStats.Text = "Stats"
         '
@@ -491,6 +989,7 @@ Partial Class frmForm1
         '
         'nmbIndictments
         '
+        Me.nmbIndictments.Enabled = False
         Me.nmbIndictments.Location = New System.Drawing.Point(116, 59)
         Me.nmbIndictments.Name = "nmbIndictments"
         Me.nmbIndictments.Size = New System.Drawing.Size(100, 20)
@@ -507,6 +1006,7 @@ Partial Class frmForm1
         '
         'txtSouls
         '
+        Me.txtSouls.Enabled = False
         Me.txtSouls.Location = New System.Drawing.Point(116, 335)
         Me.txtSouls.Name = "txtSouls"
         Me.txtSouls.Size = New System.Drawing.Size(100, 20)
@@ -523,6 +1023,7 @@ Partial Class frmForm1
         '
         'nmbSoulLevel
         '
+        Me.nmbSoulLevel.Enabled = False
         Me.nmbSoulLevel.Location = New System.Drawing.Point(116, 305)
         Me.nmbSoulLevel.Maximum = New Decimal(New Integer() {1024, 0, 0, 0})
         Me.nmbSoulLevel.Name = "nmbSoulLevel"
@@ -540,6 +1041,7 @@ Partial Class frmForm1
         '
         'nmbVitality
         '
+        Me.nmbVitality.Enabled = False
         Me.nmbVitality.Location = New System.Drawing.Point(116, 98)
         Me.nmbVitality.Name = "nmbVitality"
         Me.nmbVitality.Size = New System.Drawing.Size(100, 20)
@@ -556,6 +1058,7 @@ Partial Class frmForm1
         '
         'nmbAttunement
         '
+        Me.nmbAttunement.Enabled = False
         Me.nmbAttunement.Location = New System.Drawing.Point(116, 121)
         Me.nmbAttunement.Name = "nmbAttunement"
         Me.nmbAttunement.Size = New System.Drawing.Size(100, 20)
@@ -572,6 +1075,7 @@ Partial Class frmForm1
         '
         'nmbEnd
         '
+        Me.nmbEnd.Enabled = False
         Me.nmbEnd.Location = New System.Drawing.Point(116, 144)
         Me.nmbEnd.Name = "nmbEnd"
         Me.nmbEnd.Size = New System.Drawing.Size(100, 20)
@@ -588,6 +1092,7 @@ Partial Class frmForm1
         '
         'nmbStr
         '
+        Me.nmbStr.Enabled = False
         Me.nmbStr.Location = New System.Drawing.Point(116, 167)
         Me.nmbStr.Name = "nmbStr"
         Me.nmbStr.Size = New System.Drawing.Size(100, 20)
@@ -604,6 +1109,7 @@ Partial Class frmForm1
         '
         'nmbDex
         '
+        Me.nmbDex.Enabled = False
         Me.nmbDex.Location = New System.Drawing.Point(116, 190)
         Me.nmbDex.Name = "nmbDex"
         Me.nmbDex.Size = New System.Drawing.Size(100, 20)
@@ -620,6 +1126,7 @@ Partial Class frmForm1
         '
         'nmbResistance
         '
+        Me.nmbResistance.Enabled = False
         Me.nmbResistance.Location = New System.Drawing.Point(116, 213)
         Me.nmbResistance.Name = "nmbResistance"
         Me.nmbResistance.Size = New System.Drawing.Size(100, 20)
@@ -636,6 +1143,7 @@ Partial Class frmForm1
         '
         'nmbIntelligence
         '
+        Me.nmbIntelligence.Enabled = False
         Me.nmbIntelligence.Location = New System.Drawing.Point(116, 236)
         Me.nmbIntelligence.Name = "nmbIntelligence"
         Me.nmbIntelligence.Size = New System.Drawing.Size(100, 20)
@@ -652,6 +1160,7 @@ Partial Class frmForm1
         '
         'nmbFaith
         '
+        Me.nmbFaith.Enabled = False
         Me.nmbFaith.Location = New System.Drawing.Point(116, 259)
         Me.nmbFaith.Name = "nmbFaith"
         Me.nmbFaith.Size = New System.Drawing.Size(100, 20)
@@ -668,6 +1177,7 @@ Partial Class frmForm1
         '
         'nmbTeamType
         '
+        Me.nmbTeamType.Enabled = False
         Me.nmbTeamType.Location = New System.Drawing.Point(116, 33)
         Me.nmbTeamType.Name = "nmbTeamType"
         Me.nmbTeamType.Size = New System.Drawing.Size(100, 20)
@@ -684,6 +1194,7 @@ Partial Class frmForm1
         '
         'nmbPhantomType
         '
+        Me.nmbPhantomType.Enabled = False
         Me.nmbPhantomType.Location = New System.Drawing.Point(116, 10)
         Me.nmbPhantomType.Name = "nmbPhantomType"
         Me.nmbPhantomType.Size = New System.Drawing.Size(100, 20)
@@ -700,393 +1211,90 @@ Partial Class frmForm1
         '
         'nmbHumanity
         '
+        Me.nmbHumanity.Enabled = False
         Me.nmbHumanity.Location = New System.Drawing.Point(116, 282)
         Me.nmbHumanity.Name = "nmbHumanity"
         Me.nmbHumanity.Size = New System.Drawing.Size(100, 20)
         Me.nmbHumanity.TabIndex = 0
         '
-        'tabLUA
-        '
-        Me.tabLUA.AutoScroll = True
-        Me.tabLUA.Controls.Add(Me.lblLastPointer)
-        Me.tabLUA.Controls.Add(Me.Label23)
-        Me.tabLUA.Controls.Add(Me.Label21)
-        Me.tabLUA.Controls.Add(Me.Label20)
-        Me.tabLUA.Controls.Add(Me.txtFuncParam5)
-        Me.tabLUA.Controls.Add(Me.txtFuncParam4)
-        Me.tabLUA.Controls.Add(Me.txtFuncParam3)
-        Me.tabLUA.Controls.Add(Me.txtFuncParam2)
-        Me.tabLUA.Controls.Add(Me.txtFuncParam1)
-        Me.tabLUA.Controls.Add(Me.btnFuncExecute)
-        Me.tabLUA.Controls.Add(Me.cmbFuncName)
-        Me.tabLUA.Location = New System.Drawing.Point(4, 22)
-        Me.tabLUA.Name = "tabLUA"
-        Me.tabLUA.Size = New System.Drawing.Size(384, 453)
-        Me.tabLUA.TabIndex = 4
-        Me.tabLUA.Text = "LUA"
-        '
-        'lblLastPointer
-        '
-        Me.lblLastPointer.AutoSize = True
-        Me.lblLastPointer.Enabled = False
-        Me.lblLastPointer.ForeColor = System.Drawing.SystemColors.GrayText
-        Me.lblLastPointer.Location = New System.Drawing.Point(129, 96)
-        Me.lblLastPointer.Name = "lblLastPointer"
-        Me.lblLastPointer.Size = New System.Drawing.Size(27, 13)
-        Me.lblLastPointer.TabIndex = 68
-        Me.lblLastPointer.Text = "N/A"
-        '
-        'Label23
-        '
-        Me.Label23.AutoSize = True
-        Me.Label23.Enabled = False
-        Me.Label23.ForeColor = System.Drawing.SystemColors.GrayText
-        Me.Label23.Location = New System.Drawing.Point(29, 95)
-        Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(94, 13)
-        Me.Label23.TabIndex = 67
-        Me.Label23.Text = "Last-Used Pointer:"
-        '
-        'Label21
-        '
-        Me.Label21.AutoSize = True
-        Me.Label21.Location = New System.Drawing.Point(4, 48)
-        Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(63, 13)
-        Me.Label21.TabIndex = 66
-        Me.Label21.Text = "Parameters:"
-        '
-        'Label20
-        '
-        Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(4, 18)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(51, 13)
-        Me.Label20.TabIndex = 65
-        Me.Label20.Text = "Function:"
-        '
-        'txtFuncParam5
-        '
-        Me.txtFuncParam5.Location = New System.Drawing.Point(317, 43)
-        Me.txtFuncParam5.Name = "txtFuncParam5"
-        Me.txtFuncParam5.Size = New System.Drawing.Size(55, 20)
-        Me.txtFuncParam5.TabIndex = 64
-        '
-        'txtFuncParam4
-        '
-        Me.txtFuncParam4.Location = New System.Drawing.Point(256, 43)
-        Me.txtFuncParam4.Name = "txtFuncParam4"
-        Me.txtFuncParam4.Size = New System.Drawing.Size(55, 20)
-        Me.txtFuncParam4.TabIndex = 63
-        '
-        'txtFuncParam3
-        '
-        Me.txtFuncParam3.Location = New System.Drawing.Point(195, 43)
-        Me.txtFuncParam3.Name = "txtFuncParam3"
-        Me.txtFuncParam3.Size = New System.Drawing.Size(55, 20)
-        Me.txtFuncParam3.TabIndex = 62
-        '
-        'txtFuncParam2
-        '
-        Me.txtFuncParam2.Location = New System.Drawing.Point(134, 43)
-        Me.txtFuncParam2.Name = "txtFuncParam2"
-        Me.txtFuncParam2.Size = New System.Drawing.Size(55, 20)
-        Me.txtFuncParam2.TabIndex = 61
-        '
-        'txtFuncParam1
-        '
-        Me.txtFuncParam1.Location = New System.Drawing.Point(73, 43)
-        Me.txtFuncParam1.Name = "txtFuncParam1"
-        Me.txtFuncParam1.Size = New System.Drawing.Size(55, 20)
-        Me.txtFuncParam1.TabIndex = 60
-        '
-        'btnFuncExecute
-        '
-        Me.btnFuncExecute.Location = New System.Drawing.Point(245, 93)
-        Me.btnFuncExecute.Name = "btnFuncExecute"
-        Me.btnFuncExecute.Size = New System.Drawing.Size(127, 23)
-        Me.btnFuncExecute.TabIndex = 59
-        Me.btnFuncExecute.Text = "Execute Function"
-        Me.btnFuncExecute.UseVisualStyleBackColor = False
-        '
-        'cmbFuncName
-        '
-        Me.cmbFuncName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cmbFuncName.FormattingEnabled = True
-        Me.cmbFuncName.Location = New System.Drawing.Point(61, 13)
-        Me.cmbFuncName.Name = "cmbFuncName"
-        Me.cmbFuncName.Size = New System.Drawing.Size(311, 21)
-        Me.cmbFuncName.TabIndex = 58
-        '
-        'tabBosses
-        '
-        Me.tabBosses.Controls.Add(Me.btnTest)
-        Me.tabBosses.Controls.Add(Me.btnBossBlackDragonKalameet)
-        Me.tabBosses.Controls.Add(Me.btnBossTaurusDemon)
-        Me.tabBosses.Controls.Add(Me.btnBossSif)
-        Me.tabBosses.Controls.Add(Me.btnBossStrayDemon)
-        Me.tabBosses.Controls.Add(Me.btnBossSeath)
-        Me.tabBosses.Controls.Add(Me.btnBossSanctuaryGuardian)
-        Me.tabBosses.Controls.Add(Me.btnBossMoonlightButterfly)
-        Me.tabBosses.Controls.Add(Me.btnBossManus)
-        Me.tabBosses.Controls.Add(Me.btnBossKnightArtorias)
-        Me.tabBosses.Controls.Add(Me.btnBossIronGolem)
-        Me.tabBosses.Controls.Add(Me.btnBossGwyn)
-        Me.tabBosses.Controls.Add(Me.btnBossGravelordNito)
-        Me.tabBosses.Controls.Add(Me.btnBossGapingDragon)
-        Me.tabBosses.Controls.Add(Me.btnBossFourKings)
-        Me.tabBosses.Controls.Add(Me.btnBossOandS)
-        Me.tabBosses.Controls.Add(Me.btnBossDemonFiresage)
-        Me.tabBosses.Controls.Add(Me.btnBossDarkSunGwyndolin)
-        Me.tabBosses.Controls.Add(Me.btnBossCrossbreedPriscilla)
-        Me.tabBosses.Controls.Add(Me.btnBossChaosWitchQuelaag)
-        Me.tabBosses.Controls.Add(Me.btnBossCentipedeDemon)
-        Me.tabBosses.Controls.Add(Me.btnBossBedOfChaos)
-        Me.tabBosses.Controls.Add(Me.btnBossCeaselessDischarge)
-        Me.tabBosses.Controls.Add(Me.btnBossBellGargoyles)
-        Me.tabBosses.Controls.Add(Me.btnBossCapraDemon)
-        Me.tabBosses.Controls.Add(Me.btnBossPinwheel)
-        Me.tabBosses.Controls.Add(Me.btnBossAsylumDemon)
-        Me.tabBosses.Location = New System.Drawing.Point(4, 22)
-        Me.tabBosses.Name = "tabBosses"
-        Me.tabBosses.Size = New System.Drawing.Size(384, 453)
-        Me.tabBosses.TabIndex = 5
-        Me.tabBosses.Text = "Bosses"
-        Me.tabBosses.UseVisualStyleBackColor = True
-        '
-        'btnBossBlackDragonKalameet
-        '
-        Me.btnBossBlackDragonKalameet.Location = New System.Drawing.Point(3, 155)
-        Me.btnBossBlackDragonKalameet.Name = "btnBossBlackDragonKalameet"
-        Me.btnBossBlackDragonKalameet.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossBlackDragonKalameet.TabIndex = 73
-        Me.btnBossBlackDragonKalameet.Text = "Black Dragon Kalameet"
-        Me.btnBossBlackDragonKalameet.UseVisualStyleBackColor = False
-        '
-        'btnBossTaurusDemon
-        '
-        Me.btnBossTaurusDemon.Location = New System.Drawing.Point(194, 416)
-        Me.btnBossTaurusDemon.Name = "btnBossTaurusDemon"
-        Me.btnBossTaurusDemon.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossTaurusDemon.TabIndex = 72
-        Me.btnBossTaurusDemon.Text = "Taurus Demon"
-        Me.btnBossTaurusDemon.UseVisualStyleBackColor = False
-        '
-        'btnBossSif
-        '
-        Me.btnBossSif.Location = New System.Drawing.Point(194, 358)
-        Me.btnBossSif.Name = "btnBossSif"
-        Me.btnBossSif.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossSif.TabIndex = 71
-        Me.btnBossSif.Text = "Sif"
-        Me.btnBossSif.UseVisualStyleBackColor = False
-        '
-        'btnBossStrayDemon
-        '
-        Me.btnBossStrayDemon.Location = New System.Drawing.Point(194, 387)
-        Me.btnBossStrayDemon.Name = "btnBossStrayDemon"
-        Me.btnBossStrayDemon.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossStrayDemon.TabIndex = 70
-        Me.btnBossStrayDemon.Text = "Stray Demon"
-        Me.btnBossStrayDemon.UseVisualStyleBackColor = False
-        '
-        'btnBossSeath
-        '
-        Me.btnBossSeath.Location = New System.Drawing.Point(194, 329)
-        Me.btnBossSeath.Name = "btnBossSeath"
-        Me.btnBossSeath.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossSeath.TabIndex = 69
-        Me.btnBossSeath.Text = "Seath"
-        Me.btnBossSeath.UseVisualStyleBackColor = False
-        '
-        'btnBossSanctuaryGuardian
-        '
-        Me.btnBossSanctuaryGuardian.Location = New System.Drawing.Point(194, 300)
-        Me.btnBossSanctuaryGuardian.Name = "btnBossSanctuaryGuardian"
-        Me.btnBossSanctuaryGuardian.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossSanctuaryGuardian.TabIndex = 68
-        Me.btnBossSanctuaryGuardian.Text = "Sanctuary Guardian"
-        Me.btnBossSanctuaryGuardian.UseVisualStyleBackColor = False
-        '
-        'btnBossMoonlightButterfly
-        '
-        Me.btnBossMoonlightButterfly.Location = New System.Drawing.Point(194, 213)
-        Me.btnBossMoonlightButterfly.Name = "btnBossMoonlightButterfly"
-        Me.btnBossMoonlightButterfly.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossMoonlightButterfly.TabIndex = 67
-        Me.btnBossMoonlightButterfly.Text = "Moonlight Butterfly"
-        Me.btnBossMoonlightButterfly.UseVisualStyleBackColor = False
-        '
-        'btnBossManus
-        '
-        Me.btnBossManus.Location = New System.Drawing.Point(194, 184)
-        Me.btnBossManus.Name = "btnBossManus"
-        Me.btnBossManus.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossManus.TabIndex = 66
-        Me.btnBossManus.Text = "Manus"
-        Me.btnBossManus.UseVisualStyleBackColor = False
-        '
-        'btnBossKnightArtorias
-        '
-        Me.btnBossKnightArtorias.Location = New System.Drawing.Point(194, 155)
-        Me.btnBossKnightArtorias.Name = "btnBossKnightArtorias"
-        Me.btnBossKnightArtorias.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossKnightArtorias.TabIndex = 65
-        Me.btnBossKnightArtorias.Text = "Knight Artorias"
-        Me.btnBossKnightArtorias.UseVisualStyleBackColor = False
-        '
-        'btnBossIronGolem
-        '
-        Me.btnBossIronGolem.Location = New System.Drawing.Point(194, 126)
-        Me.btnBossIronGolem.Name = "btnBossIronGolem"
-        Me.btnBossIronGolem.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossIronGolem.TabIndex = 64
-        Me.btnBossIronGolem.Text = "Iron Golem"
-        Me.btnBossIronGolem.UseVisualStyleBackColor = False
-        '
-        'btnBossGwyn
-        '
-        Me.btnBossGwyn.Location = New System.Drawing.Point(194, 97)
-        Me.btnBossGwyn.Name = "btnBossGwyn"
-        Me.btnBossGwyn.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossGwyn.TabIndex = 63
-        Me.btnBossGwyn.Text = "Gwyn"
-        Me.btnBossGwyn.UseVisualStyleBackColor = False
-        '
-        'btnBossGravelordNito
-        '
-        Me.btnBossGravelordNito.Location = New System.Drawing.Point(194, 68)
-        Me.btnBossGravelordNito.Name = "btnBossGravelordNito"
-        Me.btnBossGravelordNito.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossGravelordNito.TabIndex = 62
-        Me.btnBossGravelordNito.Text = "Gravelord Nito"
-        Me.btnBossGravelordNito.UseVisualStyleBackColor = False
-        '
-        'btnBossGapingDragon
-        '
-        Me.btnBossGapingDragon.Location = New System.Drawing.Point(3, 416)
-        Me.btnBossGapingDragon.Name = "btnBossGapingDragon"
-        Me.btnBossGapingDragon.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossGapingDragon.TabIndex = 61
-        Me.btnBossGapingDragon.Text = "Gaping Dragon"
-        Me.btnBossGapingDragon.UseVisualStyleBackColor = False
-        '
-        'btnBossFourKings
-        '
-        Me.btnBossFourKings.Location = New System.Drawing.Point(3, 387)
-        Me.btnBossFourKings.Name = "btnBossFourKings"
-        Me.btnBossFourKings.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossFourKings.TabIndex = 60
-        Me.btnBossFourKings.Text = "Four Kings"
-        Me.btnBossFourKings.UseVisualStyleBackColor = False
-        '
-        'btnBossOandS
-        '
-        Me.btnBossOandS.Location = New System.Drawing.Point(194, 242)
-        Me.btnBossOandS.Name = "btnBossOandS"
-        Me.btnBossOandS.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossOandS.TabIndex = 59
-        Me.btnBossOandS.Text = "Ornstein and Smough"
-        Me.btnBossOandS.UseVisualStyleBackColor = False
-        '
-        'btnBossDemonFiresage
-        '
-        Me.btnBossDemonFiresage.Location = New System.Drawing.Point(3, 358)
-        Me.btnBossDemonFiresage.Name = "btnBossDemonFiresage"
-        Me.btnBossDemonFiresage.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossDemonFiresage.TabIndex = 58
-        Me.btnBossDemonFiresage.Text = "Demon Firesage"
-        Me.btnBossDemonFiresage.UseVisualStyleBackColor = False
-        '
-        'btnBossDarkSunGwyndolin
-        '
-        Me.btnBossDarkSunGwyndolin.Location = New System.Drawing.Point(3, 329)
-        Me.btnBossDarkSunGwyndolin.Name = "btnBossDarkSunGwyndolin"
-        Me.btnBossDarkSunGwyndolin.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossDarkSunGwyndolin.TabIndex = 57
-        Me.btnBossDarkSunGwyndolin.Text = "Dark Sun Gwyndolin"
-        Me.btnBossDarkSunGwyndolin.UseVisualStyleBackColor = False
-        '
-        'btnBossCrossbreedPriscilla
-        '
-        Me.btnBossCrossbreedPriscilla.Location = New System.Drawing.Point(3, 300)
-        Me.btnBossCrossbreedPriscilla.Name = "btnBossCrossbreedPriscilla"
-        Me.btnBossCrossbreedPriscilla.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossCrossbreedPriscilla.TabIndex = 56
-        Me.btnBossCrossbreedPriscilla.Text = "Crossbreed Priscilla"
-        Me.btnBossCrossbreedPriscilla.UseVisualStyleBackColor = False
-        '
-        'btnBossChaosWitchQuelaag
-        '
-        Me.btnBossChaosWitchQuelaag.Location = New System.Drawing.Point(3, 271)
-        Me.btnBossChaosWitchQuelaag.Name = "btnBossChaosWitchQuelaag"
-        Me.btnBossChaosWitchQuelaag.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossChaosWitchQuelaag.TabIndex = 55
-        Me.btnBossChaosWitchQuelaag.Text = "Chaos Witch Quelaag"
-        Me.btnBossChaosWitchQuelaag.UseVisualStyleBackColor = False
-        '
-        'btnBossCentipedeDemon
-        '
-        Me.btnBossCentipedeDemon.Location = New System.Drawing.Point(3, 242)
-        Me.btnBossCentipedeDemon.Name = "btnBossCentipedeDemon"
-        Me.btnBossCentipedeDemon.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossCentipedeDemon.TabIndex = 54
-        Me.btnBossCentipedeDemon.Text = "Centipede Demon"
-        Me.btnBossCentipedeDemon.UseVisualStyleBackColor = False
-        '
-        'btnBossBedOfChaos
-        '
-        Me.btnBossBedOfChaos.Location = New System.Drawing.Point(3, 97)
-        Me.btnBossBedOfChaos.Name = "btnBossBedOfChaos"
-        Me.btnBossBedOfChaos.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossBedOfChaos.TabIndex = 53
-        Me.btnBossBedOfChaos.Text = "Bed of Chaos"
-        Me.btnBossBedOfChaos.UseVisualStyleBackColor = False
-        '
-        'btnBossCeaselessDischarge
-        '
-        Me.btnBossCeaselessDischarge.Location = New System.Drawing.Point(3, 213)
-        Me.btnBossCeaselessDischarge.Name = "btnBossCeaselessDischarge"
-        Me.btnBossCeaselessDischarge.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossCeaselessDischarge.TabIndex = 52
-        Me.btnBossCeaselessDischarge.Text = "Ceaseless Discharge"
-        Me.btnBossCeaselessDischarge.UseVisualStyleBackColor = False
-        '
-        'btnBossBellGargoyles
-        '
-        Me.btnBossBellGargoyles.Location = New System.Drawing.Point(3, 126)
-        Me.btnBossBellGargoyles.Name = "btnBossBellGargoyles"
-        Me.btnBossBellGargoyles.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossBellGargoyles.TabIndex = 51
-        Me.btnBossBellGargoyles.Text = "Bell Gargoyles"
-        Me.btnBossBellGargoyles.UseVisualStyleBackColor = False
-        '
-        'btnBossCapraDemon
-        '
-        Me.btnBossCapraDemon.Location = New System.Drawing.Point(3, 184)
-        Me.btnBossCapraDemon.Name = "btnBossCapraDemon"
-        Me.btnBossCapraDemon.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossCapraDemon.TabIndex = 50
-        Me.btnBossCapraDemon.Text = "Capra Demon"
-        Me.btnBossCapraDemon.UseVisualStyleBackColor = False
-        '
-        'btnBossPinwheel
-        '
-        Me.btnBossPinwheel.Location = New System.Drawing.Point(194, 271)
-        Me.btnBossPinwheel.Name = "btnBossPinwheel"
-        Me.btnBossPinwheel.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossPinwheel.TabIndex = 49
-        Me.btnBossPinwheel.Text = "Pinwheel"
-        Me.btnBossPinwheel.UseVisualStyleBackColor = False
-        '
-        'btnBossAsylumDemon
-        '
-        Me.btnBossAsylumDemon.Location = New System.Drawing.Point(3, 68)
-        Me.btnBossAsylumDemon.Name = "btnBossAsylumDemon"
-        Me.btnBossAsylumDemon.Size = New System.Drawing.Size(160, 23)
-        Me.btnBossAsylumDemon.TabIndex = 48
-        Me.btnBossAsylumDemon.Text = "Asylum Demon"
-        Me.btnBossAsylumDemon.UseVisualStyleBackColor = False
+        'tabTests
+        '
+        Me.tabTests.Controls.Add(Me.btnTestSomeRedYeti)
+        Me.tabTests.Controls.Add(Me.btnTestTheAppleMan)
+        Me.tabTests.Controls.Add(Me.btnTest)
+        Me.tabTests.Location = New System.Drawing.Point(4, 22)
+        Me.tabTests.Name = "tabTests"
+        Me.tabTests.Size = New System.Drawing.Size(381, 446)
+        Me.tabTests.TabIndex = 7
+        Me.tabTests.Text = "Tests"
+        Me.tabTests.UseVisualStyleBackColor = True
+        '
+        'btnTestTheAppleMan
+        '
+        Me.btnTestTheAppleMan.Location = New System.Drawing.Point(3, 29)
+        Me.btnTestTheAppleMan.Name = "btnTestTheAppleMan"
+        Me.btnTestTheAppleMan.Size = New System.Drawing.Size(160, 23)
+        Me.btnTestTheAppleMan.TabIndex = 78
+        Me.btnTestTheAppleMan.Text = "TheAppleMan"
+        Me.btnTestTheAppleMan.UseVisualStyleBackColor = False
+        '
+        'btnTest
+        '
+        Me.btnTest.Location = New System.Drawing.Point(304, 3)
+        Me.btnTest.Name = "btnTest"
+        Me.btnTest.Size = New System.Drawing.Size(68, 23)
+        Me.btnTest.TabIndex = 77
+        Me.btnTest.Text = "Test"
+        Me.btnTest.UseVisualStyleBackColor = False
+        '
+        'tabDonate
+        '
+        Me.tabDonate.Controls.Add(Me.btnDonate)
+        Me.tabDonate.Controls.Add(Me.Label6)
+        Me.tabDonate.Controls.Add(Me.Label5)
+        Me.tabDonate.Controls.Add(Me.Label4)
+        Me.tabDonate.Location = New System.Drawing.Point(4, 22)
+        Me.tabDonate.Name = "tabDonate"
+        Me.tabDonate.Size = New System.Drawing.Size(381, 446)
+        Me.tabDonate.TabIndex = 6
+        Me.tabDonate.Text = "$$$"
+        Me.tabDonate.UseVisualStyleBackColor = True
+        '
+        'btnDonate
+        '
+        Me.btnDonate.Location = New System.Drawing.Point(111, 235)
+        Me.btnDonate.Name = "btnDonate"
+        Me.btnDonate.Size = New System.Drawing.Size(149, 23)
+        Me.btnDonate.TabIndex = 3
+        Me.btnDonate.Text = "http://paypal.me/wulf2k"
+        Me.btnDonate.UseVisualStyleBackColor = True
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(160, 199)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(53, 13)
+        Me.Label6.TabIndex = 2
+        Me.Label6.Text = "And beer."
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(202, 172)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(58, 13)
+        Me.Label5.TabIndex = 1
+        Me.Label5.Text = "And steak."
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(108, 144)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(152, 13)
+        Me.Label4.TabIndex = 0
+        Me.Label4.Text = "No obligation, but I like money."
         '
         'Label22
         '
@@ -1107,34 +1315,53 @@ Partial Class frmForm1
         Me.lblRelease.TabIndex = 5
         Me.lblRelease.Text = "Nothing"
         '
-        'btnTest
+        'btnReconnect
         '
-        Me.btnTest.Location = New System.Drawing.Point(107, 18)
-        Me.btnTest.Name = "btnTest"
-        Me.btnTest.Size = New System.Drawing.Size(160, 23)
-        Me.btnTest.TabIndex = 74
-        Me.btnTest.Text = "Test button"
-        Me.btnTest.UseVisualStyleBackColor = False
+        Me.btnReconnect.Enabled = False
+        Me.btnReconnect.Location = New System.Drawing.Point(320, 5)
+        Me.btnReconnect.Name = "btnReconnect"
+        Me.btnReconnect.Size = New System.Drawing.Size(81, 23)
+        Me.btnReconnect.TabIndex = 76
+        Me.btnReconnect.Text = "Reconnect"
+        Me.btnReconnect.UseVisualStyleBackColor = False
+        '
+        'btnBeginBossRush
+        '
+        Me.btnBeginBossRush.Location = New System.Drawing.Point(9, 14)
+        Me.btnBeginBossRush.Name = "btnBeginBossRush"
+        Me.btnBeginBossRush.Size = New System.Drawing.Size(160, 23)
+        Me.btnBeginBossRush.TabIndex = 77
+        Me.btnBeginBossRush.Text = "Begin Boss Rush"
+        Me.btnBeginBossRush.UseVisualStyleBackColor = False
+        '
+        'btnTestSomeRedYeti
+        '
+        Me.btnTestSomeRedYeti.Location = New System.Drawing.Point(3, 58)
+        Me.btnTestSomeRedYeti.Name = "btnTestSomeRedYeti"
+        Me.btnTestSomeRedYeti.Size = New System.Drawing.Size(160, 23)
+        Me.btnTestSomeRedYeti.TabIndex = 79
+        Me.btnTestSomeRedYeti.Text = "SomeRedYeti"
+        Me.btnTestSomeRedYeti.UseVisualStyleBackColor = False
         '
         'frmForm1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(544, 538)
+        Me.ClientSize = New System.Drawing.Size(413, 531)
+        Me.Controls.Add(Me.btnReconnect)
         Me.Controls.Add(Me.Label22)
         Me.Controls.Add(Me.lblRelease)
         Me.Controls.Add(Me.tabs)
         Me.Name = "frmForm1"
-        Me.Text = "BRush! With Death!"
+        Me.Text = "BRush! With Death! ....Super-Mega-Pre-Alpha"
         Me.tabs.ResumeLayout(False)
+        Me.tabBosses.ResumeLayout(False)
+        Me.gbBosses.ResumeLayout(False)
         Me.tabMain.ResumeLayout(False)
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
-        Me.tabItems.ResumeLayout(False)
-        Me.tabItems.PerformLayout()
-        CType(Me.nmbItemCount, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabStats.ResumeLayout(False)
         Me.tabStats.PerformLayout()
         CType(Me.nmbIndictments, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1150,9 +1377,9 @@ Partial Class frmForm1
         CType(Me.nmbTeamType, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.nmbPhantomType, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.nmbHumanity, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.tabLUA.ResumeLayout(False)
-        Me.tabLUA.PerformLayout()
-        Me.tabBosses.ResumeLayout(False)
+        Me.tabTests.ResumeLayout(False)
+        Me.tabDonate.ResumeLayout(False)
+        Me.tabDonate.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1179,13 +1406,6 @@ Partial Class frmForm1
     Friend WithEvents lblZpos As Label
     Friend WithEvents lblYpos As Label
     Friend WithEvents lblXpos As Label
-    Friend WithEvents tabItems As TabPage
-    Friend WithEvents Label29 As Label
-    Friend WithEvents Label28 As Label
-    Friend WithEvents nmbItemCount As NumericUpDown
-    Friend WithEvents cmbItemName As ComboBox
-    Friend WithEvents cmbItemCat As ComboBox
-    Friend WithEvents btnDropItem As Button
     Friend WithEvents tabStats As TabPage
     Friend WithEvents Label18 As Label
     Friend WithEvents nmbIndictments As NumericUpDown
@@ -1215,18 +1435,6 @@ Partial Class frmForm1
     Friend WithEvents nmbPhantomType As NumericUpDown
     Friend WithEvents Label1 As Label
     Friend WithEvents nmbHumanity As NumericUpDown
-    Friend WithEvents tabLUA As TabPage
-    Friend WithEvents lblLastPointer As Label
-    Friend WithEvents Label23 As Label
-    Friend WithEvents Label21 As Label
-    Friend WithEvents Label20 As Label
-    Friend WithEvents txtFuncParam5 As TextBox
-    Friend WithEvents txtFuncParam4 As TextBox
-    Friend WithEvents txtFuncParam3 As TextBox
-    Friend WithEvents txtFuncParam2 As TextBox
-    Friend WithEvents txtFuncParam1 As TextBox
-    Friend WithEvents btnFuncExecute As Button
-    Friend WithEvents cmbFuncName As ComboBox
     Friend WithEvents Label22 As Label
     Friend WithEvents lblRelease As Label
     Friend WithEvents tabBosses As TabPage
@@ -1257,5 +1465,43 @@ Partial Class frmForm1
     Friend WithEvents btnBossSif As Button
     Friend WithEvents btnBossTaurusDemon As Button
     Friend WithEvents btnBossBlackDragonKalameet As Button
+    Friend WithEvents btnBeginReverseRush As Button
+    Friend WithEvents gbBosses As GroupBox
+    Friend WithEvents Button1 As Button
+    Friend WithEvents Button26 As Button
+    Friend WithEvents Button25 As Button
+    Friend WithEvents Button2 As Button
+    Friend WithEvents Button24 As Button
+    Friend WithEvents Button3 As Button
+    Friend WithEvents Button23 As Button
+    Friend WithEvents Button4 As Button
+    Friend WithEvents Button22 As Button
+    Friend WithEvents Button5 As Button
+    Friend WithEvents Button21 As Button
+    Friend WithEvents Button6 As Button
+    Friend WithEvents Button20 As Button
+    Friend WithEvents Button7 As Button
+    Friend WithEvents Button19 As Button
+    Friend WithEvents Button8 As Button
+    Friend WithEvents Button18 As Button
+    Friend WithEvents Button9 As Button
+    Friend WithEvents Button17 As Button
+    Friend WithEvents Button10 As Button
+    Friend WithEvents Button16 As Button
+    Friend WithEvents Button11 As Button
+    Friend WithEvents Button15 As Button
+    Friend WithEvents Button12 As Button
+    Friend WithEvents Button14 As Button
+    Friend WithEvents Button13 As Button
+    Friend WithEvents tabDonate As TabPage
+    Friend WithEvents btnDonate As Button
+    Friend WithEvents Label6 As Label
+    Friend WithEvents Label5 As Label
+    Friend WithEvents Label4 As Label
+    Friend WithEvents btnReconnect As Button
     Friend WithEvents btnTest As Button
+    Friend WithEvents tabTests As TabPage
+    Friend WithEvents btnTestTheAppleMan As Button
+    Friend WithEvents btnBeginBossRush As Button
+    Friend WithEvents btnTestSomeRedYeti As Button
 End Class
