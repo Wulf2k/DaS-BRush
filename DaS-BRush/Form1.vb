@@ -1176,6 +1176,7 @@ Public Class frmForm1
         FadeIn()
         ShowHUD(True)
         PlayerHide(False)
+        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossPinwheel()
         SetEventFlag(6, False)
