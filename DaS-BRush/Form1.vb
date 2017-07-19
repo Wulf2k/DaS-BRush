@@ -1131,14 +1131,14 @@ Public Class frmForm1
 
         Thread.Sleep(500)
         Warp_Coords(181.39, 7.53, 29.01)
-        Thread.Sleep(1000)
+        Thread.Sleep(4000)
         SetEventFlag(11205383, True)
 
         Warp_Coords(178.82, 8.12, 30.77)
 
 
 
-        Thread.Sleep(5000)
+        Thread.Sleep(2000)
         FadeIn()
         ShowHUD(True)
 
