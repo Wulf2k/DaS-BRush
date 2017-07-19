@@ -6,6 +6,7 @@ Public Class frmForm1
 
     'TODO:
     'Check equipment durability
+    'Handle equipment management
 
     'Set tails to be pre-cut to avoid drops
 
@@ -16,7 +17,10 @@ Public Class frmForm1
 
     'Grant ring for 4K fight
 
+    'Force animation through fog gate?
+
     '50001550 = Stop Rite of Kindling dropping?
+    'Check ItemLotParam for boss soul EventFlags
 
 
     'Reported 3x Sanctuary Guardians
@@ -35,12 +39,13 @@ Public Class frmForm1
     Private Declare Function WriteProcessMemory Lib "kernel32" (ByVal hProcess As IntPtr, ByVal lpBaseAddress As IntPtr, ByVal lpBuffer() As Byte, ByVal iSize As Integer, ByVal lpNumberOfBytesWritten As Integer) As Boolean
     Private Declare Function CloseHandle Lib "kernel32.dll" (ByVal hObject As IntPtr) As Boolean
     Private Declare Function VirtualAllocEx Lib "kernel32.dll" (ByVal hProcess As IntPtr, ByVal lpAddress As IntPtr, ByVal dwSize As IntPtr, ByVal flAllocationType As Integer, ByVal flProtect As Integer) As IntPtr
-    Private Declare Function CreateRemoteThread Lib "kernel32" (ByVal hProcess As Integer, ByVal lpThreadAttributes As Integer, ByVal dwStackSize As Integer, ByVal lpStartAddress As Integer, ByVal lpParameter As Integer, ByVal dwCreationFlags As Integer, ByRef lpThreadId As Integer) As Integer
+    Private Declare Function CreateRemoteThread Lib "kernel32" (ByVal hProcess As IntPtr, ByVal lpThreadAttributes As IntPtr, ByVal dwStackSize As Integer, ByVal lpStartAddress As IntPtr, ByVal lpParameter As IntPtr, ByVal dwCreationFlags As Integer, ByRef lpThreadId As IntPtr) As Integer
 
     Public Const PROCESS_VM_READ = &H10
     Public Const TH32CS_SNAPPROCESS = &H2
     Public Const MEM_COMMIT = 4096
     Public Const PAGE_READWRITE = 4
+    Public Const PAGE_EXECUTE_READWRITE = &H40
     Public Const PROCESS_CREATE_THREAD = (&H2)
     Public Const PROCESS_VM_OPERATION = (&H8)
     Public Const PROCESS_VM_WRITE = (&H20)
@@ -365,11 +370,11 @@ Public Class frmForm1
 
     Private Sub funcAlloc()
         Dim TargetBufferSize = 1024
-        funcPtr = VirtualAllocEx(_targetProcessHandle, 0, TargetBufferSize, MEM_COMMIT, PAGE_READWRITE)
+        funcPtr = VirtualAllocEx(_targetProcessHandle, 0, TargetBufferSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE)
     End Sub
     Private Sub dropAlloc()
         Dim TargetBufferSize = 1024
-        dropPtr = VirtualAllocEx(_targetProcessHandle, 0, TargetBufferSize, MEM_COMMIT, PAGE_READWRITE)
+        dropPtr = VirtualAllocEx(_targetProcessHandle, 0, TargetBufferSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE)
     End Sub
 
     Private Sub checkDarkSoulsVersion()
@@ -730,7 +735,7 @@ Public Class frmForm1
         WaitForLoad()
         BlackScreen()
         PlayerHide(True)
-        'funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
+
         Thread.Sleep(500)
 
         Warp(10000, warpID)
@@ -739,7 +744,7 @@ Public Class frmForm1
         FadeIn()
         ShowHUD(True)
         PlayerHide(False)
-        'funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
+
 
     End Sub
 
@@ -1009,7 +1014,6 @@ Public Class frmForm1
         WaitForLoad()
         BlackScreen()
         PlayerHide(True)
-        'funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
         Thread.Sleep(500)
         SetEventFlag(11005390, True)
         SetEventFlag(11005392, True)
@@ -1025,7 +1029,6 @@ Public Class frmForm1
         FadeIn()
         ShowHUD(True)
         PlayerHide(False)
-        'funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
 
 
 
