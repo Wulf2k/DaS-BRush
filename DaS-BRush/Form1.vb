@@ -13,14 +13,14 @@ Public Class frmForm1
 
     'Bed of Chaos, reset platform-collapsing
 
-    'butterfly
-
     'Grant ring for 4K fight
 
     'Force animation through fog gate?
 
     '50001550 = Stop Rite of Kindling dropping?
     'Check ItemLotParam for boss soul EventFlags
+
+    'Check Centipede's tail/arm flags
 
 
     'Reported 3x Sanctuary Guardians
