@@ -16,6 +16,8 @@ Public Class frmForm1
 
     'Grant ring for 4K fight
 
+    '50001550 = Stop Rite of Kindling dropping?
+
 
     'Reported 3x Sanctuary Guardians
     'Reported Kaathe Present for 4K
