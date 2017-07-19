@@ -8,18 +8,15 @@ Public Class frmForm1
     'Check equipment durability
 
     'Set tails to be pre-cut to avoid drops
-    'Hide Ciarin after artorias kill
-    'Ceaseless, proper flags (done?  Confirm new game)
+
+
     'Bed of Chaos, reset platform-collapsing
-    'Trim down Kalameet flags
 
-    'Redo "WaitForxDeath" subs so that it monitors an event flag generically
-    'instead of hardcoded one-offs
+    'butterfly
 
-    'Check Sif trigger
     'Grant ring for 4K fight
-    'Reported that Nito's underground sword attack doesn't work
-    'Reported Ornstein failed grab
+
+
     'Reported 3x Sanctuary Guardians
     'Reported Kaathe Present for 4K
     'Gwyn can open with a different attack
@@ -580,7 +577,7 @@ Public Class frmForm1
         Array.Copy(bytes2, 0, bytes, bytJmp, bytes2.Length)
         WriteProcessMemory(_targetProcessHandle, funcPtr, bytes, 1024, 0)
         CreateRemoteThread(_targetProcessHandle, 0, 0, funcPtr, 0, 0, 0)
-        Thread.Sleep(2)
+        Thread.Sleep(5)
     End Sub
 
 
@@ -731,13 +728,16 @@ Public Class frmForm1
         WaitForLoad()
         BlackScreen()
         PlayerHide(True)
+        'funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
+        Thread.Sleep(500)
 
         Warp(10000, warpID)
 
-        Thread.Sleep(2000)
+        Thread.Sleep(1500)
         FadeIn()
         ShowHUD(True)
         PlayerHide(False)
+        'funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
 
     End Sub
 
@@ -763,16 +763,18 @@ Public Class frmForm1
         WaitForLoad()
         BlackScreen()
         PlayerHide(True)
+        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
 
-        Thread.Sleep(200)
+        Thread.Sleep(500)
         'facing 180 degrees
         Warp_Coords(3.15, 198.15, -6)
         SetEventFlag(11815390, True)
 
-        Thread.Sleep(1800)
+        Thread.Sleep(1500)
         FadeIn()
         ShowHUD(True)
         PlayerHide(False)
+        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossBedOfChaos()
         SetEventFlag(10, False) 'Boss 
@@ -797,15 +799,18 @@ Public Class frmForm1
         WaitForLoad()
         BlackScreen()
         PlayerHide(True)
+        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
 
+        Thread.Sleep(500)
         Warp(10000, 1412998)
-        Thread.Sleep(200)
+        Thread.Sleep(250)
         Warp(10000, 1412997)
 
-        Thread.Sleep(1800)
+        Thread.Sleep(1250)
         FadeIn()
         ShowHUD(True)
         PlayerHide(False)
+        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
 
     End Sub
     Private Sub BossBellGargoyles()
@@ -828,21 +833,23 @@ Public Class frmForm1
         WaitForLoad()
         BlackScreen()
         PlayerHide(True)
+        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
 
-        Thread.Sleep(200)
+        Thread.Sleep(500)
 
         SetEventFlag(11015390, True) 'Boss Fog Used
         SetEventFlag(11015393, True) 'Boss Area Entered
-        Thread.Sleep(200)
+        Thread.Sleep(250)
 
         'facing 0 degrees
         Warp_Coords(10.8, 48.92, 87.26)
 
 
-        Thread.Sleep(1600)
+        Thread.Sleep(1250)
         FadeIn()
         ShowHUD(True)
         PlayerHide(False)
+        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossBlackDragonKalameet()
         SetEventFlag(11210004, False)
@@ -870,20 +877,48 @@ Public Class frmForm1
         WaitForLoad()
         BlackScreen()
         PlayerHide(True)
+        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
 
-        Thread.Sleep(200)
+        Thread.Sleep(500)
         'facing 107 degrees
         Warp_Coords(876.04, -344.73, 749.75)
 
 
-        Thread.Sleep(1800)
+        Thread.Sleep(1500)
         FadeIn()
         ShowHUD(True)
         PlayerHide(False)
+        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossCapraDemon()
         SetEventFlag(11010902, False)
-        StandardTransition(1010998, 1012887)
+
+
+        'Non-standard due to random deaths
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1010998)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
+        Thread.Sleep(500)
+        'facing 238 degrees
+        Warp_Coords(-73.17, -43.56, -15.17)
+        'Warp(10000, 1012887)
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
+        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossCeaselessDischarge()
         SetEventFlag(11410900, False) 'Boss death flag
@@ -908,21 +943,23 @@ Public Class frmForm1
         WaitForLoad()
         BlackScreen()
         PlayerHide(True)
+        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
 
-        Thread.Sleep(200)
+        Thread.Sleep(500)
 
         Warp_Coords(250.53, -283.15, 72.1)
-        Thread.Sleep(300)
+        Thread.Sleep(250)
         'facing 30 degrees
         Warp_Coords(402.45, -278.15, 15.5)
 
 
 
 
-        Thread.Sleep(1500)
+        Thread.Sleep(1250)
         FadeIn()
         ShowHUD(True)
         PlayerHide(False)
+        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossCentipedeDemon()
         SetEventFlag(11410901, False)
@@ -955,11 +992,73 @@ Public Class frmForm1
     Private Sub BossGapingDragon()
         SetEventFlag(2, False) 'Boss Death Flag
         SetEventFlag(11000853, True) 'Channeler Death Flag
-        StandardTransition(1000999, 1002997)
+        'StandardTransition(1000999, 1002997)
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1000999)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+        'funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
+        Thread.Sleep(500)
+        SetEventFlag(11005390, True)
+        SetEventFlag(11005392, True)
+        SetEventFlag(11005393, True)
+        SetEventFlag(11005394, True)
+        SetEventFlag(11005397, True)
+        SetEventFlag(11000000, False)
+
+
+        Warp(10000, 1002997)
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
+        'funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
+
+
+
     End Sub
     Private Sub BossGravelordNito()
         SetEventFlag(7, False)
-        StandardTransition(1310998, 1312110)
+        'StandardTransition(1310998, 1312110)
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1310998)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
+        Thread.Sleep(500)
+
+        'Warp(10000, 1312110)
+        Warp_Coords(-126.84, -265.12, -30.78)
+        SetEventFlag(11315390, True)
+        SetEventFlag(11315393, True)
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
+        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
+
     End Sub
     Private Sub BossGwyn()
         SetEventFlag(15, False)
@@ -972,7 +1071,7 @@ Public Class frmForm1
     End Sub
     Private Sub BossKnightArtorias()
         SetEventFlag(11210001, False)
-
+        SetEventFlag(1864, True) 'Ciarin Dead
 
         'Non-standard due to co-ords warp
 
@@ -988,16 +1087,18 @@ Public Class frmForm1
         WaitForLoad()
         BlackScreen()
         PlayerHide(True)
+        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
 
-        Thread.Sleep(200)
+        Thread.Sleep(500)
         'facing 75.8 degrees
         Warp_Coords(1034.11, -330.0, 810.68)
 
 
-        Thread.Sleep(1800)
+        Thread.Sleep(1500)
         FadeIn()
         ShowHUD(True)
         PlayerHide(False)
+        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossManus()
         SetEventFlag(11210002, False)
@@ -1023,11 +1124,12 @@ Public Class frmForm1
         WaitForLoad()
         BlackScreen()
         PlayerHide(True)
+        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
 
 
 
 
-        Thread.Sleep(200)
+        Thread.Sleep(500)
         Warp_Coords(181.39, 7.53, 29.01)
         Thread.Sleep(1000)
         SetEventFlag(11205383, True)
@@ -1036,11 +1138,12 @@ Public Class frmForm1
 
 
 
-        Thread.Sleep(1000)
+        Thread.Sleep(5000)
         FadeIn()
         ShowHUD(True)
 
         PlayerHide(False)
+        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
 
     End Sub
     Private Sub BossOAndS()
@@ -1062,13 +1165,14 @@ Public Class frmForm1
         WaitForLoad()
         BlackScreen()
         PlayerHide(True)
+        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
 
-        Thread.Sleep(200)
+        Thread.Sleep(500)
         'facing 90 degrees
         Warp_Coords(539.9, 142.6, 254.79)
 
 
-        Thread.Sleep(1800)
+        Thread.Sleep(1500)
         FadeIn()
         ShowHUD(True)
         PlayerHide(False)
@@ -1095,18 +1199,19 @@ Public Class frmForm1
         WaitForLoad()
         BlackScreen()
         PlayerHide(True)
+        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
 
 
-        Thread.Sleep(200)
+        Thread.Sleep(500)
         'facing = 45 deg
         Warp_Coords(931.82, -318.63, 472.45)
 
 
-        Thread.Sleep(1800)
+        Thread.Sleep(1500)
         FadeIn()
         ShowHUD(True)
         PlayerHide(False)
-
+        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossSeath()
         SetEventFlag(14, False)
@@ -1116,7 +1221,39 @@ Public Class frmForm1
     End Sub
     Private Sub BossSif()
         SetEventFlag(5, False)
-        StandardTransition(1200999, 1202999)
+        SetEventFlag(11200000, False)
+        SetEventFlag(11200001, False)
+        SetEventFlag(11200002, False)
+        SetEventFlag(11205392, False)
+        SetEventFlag(11205393, False)
+        SetEventFlag(11205394, False)
+        'StandardTransition(1200999, 1202999)
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1200999)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
+        Thread.Sleep(500)
+        'Warp_Coords(274, -19.82, -266.43)
+        Thread.Sleep(500)
+        'Warp(10000, 1202999)
+        Warp_Coords(254.31, -16.02, -320.32)
+
+        Thread.Sleep(1000)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
+        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossStrayDemon()
         SetEventFlag(11810000, True)
@@ -1133,10 +1270,6 @@ Public Class frmForm1
         soulTimer = New Thread(AddressOf BeginSoulTimer)
         soulTimer.IsBackground = True
 
-        DropItem("Weapons", "Dark Hand+5", 1)
-        DropItem("Weapons", "Dark Hand+5", 1)
-        DropItem("Armor", "Traveling Boots", 1)
-        DropItem("Armor", "Helm of Favor", 1)
 
         DropItem("Goods", "Dung Pie", 99)
 
@@ -1359,11 +1492,6 @@ Public Class frmForm1
 
         soulTimer = New Thread(AddressOf BeginSoulTimer)
         soulTimer.IsBackground = True
-
-        DropItem("Weapons", "Dark Hand+5", 1)
-        DropItem("Weapons", "Dark Hand+5", 1)
-        DropItem("Armor", "Traveling Boots", 1)
-        DropItem("Armor", "Helm of Favor", 1)
 
         DropItem("Goods", "Dung Pie", 99)
 
