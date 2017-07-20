@@ -386,7 +386,7 @@ Public Class frmForm1
         If (RUInt32(&H400080) = &HFC293654&) Then
             lblRelease.Text = "Dark Souls (Latest Release Ver.)"
         Else
-            lblRelease.Text = "None"
+            lblRelease.Text = "Dark Souls (Invalid Ver.)"
             isHooked = False
             refTimer.Enabled = False
         End If
@@ -1264,7 +1264,37 @@ Public Class frmForm1
     Private Sub BossStrayDemon()
         SetEventFlag(11810000, True)
         SetEventFlag(11810900, False)
-        StandardTransition(1810998, 1812996)
+
+
+        'StandardTransition(1810998, 1812996)
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1810998)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+        funcCall("DisableDamage", {10000, 1, 0, 0, 0})
+
+        Thread.Sleep(500)
+
+        Warp(10000, 1812996)
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
+        Thread.Sleep(1000)
+        funcCall("DisableDamage", {10000, 0, 0, 0, 0})
+
+
     End Sub
     Private Sub BossTaurusDemon()
         SetEventFlag(11010901, False)
@@ -1288,7 +1318,7 @@ Public Class frmForm1
 
 
         FlashRed(3000)
-        Thread.Sleep(3000)
+        'Thread.Sleep(3000)
 
         FlashRed(2000)
         Thread.Sleep(2000)
@@ -1298,8 +1328,8 @@ Public Class frmForm1
 
 
         For i = 0 To 30
-            FlashRed(33)
-            Thread.Sleep(33)
+            'FlashRed(33)
+            'Thread.Sleep(33)
         Next
 
 
