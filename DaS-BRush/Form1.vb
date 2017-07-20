@@ -1,5 +1,6 @@
 ﻿Imports System.Runtime.InteropServices
 Imports System.Threading
+Imports System.Globalization
 
 
 Public Class frmForm1
@@ -572,9 +573,9 @@ Public Class frmForm1
             If LUAparams(i) = "False" Then LUAparams(i) = 0
             If LUAparams(i) = "True" Then LUAparams(i) = 1
             If LUAparams(i).Contains(".") Then
-                bytes2 = BitConverter.GetBytes(Convert.ToSingle(LUAparams(i)))
+                bytes2 = BitConverter.GetBytes(Convert.ToSingle(LUAparams(i), New CultureInfo("en-us")))
             Else
-                bytes2 = BitConverter.GetBytes(Convert.ToInt32(LUAparams(i)))
+                bytes2 = BitConverter.GetBytes(Convert.ToInt32(LUAparams(i), New CultureInfo("en-us")))
             End If
 
             Array.Copy(bytes2, 0, bytes, bytParams(i), bytes2.Length)
