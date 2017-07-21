@@ -10,6 +10,7 @@ Public Class frmForm1
     'Handle equipment management
 
     'Set tails to be pre-cut to avoid drops
+    'Centipede, intro cinematic
 
 
     'Bed of Chaos, reset platform-collapsing
@@ -21,10 +22,7 @@ Public Class frmForm1
     '50001550 = Stop Rite of Kindling dropping?
     'Check ItemLotParam for boss soul EventFlags
 
-    'Check Centipede's tail/arm flags
 
-
-    'Reported 3x Sanctuary Guardians
     'Reported Kaathe Present for 4K
     'Gwyn can open with a different attack
 
@@ -379,7 +377,6 @@ Public Class frmForm1
     End Sub
 
     Private Sub checkDarkSoulsVersion()
-
         isHooked = True
         refTimer.Enabled = True
 
@@ -387,7 +384,11 @@ Public Class frmForm1
         If (RUInt32(&H400080) = &HFC293654&) Then
             lblRelease.Text = "Dark Souls (Latest Release Ver.)"
         Else
-            lblRelease.Text = "Dark Souls (Invalid Ver.)"
+            If (RUInt32(&H400080) = &HE91B11E2&) Then
+                lblRelease.Text = "Dark Souls (Invalid Beta)"
+            Else
+                lblRelease.Text = "Dark Souls (Invalid Ver.)"
+            End If
             isHooked = False
             refTimer.Enabled = False
         End If
@@ -624,6 +625,9 @@ Public Class frmForm1
         Dim tmpPtr As IntPtr = RIntPtr(&H1378700)
         WUInt32(tmpPtr + &H68, 0)
     End Sub
+    Private Sub DisableAI(ByVal state As Boolean)
+        WBytes(&H13784EE, {state})
+    End Sub
     Private Sub FadeIn()
         Dim tmpptr As UInteger
         tmpptr = RUInt32(&H1378520)
@@ -684,6 +688,9 @@ Public Class frmForm1
     End Sub
     Private Sub HealSelf()
         funcCall("SetHp", {10000, "1.0", 0, 0, 0})
+    End Sub
+    Private Sub SetSaveSlot(ByVal slot As Integer)
+        WInt32(RInt32(&H13784A0) + &HA70, slot)
     End Sub
     Private Sub ShowHUD(ByVal state As Boolean)
         Dim tmpptr As UInteger
@@ -751,10 +758,11 @@ Public Class frmForm1
 
 
     Private Sub BossAsylum()
+
+
         SetEventFlag(16, False) 'Boss Death Flag
         SetEventFlag(11810000, False) 'Tutorial Complete Flag
         SetEventFlag(11815395, True) 'Boss at lower position
-
 
 
         'Non-standard due to co-ords warp
@@ -785,6 +793,8 @@ Public Class frmForm1
         funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossBedOfChaos()
+
+
         SetEventFlag(10, False) 'Boss 
 
         SetEventFlag(11410000, False)
@@ -822,6 +832,9 @@ Public Class frmForm1
 
     End Sub
     Private Sub BossBellGargoyles()
+
+
+
         SetEventFlag(3, False) 'Boss Death Flag
         SetEventFlag(11010000, False) 'Boss Cinematic Viewed Flag
 
@@ -860,6 +873,9 @@ Public Class frmForm1
         funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossBlackDragonKalameet()
+
+
+
         SetEventFlag(11210004, False)
 
         SetEventFlag(121, False)
@@ -899,6 +915,9 @@ Public Class frmForm1
         funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossCapraDemon()
+
+
+
         SetEventFlag(11010902, False)
 
 
@@ -929,6 +948,9 @@ Public Class frmForm1
         funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossCeaselessDischarge()
+
+
+
         SetEventFlag(11410900, False) 'Boss death flag
         SetEventFlag(51410180, True) 'Corpse Loot reset
 
@@ -970,34 +992,81 @@ Public Class frmForm1
         funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossCentipedeDemon()
+
         SetEventFlag(11410901, False)
-        StandardTransition(1410998, 1412896)
+
+        'StandardTransition(1410998, 1412896)
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1410998)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+
+        Thread.Sleep(500)
+
+        Warp(10000, 1412896)
+        SetEventFlag(11415380, True)
+        SetEventFlag(11415383, True)
+        SetEventFlag(11415382, True)
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
     End Sub
     Private Sub BossChaosWitchQuelaag()
+
+
+
         SetEventFlag(9, False)
         StandardTransition(1400980, 1402997)
     End Sub
     Private Sub BossCrossbreedPriscilla()
+
+
+
         SetEventFlag(4, False) 'Boss Death flag
         SetEventFlag(1691, True) 'Boss Hostile flag
         SetEventFlag(11100531, False) 'Boss Disabled flag
         StandardTransition(1102961, 1102997)
     End Sub
     Private Sub BossDarkSunGwyndolin()
+
+
+
         SetEventFlag(11510900, False) 'Boss Death Flag
         SetEventFlag(11510523, False) 'Boss Disabled Flag
 
         StandardTransition(1510982, 1512896)
     End Sub
     Private Sub BossDemonFiresage()
+
+
+
         SetEventFlag(11410410, False)
         StandardTransition(1410998, 1412416)
     End Sub
     Private Sub BossFourKings()
+
+
+
         SetEventFlag(13, False)
+        SetEventFlag(1677, True) 'Kaathe Angry/gone
         StandardTransition(1600999, 1602996)
     End Sub
     Private Sub BossGapingDragon()
+
+
+
         SetEventFlag(2, False) 'Boss Death Flag
         SetEventFlag(11000853, True) 'Channeler Death Flag
         'StandardTransition(1000999, 1002997)
@@ -1035,6 +1104,9 @@ Public Class frmForm1
 
     End Sub
     Private Sub BossGravelordNito()
+
+
+
         SetEventFlag(7, False)
         'StandardTransition(1310998, 1312110)
 
@@ -1067,15 +1139,24 @@ Public Class frmForm1
 
     End Sub
     Private Sub BossGwyn()
+
+
+
         SetEventFlag(15, False)
         StandardTransition(1800999, 1802996)
     End Sub
     Private Sub BossIronGolem()
+
+
+
         SetEventFlag(11, False) 'Boss Death Flag
         SetEventFlag(11500865, True) 'Bomb-Tossing Giant Death Flag
         StandardTransition(1500999, 1502997)
     End Sub
     Private Sub BossKnightArtorias()
+
+
+
         SetEventFlag(11210001, False)
         SetEventFlag(1864, True) 'Ciarin Dead
 
@@ -1107,10 +1188,16 @@ Public Class frmForm1
         funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossManus()
+
+
+
         SetEventFlag(11210002, False)
         StandardTransition(1210982, 1212997)
     End Sub
     Private Sub BossMoonlightButterfly()
+
+
+
         SetEventFlag(11200900, False)
         SetEventFlag(11205383, False)
         'StandardTransition(1200999, 1202245)
@@ -1153,6 +1240,9 @@ Public Class frmForm1
 
     End Sub
     Private Sub BossOAndS()
+
+
+
         SetEventFlag(12, False)
 
 
@@ -1185,11 +1275,18 @@ Public Class frmForm1
         funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossPinwheel()
+
+
+
         SetEventFlag(6, False)
         StandardTransition(1300999, 1302999)
     End Sub
     Private Sub BossSanctuaryGuardian()
+
+
+
         SetEventFlag(11210000, False)
+        SetEventFlag(11210001, False)
 
 
         'Non-standard due to co-ords warp
@@ -1221,12 +1318,18 @@ Public Class frmForm1
         funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossSeath()
+
+
+
         SetEventFlag(14, False)
         SetEventFlag(11700000, False)
 
         StandardTransition(1700999, 1702997)
     End Sub
     Private Sub BossSif()
+
+
+
         SetEventFlag(5, False)
         SetEventFlag(11200000, False)
         SetEventFlag(11200001, False)
@@ -1263,6 +1366,9 @@ Public Class frmForm1
         funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
     Private Sub BossStrayDemon()
+
+
+
         SetEventFlag(11810000, True)
         SetEventFlag(11810900, False)
 
@@ -1298,11 +1404,16 @@ Public Class frmForm1
 
     End Sub
     Private Sub BossTaurusDemon()
+
+
+
         SetEventFlag(11010901, False)
         StandardTransition(1010998, 1012897)
     End Sub
 
     Private Sub BeginBossRush()
+
+
 
         soulTimer = New Thread(AddressOf BeginSoulTimer)
         soulTimer.IsBackground = True
@@ -1961,10 +2072,9 @@ Public Class frmForm1
 
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
 
-        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
 
-
-
+        DisableAI(True)
+        funcCall("DisableDamage", {100000, True, 0, 0, 0})
 
 
 

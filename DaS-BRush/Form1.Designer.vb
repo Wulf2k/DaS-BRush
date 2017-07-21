@@ -24,6 +24,7 @@ Partial Class frmForm1
     Private Sub InitializeComponent()
         Me.tabs = New System.Windows.Forms.TabControl()
         Me.tabBosses = New System.Windows.Forms.TabPage()
+        Me.btnBeginBossRush = New System.Windows.Forms.Button()
         Me.gbBosses = New System.Windows.Forms.GroupBox()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.Button26 = New System.Windows.Forms.Button()
@@ -129,6 +130,7 @@ Partial Class frmForm1
         Me.Label1 = New System.Windows.Forms.Label()
         Me.nmbHumanity = New System.Windows.Forms.NumericUpDown()
         Me.tabTests = New System.Windows.Forms.TabPage()
+        Me.btnTestSomeRedYeti = New System.Windows.Forms.Button()
         Me.btnTestTheAppleMan = New System.Windows.Forms.Button()
         Me.btnTest = New System.Windows.Forms.Button()
         Me.tabDonate = New System.Windows.Forms.TabPage()
@@ -139,8 +141,7 @@ Partial Class frmForm1
         Me.Label22 = New System.Windows.Forms.Label()
         Me.lblRelease = New System.Windows.Forms.Label()
         Me.btnReconnect = New System.Windows.Forms.Button()
-        Me.btnBeginBossRush = New System.Windows.Forms.Button()
-        Me.btnTestSomeRedYeti = New System.Windows.Forms.Button()
+        Me.lblVer = New System.Windows.Forms.Label()
         Me.tabs.SuspendLayout()
         Me.tabBosses.SuspendLayout()
         Me.gbBosses.SuspendLayout()
@@ -192,6 +193,15 @@ Partial Class frmForm1
         Me.tabBosses.TabIndex = 5
         Me.tabBosses.Text = "Bosses"
         Me.tabBosses.UseVisualStyleBackColor = True
+        '
+        'btnBeginBossRush
+        '
+        Me.btnBeginBossRush.Location = New System.Drawing.Point(9, 14)
+        Me.btnBeginBossRush.Name = "btnBeginBossRush"
+        Me.btnBeginBossRush.Size = New System.Drawing.Size(160, 23)
+        Me.btnBeginBossRush.TabIndex = 77
+        Me.btnBeginBossRush.Text = "Begin Boss Rush"
+        Me.btnBeginBossRush.UseVisualStyleBackColor = False
         '
         'gbBosses
         '
@@ -1229,6 +1239,15 @@ Partial Class frmForm1
         Me.tabTests.Text = "Tests"
         Me.tabTests.UseVisualStyleBackColor = True
         '
+        'btnTestSomeRedYeti
+        '
+        Me.btnTestSomeRedYeti.Location = New System.Drawing.Point(3, 58)
+        Me.btnTestSomeRedYeti.Name = "btnTestSomeRedYeti"
+        Me.btnTestSomeRedYeti.Size = New System.Drawing.Size(160, 23)
+        Me.btnTestSomeRedYeti.TabIndex = 79
+        Me.btnTestSomeRedYeti.Text = "SomeRedYeti"
+        Me.btnTestSomeRedYeti.UseVisualStyleBackColor = False
+        '
         'btnTestTheAppleMan
         '
         Me.btnTestTheAppleMan.Location = New System.Drawing.Point(3, 29)
@@ -1325,29 +1344,21 @@ Partial Class frmForm1
         Me.btnReconnect.Text = "Reconnect"
         Me.btnReconnect.UseVisualStyleBackColor = False
         '
-        'btnBeginBossRush
+        'lblVer
         '
-        Me.btnBeginBossRush.Location = New System.Drawing.Point(9, 14)
-        Me.btnBeginBossRush.Name = "btnBeginBossRush"
-        Me.btnBeginBossRush.Size = New System.Drawing.Size(160, 23)
-        Me.btnBeginBossRush.TabIndex = 77
-        Me.btnBeginBossRush.Text = "Begin Boss Rush"
-        Me.btnBeginBossRush.UseVisualStyleBackColor = False
-        '
-        'btnTestSomeRedYeti
-        '
-        Me.btnTestSomeRedYeti.Location = New System.Drawing.Point(3, 58)
-        Me.btnTestSomeRedYeti.Name = "btnTestSomeRedYeti"
-        Me.btnTestSomeRedYeti.Size = New System.Drawing.Size(160, 23)
-        Me.btnTestSomeRedYeti.TabIndex = 79
-        Me.btnTestSomeRedYeti.Text = "SomeRedYeti"
-        Me.btnTestSomeRedYeti.UseVisualStyleBackColor = False
+        Me.lblVer.AutoSize = True
+        Me.lblVer.Location = New System.Drawing.Point(325, 513)
+        Me.lblVer.Name = "lblVer"
+        Me.lblVer.Size = New System.Drawing.Size(76, 13)
+        Me.lblVer.TabIndex = 77
+        Me.lblVer.Text = "2017-07-20-17"
         '
         'frmForm1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(413, 531)
+        Me.Controls.Add(Me.lblVer)
         Me.Controls.Add(Me.btnReconnect)
         Me.Controls.Add(Me.Label22)
         Me.Controls.Add(Me.lblRelease)
@@ -1504,4 +1515,5 @@ Partial Class frmForm1
     Friend WithEvents btnTestTheAppleMan As Button
     Friend WithEvents btnBeginBossRush As Button
     Friend WithEvents btnTestSomeRedYeti As Button
+    Friend WithEvents lblVer As Label
 End Class
