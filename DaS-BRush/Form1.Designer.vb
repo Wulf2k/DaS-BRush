@@ -142,6 +142,9 @@ Partial Class frmForm1
         Me.lblRelease = New System.Windows.Forms.Label()
         Me.btnReconnect = New System.Windows.Forms.Button()
         Me.lblVer = New System.Windows.Forms.Label()
+        Me.btnUpdate = New System.Windows.Forms.Button()
+        Me.tabNotes = New System.Windows.Forms.TabPage()
+        Me.txtNotes = New System.Windows.Forms.TextBox()
         Me.tabs.SuspendLayout()
         Me.tabBosses.SuspendLayout()
         Me.gbBosses.SuspendLayout()
@@ -164,6 +167,7 @@ Partial Class frmForm1
         CType(Me.nmbHumanity, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabTests.SuspendLayout()
         Me.tabDonate.SuspendLayout()
+        Me.tabNotes.SuspendLayout()
         Me.SuspendLayout()
         '
         'tabs
@@ -175,6 +179,7 @@ Partial Class frmForm1
         Me.tabs.Controls.Add(Me.tabMain)
         Me.tabs.Controls.Add(Me.tabStats)
         Me.tabs.Controls.Add(Me.tabTests)
+        Me.tabs.Controls.Add(Me.tabNotes)
         Me.tabs.Controls.Add(Me.tabDonate)
         Me.tabs.Location = New System.Drawing.Point(12, 34)
         Me.tabs.Name = "tabs"
@@ -1336,6 +1341,7 @@ Partial Class frmForm1
         '
         'btnReconnect
         '
+        Me.btnReconnect.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnReconnect.Enabled = False
         Me.btnReconnect.Location = New System.Drawing.Point(320, 5)
         Me.btnReconnect.Name = "btnReconnect"
@@ -1346,18 +1352,54 @@ Partial Class frmForm1
         '
         'lblVer
         '
+        Me.lblVer.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblVer.AutoSize = True
-        Me.lblVer.Location = New System.Drawing.Point(325, 513)
+        Me.lblVer.Location = New System.Drawing.Point(300, 513)
         Me.lblVer.Name = "lblVer"
         Me.lblVer.Size = New System.Drawing.Size(76, 13)
         Me.lblVer.TabIndex = 77
-        Me.lblVer.Text = "2017-07-20-17"
+        Me.lblVer.Text = "2017-07-23-12"
+        '
+        'btnUpdate
+        '
+        Me.btnUpdate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnUpdate.Location = New System.Drawing.Point(25, 508)
+        Me.btnUpdate.Name = "btnUpdate"
+        Me.btnUpdate.Size = New System.Drawing.Size(160, 23)
+        Me.btnUpdate.TabIndex = 78
+        Me.btnUpdate.Text = "Update BRush"
+        Me.btnUpdate.UseVisualStyleBackColor = True
+        Me.btnUpdate.Visible = False
+        '
+        'tabNotes
+        '
+        Me.tabNotes.Controls.Add(Me.txtNotes)
+        Me.tabNotes.Location = New System.Drawing.Point(4, 22)
+        Me.tabNotes.Name = "tabNotes"
+        Me.tabNotes.Size = New System.Drawing.Size(381, 446)
+        Me.tabNotes.TabIndex = 8
+        Me.tabNotes.Text = "Notes"
+        Me.tabNotes.UseVisualStyleBackColor = True
+        '
+        'txtNotes
+        '
+        Me.txtNotes.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtNotes.Enabled = False
+        Me.txtNotes.Location = New System.Drawing.Point(9, 4)
+        Me.txtNotes.Multiline = True
+        Me.txtNotes.Name = "txtNotes"
+        Me.txtNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtNotes.Size = New System.Drawing.Size(362, 439)
+        Me.txtNotes.TabIndex = 0
         '
         'frmForm1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(413, 531)
+        Me.Controls.Add(Me.btnUpdate)
         Me.Controls.Add(Me.lblVer)
         Me.Controls.Add(Me.btnReconnect)
         Me.Controls.Add(Me.Label22)
@@ -1391,6 +1433,8 @@ Partial Class frmForm1
         Me.tabTests.ResumeLayout(False)
         Me.tabDonate.ResumeLayout(False)
         Me.tabDonate.PerformLayout()
+        Me.tabNotes.ResumeLayout(False)
+        Me.tabNotes.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1516,4 +1560,7 @@ Partial Class frmForm1
     Friend WithEvents btnBeginBossRush As Button
     Friend WithEvents btnTestSomeRedYeti As Button
     Friend WithEvents lblVer As Label
+    Friend WithEvents btnUpdate As Button
+    Friend WithEvents tabNotes As TabPage
+    Friend WithEvents txtNotes As TextBox
 End Class

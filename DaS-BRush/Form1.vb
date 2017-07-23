@@ -1,4 +1,5 @@
 ﻿Imports System.Runtime.InteropServices
+Imports System.IO
 Imports System.Threading
 Imports System.Globalization
 
@@ -23,8 +24,8 @@ Public Class frmForm1
     'Check ItemLotParam for boss soul EventFlags
 
 
-    'Reported Kaathe Present for 4K
-    'Gwyn can open with a different attack
+    Public Const VersionCheckUrl = "http://wulf2k.ca/pc/das/das-brush-ver.txt"
+    Public Const NoteCheckUrl = "http://wulf2k.ca/pc/das/das-brush-notes.txt"
 
     Private WithEvents refTimer As New System.Windows.Forms.Timer()
     Public Declare Function GetAsyncKeyState Lib "user32" (ByVal vKey As Integer) As Short
@@ -117,6 +118,30 @@ Public Class frmForm1
     Private _targetProcess As Process = Nothing 'to keep track of it. not used yet.
     Private _targetProcessHandle As IntPtr = IntPtr.Zero 'Used for ReadProcessMemory
 
+    Private Async Sub updatecheck()
+        Try
+            Dim client As New Net.WebClient()
+            Dim content As String = Await client.DownloadStringTaskAsync(VersionCheckUrl)
+
+            Dim lines() As String = content.Split({vbCrLf, vbLf}, StringSplitOptions.None)
+            Dim stableVersion = lines(0)
+            Dim stableUrl = lines(1)
+
+
+            If stableVersion > lblVer.Text.Replace("-", "") Then
+                btnUpdate.Visible = True
+                btnUpdate.Tag = stableUrl
+            Else
+                btnUpdate.Visible = False
+            End If
+
+            content = Await client.DownloadStringTaskAsync(NoteCheckUrl)
+            txtNotes.Text = content
+
+        Catch ex As Exception
+            'Fail silently since nobody wants to be bothered for an update check.
+        End Try
+    End Sub
 
     Public Function ScanForProcess(ByVal windowCaption As String, Optional automatic As Boolean = False) As Boolean
         Dim _allProcesses() As Process = Process.GetProcesses
@@ -348,6 +373,37 @@ Public Class frmForm1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+
+        Dim oldFileArg As String = Nothing
+        For Each arg In Environment.GetCommandLineArgs().Skip(1)
+            If arg.StartsWith("--old-file=") Then
+                oldFileArg = arg.Substring("--old-file=".Length)
+            Else
+                MsgBox("Unknown command line arguments")
+                oldFileArg = Nothing
+                Exit For
+            End If
+        Next
+        If oldFileArg IsNot Nothing Then
+            If oldFileArg.EndsWith(".old") Then
+                Dim t = New Thread(
+                    Sub()
+                        Try
+                            'Give the old version time to shut down
+                            Thread.Sleep(1000)
+                            File.Delete(oldFileArg)
+                        Catch ex As Exception
+                            Me.Invoke(Function() MsgBox("Deleting old version failed: " & vbCrLf & ex.Message, MsgBoxStyle.Exclamation))
+                        End Try
+                    End Sub)
+                t.Start()
+            Else
+                MsgBox("Deleting old version failed: Invalid filename ", MsgBoxStyle.Exclamation)
+            End If
+        End If
+
+        updatecheck()
+
         initClls()
 
         refTimer = New System.Windows.Forms.Timer
@@ -387,7 +443,7 @@ Public Class frmForm1
             If (RUInt32(&H400080) = &HE91B11E2&) Then
                 lblRelease.Text = "Dark Souls (Invalid Beta)"
             Else
-                lblRelease.Text = "Dark Souls (Invalid Ver.)"
+                lblRelease.Text = "None"
             End If
             isHooked = False
             refTimer.Enabled = False
@@ -2126,5 +2182,14 @@ Public Class frmForm1
 
 
 
+    End Sub
+
+    Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
+        Dim updateWindow As New UpdateWindow(sender.Tag)
+        updateWindow.ShowDialog()
+        If updateWindow.WasSuccessful Then
+            Process.Start(updateWindow.NewAssembly, """--old-file=" & updateWindow.OldAssembly & """")
+            Me.Close()
+        End If
     End Sub
 End Class
