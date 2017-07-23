@@ -34,12 +34,14 @@ Public Class frmForm1
     Private soulTimer As Thread
 
 
+    Private Declare Function CloseHandle Lib "kernel32.dll" (ByVal hObject As IntPtr) As Boolean
+    Private Declare Function CreateRemoteThread Lib "kernel32" (ByVal hProcess As IntPtr, ByVal lpThreadAttributes As IntPtr, ByVal dwStackSize As Integer, ByVal lpStartAddress As IntPtr, ByVal lpParameter As IntPtr, ByVal dwCreationFlags As Integer, ByRef lpThreadId As IntPtr) As Integer
     Private Declare Function OpenProcess Lib "kernel32.dll" (ByVal dwDesiredAcess As UInt32, ByVal bInheritHandle As Boolean, ByVal dwProcessId As Int32) As IntPtr
     Private Declare Function ReadProcessMemory Lib "kernel32" (ByVal hProcess As IntPtr, ByVal lpBaseAddress As IntPtr, ByVal lpBuffer() As Byte, ByVal iSize As Integer, ByRef lpNumberOfBytesRead As Integer) As Boolean
     Private Declare Function WriteProcessMemory Lib "kernel32" (ByVal hProcess As IntPtr, ByVal lpBaseAddress As IntPtr, ByVal lpBuffer() As Byte, ByVal iSize As Integer, ByVal lpNumberOfBytesWritten As Integer) As Boolean
-    Private Declare Function CloseHandle Lib "kernel32.dll" (ByVal hObject As IntPtr) As Boolean
     Private Declare Function VirtualAllocEx Lib "kernel32.dll" (ByVal hProcess As IntPtr, ByVal lpAddress As IntPtr, ByVal dwSize As IntPtr, ByVal flAllocationType As Integer, ByVal flProtect As Integer) As IntPtr
-    Private Declare Function CreateRemoteThread Lib "kernel32" (ByVal hProcess As IntPtr, ByVal lpThreadAttributes As IntPtr, ByVal dwStackSize As Integer, ByVal lpStartAddress As IntPtr, ByVal lpParameter As IntPtr, ByVal dwCreationFlags As Integer, ByRef lpThreadId As IntPtr) As Integer
+    Private Declare Function VirtualProtectEx Lib "kernel32.dll" (ByVal hProcess As IntPtr, ByVal lpAddress As IntPtr, ByVal dwSize As IntPtr, ByVal flNewProtect As Integer, ByRef lpflOldProtect As Integer) As Boolean
+
 
     Public Const PROCESS_VM_READ = &H10
     Public Const TH32CS_SNAPPROCESS = &H2
@@ -355,6 +357,9 @@ Public Class frmForm1
         Return Str
     End Function
 
+    Public Sub Wint16(ByVal addr As IntPtr, val As Int16)
+        WriteProcessMemory(_targetProcessHandle, addr, BitConverter.GetBytes(val), 2, Nothing)
+    End Sub
     Public Sub WInt32(ByVal addr As IntPtr, val As Int32)
         WriteProcessMemory(_targetProcessHandle, addr, BitConverter.GetBytes(val), 4, Nothing)
     End Sub
@@ -367,8 +372,11 @@ Public Class frmForm1
     Public Sub WBytes(ByVal addr As IntPtr, val As Byte())
         WriteProcessMemory(_targetProcessHandle, addr, val, val.Length, Nothing)
     End Sub
-    Public Sub WAsciiStr(addr As UInteger, str As String)
+    Public Sub WAsciiStr(addr As IntPtr, str As String)
         WriteProcessMemory(_targetProcessHandle, addr, System.Text.Encoding.ASCII.GetBytes(str), str.Length, Nothing)
+    End Sub
+    Public Sub WUniStr(addr As IntPtr, str As String)
+        WriteProcessMemory(_targetProcessHandle, addr, System.Text.Encoding.Unicode.GetBytes(str), str.Length * 2, Nothing)
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -491,8 +499,8 @@ Public Class frmForm1
 
 
 
-        Select Case tabs.SelectedIndex
-            Case 1
+        Select Case tabs.TabPages(tabs.SelectedIndex).Text
+            Case "Player"
                 playerHP = RInt32(charptr1 + &H2D4)
                 playerMaxHP = RInt32(charptr1 + &H2D8)
 
@@ -542,26 +550,27 @@ Public Class frmForm1
                 End If
 
 
-            Case 2
-                If Not nmbPhantomType.Focused Then nmbPhantomType.Value = RInt32(charptr1 + &H70)
-                If Not nmbTeamType.Focused Then nmbTeamType.Value = RInt32(charptr1 + &H74)
+            Case "Stats"
+                Try
+                    If Not nmbMaxHP.Focused Then nmbMaxHP.Value = RInt32(charptr2 + &H14)
+                    If Not nmbMaxStam.Focused Then nmbMaxStam.Value = RInt32(charptr2 + &H30)
 
-                If Not nmbVitality.Focused Then nmbVitality.Value = RInt32(charptr2 + &H38)
-                If Not nmbAttunement.Focused Then nmbAttunement.Value = RInt32(charptr2 + &H40)
-                If Not nmbEnd.Focused Then nmbEnd.Value = RInt32(charptr2 + &H48)
-                If Not nmbStr.Focused Then nmbStr.Value = RInt32(charptr2 + &H50)
-                If Not nmbDex.Focused Then nmbDex.Value = RInt32(charptr2 + &H58)
-                If Not nmbIntelligence.Focused Then nmbIntelligence.Value = RInt32(charptr2 + &H60)
-                If Not nmbFaith.Focused Then nmbFaith.Value = RInt32(charptr2 + &H68)
+                    If Not nmbVitality.Focused Then nmbVitality.Value = RInt32(charptr2 + &H38)
+                    If Not nmbAttunement.Focused Then nmbAttunement.Value = RInt32(charptr2 + &H40)
+                    If Not nmbEnd.Focused Then nmbEnd.Value = RInt32(charptr2 + &H48)
+                    If Not nmbStr.Focused Then nmbStr.Value = RInt32(charptr2 + &H50)
+                    If Not nmbDex.Focused Then nmbDex.Value = RInt32(charptr2 + &H58)
+                    If Not nmbIntelligence.Focused Then nmbIntelligence.Value = RInt32(charptr2 + &H60)
+                    If Not nmbFaith.Focused Then nmbFaith.Value = RInt32(charptr2 + &H68)
 
-                If Not nmbHumanity.Focused Then nmbHumanity.Value = RInt32(charptr2 + &H7C)
-                If Not nmbResistance.Focused Then nmbResistance.Value = RInt32(charptr2 + &H80)
-                If Not nmbSoulLevel.Focused Then nmbSoulLevel.Value = RInt32(charptr2 + &H88)
+                    If Not nmbHumanity.Focused Then nmbHumanity.Value = RInt32(charptr2 + &H7C)
+                    If Not nmbResistance.Focused Then nmbResistance.Value = RInt32(charptr2 + &H80)
 
-                If Not txtSouls.Focused Then txtSouls.Text = RInt32(charptr2 + &H8C)
+                    If Not nmbGender.Focused Then nmbGender.Value = RInt32(charptr2 + &HC2)
 
-                If Not nmbIndictments.Focused Then nmbIndictments.Value = RInt32(charptr2 + &HEC)
+                Catch ex As Exception
 
+                End Try
         End Select
 
 
@@ -747,6 +756,13 @@ Public Class frmForm1
     End Sub
     Private Sub SetSaveSlot(ByVal slot As Integer)
         WInt32(RInt32(&H13784A0) + &HA70, slot)
+    End Sub
+    Private Sub SetUnknownNPCName(ByVal name As String)
+        Dim tmpProtect As Integer
+        VirtualProtectEx(_targetProcessHandle, &H10CC000, &H1DE000, 4, tmpProtect)
+
+        If name.Length > 21 Then name = Strings.Left(name, 21) 'Prevent runover into code
+        WUniStr(&H11A784C, name + ChrW(0))
     End Sub
     Private Sub ShowHUD(ByVal state As Boolean)
         Dim tmpptr As UInteger
@@ -1084,16 +1100,72 @@ Public Class frmForm1
 
 
         SetEventFlag(9, False)
-        StandardTransition(1400980, 1402997)
+        'StandardTransition(1400980, 1402997)
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1400980)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+
+        Thread.Sleep(500)
+
+
+        Warp_Coords(17.2, -236.9, 113.6)
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
     End Sub
     Private Sub BossCrossbreedPriscilla()
 
 
 
         SetEventFlag(4, False) 'Boss Death flag
-        SetEventFlag(1691, True) 'Boss Hostile flag
+        SetEventFlag(1691, True) 'Priscilla Hostile flag
+        SetEventFlag(1692, True) 'Priscilla Dead flag
+
         SetEventFlag(11100531, False) 'Boss Disabled flag
-        StandardTransition(1102961, 1102997)
+
+        SetEventFlag(11100000, False) 'Previous victory flag
+
+
+
+
+        'StandardTransition(1102961, 1102997)
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1102961)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+
+        Thread.Sleep(500)
+
+
+        Warp_Coords(-22.72, 60.55, 711.86)
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
     End Sub
     Private Sub BossDarkSunGwyndolin()
 
@@ -1102,14 +1174,62 @@ Public Class frmForm1
         SetEventFlag(11510900, False) 'Boss Death Flag
         SetEventFlag(11510523, False) 'Boss Disabled Flag
 
-        StandardTransition(1510982, 1512896)
+        'StandardTransition(1510982, 1512896)
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1510982)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+
+        Thread.Sleep(500)
+
+
+        Warp_Coords(435.1, 60.2, 255.0)
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
     End Sub
     Private Sub BossDemonFiresage()
 
 
 
         SetEventFlag(11410410, False)
-        StandardTransition(1410998, 1412416)
+        'StandardTransition(1410998, 1412416)
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1410998)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+
+        Thread.Sleep(500)
+
+
+        Warp_Coords(148.04, -341.04, 95.57)
+
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
     End Sub
     Private Sub BossFourKings()
 
@@ -1117,7 +1237,33 @@ Public Class frmForm1
 
         SetEventFlag(13, False)
         SetEventFlag(1677, True) 'Kaathe Angry/gone
-        StandardTransition(1600999, 1602996)
+        'StandardTransition(1600999, 1602996)
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1600999)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+
+        Thread.Sleep(500)
+
+
+        Warp_Coords(82.24, -163.2, 0.29)
+
+        DropItem("Rings", "Covenant of Artorias", 1)
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
     End Sub
     Private Sub BossGapingDragon()
 
@@ -1199,7 +1345,31 @@ Public Class frmForm1
 
 
         SetEventFlag(15, False)
-        StandardTransition(1800999, 1802996)
+        'StandardTransition(1800999, 1802996)
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1800999)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+
+        Thread.Sleep(500)
+
+
+        Warp_Coords(418.15, -115.92, 169.58)
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
     End Sub
     Private Sub BossIronGolem()
 
@@ -1207,14 +1377,38 @@ Public Class frmForm1
 
         SetEventFlag(11, False) 'Boss Death Flag
         SetEventFlag(11500865, True) 'Bomb-Tossing Giant Death Flag
-        StandardTransition(1500999, 1502997)
+        'StandardTransition(1500999, 1502997)
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1500999)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+
+        Thread.Sleep(500)
+
+
+        Warp_Coords(85.5, 82, 255.1)
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
     End Sub
     Private Sub BossKnightArtorias()
 
 
 
         SetEventFlag(11210001, False)
-        SetEventFlag(1864, True) 'Ciarin Dead
+        SetEventFlag(11210513, False) 'Ciaran Present
 
         'Non-standard due to co-ords warp
 
@@ -1248,7 +1442,31 @@ Public Class frmForm1
 
 
         SetEventFlag(11210002, False)
-        StandardTransition(1210982, 1212997)
+        'StandardTransition(1210982, 1212997)
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1210982)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+
+        Thread.Sleep(500)
+
+
+        Warp_Coords(857.53, -576.69, 873.38)
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
     End Sub
     Private Sub BossMoonlightButterfly()
 
@@ -1335,7 +1553,31 @@ Public Class frmForm1
 
 
         SetEventFlag(6, False)
-        StandardTransition(1300999, 1302999)
+        'StandardTransition(1300999, 1302999)
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1300999)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+
+        Thread.Sleep(500)
+
+
+        Warp_Coords(46, -165.8, 152.02)
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
     End Sub
     Private Sub BossSanctuaryGuardian()
 
@@ -1380,7 +1622,30 @@ Public Class frmForm1
         SetEventFlag(14, False)
         SetEventFlag(11700000, False)
 
-        StandardTransition(1700999, 1702997)
+        'StandardTransition(1700999, 1702997)
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1700999)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+
+        Thread.Sleep(500)
+
+
+        Warp_Coords(109, 134.05, 856.48)
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
     End Sub
     Private Sub BossSif()
 
@@ -1464,7 +1729,111 @@ Public Class frmForm1
 
 
         SetEventFlag(11010901, False)
-        StandardTransition(1010998, 1012897)
+        'StandardTransition(1010998, 1012897)
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1010998)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+
+        Thread.Sleep(500)
+
+
+        Warp_Coords(49.81, 16.9, -118.87)
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
+    End Sub
+
+    Private Sub ScenarioArtoriasAndCiaran()
+
+
+        SetEventFlag(11210001, False) 'Artorias Disabled
+        SetEventFlag(11210513, True) 'Ciaran Present
+
+
+        SetEventFlag(1863, False) 'Ciaran Hostile
+        SetEventFlag(1864, False) 'Ciaran Dead
+
+        'Non-standard due to co-ords warp
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+
+        HealSelf()
+
+        WarpNextStage_Bonfire(1210998)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+
+
+        PlayerHide(True)
+        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
+
+        Thread.Sleep(500)
+        'facing 75.8 degrees
+        Warp_Coords(1034.11, -330.0, 810.68)
+
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
+        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
+
+        SetEventFlag(1863, True) 'Ciaran Hostile
+        funcCall("SetBossGauge", {6740, 1, 10001, 0, 0})
+        SetUnknownNPCName("Lord's Blade Ciaran")
+    End Sub
+    Private Sub ScenarioTripleSanctuaryGuardian()
+
+
+
+        SetEventFlag(11210000, False)
+        SetEventFlag(11210001, True)
+
+
+        'Non-standard due to co-ords warp
+
+        PlayerHide(True)
+        ShowHUD(False)
+        FadeOut()
+        HealSelf()
+
+        WarpNextStage_Bonfire(1210998)
+
+        Thread.Sleep(1000)
+
+        WaitForLoad()
+        BlackScreen()
+        PlayerHide(True)
+        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
+
+
+        Thread.Sleep(500)
+        'facing = 45 deg
+        Warp_Coords(931.82, -318.63, 472.45)
+
+
+        Thread.Sleep(1500)
+        FadeIn()
+        ShowHUD(True)
+        PlayerHide(False)
+        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
 
     Private Sub BeginBossRush()
@@ -1477,7 +1846,7 @@ Public Class frmForm1
 
         DropItem("Goods", "Dung Pie", 99)
 
-        DropItem("Rings", "Covenant of Artorias", 1)
+
 
 
 
@@ -1698,8 +2067,6 @@ Public Class frmForm1
         soulTimer.IsBackground = True
 
         DropItem("Goods", "Dung Pie", 99)
-
-        DropItem("Rings", "Covenant of Artorias", 1)
 
 
 
@@ -2080,6 +2447,17 @@ Public Class frmForm1
         trd.Start()
     End Sub
 
+    Private Sub btnScenarioArtoriasCiaran_Click(sender As Object, e As EventArgs) Handles btnScenarioArtoriasCiaran.Click
+        trd = New Thread(AddressOf ScenarioArtoriasAndCiaran)
+        trd.IsBackground = True
+        trd.Start()
+    End Sub
+
+    Private Sub btnScenarioTripleSanctuary_Click(sender As Object, e As EventArgs) Handles btnScenarioTripleSanctuary.Click
+        trd = New Thread(AddressOf ScenarioTripleSanctuaryGuardian)
+        trd.IsBackground = True
+        trd.Start()
+    End Sub
 
     Private Sub btnBeginBossRush_Click(sender As Object, e As EventArgs) Handles btnBeginBossRush.Click
         trd = New Thread(AddressOf BeginBossRush)
@@ -2134,55 +2512,10 @@ Public Class frmForm1
 
 
 
-    End Sub
-
-    Private Sub btnTestTheAppleMan_Click(sender As Object, e As EventArgs) Handles btnTestTheAppleMan.Click
-        SetEventFlag(3, False) 'Boss Death Flag
-        SetEventFlag(11010000, False) 'Boss Cinematic Viewed Flag
-
-        FadeOut()
-        Warp_Coords(10.8, 48.92, 87.26)
-
-
-
-        FadeIn()
-        ShowHUD(True)
-        PlayerHide(False)
-    End Sub
-
-    Private Sub btnTestSomeRedYeti_Click(sender As Object, e As EventArgs) Handles btnTestSomeRedYeti.Click
-        SetEventFlag(11010902, False)
-        'StandardTransition(1010998, 1012887)
-
-
-
-        PlayerHide(True)
-        ShowHUD(False)
-        FadeOut()
-
-        HealSelf()
-
-        WarpNextStage_Bonfire(1010998)
-
-        Thread.Sleep(1000)
-
-        WaitForLoad()
-        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
-        BlackScreen()
-        PlayerHide(True)
-
-        Warp(10000, 1012887)
-        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
-
-        Thread.Sleep(2000)
-        FadeIn()
-        ShowHUD(True)
-        PlayerHide(False)
-
-
-
 
     End Sub
+
+
 
     Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
         Dim updateWindow As New UpdateWindow(sender.Tag)
@@ -2192,4 +2525,62 @@ Public Class frmForm1
             Me.Close()
         End If
     End Sub
+
+    Private Sub btnDisableAI_Click(sender As Object, e As EventArgs) Handles btnDisableAI.Click
+        DisableAI(True)
+    End Sub
+
+    Private Sub btnEnableAI_Click(sender As Object, e As EventArgs) Handles btnEnableAI.Click
+        DisableAI(False)
+    End Sub
+
+    Private Sub nmbVitality_ValueChanged(sender As Object, e As EventArgs) Handles nmbVitality.ValueChanged
+        WInt32(charptr2 + &H38, sender.Value)
+    End Sub
+
+    Private Sub nmbAttunement_ValueChanged(sender As Object, e As EventArgs) Handles nmbAttunement.ValueChanged
+        WInt32(charptr2 + &H40, sender.Value)
+    End Sub
+
+    Private Sub nmbEnd_ValueChanged(sender As Object, e As EventArgs) Handles nmbEnd.ValueChanged
+        WInt32(charptr2 + &H48, sender.Value)
+    End Sub
+
+    Private Sub nmbStr_ValueChanged(sender As Object, e As EventArgs) Handles nmbStr.ValueChanged
+        WInt32(charptr2 + &H50, sender.Value)
+    End Sub
+
+    Private Sub nmbDex_ValueChanged(sender As Object, e As EventArgs) Handles nmbDex.ValueChanged
+        WInt32(charptr2 + &H58, sender.Value)
+    End Sub
+
+    Private Sub nmbResistance_ValueChanged(sender As Object, e As EventArgs) Handles nmbResistance.ValueChanged
+        WInt32(charptr2 + &H80, sender.Value)
+    End Sub
+
+    Private Sub nmbIntelligence_ValueChanged(sender As Object, e As EventArgs) Handles nmbIntelligence.ValueChanged
+        WInt32(charptr2 + &H60, sender.Value)
+    End Sub
+
+    Private Sub nmbFaith_ValueChanged(sender As Object, e As EventArgs) Handles nmbFaith.ValueChanged
+        WInt32(charptr2 + &H68, sender.Value)
+    End Sub
+
+    Private Sub nmbHumanity_ValueChanged(sender As Object, e As EventArgs) Handles nmbHumanity.ValueChanged
+        WInt32(charptr2 + &H7C, sender.Value)
+    End Sub
+
+    Private Sub nmbGender_ValueChanged(sender As Object, e As EventArgs) Handles nmbGender.ValueChanged
+        Wint16(charptr2 + &HC2, sender.value)
+    End Sub
+
+    Private Sub nmbMaxHP_ValueChanged(sender As Object, e As EventArgs) Handles nmbMaxHP.ValueChanged
+        WInt32(charptr2 + &H14, sender.Value)
+    End Sub
+
+    Private Sub nmbMaxStam_ValueChanged(sender As Object, e As EventArgs) Handles nmbMaxStam.ValueChanged
+        WInt32(charptr2 + &H30, sender.Value)
+    End Sub
+
+
 End Class

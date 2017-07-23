@@ -79,6 +79,9 @@ Partial Class frmForm1
         Me.btnBossGravelordNito = New System.Windows.Forms.Button()
         Me.Button13 = New System.Windows.Forms.Button()
         Me.btnBeginReverseRush = New System.Windows.Forms.Button()
+        Me.tabScenarios = New System.Windows.Forms.TabPage()
+        Me.btnScenarioTripleSanctuary = New System.Windows.Forms.Button()
+        Me.btnScenarioArtoriasCiaran = New System.Windows.Forms.Button()
         Me.tabMain = New System.Windows.Forms.TabPage()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.lblPlaytime = New System.Windows.Forms.Label()
@@ -101,12 +104,12 @@ Partial Class frmForm1
         Me.lblYpos = New System.Windows.Forms.Label()
         Me.lblXpos = New System.Windows.Forms.Label()
         Me.tabStats = New System.Windows.Forms.TabPage()
-        Me.Label18 = New System.Windows.Forms.Label()
-        Me.nmbIndictments = New System.Windows.Forms.NumericUpDown()
-        Me.Label17 = New System.Windows.Forms.Label()
-        Me.txtSouls = New System.Windows.Forms.TextBox()
-        Me.Label16 = New System.Windows.Forms.Label()
-        Me.nmbSoulLevel = New System.Windows.Forms.NumericUpDown()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.nmbMaxHP = New System.Windows.Forms.NumericUpDown()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.nmbMaxStam = New System.Windows.Forms.NumericUpDown()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.nmbGender = New System.Windows.Forms.NumericUpDown()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.nmbVitality = New System.Windows.Forms.NumericUpDown()
         Me.Label13 = New System.Windows.Forms.Label()
@@ -123,16 +126,14 @@ Partial Class frmForm1
         Me.nmbIntelligence = New System.Windows.Forms.NumericUpDown()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.nmbFaith = New System.Windows.Forms.NumericUpDown()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.nmbTeamType = New System.Windows.Forms.NumericUpDown()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.nmbPhantomType = New System.Windows.Forms.NumericUpDown()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.nmbHumanity = New System.Windows.Forms.NumericUpDown()
         Me.tabTests = New System.Windows.Forms.TabPage()
-        Me.btnTestSomeRedYeti = New System.Windows.Forms.Button()
-        Me.btnTestTheAppleMan = New System.Windows.Forms.Button()
+        Me.btnEnableAI = New System.Windows.Forms.Button()
+        Me.btnDisableAI = New System.Windows.Forms.Button()
         Me.btnTest = New System.Windows.Forms.Button()
+        Me.tabNotes = New System.Windows.Forms.TabPage()
+        Me.txtNotes = New System.Windows.Forms.TextBox()
         Me.tabDonate = New System.Windows.Forms.TabPage()
         Me.btnDonate = New System.Windows.Forms.Button()
         Me.Label6 = New System.Windows.Forms.Label()
@@ -143,17 +144,17 @@ Partial Class frmForm1
         Me.btnReconnect = New System.Windows.Forms.Button()
         Me.lblVer = New System.Windows.Forms.Label()
         Me.btnUpdate = New System.Windows.Forms.Button()
-        Me.tabNotes = New System.Windows.Forms.TabPage()
-        Me.txtNotes = New System.Windows.Forms.TextBox()
         Me.tabs.SuspendLayout()
         Me.tabBosses.SuspendLayout()
         Me.gbBosses.SuspendLayout()
+        Me.tabScenarios.SuspendLayout()
         Me.tabMain.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.tabStats.SuspendLayout()
-        CType(Me.nmbIndictments, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.nmbSoulLevel, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nmbMaxHP, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nmbMaxStam, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nmbGender, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nmbVitality, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nmbAttunement, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nmbEnd, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -162,12 +163,10 @@ Partial Class frmForm1
         CType(Me.nmbResistance, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nmbIntelligence, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nmbFaith, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.nmbTeamType, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.nmbPhantomType, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nmbHumanity, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabTests.SuspendLayout()
-        Me.tabDonate.SuspendLayout()
         Me.tabNotes.SuspendLayout()
+        Me.tabDonate.SuspendLayout()
         Me.SuspendLayout()
         '
         'tabs
@@ -176,6 +175,7 @@ Partial Class frmForm1
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.tabs.Controls.Add(Me.tabBosses)
+        Me.tabs.Controls.Add(Me.tabScenarios)
         Me.tabs.Controls.Add(Me.tabMain)
         Me.tabs.Controls.Add(Me.tabStats)
         Me.tabs.Controls.Add(Me.tabTests)
@@ -746,6 +746,35 @@ Partial Class frmForm1
         Me.btnBeginReverseRush.Text = "Begin Reverse Rush"
         Me.btnBeginReverseRush.UseVisualStyleBackColor = False
         '
+        'tabScenarios
+        '
+        Me.tabScenarios.Controls.Add(Me.btnScenarioTripleSanctuary)
+        Me.tabScenarios.Controls.Add(Me.btnScenarioArtoriasCiaran)
+        Me.tabScenarios.Location = New System.Drawing.Point(4, 22)
+        Me.tabScenarios.Name = "tabScenarios"
+        Me.tabScenarios.Size = New System.Drawing.Size(381, 446)
+        Me.tabScenarios.TabIndex = 9
+        Me.tabScenarios.Text = "Scenarios"
+        Me.tabScenarios.UseVisualStyleBackColor = True
+        '
+        'btnScenarioTripleSanctuary
+        '
+        Me.btnScenarioTripleSanctuary.Location = New System.Drawing.Point(9, 65)
+        Me.btnScenarioTripleSanctuary.Name = "btnScenarioTripleSanctuary"
+        Me.btnScenarioTripleSanctuary.Size = New System.Drawing.Size(160, 23)
+        Me.btnScenarioTripleSanctuary.TabIndex = 70
+        Me.btnScenarioTripleSanctuary.Text = "3x Sanctuary Guardian"
+        Me.btnScenarioTripleSanctuary.UseVisualStyleBackColor = False
+        '
+        'btnScenarioArtoriasCiaran
+        '
+        Me.btnScenarioArtoriasCiaran.Location = New System.Drawing.Point(9, 36)
+        Me.btnScenarioArtoriasCiaran.Name = "btnScenarioArtoriasCiaran"
+        Me.btnScenarioArtoriasCiaran.Size = New System.Drawing.Size(160, 23)
+        Me.btnScenarioArtoriasCiaran.TabIndex = 69
+        Me.btnScenarioArtoriasCiaran.Text = "Knight Artorias + Ciaran"
+        Me.btnScenarioArtoriasCiaran.UseVisualStyleBackColor = False
+        '
         'tabMain
         '
         Me.tabMain.AutoScroll = True
@@ -959,12 +988,12 @@ Partial Class frmForm1
         'tabStats
         '
         Me.tabStats.AutoScroll = True
-        Me.tabStats.Controls.Add(Me.Label18)
-        Me.tabStats.Controls.Add(Me.nmbIndictments)
-        Me.tabStats.Controls.Add(Me.Label17)
-        Me.tabStats.Controls.Add(Me.txtSouls)
-        Me.tabStats.Controls.Add(Me.Label16)
-        Me.tabStats.Controls.Add(Me.nmbSoulLevel)
+        Me.tabStats.Controls.Add(Me.Label3)
+        Me.tabStats.Controls.Add(Me.nmbMaxHP)
+        Me.tabStats.Controls.Add(Me.Label7)
+        Me.tabStats.Controls.Add(Me.nmbMaxStam)
+        Me.tabStats.Controls.Add(Me.Label2)
+        Me.tabStats.Controls.Add(Me.nmbGender)
         Me.tabStats.Controls.Add(Me.Label12)
         Me.tabStats.Controls.Add(Me.nmbVitality)
         Me.tabStats.Controls.Add(Me.Label13)
@@ -981,10 +1010,6 @@ Partial Class frmForm1
         Me.tabStats.Controls.Add(Me.nmbIntelligence)
         Me.tabStats.Controls.Add(Me.Label8)
         Me.tabStats.Controls.Add(Me.nmbFaith)
-        Me.tabStats.Controls.Add(Me.Label3)
-        Me.tabStats.Controls.Add(Me.nmbTeamType)
-        Me.tabStats.Controls.Add(Me.Label2)
-        Me.tabStats.Controls.Add(Me.nmbPhantomType)
         Me.tabStats.Controls.Add(Me.Label1)
         Me.tabStats.Controls.Add(Me.nmbHumanity)
         Me.tabStats.Location = New System.Drawing.Point(4, 22)
@@ -993,62 +1018,61 @@ Partial Class frmForm1
         Me.tabStats.TabIndex = 2
         Me.tabStats.Text = "Stats"
         '
-        'Label18
+        'Label3
         '
-        Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(29, 63)
-        Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(61, 13)
-        Me.Label18.TabIndex = 27
-        Me.Label18.Text = "Indictments"
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(65, 47)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(45, 13)
+        Me.Label3.TabIndex = 27
+        Me.Label3.Text = "Max HP"
         '
-        'nmbIndictments
+        'nmbMaxHP
         '
-        Me.nmbIndictments.Enabled = False
-        Me.nmbIndictments.Location = New System.Drawing.Point(116, 59)
-        Me.nmbIndictments.Name = "nmbIndictments"
-        Me.nmbIndictments.Size = New System.Drawing.Size(100, 20)
-        Me.nmbIndictments.TabIndex = 26
+        Me.nmbMaxHP.Location = New System.Drawing.Point(124, 45)
+        Me.nmbMaxHP.Maximum = New Decimal(New Integer() {1900, 0, 0, 0})
+        Me.nmbMaxHP.Name = "nmbMaxHP"
+        Me.nmbMaxHP.Size = New System.Drawing.Size(65, 20)
+        Me.nmbMaxHP.TabIndex = 26
         '
-        'Label17
+        'Label7
         '
-        Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(59, 339)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(33, 13)
-        Me.Label17.TabIndex = 25
-        Me.Label17.Text = "Souls"
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(42, 70)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(68, 13)
+        Me.Label7.TabIndex = 25
+        Me.Label7.Text = "Max Stamina"
         '
-        'txtSouls
+        'nmbMaxStam
         '
-        Me.txtSouls.Enabled = False
-        Me.txtSouls.Location = New System.Drawing.Point(116, 335)
-        Me.txtSouls.Name = "txtSouls"
-        Me.txtSouls.Size = New System.Drawing.Size(100, 20)
-        Me.txtSouls.TabIndex = 24
+        Me.nmbMaxStam.Location = New System.Drawing.Point(124, 68)
+        Me.nmbMaxStam.Maximum = New Decimal(New Integer() {160, 0, 0, 0})
+        Me.nmbMaxStam.Name = "nmbMaxStam"
+        Me.nmbMaxStam.Size = New System.Drawing.Size(65, 20)
+        Me.nmbMaxStam.TabIndex = 24
         '
-        'Label16
+        'Label2
         '
-        Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(35, 308)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(57, 13)
-        Me.Label16.TabIndex = 23
-        Me.Label16.Text = "Soul Level"
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(22, 306)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(86, 13)
+        Me.Label2.TabIndex = 23
+        Me.Label2.Text = "External Genitals"
         '
-        'nmbSoulLevel
+        'nmbGender
         '
-        Me.nmbSoulLevel.Enabled = False
-        Me.nmbSoulLevel.Location = New System.Drawing.Point(116, 305)
-        Me.nmbSoulLevel.Maximum = New Decimal(New Integer() {1024, 0, 0, 0})
-        Me.nmbSoulLevel.Name = "nmbSoulLevel"
-        Me.nmbSoulLevel.Size = New System.Drawing.Size(100, 20)
-        Me.nmbSoulLevel.TabIndex = 22
+        Me.nmbGender.Location = New System.Drawing.Point(124, 304)
+        Me.nmbGender.Maximum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.nmbGender.Name = "nmbGender"
+        Me.nmbGender.Size = New System.Drawing.Size(65, 20)
+        Me.nmbGender.TabIndex = 22
         '
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(53, 101)
+        Me.Label12.Location = New System.Drawing.Point(71, 96)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(37, 13)
         Me.Label12.TabIndex = 21
@@ -1056,16 +1080,16 @@ Partial Class frmForm1
         '
         'nmbVitality
         '
-        Me.nmbVitality.Enabled = False
-        Me.nmbVitality.Location = New System.Drawing.Point(116, 98)
+        Me.nmbVitality.Location = New System.Drawing.Point(124, 94)
+        Me.nmbVitality.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbVitality.Name = "nmbVitality"
-        Me.nmbVitality.Size = New System.Drawing.Size(100, 20)
+        Me.nmbVitality.Size = New System.Drawing.Size(65, 20)
         Me.nmbVitality.TabIndex = 20
         '
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(31, 124)
+        Me.Label13.Location = New System.Drawing.Point(49, 119)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(61, 13)
         Me.Label13.TabIndex = 19
@@ -1073,16 +1097,16 @@ Partial Class frmForm1
         '
         'nmbAttunement
         '
-        Me.nmbAttunement.Enabled = False
-        Me.nmbAttunement.Location = New System.Drawing.Point(116, 121)
+        Me.nmbAttunement.Location = New System.Drawing.Point(124, 117)
+        Me.nmbAttunement.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbAttunement.Name = "nmbAttunement"
-        Me.nmbAttunement.Size = New System.Drawing.Size(100, 20)
+        Me.nmbAttunement.Size = New System.Drawing.Size(65, 20)
         Me.nmbAttunement.TabIndex = 18
         '
         'Label14
         '
         Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(33, 147)
+        Me.Label14.Location = New System.Drawing.Point(51, 142)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(59, 13)
         Me.Label14.TabIndex = 17
@@ -1090,16 +1114,16 @@ Partial Class frmForm1
         '
         'nmbEnd
         '
-        Me.nmbEnd.Enabled = False
-        Me.nmbEnd.Location = New System.Drawing.Point(116, 144)
+        Me.nmbEnd.Location = New System.Drawing.Point(124, 140)
+        Me.nmbEnd.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbEnd.Name = "nmbEnd"
-        Me.nmbEnd.Size = New System.Drawing.Size(100, 20)
+        Me.nmbEnd.Size = New System.Drawing.Size(65, 20)
         Me.nmbEnd.TabIndex = 16
         '
         'Label15
         '
         Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(43, 170)
+        Me.Label15.Location = New System.Drawing.Point(61, 165)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(47, 13)
         Me.Label15.TabIndex = 15
@@ -1107,16 +1131,16 @@ Partial Class frmForm1
         '
         'nmbStr
         '
-        Me.nmbStr.Enabled = False
-        Me.nmbStr.Location = New System.Drawing.Point(116, 167)
+        Me.nmbStr.Location = New System.Drawing.Point(124, 163)
+        Me.nmbStr.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbStr.Name = "nmbStr"
-        Me.nmbStr.Size = New System.Drawing.Size(100, 20)
+        Me.nmbStr.Size = New System.Drawing.Size(65, 20)
         Me.nmbStr.TabIndex = 14
         '
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(44, 193)
+        Me.Label11.Location = New System.Drawing.Point(62, 188)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(48, 13)
         Me.Label11.TabIndex = 13
@@ -1124,16 +1148,16 @@ Partial Class frmForm1
         '
         'nmbDex
         '
-        Me.nmbDex.Enabled = False
-        Me.nmbDex.Location = New System.Drawing.Point(116, 190)
+        Me.nmbDex.Location = New System.Drawing.Point(124, 186)
+        Me.nmbDex.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbDex.Name = "nmbDex"
-        Me.nmbDex.Size = New System.Drawing.Size(100, 20)
+        Me.nmbDex.Size = New System.Drawing.Size(65, 20)
         Me.nmbDex.TabIndex = 12
         '
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(30, 214)
+        Me.Label10.Location = New System.Drawing.Point(48, 209)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(60, 13)
         Me.Label10.TabIndex = 11
@@ -1141,16 +1165,16 @@ Partial Class frmForm1
         '
         'nmbResistance
         '
-        Me.nmbResistance.Enabled = False
-        Me.nmbResistance.Location = New System.Drawing.Point(116, 213)
+        Me.nmbResistance.Location = New System.Drawing.Point(124, 209)
+        Me.nmbResistance.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbResistance.Name = "nmbResistance"
-        Me.nmbResistance.Size = New System.Drawing.Size(100, 20)
+        Me.nmbResistance.Size = New System.Drawing.Size(65, 20)
         Me.nmbResistance.TabIndex = 10
         '
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(31, 239)
+        Me.Label9.Location = New System.Drawing.Point(49, 234)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(61, 13)
         Me.Label9.TabIndex = 9
@@ -1158,16 +1182,16 @@ Partial Class frmForm1
         '
         'nmbIntelligence
         '
-        Me.nmbIntelligence.Enabled = False
-        Me.nmbIntelligence.Location = New System.Drawing.Point(116, 236)
+        Me.nmbIntelligence.Location = New System.Drawing.Point(124, 232)
+        Me.nmbIntelligence.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbIntelligence.Name = "nmbIntelligence"
-        Me.nmbIntelligence.Size = New System.Drawing.Size(100, 20)
+        Me.nmbIntelligence.Size = New System.Drawing.Size(65, 20)
         Me.nmbIntelligence.TabIndex = 8
         '
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(60, 262)
+        Me.Label8.Location = New System.Drawing.Point(78, 257)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(30, 13)
         Me.Label8.TabIndex = 7
@@ -1175,50 +1199,16 @@ Partial Class frmForm1
         '
         'nmbFaith
         '
-        Me.nmbFaith.Enabled = False
-        Me.nmbFaith.Location = New System.Drawing.Point(116, 259)
+        Me.nmbFaith.Location = New System.Drawing.Point(124, 255)
+        Me.nmbFaith.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbFaith.Name = "nmbFaith"
-        Me.nmbFaith.Size = New System.Drawing.Size(100, 20)
+        Me.nmbFaith.Size = New System.Drawing.Size(65, 20)
         Me.nmbFaith.TabIndex = 6
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(31, 37)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(61, 13)
-        Me.Label3.TabIndex = 5
-        Me.Label3.Text = "Team Type"
-        '
-        'nmbTeamType
-        '
-        Me.nmbTeamType.Enabled = False
-        Me.nmbTeamType.Location = New System.Drawing.Point(116, 33)
-        Me.nmbTeamType.Name = "nmbTeamType"
-        Me.nmbTeamType.Size = New System.Drawing.Size(100, 20)
-        Me.nmbTeamType.TabIndex = 4
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(14, 14)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(76, 13)
-        Me.Label2.TabIndex = 3
-        Me.Label2.Text = "Phantom Type"
-        '
-        'nmbPhantomType
-        '
-        Me.nmbPhantomType.Enabled = False
-        Me.nmbPhantomType.Location = New System.Drawing.Point(116, 10)
-        Me.nmbPhantomType.Name = "nmbPhantomType"
-        Me.nmbPhantomType.Size = New System.Drawing.Size(100, 20)
-        Me.nmbPhantomType.TabIndex = 2
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(41, 285)
+        Me.Label1.Location = New System.Drawing.Point(57, 280)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(51, 13)
         Me.Label1.TabIndex = 1
@@ -1226,16 +1216,16 @@ Partial Class frmForm1
         '
         'nmbHumanity
         '
-        Me.nmbHumanity.Enabled = False
-        Me.nmbHumanity.Location = New System.Drawing.Point(116, 282)
+        Me.nmbHumanity.Location = New System.Drawing.Point(124, 278)
+        Me.nmbHumanity.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbHumanity.Name = "nmbHumanity"
-        Me.nmbHumanity.Size = New System.Drawing.Size(100, 20)
+        Me.nmbHumanity.Size = New System.Drawing.Size(65, 20)
         Me.nmbHumanity.TabIndex = 0
         '
         'tabTests
         '
-        Me.tabTests.Controls.Add(Me.btnTestSomeRedYeti)
-        Me.tabTests.Controls.Add(Me.btnTestTheAppleMan)
+        Me.tabTests.Controls.Add(Me.btnEnableAI)
+        Me.tabTests.Controls.Add(Me.btnDisableAI)
         Me.tabTests.Controls.Add(Me.btnTest)
         Me.tabTests.Location = New System.Drawing.Point(4, 22)
         Me.tabTests.Name = "tabTests"
@@ -1244,23 +1234,23 @@ Partial Class frmForm1
         Me.tabTests.Text = "Tests"
         Me.tabTests.UseVisualStyleBackColor = True
         '
-        'btnTestSomeRedYeti
+        'btnEnableAI
         '
-        Me.btnTestSomeRedYeti.Location = New System.Drawing.Point(3, 58)
-        Me.btnTestSomeRedYeti.Name = "btnTestSomeRedYeti"
-        Me.btnTestSomeRedYeti.Size = New System.Drawing.Size(160, 23)
-        Me.btnTestSomeRedYeti.TabIndex = 79
-        Me.btnTestSomeRedYeti.Text = "SomeRedYeti"
-        Me.btnTestSomeRedYeti.UseVisualStyleBackColor = False
+        Me.btnEnableAI.Location = New System.Drawing.Point(9, 68)
+        Me.btnEnableAI.Name = "btnEnableAI"
+        Me.btnEnableAI.Size = New System.Drawing.Size(160, 23)
+        Me.btnEnableAI.TabIndex = 81
+        Me.btnEnableAI.Text = "Enable AI"
+        Me.btnEnableAI.UseVisualStyleBackColor = False
         '
-        'btnTestTheAppleMan
+        'btnDisableAI
         '
-        Me.btnTestTheAppleMan.Location = New System.Drawing.Point(3, 29)
-        Me.btnTestTheAppleMan.Name = "btnTestTheAppleMan"
-        Me.btnTestTheAppleMan.Size = New System.Drawing.Size(160, 23)
-        Me.btnTestTheAppleMan.TabIndex = 78
-        Me.btnTestTheAppleMan.Text = "TheAppleMan"
-        Me.btnTestTheAppleMan.UseVisualStyleBackColor = False
+        Me.btnDisableAI.Location = New System.Drawing.Point(9, 39)
+        Me.btnDisableAI.Name = "btnDisableAI"
+        Me.btnDisableAI.Size = New System.Drawing.Size(160, 23)
+        Me.btnDisableAI.TabIndex = 80
+        Me.btnDisableAI.Text = "Disable AI"
+        Me.btnDisableAI.UseVisualStyleBackColor = False
         '
         'btnTest
         '
@@ -1270,6 +1260,29 @@ Partial Class frmForm1
         Me.btnTest.TabIndex = 77
         Me.btnTest.Text = "Test"
         Me.btnTest.UseVisualStyleBackColor = False
+        '
+        'tabNotes
+        '
+        Me.tabNotes.Controls.Add(Me.txtNotes)
+        Me.tabNotes.Location = New System.Drawing.Point(4, 22)
+        Me.tabNotes.Name = "tabNotes"
+        Me.tabNotes.Size = New System.Drawing.Size(381, 446)
+        Me.tabNotes.TabIndex = 8
+        Me.tabNotes.Text = "Notes"
+        Me.tabNotes.UseVisualStyleBackColor = True
+        '
+        'txtNotes
+        '
+        Me.txtNotes.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtNotes.Enabled = False
+        Me.txtNotes.Location = New System.Drawing.Point(9, 4)
+        Me.txtNotes.Multiline = True
+        Me.txtNotes.Name = "txtNotes"
+        Me.txtNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtNotes.Size = New System.Drawing.Size(362, 439)
+        Me.txtNotes.TabIndex = 0
         '
         'tabDonate
         '
@@ -1358,7 +1371,7 @@ Partial Class frmForm1
         Me.lblVer.Name = "lblVer"
         Me.lblVer.Size = New System.Drawing.Size(76, 13)
         Me.lblVer.TabIndex = 77
-        Me.lblVer.Text = "2017-07-23-12"
+        Me.lblVer.Text = "2017-07-23-19"
         '
         'btnUpdate
         '
@@ -1370,29 +1383,6 @@ Partial Class frmForm1
         Me.btnUpdate.Text = "Update BRush"
         Me.btnUpdate.UseVisualStyleBackColor = True
         Me.btnUpdate.Visible = False
-        '
-        'tabNotes
-        '
-        Me.tabNotes.Controls.Add(Me.txtNotes)
-        Me.tabNotes.Location = New System.Drawing.Point(4, 22)
-        Me.tabNotes.Name = "tabNotes"
-        Me.tabNotes.Size = New System.Drawing.Size(381, 446)
-        Me.tabNotes.TabIndex = 8
-        Me.tabNotes.Text = "Notes"
-        Me.tabNotes.UseVisualStyleBackColor = True
-        '
-        'txtNotes
-        '
-        Me.txtNotes.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtNotes.Enabled = False
-        Me.txtNotes.Location = New System.Drawing.Point(9, 4)
-        Me.txtNotes.Multiline = True
-        Me.txtNotes.Name = "txtNotes"
-        Me.txtNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtNotes.Size = New System.Drawing.Size(362, 439)
-        Me.txtNotes.TabIndex = 0
         '
         'frmForm1
         '
@@ -1410,6 +1400,7 @@ Partial Class frmForm1
         Me.tabs.ResumeLayout(False)
         Me.tabBosses.ResumeLayout(False)
         Me.gbBosses.ResumeLayout(False)
+        Me.tabScenarios.ResumeLayout(False)
         Me.tabMain.ResumeLayout(False)
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
@@ -1417,8 +1408,9 @@ Partial Class frmForm1
         Me.GroupBox1.PerformLayout()
         Me.tabStats.ResumeLayout(False)
         Me.tabStats.PerformLayout()
-        CType(Me.nmbIndictments, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.nmbSoulLevel, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nmbMaxHP, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nmbMaxStam, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nmbGender, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.nmbVitality, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.nmbAttunement, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.nmbEnd, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1427,14 +1419,12 @@ Partial Class frmForm1
         CType(Me.nmbResistance, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.nmbIntelligence, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.nmbFaith, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.nmbTeamType, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.nmbPhantomType, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.nmbHumanity, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabTests.ResumeLayout(False)
-        Me.tabDonate.ResumeLayout(False)
-        Me.tabDonate.PerformLayout()
         Me.tabNotes.ResumeLayout(False)
         Me.tabNotes.PerformLayout()
+        Me.tabDonate.ResumeLayout(False)
+        Me.tabDonate.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1462,12 +1452,6 @@ Partial Class frmForm1
     Friend WithEvents lblYpos As Label
     Friend WithEvents lblXpos As Label
     Friend WithEvents tabStats As TabPage
-    Friend WithEvents Label18 As Label
-    Friend WithEvents nmbIndictments As NumericUpDown
-    Friend WithEvents Label17 As Label
-    Friend WithEvents txtSouls As TextBox
-    Friend WithEvents Label16 As Label
-    Friend WithEvents nmbSoulLevel As NumericUpDown
     Friend WithEvents Label12 As Label
     Friend WithEvents nmbVitality As NumericUpDown
     Friend WithEvents Label13 As Label
@@ -1484,10 +1468,6 @@ Partial Class frmForm1
     Friend WithEvents nmbIntelligence As NumericUpDown
     Friend WithEvents Label8 As Label
     Friend WithEvents nmbFaith As NumericUpDown
-    Friend WithEvents Label3 As Label
-    Friend WithEvents nmbTeamType As NumericUpDown
-    Friend WithEvents Label2 As Label
-    Friend WithEvents nmbPhantomType As NumericUpDown
     Friend WithEvents Label1 As Label
     Friend WithEvents nmbHumanity As NumericUpDown
     Friend WithEvents Label22 As Label
@@ -1556,11 +1536,20 @@ Partial Class frmForm1
     Friend WithEvents btnReconnect As Button
     Friend WithEvents btnTest As Button
     Friend WithEvents tabTests As TabPage
-    Friend WithEvents btnTestTheAppleMan As Button
     Friend WithEvents btnBeginBossRush As Button
-    Friend WithEvents btnTestSomeRedYeti As Button
     Friend WithEvents lblVer As Label
     Friend WithEvents btnUpdate As Button
     Friend WithEvents tabNotes As TabPage
     Friend WithEvents txtNotes As TextBox
+    Friend WithEvents btnEnableAI As Button
+    Friend WithEvents btnDisableAI As Button
+    Friend WithEvents Label2 As Label
+    Friend WithEvents nmbGender As NumericUpDown
+    Friend WithEvents Label3 As Label
+    Friend WithEvents nmbMaxHP As NumericUpDown
+    Friend WithEvents Label7 As Label
+    Friend WithEvents nmbMaxStam As NumericUpDown
+    Friend WithEvents tabScenarios As TabPage
+    Friend WithEvents btnScenarioTripleSanctuary As Button
+    Friend WithEvents btnScenarioArtoriasCiaran As Button
 End Class
