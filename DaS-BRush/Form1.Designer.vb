@@ -144,6 +144,8 @@ Partial Class frmForm1
         Me.btnReconnect = New System.Windows.Forms.Button()
         Me.lblVer = New System.Windows.Forms.Label()
         Me.btnUpdate = New System.Windows.Forms.Button()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.nmbClearCount = New System.Windows.Forms.NumericUpDown()
         Me.tabs.SuspendLayout()
         Me.tabBosses.SuspendLayout()
         Me.gbBosses.SuspendLayout()
@@ -167,6 +169,7 @@ Partial Class frmForm1
         Me.tabTests.SuspendLayout()
         Me.tabNotes.SuspendLayout()
         Me.tabDonate.SuspendLayout()
+        CType(Me.nmbClearCount, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'tabs
@@ -988,6 +991,8 @@ Partial Class frmForm1
         'tabStats
         '
         Me.tabStats.AutoScroll = True
+        Me.tabStats.Controls.Add(Me.Label16)
+        Me.tabStats.Controls.Add(Me.nmbClearCount)
         Me.tabStats.Controls.Add(Me.Label3)
         Me.tabStats.Controls.Add(Me.nmbMaxHP)
         Me.tabStats.Controls.Add(Me.Label7)
@@ -1384,6 +1389,23 @@ Partial Class frmForm1
         Me.btnUpdate.UseVisualStyleBackColor = True
         Me.btnUpdate.Visible = False
         '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Location = New System.Drawing.Point(56, 332)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(52, 13)
+        Me.Label16.TabIndex = 29
+        Me.Label16.Text = "NG Level"
+        '
+        'nmbClearCount
+        '
+        Me.nmbClearCount.Location = New System.Drawing.Point(124, 330)
+        Me.nmbClearCount.Maximum = New Decimal(New Integer() {1900, 0, 0, 0})
+        Me.nmbClearCount.Name = "nmbClearCount"
+        Me.nmbClearCount.Size = New System.Drawing.Size(65, 20)
+        Me.nmbClearCount.TabIndex = 28
+        '
         'frmForm1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1425,6 +1447,7 @@ Partial Class frmForm1
         Me.tabNotes.PerformLayout()
         Me.tabDonate.ResumeLayout(False)
         Me.tabDonate.PerformLayout()
+        CType(Me.nmbClearCount, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1552,4 +1575,6 @@ Partial Class frmForm1
     Friend WithEvents tabScenarios As TabPage
     Friend WithEvents btnScenarioTripleSanctuary As Button
     Friend WithEvents btnScenarioArtoriasCiaran As Button
+    Friend WithEvents Label16 As Label
+    Friend WithEvents nmbClearCount As NumericUpDown
 End Class

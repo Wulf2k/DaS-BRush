@@ -568,6 +568,8 @@ Public Class frmForm1
 
                     If Not nmbGender.Focused Then nmbGender.Value = RInt32(charptr2 + &HC2)
 
+                    If Not nmbClearCount.Focused Then nmbClearCount.Value = RInt32(gamestatsptr + &H3C)
+
                 Catch ex As Exception
 
                 End Try
@@ -751,8 +753,12 @@ Public Class frmForm1
         WBytes(tmpptr + &H26D, {0})
 
     End Sub
-    Private Sub HealSelf()
-        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
+    Private Sub SetClearCount(ByVal clearCount As Integer)
+        Dim tmpPtr As Integer
+        tmpPtr = RInt32(&H1378700)
+
+        WInt32(tmpPtr + &H3C, clearCount)
+
     End Sub
     Private Sub SetSaveSlot(ByVal slot As Integer)
         WInt32(RInt32(&H13784A0) + &HA70, slot)
@@ -806,7 +812,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(bonfireID)
 
@@ -842,7 +848,7 @@ Public Class frmForm1
         PlayerHide(True)
         ShowHUD(False)
         FadeOut()
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1810998)
 
@@ -880,7 +886,7 @@ Public Class frmForm1
         PlayerHide(True)
         ShowHUD(False)
         FadeOut()
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1410980)
 
@@ -917,7 +923,7 @@ Public Class frmForm1
         PlayerHide(True)
         ShowHUD(False)
         FadeOut()
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1010998)
 
@@ -964,7 +970,7 @@ Public Class frmForm1
         PlayerHide(True)
         ShowHUD(False)
         FadeOut()
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1210998)
 
@@ -998,7 +1004,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1010998)
 
@@ -1036,7 +1042,7 @@ Public Class frmForm1
         PlayerHide(True)
         ShowHUD(False)
         FadeOut()
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1410998)
 
@@ -1073,7 +1079,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1410998)
 
@@ -1106,7 +1112,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1400980)
 
@@ -1147,7 +1153,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1102961)
 
@@ -1179,7 +1185,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1510982)
 
@@ -1210,7 +1216,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1410998)
 
@@ -1243,7 +1249,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1600999)
 
@@ -1277,7 +1283,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1000999)
 
@@ -1316,7 +1322,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1310998)
 
@@ -1351,7 +1357,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1800999)
 
@@ -1383,7 +1389,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1500999)
 
@@ -1415,7 +1421,7 @@ Public Class frmForm1
         PlayerHide(True)
         ShowHUD(False)
         FadeOut()
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1210998)
 
@@ -1448,7 +1454,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1210982)
 
@@ -1482,7 +1488,7 @@ Public Class frmForm1
         PlayerHide(True)
         ShowHUD(False)
         FadeOut()
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1200999)
 
@@ -1526,7 +1532,7 @@ Public Class frmForm1
         PlayerHide(True)
         ShowHUD(False)
         FadeOut()
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1510998)
 
@@ -1559,7 +1565,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1300999)
 
@@ -1592,7 +1598,7 @@ Public Class frmForm1
         PlayerHide(True)
         ShowHUD(False)
         FadeOut()
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1210998)
 
@@ -1627,7 +1633,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1700999)
 
@@ -1664,7 +1670,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1200999)
 
@@ -1700,7 +1706,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1810998)
 
@@ -1734,7 +1740,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1010998)
 
@@ -1771,7 +1777,7 @@ Public Class frmForm1
         ShowHUD(False)
         FadeOut()
 
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1210998)
 
@@ -1812,7 +1818,7 @@ Public Class frmForm1
         PlayerHide(True)
         ShowHUD(False)
         FadeOut()
-        HealSelf()
+        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1210998)
 
