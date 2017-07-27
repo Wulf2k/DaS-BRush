@@ -9,10 +9,11 @@ Public Class frmForm1
     'TODO:
     'Check equipment durability
     'Handle equipment management
-
+    
     'Set tails to be pre-cut to avoid drops
     'Centipede, intro cinematic
 
+    'Asylum Demon, Close that damn door
 
     'Bed of Chaos, reset platform-collapsing
 
@@ -758,6 +759,48 @@ Public Class frmForm1
         WBytes(tmpptr + &H26D, {0})
 
     End Sub
+    Private sub SetCamPos(Byval xpos As Single, ypos As single, zpos As single, xrot As single, yrot As single)
+        Dim tmpPtr As Integer
+
+        tmpPtr = RInt32(&H1378714)
+
+        WFloat(tmpPtr + &HB0, xpos)
+        WFloat(tmpPtr + &HB4, ypos)
+        WFloat(tmpPtr + &HB8, zpos)
+
+
+        tmpPtr = RInt32(&H137d6dc)
+        tmpPtr = RInt32(tmpPtr + &H3c)
+        tmpPtr = RInt32(tmpPtr + &H60)
+        
+
+        WFloat(tmpPtr + &H144, xrot)
+        WFloat(tmpPtr + &H150, yrot)
+
+
+        
+    End sub
+    Private sub SetFreeCam(ByVal state As Boolean)
+        If state Then
+            'WBytes(&HEFDBAF, {&H90, &H90, &H90, &H90, &H90})
+            WBytes(&H404E59, {&H90, &H90, &H90, &H90, &H90})
+            WBytes(&H404E63, {&H90, &H90, &H90, &H90, &H90})
+            WBytes(&HF06C46, {&H90, &H90, &H90, &H90, &H90, &H90, &H90, &H90})
+
+
+
+
+        Else
+            'WBytes(&HEFDBAF, {&HE8, &H7c, &H72, &H50, &HFF})
+            WBytes(&H404E59, {&H66, &H0f, &Hd6, &H46, &H20})
+            WBytes(&H404E63, {&H66, &H0f, &Hd6, &H46, &H28})
+            WBytes(&HF06C46, {&Hf3, &H0f, &H11, &H83, &H44, &H01, &H00, &H00})
+
+
+
+
+        End If
+    End sub
     Private Sub SetClearCount(ByVal clearCount As Integer)
         Dim tmpPtr As Integer
         tmpPtr = RInt32(&H1378700)
@@ -2537,26 +2580,17 @@ Public Class frmForm1
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
 
 
-        funcCall("DisableDamage", {100000, True, 0, 0, 0})
+        SetFreeCam(True)
+        'SetFreeCam(False)
 
-        SetSaveEnable(False)
-        Dim msg As String
-
-        msg = "Welcome to the Boss Rush." & Environment.NewLine
-        msg = msg & "Saving has been disabled." & Environment.NewLine
-        'msg = msg & ""
-
-
-        For i = 10 To 1 Step -1
-            msg = msg & "   " & i
-            SetBriefingMsg(msg)
-            Thread.Sleep(1000)
-        Next
+        'For i = 0 To 19
+            SetCamPos(-46.26, -57.07, 56.34, -0.8, 0)
+            'Thread.Sleep(250)
+        'Next
+        'SetCamPos(-50, -60, 60, 0, 0)
 
 
-        SetBriefingMsg("Begin")
-        'Thread.Sleep(1000)
-        funcCall("CroseBriefingMsg", {0, 0, 0, 0, 0})
+
 
     End Sub
 
