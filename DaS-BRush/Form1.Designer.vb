@@ -104,6 +104,8 @@ Partial Class frmForm1
         Me.lblYpos = New System.Windows.Forms.Label()
         Me.lblXpos = New System.Windows.Forms.Label()
         Me.tabStats = New System.Windows.Forms.TabPage()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.nmbClearCount = New System.Windows.Forms.NumericUpDown()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.nmbMaxHP = New System.Windows.Forms.NumericUpDown()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -144,8 +146,6 @@ Partial Class frmForm1
         Me.btnReconnect = New System.Windows.Forms.Button()
         Me.lblVer = New System.Windows.Forms.Label()
         Me.btnUpdate = New System.Windows.Forms.Button()
-        Me.Label16 = New System.Windows.Forms.Label()
-        Me.nmbClearCount = New System.Windows.Forms.NumericUpDown()
         Me.tabs.SuspendLayout()
         Me.tabBosses.SuspendLayout()
         Me.gbBosses.SuspendLayout()
@@ -154,6 +154,7 @@ Partial Class frmForm1
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.tabStats.SuspendLayout()
+        CType(Me.nmbClearCount, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nmbMaxHP, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nmbMaxStam, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nmbGender, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -169,7 +170,6 @@ Partial Class frmForm1
         Me.tabTests.SuspendLayout()
         Me.tabNotes.SuspendLayout()
         Me.tabDonate.SuspendLayout()
-        CType(Me.nmbClearCount, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'tabs
@@ -1023,6 +1023,23 @@ Partial Class frmForm1
         Me.tabStats.TabIndex = 2
         Me.tabStats.Text = "Stats"
         '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Location = New System.Drawing.Point(56, 332)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(52, 13)
+        Me.Label16.TabIndex = 29
+        Me.Label16.Text = "NG Level"
+        '
+        'nmbClearCount
+        '
+        Me.nmbClearCount.Location = New System.Drawing.Point(124, 330)
+        Me.nmbClearCount.Maximum = New Decimal(New Integer() {1900, 0, 0, 0})
+        Me.nmbClearCount.Name = "nmbClearCount"
+        Me.nmbClearCount.Size = New System.Drawing.Size(65, 20)
+        Me.nmbClearCount.TabIndex = 28
+        '
         'Label3
         '
         Me.Label3.AutoSize = True
@@ -1376,7 +1393,7 @@ Partial Class frmForm1
         Me.lblVer.Name = "lblVer"
         Me.lblVer.Size = New System.Drawing.Size(76, 13)
         Me.lblVer.TabIndex = 77
-        Me.lblVer.Text = "2017-07-23-19"
+        Me.lblVer.Text = "2017-07-26-19"
         '
         'btnUpdate
         '
@@ -1388,23 +1405,6 @@ Partial Class frmForm1
         Me.btnUpdate.Text = "Update BRush"
         Me.btnUpdate.UseVisualStyleBackColor = True
         Me.btnUpdate.Visible = False
-        '
-        'Label16
-        '
-        Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(56, 332)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(52, 13)
-        Me.Label16.TabIndex = 29
-        Me.Label16.Text = "NG Level"
-        '
-        'nmbClearCount
-        '
-        Me.nmbClearCount.Location = New System.Drawing.Point(124, 330)
-        Me.nmbClearCount.Maximum = New Decimal(New Integer() {1900, 0, 0, 0})
-        Me.nmbClearCount.Name = "nmbClearCount"
-        Me.nmbClearCount.Size = New System.Drawing.Size(65, 20)
-        Me.nmbClearCount.TabIndex = 28
         '
         'frmForm1
         '
@@ -1430,6 +1430,7 @@ Partial Class frmForm1
         Me.GroupBox1.PerformLayout()
         Me.tabStats.ResumeLayout(False)
         Me.tabStats.PerformLayout()
+        CType(Me.nmbClearCount, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.nmbMaxHP, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.nmbMaxStam, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.nmbGender, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1447,7 +1448,6 @@ Partial Class frmForm1
         Me.tabNotes.PerformLayout()
         Me.tabDonate.ResumeLayout(False)
         Me.tabDonate.PerformLayout()
-        CType(Me.nmbClearCount, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

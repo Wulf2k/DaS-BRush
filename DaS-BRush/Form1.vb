@@ -425,6 +425,8 @@ Public Class frmForm1
             If isHooked Then
                 dropAlloc()
                 funcAlloc()
+
+                SetSaveEnable(False)
             End If
         End If
 
@@ -659,7 +661,7 @@ Public Class frmForm1
 
 
     Private Sub SetEventFlag(ByVal flag As Integer, state As Boolean)
-        funcCall("SetEventFlag", {flag, state, 0, 0, 0})
+        funcCall("SetEventFlag", {flag, state And 1, 0, 0, 0})
     End Sub
     Private Sub Warp(ByVal entityID As Integer, point As Integer)
         funcCall("Warp", {entityID, point, 0, 0, 0})
@@ -693,7 +695,7 @@ Public Class frmForm1
         WUInt32(tmpPtr + &H68, 0)
     End Sub
     Private Sub DisableAI(ByVal state As Boolean)
-        WBytes(&H13784EE, {state})
+        WBytes(&H13784EE, {state And 1})
     End Sub
     Private Sub FadeIn()
         Dim tmpptr As UInteger
@@ -723,6 +725,9 @@ Public Class frmForm1
         WBytes(tmpptr + &H26D, {1})
 
         Dim val As Single = 1.0
+
+
+
 
 
         For i = 0 To 33
@@ -760,6 +765,12 @@ Public Class frmForm1
         WInt32(tmpPtr + &H3C, clearCount)
 
     End Sub
+    Private Sub SetSaveEnable(ByVal state As Boolean)
+        Dim tmpPtr As Integer
+        tmpPtr = RInt32(&H13784A0)
+
+        WBytes(tmpPtr + &HB40, {state And 1})
+    End Sub
     Private Sub SetSaveSlot(ByVal slot As Integer)
         WInt32(RInt32(&H13784A0) + &HA70, slot)
     End Sub
@@ -775,10 +786,10 @@ Public Class frmForm1
         tmpptr = RUInt32(&H1378700)
         tmpptr = RUInt32(tmpptr + &H2C)
 
-        WBytes(tmpptr + &HD, {state})
+        WBytes(tmpptr + &HD, {state And 1})
     End Sub
     Private Sub PlayerHide(ByVal state As Boolean)
-        WBytes(&H13784E7, {state})
+        WBytes(&H13784E7, {state And 1})
     End Sub
     Private Sub PlayerSwoll(ByVal val As Single)
         Dim tmpptr As Integer
@@ -804,6 +815,17 @@ Public Class frmForm1
             loading = (msPlayed = RUInt32(tmpptr + &H68))
 
         Loop
+    End Sub
+
+
+    Private Sub SetBriefingMsg(ByVal str As String)
+        Dim tmpptr As Integer
+        tmpptr = RInt32(&H13785DC)
+        tmpptr = RInt32(tmpptr + &H7C)
+
+        WUniStr(tmpptr + &H3B7A, str + ChrW(0))
+        funcCall("RequestOpenBriefingMsg", {"10010721", "1", 0, 0, 0})
+
     End Sub
 
 
@@ -1845,35 +1867,39 @@ Public Class frmForm1
     Private Sub BeginBossRush()
 
 
+        PlayerSwoll(-4)
+
+
+        Dim msg As String
+
+        msg = "Welcome to the Boss Rush." & Environment.NewLine
+        msg = msg & "Saving has been disabled." & Environment.NewLine
+        'msg = msg & ""
+
+
+        For i = 10 To 1 Step -1
+            msg = msg & "   " & i
+            SetBriefingMsg(msg)
+            Thread.Sleep(1000)
+        Next
+
+
+        SetBriefingMsg("Begin")
+
+        funcCall("CroseBriefingMsg", {0, 0, 0, 0, 0})
+        Thread.Sleep(1000)
+
 
         soulTimer = New Thread(AddressOf BeginSoulTimer)
         soulTimer.IsBackground = True
 
 
-        DropItem("Goods", "Dung Pie", 99)
+        'DropItem("Goods", "Dung Pie", 99)
 
 
 
 
 
-        PlayerSwoll(-4)
-
-
-
-        FlashRed(3000)
-        'Thread.Sleep(3000)
-
-        FlashRed(2000)
-        Thread.Sleep(2000)
-
-        FlashRed(1000)
-        Thread.Sleep(1000)
-
-
-        For i = 0 To 30
-            'FlashRed(33)
-            'Thread.Sleep(33)
-        Next
 
 
 
@@ -2031,11 +2057,9 @@ Public Class frmForm1
 
         PlayerSwoll(6)
 
-
-        For i = 0 To 30
-            FlashRed(33)
-            Thread.Sleep(33)
-        Next
+        SetBriefingMsg("Congratulations.")
+        Thread.Sleep(5000)
+        funcCall("CroseBriefingMsg", {0, 0, 0, 0, 0})
 
         soulTimer.Abort()
     End Sub
@@ -2067,33 +2091,34 @@ Public Class frmForm1
         'Taurus Demon
         'Asylum Demon
 
+        PlayerSwoll(-4)
+
+
+        Dim msg As String
+
+        msg = "Welcome to the Reverse Boss Rush." & Environment.NewLine
+        msg = msg & "Saving has been disabled." & Environment.NewLine
+        'msg = msg & ""
+
+
+        For i = 10 To 1 Step -1
+            msg = msg & "   " & i
+            SetBriefingMsg(msg)
+            Thread.Sleep(1000)
+        Next
+
+
+        SetBriefingMsg("Begin")
+
+        funcCall("CroseBriefingMsg", {0, 0, 0, 0, 0})
+        Thread.Sleep(1000)
 
 
         soulTimer = New Thread(AddressOf BeginSoulTimer)
         soulTimer.IsBackground = True
 
-        DropItem("Goods", "Dung Pie", 99)
 
 
-
-        PlayerSwoll(-4)
-
-
-
-        FlashRed(3000)
-        Thread.Sleep(3000)
-
-        FlashRed(2000)
-        Thread.Sleep(2000)
-
-        FlashRed(1000)
-        Thread.Sleep(1000)
-
-
-        For i = 0 To 30
-            FlashRed(33)
-            Thread.Sleep(33)
-        Next
 
 
         BossGwyn()
@@ -2248,10 +2273,9 @@ Public Class frmForm1
         WaitForBossDeath(0, &H8000)
         Thread.Sleep(5000)
 
-        For i = 0 To 30
-            FlashRed(33)
-            Thread.Sleep(33)
-        Next
+        SetBriefingMsg("Congratulations.")
+        Thread.Sleep(5000)
+        funcCall("CroseBriefingMsg", {0, 0, 0, 0, 0})
 
         soulTimer.Abort()
 
@@ -2513,11 +2537,26 @@ Public Class frmForm1
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
 
 
-        DisableAI(True)
         funcCall("DisableDamage", {100000, True, 0, 0, 0})
 
+        SetSaveEnable(False)
+        Dim msg As String
+
+        msg = "Welcome to the Boss Rush." & Environment.NewLine
+        msg = msg & "Saving has been disabled." & Environment.NewLine
+        'msg = msg & ""
 
 
+        For i = 10 To 1 Step -1
+            msg = msg & "   " & i
+            SetBriefingMsg(msg)
+            Thread.Sleep(1000)
+        Next
+
+
+        SetBriefingMsg("Begin")
+        'Thread.Sleep(1000)
+        funcCall("CroseBriefingMsg", {0, 0, 0, 0, 0})
 
     End Sub
 
