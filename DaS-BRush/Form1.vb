@@ -834,17 +834,6 @@ Public Class frmForm1
     Private Sub PlayerHide(ByVal state As Boolean)
         WBytes(&H13784E7, {state And 1})
     End Sub
-    Private Sub PlayerSwoll(ByVal val As Single)
-        Dim tmpptr As Integer
-        tmpptr = RInt32(&H1378700)
-        tmpptr = RInt32(tmpptr + 8)
-
-        WFloat(tmpptr + &H2B0, val / 3)
-        WFloat(tmpptr + &H2B4, val / 3)
-        WFloat(tmpptr + &H2B8, val * 1.3)
-        WFloat(tmpptr + &H2BC, val)
-
-    End Sub
     Private Sub WaitForLoad()
         Dim tmpptr As UInteger
         tmpptr = RUInt32(&H1378700)
@@ -1910,9 +1899,6 @@ Public Class frmForm1
     Private Sub BeginBossRush()
 
 
-        PlayerSwoll(-4)
-
-
         Dim msg As String
 
         msg = "Welcome to the Boss Rush." & Environment.NewLine
@@ -1954,151 +1940,101 @@ Public Class frmForm1
         WaitForBossDeath(0, &H8000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(-3.66)
-
         BossTaurusDemon()
         WaitForBossDeath(&HF70, &H4000000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(-3.33)
 
         BossBellGargoyles()
         WaitForBossDeath(0, &H10000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(-3)
-
         BossCapraDemon()
         WaitForBossDeath(&HF70, &H2000000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(-2.66)
 
         BossGapingDragon()
         WaitForBossDeath(0, &H20000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(-2.33)
-
         BossMoonlightButterfly()
         WaitForBossDeath(&H1E70, &H8000000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(-2)
 
         BossSif()
         WaitForBossDeath(0, &H4000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(-1.66)
-
         BossChaosWitchQuelaag()
         WaitForBossDeath(0, &H400000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(-1.33)
 
         BossStrayDemon()
         WaitForBossDeath(&H5A70, &H8000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(-1)
-
         BossIronGolem()
         WaitForBossDeath(0, &H100000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(-0.66)
 
         BossOAndS()
         WaitForBossDeath(0, &H80000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(-0.33)
-
         BossPinwheel()
         WaitForBossDeath(0, &H2000000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(0)
 
         BossGravelordNito()
         WaitForBossDeath(0, &H1000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(0.33)
-
         BossSanctuaryGuardian()
         WaitForBossDeath(&H2300, &H80000000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(0.66)
 
         BossKnightArtorias()
         WaitForBossDeath(&H2300, &H40000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(1)
-
         BossManus()
         WaitForBossDeath(&H2300, &H20000000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(1.66)
 
         BossCeaselessDischarge()
         WaitForBossDeath(&H3C70, &H8000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(2)
-
         BossDemonFiresage()
         WaitForBossDeath(&H3C30, &H20)
         Thread.Sleep(5000)
-
-        PlayerSwoll(2.33)
 
         BossCentipedeDemon()
         WaitForBossDeath(&H3C70, &H4000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(2.66)
-
         BossBlackDragonKalameet()
         WaitForBossDeath(&H2300, &H8000000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(3)
 
         BossSeath()
         WaitForBossDeath(0, &H20000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(3.33)
-
         BossFourKings()
         WaitForBossDeath(0, &H40000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(3.66)
 
         BossCrossbreedPriscilla()
         WaitForBossDeath(0, &H8000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(4)
-
         BossDarkSunGwyndolin()
         WaitForBossDeath(&H4670, &H8000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(4.33)
-
         BossGwyn()
         WaitForBossDeath(0, &H10000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(6)
 
         SetBriefingMsg("Congratulations.")
         Thread.Sleep(5000)
@@ -2133,9 +2069,6 @@ Public Class frmForm1
         'Bell Gargoyles
         'Taurus Demon
         'Asylum Demon
-
-        PlayerSwoll(-4)
-
 
         Dim msg As String
 
@@ -2172,145 +2105,97 @@ Public Class frmForm1
         WaitForBossDeath(0, &H10000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(-3.66)
-
         BossDarkSunGwyndolin()
         WaitForBossDeath(&H4670, &H8000000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(-3.33)
 
         BossCrossbreedPriscilla()
         WaitForBossDeath(0, &H8000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(-3)
-
         BossFourKings()
         WaitForBossDeath(0, &H40000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(-2.66)
 
         BossSeath()
         WaitForBossDeath(0, &H20000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(-2.33)
-
         BossBlackDragonKalameet()
         WaitForBossDeath(&H2300, &H8000000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(-2)
 
         BossCentipedeDemon()
         WaitForBossDeath(&H3C70, &H4000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(-1.66)
-
         BossDemonFiresage()
         WaitForBossDeath(&H3C30, &H20)
         Thread.Sleep(5000)
-
-        PlayerSwoll(-1.33)
 
         BossCeaselessDischarge()
         WaitForBossDeath(&H3C70, &H8000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(-1)
-
         BossManus()
         WaitForBossDeath(&H2300, &H20000000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(-0.66)
 
         BossKnightArtorias()
         WaitForBossDeath(&H2300, &H40000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(-0.33)
-
         BossSanctuaryGuardian()
         WaitForBossDeath(&H2300, &H80000000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(0)
 
         BossGravelordNito()
         WaitForBossDeath(0, &H1000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(0.33)
-
         BossPinwheel()
         WaitForBossDeath(0, &H2000000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(0.66)
 
         BossOAndS()
         WaitForBossDeath(0, &H80000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(1)
-
         BossIronGolem()
         WaitForBossDeath(0, &H100000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(1.66)
 
         BossStrayDemon()
         WaitForBossDeath(&H5A70, &H8000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(2)
-
         BossChaosWitchQuelaag()
         WaitForBossDeath(0, &H400000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(2.33)
 
         BossSif()
         WaitForBossDeath(0, &H4000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(2.66)
-
         BossMoonlightButterfly()
         WaitForBossDeath(&H1E70, &H8000000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(3)
 
         BossGapingDragon()
         WaitForBossDeath(0, &H20000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(3.33)
-
         BossCapraDemon()
         WaitForBossDeath(&HF70, &H2000000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(3.66)
 
         BossBellGargoyles()
         WaitForBossDeath(0, &H10000000)
         Thread.Sleep(5000)
 
-        PlayerSwoll(4)
-
         BossTaurusDemon()
         WaitForBossDeath(&HF70, &H4000000)
         Thread.Sleep(5000)
-
-        PlayerSwoll(4.33)
 
         BossAsylum()
         WaitForBossDeath(0, &H8000)
@@ -2321,8 +2206,6 @@ Public Class frmForm1
         funcCall("CroseBriefingMsg", {0, 0, 0, 0, 0})
 
         soulTimer.Abort()
-
-        PlayerSwoll(6)
 
     End Sub
 
@@ -2573,6 +2456,8 @@ Public Class frmForm1
             If isHooked Then
                 dropAlloc()
                 funcAlloc()
+
+                SetSaveEnable(False)
             End If
         End If
     End Sub
