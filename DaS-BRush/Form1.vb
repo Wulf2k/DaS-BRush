@@ -623,6 +623,31 @@ Public Class frmForm1
         WInt32(tmpPtr + &H3C, clearCount)
 
     End Sub
+    Private sub SetCaption(ByVal str As String)
+        Dim tmpptr As Integer
+        Dim alpha As Byte
+
+        Dim state As Boolean
+        state = (str.Length > 0)
+
+        If state Then
+            alpha = 254
+        Else
+            alpha = 0
+        End If
+
+        tmpptr = RInt32(&H13786d0)
+
+        WInt32(tmpptr + &H40, state And 4)
+        WInt32(tmpptr + &HB18, alpha)
+        WInt32(tmpptr + &HB14, 100)
+
+        tmpptr = RInt32(&H13785DC)
+        tmpptr = RInt32(tmpptr + &H10)
+
+        WUniStr(tmpptr + &H12c, str & ChrW(0))
+
+    End sub
     Private Sub SetSaveEnable(ByVal state As Boolean)
         Dim tmpPtr As Integer
         tmpPtr = RInt32(&H13784A0)
@@ -633,6 +658,7 @@ Public Class frmForm1
         WInt32(RInt32(&H13784A0) + &HA70, slot)
     End Sub
     Private Sub SetUnknownNPCName(ByVal name As String)
+        'Overwrites
         Dim tmpProtect As Integer
         VirtualProtectEx(_targetProcessHandle, &H10CC000, &H1DE000, 4, tmpProtect)
 
@@ -2253,17 +2279,29 @@ Public Class frmForm1
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
 
 
-        SetFreeCam(True)
+        'SetFreeCam(True)
         'SetFreeCam(False)
 
         'For i = 0 To 19
-        SetCamPos(-46.26, -57.07, 56.34, -0.8, 0)
+        'SetCamPos(-46.26, -57.07, 56.34, -0.8, 0)
         'Thread.Sleep(250)
         'Next
         'SetCamPos(-50, -60, 60, 0, 0)
 
 
+        SetCaption("And verily, yon blacksmith did say unto his people, " & ChrW(&HA) & _
+                   "'Dude, what is uppeth?'")
 
+
+        Thread.Sleep(5000)
+
+        SetCaption("And he smithed in a generally blackened manner, " & ChrW(&HA) & _
+            "And the people rejoiced.")
+
+
+        Thread.Sleep(5000)
+
+        SetCaption("")
 
     End Sub
 
