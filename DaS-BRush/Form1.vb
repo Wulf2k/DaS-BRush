@@ -6,10 +6,12 @@ Imports System.Globalization
 
 Public Class frmForm1
 
+
+
     'TODO:
     'Check equipment durability
     'Handle equipment management
-    
+
     'Set tails to be pre-cut to avoid drops
     'Centipede, intro cinematic
 
@@ -35,26 +37,7 @@ Public Class frmForm1
     Private soulTimer As Thread
 
 
-    Private Declare Function CloseHandle Lib "kernel32.dll" (ByVal hObject As IntPtr) As Boolean
-    Private Declare Function CreateRemoteThread Lib "kernel32" (ByVal hProcess As IntPtr, ByVal lpThreadAttributes As IntPtr, ByVal dwStackSize As Integer, ByVal lpStartAddress As IntPtr, ByVal lpParameter As IntPtr, ByVal dwCreationFlags As Integer, ByRef lpThreadId As IntPtr) As Integer
-    Private Declare Function OpenProcess Lib "kernel32.dll" (ByVal dwDesiredAcess As UInt32, ByVal bInheritHandle As Boolean, ByVal dwProcessId As Int32) As IntPtr
-    Private Declare Function ReadProcessMemory Lib "kernel32" (ByVal hProcess As IntPtr, ByVal lpBaseAddress As IntPtr, ByVal lpBuffer() As Byte, ByVal iSize As Integer, ByRef lpNumberOfBytesRead As Integer) As Boolean
-    Private Declare Function WriteProcessMemory Lib "kernel32" (ByVal hProcess As IntPtr, ByVal lpBaseAddress As IntPtr, ByVal lpBuffer() As Byte, ByVal iSize As Integer, ByVal lpNumberOfBytesWritten As Integer) As Boolean
-    Private Declare Function VirtualAllocEx Lib "kernel32.dll" (ByVal hProcess As IntPtr, ByVal lpAddress As IntPtr, ByVal dwSize As IntPtr, ByVal flAllocationType As Integer, ByVal flProtect As Integer) As IntPtr
-    Private Declare Function VirtualProtectEx Lib "kernel32.dll" (ByVal hProcess As IntPtr, ByVal lpAddress As IntPtr, ByVal dwSize As IntPtr, ByVal flNewProtect As Integer, ByRef lpflOldProtect As Integer) As Boolean
 
-
-    Public Const PROCESS_VM_READ = &H10
-    Public Const TH32CS_SNAPPROCESS = &H2
-    Public Const MEM_COMMIT = 4096
-    Public Const PAGE_READWRITE = 4
-    Public Const PAGE_EXECUTE_READWRITE = &H40
-    Public Const PROCESS_CREATE_THREAD = (&H2)
-    Public Const PROCESS_VM_OPERATION = (&H8)
-    Public Const PROCESS_VM_WRITE = (&H20)
-    Public Const PROCESS_ALL_ACCESS = &H1F0FFF
-
-    Dim isHooked As Boolean = False
 
     Dim clsFuncNames As New Hashtable
     Dim clsFuncLocs As New Hashtable
@@ -118,8 +101,7 @@ Public Class frmForm1
     Dim playerZpos As Single
 
 
-    Private _targetProcess As Process = Nothing 'to keep track of it. not used yet.
-    Private _targetProcessHandle As IntPtr = IntPtr.Zero 'Used for ReadProcessMemory
+
 
     Private Async Sub updatecheck()
         Try
@@ -146,48 +128,7 @@ Public Class frmForm1
         End Try
     End Sub
 
-    Public Function ScanForProcess(ByVal windowCaption As String, Optional automatic As Boolean = False) As Boolean
-        Dim _allProcesses() As Process = Process.GetProcesses
-        For Each pp As Process In _allProcesses
-            If pp.MainWindowTitle.ToLower.Equals(windowCaption.ToLower) Then
-                'found it! proceed.
-                Return TryAttachToProcess(pp, automatic)
-            End If
-        Next
-        Return False
-    End Function
-    Public Function TryAttachToProcess(ByVal proc As Process, Optional automatic As Boolean = False) As Boolean
-        If Not (_targetProcessHandle = IntPtr.Zero) Then
-            DetachFromProcess()
-        End If
 
-        _targetProcess = proc
-        _targetProcessHandle = OpenProcess(PROCESS_ALL_ACCESS, False, _targetProcess.Id)
-        If _targetProcessHandle = 0 Then
-            If Not automatic Then 'Showing 2 message boxes as soon as you start the program is too annoying.
-                MessageBox.Show("Failed to attach to process.Please run with administrative privileges.")
-            End If
-
-            Return False
-        Else
-            'if we get here, all connected and ready to use ReadProcessMemory()
-            Return True
-            'MessageBox.Show("OpenProcess() OK")
-        End If
-
-    End Function
-    Public Sub DetachFromProcess()
-        If Not (_targetProcessHandle = IntPtr.Zero) Then
-            _targetProcess = Nothing
-            Try
-                CloseHandle(_targetProcessHandle)
-                _targetProcessHandle = IntPtr.Zero
-                'MessageBox.Show("MemReader::Detach() OK")
-            Catch ex As Exception
-                'MessageBox.Show("Warning: MemoryManager::DetachFromProcess::CloseHandle error " & Environment.NewLine & ex.Message)
-            End Try
-        End If
-    End Sub
 
     Public Sub initClls()
         Dim nameList As New List(Of String)
@@ -252,133 +193,7 @@ Public Class frmForm1
         Return nameList
     End Function
 
-    Public Function RInt8(ByVal addr As IntPtr) As SByte
-        Dim _rtnBytes(0) As Byte
-        ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 1, vbNull)
-        Return _rtnBytes(0)
-    End Function
-    Public Function RInt16(ByVal addr As IntPtr) As Int16
-        Dim _rtnBytes(1) As Byte
-        ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 2, vbNull)
-        Return BitConverter.ToInt16(_rtnBytes, 0)
-    End Function
-    Public Function RInt32(ByVal addr As IntPtr) As Int32
-        Dim _rtnBytes(3) As Byte
-        ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 4, vbNull)
 
-        Return BitConverter.ToInt32(_rtnBytes, 0)
-    End Function
-    Public Function RInt64(ByVal addr As IntPtr) As Int64
-        Dim _rtnBytes(7) As Byte
-        ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 8, vbNull)
-        Return BitConverter.ToInt64(_rtnBytes, 0)
-    End Function
-    Public Function RUInt16(ByVal addr As IntPtr) As UInt16
-        Dim _rtnBytes(1) As Byte
-        ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 2, vbNull)
-        Return BitConverter.ToUInt16(_rtnBytes, 0)
-    End Function
-    Public Function RUInt32(ByVal addr As IntPtr) As UInt32
-        Dim _rtnBytes(3) As Byte
-        ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 4, vbNull)
-        Return BitConverter.ToUInt32(_rtnBytes, 0)
-    End Function
-    Public Function RUInt64(ByVal addr As IntPtr) As UInt64
-        Dim _rtnBytes(7) As Byte
-        ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 8, vbNull)
-        Return BitConverter.ToUInt64(_rtnBytes, 0)
-    End Function
-    Public Function RFloat(ByVal addr As IntPtr) As Single
-        Dim _rtnBytes(3) As Byte
-        ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 4, vbNull)
-        Return BitConverter.ToSingle(_rtnBytes, 0)
-    End Function
-    Public Function RDouble(ByVal addr As IntPtr) As Double
-        Dim _rtnBytes(7) As Byte
-        ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 8, vbNull)
-        Return BitConverter.ToDouble(_rtnBytes, 0)
-    End Function
-    Public Function RIntPtr(ByVal addr As IntPtr) As IntPtr
-        Dim _rtnBytes(IntPtr.Size - 1) As Byte
-        ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, IntPtr.Size, Nothing)
-        If IntPtr.Size = 4 Then
-            Return New IntPtr(BitConverter.ToUInt32(_rtnBytes, 0))
-        Else
-            Return New IntPtr(BitConverter.ToInt64(_rtnBytes, 0))
-        End If
-    End Function
-    Public Function RBytes(ByVal addr As IntPtr, ByVal size As Int32) As Byte()
-        Dim _rtnBytes(size - 1) As Byte
-        ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, size, vbNull)
-        Return _rtnBytes
-    End Function
-    Private Function RAsciiStr(ByVal addr As UInteger) As String
-        Dim Str As String = ""
-        Dim cont As Boolean = True
-        Dim loc As Integer = 0
-
-        Dim bytes(&H10) As Byte
-
-        ReadProcessMemory(_targetProcessHandle, addr, bytes, &H10, vbNull)
-
-        While (cont And loc < &H10)
-            If bytes(loc) > 0 Then
-
-                Str = Str + Convert.ToChar(bytes(loc))
-
-                loc += 1
-            Else
-                cont = False
-            End If
-        End While
-
-        Return Str
-    End Function
-    Private Function RUnicodeStr(ByVal addr As UInteger) As String
-        Dim Str As String = ""
-        Dim cont As Boolean = True
-        Dim loc As Integer = 0
-
-        Dim bytes(&H20) As Byte
-
-
-        ReadProcessMemory(_targetProcessHandle, addr, bytes, &H20, vbNull)
-
-        While (cont And loc < &H20)
-            If bytes(loc) > 0 Then
-
-                Str = Str + Convert.ToChar(bytes(loc))
-
-                loc += 2
-            Else
-                cont = False
-            End If
-        End While
-
-        Return Str
-    End Function
-
-    Public Sub Wint16(ByVal addr As IntPtr, val As Int16)
-        WriteProcessMemory(_targetProcessHandle, addr, BitConverter.GetBytes(val), 2, Nothing)
-    End Sub
-    Public Sub WInt32(ByVal addr As IntPtr, val As Int32)
-        WriteProcessMemory(_targetProcessHandle, addr, BitConverter.GetBytes(val), 4, Nothing)
-    End Sub
-    Public Sub WUInt32(ByVal addr As IntPtr, val As UInt32)
-        WriteProcessMemory(_targetProcessHandle, addr, BitConverter.GetBytes(val), 4, Nothing)
-    End Sub
-    Public Sub WFloat(ByVal addr As IntPtr, val As Single)
-        WriteProcessMemory(_targetProcessHandle, addr, BitConverter.GetBytes(val), 4, Nothing)
-    End Sub
-    Public Sub WBytes(ByVal addr As IntPtr, val As Byte())
-        WriteProcessMemory(_targetProcessHandle, addr, val, val.Length, Nothing)
-    End Sub
-    Public Sub WAsciiStr(addr As IntPtr, str As String)
-        WriteProcessMemory(_targetProcessHandle, addr, System.Text.Encoding.ASCII.GetBytes(str), str.Length, Nothing)
-    End Sub
-    Public Sub WUniStr(addr As IntPtr, str As String)
-        WriteProcessMemory(_targetProcessHandle, addr, System.Text.Encoding.Unicode.GetBytes(str), str.Length * 2, Nothing)
-    End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -396,15 +211,15 @@ Public Class frmForm1
         If oldFileArg IsNot Nothing Then
             If oldFileArg.EndsWith(".old") Then
                 Dim t = New Thread(
-                    Sub()
-                        Try
-                            'Give the old version time to shut down
-                            Thread.Sleep(1000)
-                            File.Delete(oldFileArg)
-                        Catch ex As Exception
-                            Me.Invoke(Function() MsgBox("Deleting old version failed: " & vbCrLf & ex.Message, MsgBoxStyle.Exclamation))
-                        End Try
-                    End Sub)
+                Sub()
+                    Try
+                        'Give the old version time to shut down
+                        Thread.Sleep(1000)
+                        File.Delete(oldFileArg)
+                    Catch ex As Exception
+                        Me.Invoke(Function() MsgBox("Deleting old version failed: " & vbCrLf & ex.Message, MsgBoxStyle.Exclamation))
+                    End Try
+                End Sub)
                 t.Start()
             Else
                 MsgBox("Deleting old version failed: Invalid filename ", MsgBoxStyle.Exclamation)
@@ -759,7 +574,7 @@ Public Class frmForm1
         WBytes(tmpptr + &H26D, {0})
 
     End Sub
-    Private sub SetCamPos(Byval xpos As Single, ypos As single, zpos As single, xrot As single, yrot As single)
+    Private Sub SetCamPos(ByVal xpos As Single, ypos As Single, zpos As Single, xrot As Single, yrot As Single)
         Dim tmpPtr As Integer
 
         tmpPtr = RInt32(&H1378714)
@@ -769,18 +584,18 @@ Public Class frmForm1
         WFloat(tmpPtr + &HB8, zpos)
 
 
-        tmpPtr = RInt32(&H137d6dc)
-        tmpPtr = RInt32(tmpPtr + &H3c)
+        tmpPtr = RInt32(&H137D6DC)
+        tmpPtr = RInt32(tmpPtr + &H3C)
         tmpPtr = RInt32(tmpPtr + &H60)
-        
+
 
         WFloat(tmpPtr + &H144, xrot)
         WFloat(tmpPtr + &H150, yrot)
 
 
-        
-    End sub
-    Private sub SetFreeCam(ByVal state As Boolean)
+
+    End Sub
+    Private Sub SetFreeCam(ByVal state As Boolean)
         If state Then
             'WBytes(&HEFDBAF, {&H90, &H90, &H90, &H90, &H90})
             WBytes(&H404E59, {&H90, &H90, &H90, &H90, &H90})
@@ -792,15 +607,15 @@ Public Class frmForm1
 
         Else
             'WBytes(&HEFDBAF, {&HE8, &H7c, &H72, &H50, &HFF})
-            WBytes(&H404E59, {&H66, &H0f, &Hd6, &H46, &H20})
-            WBytes(&H404E63, {&H66, &H0f, &Hd6, &H46, &H28})
-            WBytes(&HF06C46, {&Hf3, &H0f, &H11, &H83, &H44, &H01, &H00, &H00})
+            WBytes(&H404E59, {&H66, &HF, &HD6, &H46, &H20})
+            WBytes(&H404E63, {&H66, &HF, &HD6, &H46, &H28})
+            WBytes(&HF06C46, {&HF3, &HF, &H11, &H83, &H44, &H1, &H0, &H0})
 
 
 
 
         End If
-    End sub
+    End Sub
     Private Sub SetClearCount(ByVal clearCount As Integer)
         Dim tmpPtr As Integer
         tmpPtr = RInt32(&H1378700)
@@ -2469,8 +2284,8 @@ Public Class frmForm1
         'SetFreeCam(False)
 
         'For i = 0 To 19
-            SetCamPos(-46.26, -57.07, 56.34, -0.8, 0)
-            'Thread.Sleep(250)
+        SetCamPos(-46.26, -57.07, 56.34, -0.8, 0)
+        'Thread.Sleep(250)
         'Next
         'SetCamPos(-50, -60, 60, 0, 0)
 

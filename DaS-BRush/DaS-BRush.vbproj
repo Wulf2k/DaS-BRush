@@ -96,6 +96,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="ProcessAccess.vb" />
     <Compile Include="UpdateWindow.designer.vb">
       <DependentUpon>UpdateWindow.vb</DependentUpon>
     </Compile>
