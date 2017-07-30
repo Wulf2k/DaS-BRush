@@ -676,33 +676,6 @@ Public Class frmForm1
     End Sub
 
 
-    Private Sub StandardTransition(ByVal bonfireID, warpID)
-        PlayerHide(True)
-        ShowHUD(False)
-        FadeOut()
-
-        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
-
-        WarpNextStage_Bonfire(bonfireID)
-
-        Thread.Sleep(1000)
-
-        WaitForLoad()
-        BlackScreen()
-        PlayerHide(True)
-
-        Thread.Sleep(500)
-
-        Warp(10000, warpID)
-
-        Thread.Sleep(1500)
-        FadeIn()
-        ShowHUD(True)
-        PlayerHide(False)
-
-
-    End Sub
-
 
     Private Sub BossAsylum()
 
