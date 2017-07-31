@@ -34,7 +34,7 @@ Public Class frmForm1
     Public Declare Function GetAsyncKeyState Lib "user32" (ByVal vKey As Integer) As Short
 
     Private trd As Thread
-    Private soulTimer As Thread
+    Private rushTimer As Thread
 
 
 
@@ -100,7 +100,10 @@ Public Class frmForm1
     Dim playerYpos As Single
     Dim playerZpos As Single
 
+    Dim rushMode As Boolean = False
 
+    Dim GenDiagResponse As Integer
+    Dim GenDiagVal As Integer
 
 
     Private Async Sub updatecheck()
@@ -265,6 +268,10 @@ Public Class frmForm1
 
         If (RUInt32(&H400080) = &HFC293654&) Then
             lblRelease.Text = "Dark Souls (Latest Release Ver.)"
+
+            Dim tmpProtect As Integer
+            VirtualProtectEx(_targetProcessHandle, &H10CC000, &H1DE000, 4, tmpProtect)
+
         Else
             If (RUInt32(&H400080) = &HE91B11E2&) Then
                 lblRelease.Text = "Dark Souls (Invalid Beta)"
@@ -282,19 +289,25 @@ Public Class frmForm1
 
         If Not trd Is Nothing Then
 
-            If trd.ThreadState = &H10 Then
+            If trd.ThreadState = &H10 Or trd.ThreadState = &H100 Then
                 gbBosses.Visible = True
                 btnBeginBossRush.Enabled = True
                 btnBeginReverseRush.Enabled = True
+                btnX.Visible = False
+                btnX.Enabled = False
             Else
                 gbBosses.Visible = False
                 btnBeginBossRush.Enabled = False
                 btnBeginReverseRush.Enabled = False
+                btnX.Visible = True
+                btnX.Enabled = True
             End If
         Else
             gbBosses.Visible = True
             btnBeginBossRush.Enabled = True
             btnBeginReverseRush.Enabled = True
+            btnX.Visible = False
+            btnX.Enabled = False
         End If
 
         checkDarkSoulsVersion()
@@ -623,7 +636,7 @@ Public Class frmForm1
         WInt32(tmpPtr + &H3C, clearCount)
 
     End Sub
-    Private sub SetCaption(ByVal str As String)
+    Private Sub SetCaption(ByVal str As String)
         Dim tmpptr As Integer
         Dim alpha As Byte
 
@@ -636,7 +649,7 @@ Public Class frmForm1
             alpha = 0
         End If
 
-        tmpptr = RInt32(&H13786d0)
+        tmpptr = RInt32(&H13786D0)
 
         WInt32(tmpptr + &H40, state And 4)
         WInt32(tmpptr + &HB18, alpha)
@@ -645,9 +658,9 @@ Public Class frmForm1
         tmpptr = RInt32(&H13785DC)
         tmpptr = RInt32(tmpptr + &H10)
 
-        WUniStr(tmpptr + &H12c, str & ChrW(0))
+        WUniStr(tmpptr + &H12C, str & ChrW(0))
 
-    End sub
+    End Sub
     Private Sub SetSaveEnable(ByVal state As Boolean)
         Dim tmpPtr As Integer
         tmpPtr = RInt32(&H13784A0)
@@ -658,9 +671,6 @@ Public Class frmForm1
         WInt32(RInt32(&H13784A0) + &HA70, slot)
     End Sub
     Private Sub SetUnknownNPCName(ByVal name As String)
-        'Overwrites
-        Dim tmpProtect As Integer
-        VirtualProtectEx(_targetProcessHandle, &H10CC000, &H1DE000, 4, tmpProtect)
 
         If name.Length > 21 Then name = Strings.Left(name, 21) 'Prevent runover into code
         WUniStr(&H11A784C, name + ChrW(0))
@@ -700,43 +710,111 @@ Public Class frmForm1
         funcCall("RequestOpenBriefingMsg", {"10010721", "1", 0, 0, 0})
 
     End Sub
+    Private Sub SetGenDialog(ByVal str As String, type As Integer, Optional btn0 As String = "", Optional btn1 As String = "")
+        '50002 = Overridden Maintext
+        '65000 = Overridden Button 0
+        '70000 = Overridden Button 1
+
+        Dim tmpptr As Integer
+        tmpptr = RInt32(&H13785DC)
+        tmpptr = RInt32(tmpptr + &H174)
+
+        str = str.Replace("\n", ChrW(&HA))
+
+        'Weird issues if exactly 6 characters
+        If str.Length = 6 Then str = str & "  "
+        WUniStr(tmpptr + &H1A5C, str + ChrW(0))
+
+        'Set Default Ok/Cancel if not overridden
+        WInt32(&H12E33E4, 1)
+        WInt32(&H12E33E8, 2)
+
+        'Clear previous values
+        WInt32(&H12E33F8, -1)
+        WInt32(&H12E33FC, -1)
+
+        WInt32(&H12E33E0, 50002)
+        If btn0.Length > 0 Then
+            WInt32(&H12E33E4, 65000)
+            WUniStr(tmpptr + &H2226, btn0 + ChrW(0))
+        End If
+        If btn1.Length > 0 Then
+            WInt32(&H12E33E8, 70000)
+            WUniStr(tmpptr + &H350C, btn1 + ChrW(0))
+        End If
+
+        tmpptr = RInt32(&H13786D0)
+        WInt32(tmpptr + &H60, type)
+
+
+        'Wait for response
+        GenDiagResponse = -1
+        GenDiagVal = -1
+
+        tmpptr = &H12E33F8
+
+        While GenDiagResponse = -1
+            GenDiagResponse = RInt32(tmpptr)
+            GenDiagVal = RInt32(tmpptr + &H4)
+            Thread.Sleep(33)
+        End While
+        Thread.Sleep(500)
+
+
+    End Sub
 
 
 
     Private Sub BossAsylum()
 
+        Dim bossDead As Boolean = False
+        Dim firstTry As Boolean = True
 
-        SetEventFlag(16, False) 'Boss Death Flag
-        SetEventFlag(11810000, False) 'Tutorial Complete Flag
-        SetEventFlag(11815395, True) 'Boss at lower position
+        Do
+            SetEventFlag(16, False) 'Boss Death Flag
+            SetEventFlag(11810000, False) 'Tutorial Complete Flag
+            SetEventFlag(11815395, True) 'Boss at lower position
 
+            PlayerHide(True)
+            ShowHUD(False)
+            FadeOut()
+            funcCall("RequestFullRecover", {0, 0, 0, 0, 0})
 
-        'Non-standard due to co-ords warp
+            WarpNextStage_Bonfire(1810998)
 
-        PlayerHide(True)
-        ShowHUD(False)
-        FadeOut()
-        funcCall("SetHp", {10000, "1.0", 0, 0, 0})
+            Thread.Sleep(1000)
 
-        WarpNextStage_Bonfire(1810998)
+            WaitForLoad()
+            BlackScreen()
+            PlayerHide(True)
+            funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
 
-        Thread.Sleep(1000)
+            Thread.Sleep(500)
+            'facing 180 degrees
+            Warp_Coords(3.15, 198.15, -6)
+            SetEventFlag(11815390, True)
 
-        WaitForLoad()
-        BlackScreen()
-        PlayerHide(True)
-        funcCall("SetDisableGravity", {10000, 1, 0, 0, 0})
+            Thread.Sleep(1500)
+            FadeIn()
+            ShowHUD(True)
+            PlayerHide(False)
+            funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
 
-        Thread.Sleep(500)
-        'facing 180 degrees
-        Warp_Coords(3.15, 198.15, -6)
-        SetEventFlag(11815390, True)
+            If firstTry Then
+                ClearPlaytime()
+                firstTry = False
+            End If
 
-        Thread.Sleep(1500)
-        FadeIn()
-        ShowHUD(True)
-        PlayerHide(False)
-        funcCall("SetDisableGravity", {10000, 0, 0, 0, 0})
+            If rushMode Then
+                bossDead = WaitForBossDeath(0, &H8000)
+                If Not bossDead Then
+                    funcCall("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funcCall("SetTextEffect", {16, 0, 0, 0, 0})
+                    Thread.Sleep(5000)
+                End If
+            End If
+
+        Loop While rushmode And Not bossdead
     End Sub
     Private Sub BossBedOfChaos()
 
@@ -1715,14 +1793,18 @@ Public Class frmForm1
 
         Dim msg As String
 
+        SetGenDialog("Choose your NG level wisely.\nValues above 6 are ignored.", 3, "Begin", "Wuss Out")
+        If GenDiagVal > 6 Then GenDiagVal = 6
+        SetClearCount(GenDiagVal)
+
         msg = "Welcome to the Boss Rush." & Environment.NewLine
         msg = msg & "Saving has been disabled." & Environment.NewLine
         'msg = msg & ""
 
 
         For i = 10 To 1 Step -1
-            msg = msg & "   " & i
-            SetBriefingMsg(msg)
+
+            SetBriefingMsg(msg & i)
             Thread.Sleep(1000)
         Next
 
@@ -1733,25 +1815,16 @@ Public Class frmForm1
         Thread.Sleep(1000)
 
 
-        soulTimer = New Thread(AddressOf BeginSoulTimer)
-        soulTimer.IsBackground = True
-
-
-        'DropItem("Goods", "Dung Pie", 99)
+        rushTimer = New Thread(AddressOf BeginRushTimer)
+        rushTimer.IsBackground = True
 
 
 
 
-
-
-
-
-
-        soulTimer.Start()
-        ClearPlaytime()
-
+        rushTimer.Start()
+        rushMode = True
         BossAsylum()
-        WaitForBossDeath(0, &H8000)
+
         Thread.Sleep(5000)
 
         BossTaurusDemon()
@@ -1854,7 +1927,7 @@ Public Class frmForm1
         Thread.Sleep(5000)
         funcCall("CroseBriefingMsg", {0, 0, 0, 0, 0})
 
-        soulTimer.Abort()
+        rushTimer.Abort()
     End Sub
     Private Sub BeginReverseBossRush()
         'Reverse Boss Order
@@ -1904,8 +1977,8 @@ Public Class frmForm1
         Thread.Sleep(1000)
 
 
-        soulTimer = New Thread(AddressOf BeginSoulTimer)
-        soulTimer.IsBackground = True
+        rushTimer = New Thread(AddressOf BeginRushTimer)
+        rushTimer.IsBackground = True
 
 
 
@@ -1915,7 +1988,7 @@ Public Class frmForm1
         ClearPlaytime()
 
 
-        soulTimer.Start()
+        rushTimer.Start()
         WaitForBossDeath(0, &H10000)
         Thread.Sleep(5000)
 
@@ -2019,40 +2092,11 @@ Public Class frmForm1
         Thread.Sleep(5000)
         funcCall("CroseBriefingMsg", {0, 0, 0, 0, 0})
 
-        soulTimer.Abort()
+        rushTimer.Abort()
 
     End Sub
 
-    Private Sub WaitForAsylumDeath()
-        Dim eventPtr As Integer
-        eventPtr = RInt32(&H137D7D4)
-        eventPtr = RInt32(eventPtr)
-
-        Dim hpPtr As Integer
-        hpPtr = RInt32(&H137DC70)
-        hpPtr = RInt32(hpPtr + 4)
-        hpPtr = RInt32(hpPtr)
-        hpPtr = hpPtr + &H2D4
-
-        Dim bossdead As Boolean = False
-        Dim selfdead As Boolean = False
-
-        While Not (bossdead Or selfdead)
-            bossdead = (RInt32(eventPtr) And &H8000)
-            selfdead = (RInt32(hpPtr) = 0)
-
-            Thread.Sleep(33)
-        End While
-
-        If bossdead Then
-
-        End If
-        If selfdead Then
-            trd.Abort()
-        End If
-
-    End Sub
-    Private Sub WaitForBossDeath(ByVal boost As Integer, match As Integer)
+    Private Function WaitForBossDeath(ByVal boost As Integer, match As Integer) As Boolean
         Dim eventPtr As Integer
         eventPtr = RInt32(&H137D7D4)
         eventPtr = RInt32(eventPtr)
@@ -2074,14 +2118,13 @@ Public Class frmForm1
         End While
 
         If bossdead Then
-
-        End If
-        If selfdead Then
-            soulTimer.Abort()
-            trd.Abort()
+            Return True
+        Else
+            Return False
         End If
 
-    End Sub
+
+    End Function
 
 
 
@@ -2239,21 +2282,49 @@ Public Class frmForm1
         trd.IsBackground = True
         trd.Start()
     End Sub
-    Private Sub BeginSoulTimer()
+    Private Sub BeginRushTimer()
 
-        gamestatsptr = RUInt32(&H1378700)
+        gamestatsptr = RInt32(&H1378700)
+        Dim menuptr = RInt32(&H13786D0)
+        Dim lineptr = RInt32(&H1378388)
+        'Dim keyptr = RInt32(&H13809C0)
 
-        Dim SoulTimer As TimeSpan
-        Dim Souls As Integer
+        Dim rushTime As TimeSpan
         Dim msPlayed As Integer
-        'souls = charptr2 + &H8C
+        Dim clearCount As Integer
+        Dim trueDeathCount As Integer
+        Dim msg As String
+
+        'WFloat(keyptr + &H78, 20)
+        'WFloat(keyptr + &H7C, 1200)
+
+        WFloat(lineptr + &H78, 600)
+        WFloat(lineptr + &H7C, 640)
+
+        'Clear TrueDeaths
+        WInt32(gamestatsptr + &H58, 0)
 
         Do
-            msPlayed = RInt32(gamestatsptr + &H68)
-            SoulTimer = TimeSpan.FromMilliseconds(msPlayed)
-            Souls = SoulTimer.Days * 1000000 + SoulTimer.Hours * 10000 + SoulTimer.Minutes * 100 + SoulTimer.Seconds
+            WInt32(menuptr + &H154, RInt32(menuptr + &H1C)) 'LineHelp
+            'WInt32(menuptr + &H158, RInt32(menuptr + &H1C)) 'KeyGuide
 
-            WInt32(charptr2 + &H8C, Souls)
+            msPlayed = RInt32(gamestatsptr + &H68)
+            rushTime = TimeSpan.FromMilliseconds(msPlayed)
+            clearCount = RInt32(gamestatsptr + &H3C)
+            'trueDeathCount = RInt32(gamestatsptr + &H58)
+
+
+            'msg = "NG: " & clearCount & ChrW(&HA)
+            'msg = msg & "Deaths: " & trueDeathCount & ChrW(0)
+            'WUniStr(&H11A7770, msg)
+
+            msg = "NG" & clearCount & " - "
+
+            msg = msg & Strings.Left(rushTime.ToString, 12) & ChrW(0)
+            WUniStr(&H11A7758, msg) 'LineHelp
+
+
+
             Thread.Sleep(33)
         Loop
     End Sub
@@ -2289,19 +2360,30 @@ Public Class frmForm1
         'SetCamPos(-50, -60, 60, 0, 0)
 
 
-        SetCaption("And verily, yon blacksmith did say unto his people, " & ChrW(&HA) & _
-                   "'Dude, what is uppeth?'")
+        'SetCaption("And verily, yon blacksmith did say unto his people, " & ChrW(&HA) & _
+        '           "'Dude, what is uppeth?'")
 
 
-        Thread.Sleep(5000)
-
-        SetCaption("And he smithed in a generally blackened manner, " & ChrW(&HA) & _
-            "And the people rejoiced.")
+        'Thread.Sleep(5000)
 
 
-        Thread.Sleep(5000)
+        'SetCaption("")
 
-        SetCaption("")
+        'Thread.Sleep(2000)
+
+        'SetGenDialog("These utensils were called\n'The Best Ever'\nBy Pro Utensils Magazine", 2, "Spoons", "Forks")
+
+        'Select Case GenDiagResponse
+        'Case 0
+        'SetGenDialog("You have failed to answer.", 1)
+        'Case 1
+        'SetGenDialog("You have selected Spoons.", 1)
+        'Case 2
+        'SetGenDialog("You have selected Forks.", 1)
+        'End Select
+
+        'SetBriefingMsg("Test")
+        funcCall("SetTextEffect", {16, 0, 0, 0, 0})
 
     End Sub
 
@@ -2372,5 +2454,11 @@ Public Class frmForm1
         WInt32(charptr2 + &H30, sender.Value)
     End Sub
 
-
+    Private Sub btnX_Click(sender As Object, e As EventArgs) Handles btnX.Click
+        Console.WriteLine(trd.ThreadState)
+        If rushMode Then rushTimer.Abort()
+        rushMode = False
+        trd.Abort()
+        Console.WriteLine(trd.ThreadState)
+    End Sub
 End Class

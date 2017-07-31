@@ -146,6 +146,7 @@ Partial Class frmForm1
         Me.btnReconnect = New System.Windows.Forms.Button()
         Me.lblVer = New System.Windows.Forms.Label()
         Me.btnUpdate = New System.Windows.Forms.Button()
+        Me.btnX = New System.Windows.Forms.Button()
         Me.tabs.SuspendLayout()
         Me.tabBosses.SuspendLayout()
         Me.gbBosses.SuspendLayout()
@@ -175,8 +176,8 @@ Partial Class frmForm1
         'tabs
         '
         Me.tabs.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-        Or System.Windows.Forms.AnchorStyles.Left) _
-        Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.tabs.Controls.Add(Me.tabBosses)
         Me.tabs.Controls.Add(Me.tabScenarios)
         Me.tabs.Controls.Add(Me.tabMain)
@@ -192,6 +193,7 @@ Partial Class frmForm1
         '
         'tabBosses
         '
+        Me.tabBosses.Controls.Add(Me.btnX)
         Me.tabBosses.Controls.Add(Me.btnBeginBossRush)
         Me.tabBosses.Controls.Add(Me.gbBosses)
         Me.tabBosses.Controls.Add(Me.btnBeginReverseRush)
@@ -1296,8 +1298,8 @@ Partial Class frmForm1
         'txtNotes
         '
         Me.txtNotes.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-        Or System.Windows.Forms.AnchorStyles.Left) _
-        Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtNotes.Enabled = False
         Me.txtNotes.Location = New System.Drawing.Point(9, 4)
         Me.txtNotes.Multiline = True
@@ -1404,6 +1406,15 @@ Partial Class frmForm1
         Me.btnUpdate.Text = "Update BRush"
         Me.btnUpdate.UseVisualStyleBackColor = True
         Me.btnUpdate.Visible = False
+        '
+        'btnX
+        '
+        Me.btnX.Location = New System.Drawing.Point(175, 14)
+        Me.btnX.Name = "btnX"
+        Me.btnX.Size = New System.Drawing.Size(19, 23)
+        Me.btnX.TabIndex = 78
+        Me.btnX.Text = "X"
+        Me.btnX.UseVisualStyleBackColor = False
         '
         'frmForm1
         '
@@ -1576,4 +1587,5 @@ Partial Class frmForm1
     Friend WithEvents btnScenarioArtoriasCiaran As Button
     Friend WithEvents Label16 As Label
     Friend WithEvents nmbClearCount As NumericUpDown
+    Friend WithEvents btnX As Button
 End Class
