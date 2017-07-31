@@ -1002,7 +1002,7 @@ Public Class frmForm1
 
 
             If rushMode Then
-				WaitForBossDeath(&HF70, &H2000000)
+				bossdead = WaitForBossDeath(&HF70, &H2000000)
 				If Not bossDead Then
 					funcCall("AddTrueDeathCount", {0, 0, 0, 0, 0})
 					funcCall("SetTextEffect", {16, 0, 0, 0, 0})
