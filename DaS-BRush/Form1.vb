@@ -246,7 +246,7 @@ Public Class frmForm1
                 dropAlloc()
                 funcAlloc()
 
-                SetSaveEnable(False)
+                setsaveenable(False)
             End If
         End If
 
@@ -414,7 +414,7 @@ Public Class frmForm1
 
 
 
-    Public Sub DropItem(ByVal cat As String, item As String, num As Integer)
+    Public Sub dropitem(ByVal cat As String, item As String, num As Integer)
         Dim TargetBufferSize = 1024
         Dim Rtn As Integer
 
@@ -460,7 +460,7 @@ Public Class frmForm1
 
         Thread.Sleep(5)
     End Sub
-    Public Sub funcCall_old(ByVal func As String, LUAparams() As String)
+    Public Sub funccall_old(ByVal func As String, LUAparams() As String)
         Dim bytes() As Byte
         Dim bytes2() As Byte
 
@@ -489,8 +489,7 @@ Public Class frmForm1
     End Sub
 
 
-    'This bit of idiocy is to work around Reflection not accepting optional arguments
-    Public Sub funcCall(func As String, param1 As String, param2 As String, param3 As String, param4 As String, param5 As String)
+    Public Function funccall(func As String, param1 As String, param2 As String, param3 As String, param4 As String, param5 As String) As Integer
 
         Dim Params() As String = {param1, param2, param3, param4, param5}
         Dim param As IntPtr = Marshal.AllocHGlobal(4)
@@ -503,6 +502,10 @@ Public Class frmForm1
         a.pos = funcPtr
         a.AddVar("funcloc", clsFuncLocs(func))
         a.AddVar("returnedloc", funcPtr + &H200)
+
+        a.Asm("push ebp")
+        a.Asm("mov ebp,esp")
+        a.Asm("push eax")
 
         'Parse params, add as variables to the ASM
         For i As Integer = 4 To 0 Step -1
@@ -531,44 +534,47 @@ Public Class frmForm1
         a.Asm("pop eax")
         a.Asm("pop eax")
         a.Asm("pop eax")
+        a.Asm("pop eax")
+        a.Asm("mov esp,ebp")
+        a.Asm("pop ebp")
         a.Asm("ret")
-
-
-        Dim dbg As String = ""
-        For i = 0 To a.bytes.Length - 1
-            dbg = dbg & Hex(a.bytes(i)) & ", 0x"
-        Next
-        MsgBox(dbg)
-
-
-
 
         Marshal.FreeHGlobal(param)
 
 
-    End Sub
+        WriteProcessMemory(_targetProcessHandle, funcPtr, a.bytes, 1024, 0)
+        MsgBox(Hex(funcPtr))
+        CreateRemoteThread(_targetProcessHandle, 0, 0, funcPtr, 0, 0, 0)
+        Thread.Sleep(1)
+
+
+
+        Return RInt32(funcPtr + &H200)
+
+
+    End Function
 
 
     Public Sub SetEventFlag(ByVal flag As Integer, state As Boolean)
-        funcCall_old("SetEventFlag", {flag, state And 1, 0, 0, 0})
+        funccall_old("SetEventFlag", {flag, state And 1, 0, 0, 0})
     End Sub
     Public Sub Warp(ByVal entityID As Integer, point As Integer)
-        funcCall_old("Warp", {entityID, point, 0, 0, 0})
+        funccall_old("Warp", {entityID, point, 0, 0, 0})
     End Sub
     Public Sub WarpNextStage(ByVal world As Integer, block As Integer, area As Integer)
-        funcCall_old("WarpNextStage", {world, block, 0, 0, area})
+        funccall_old("WarpNextStage", {world, block, 0, 0, area})
     End Sub
     Public Sub WarpNextStage_Bonfire(ByVal bonfireID As Integer)
-        funcCall_old("WarpNextStage_Bonfire", {bonfireID, 0, 0, 0, 0})
+        funccall_old("WarpNextStage_Bonfire", {bonfireID, 0, 0, 0, 0})
     End Sub
-    Public Sub Warp_Coords(ByVal x As Single, y As Single, z As Single)
+    Public Sub warp_coords(ByVal x As Single, y As Single, z As Single)
         WFloat(charmapdataptr + &HD0, x)
         WFloat(charmapdataptr + &HD4, y)
         WFloat(charmapdataptr + &HD8, z)
         WBytes(charmapdataptr + &HC8, {1})
     End Sub
 
-    Public Sub BlackScreen()
+    Public Sub blackscreen()
         Dim tmpptr As Integer
         tmpptr = RUInt32(&H1378520)
         tmpptr = RUInt32(tmpptr + &H10)
@@ -579,14 +585,14 @@ Public Class frmForm1
         WFloat(tmpptr + &H274, 0)
         WFloat(tmpptr + &H278, 0)
     End Sub
-    Public Sub ClearPlaytime()
+    Public Sub clearplaytime()
         Dim tmpPtr As Integer = RIntPtr(&H1378700)
         WInt32(tmpPtr + &H68, 0)
     End Sub
-    Public Sub DisableAI(ByVal state As Byte)
+    Public Sub disableai(ByVal state As Byte)
         WBytes(&H13784EE, {state})
     End Sub
-    Public Sub FadeIn()
+    Public Sub fadein()
         Dim tmpptr As Integer
         tmpptr = RInt32(&H1378520)
         tmpptr = RInt32(tmpptr + &H10)
@@ -606,7 +612,7 @@ Public Class frmForm1
 
         WBytes(tmpptr + &H26D, {0})
     End Sub
-    Public Sub FadeOut()
+    Public Sub fadeout()
         Dim tmpptr As Integer
         tmpptr = RInt32(&H1378520)
         tmpptr = RInt32(tmpptr + &H10)
@@ -630,7 +636,7 @@ Public Class frmForm1
         Next
     End Sub
 
-    Public Sub SetCamPos(ByVal xpos As Single, ypos As Single, zpos As Single, xrot As Single, yrot As Single)
+    Public Sub setcampos(ByVal xpos As Single, ypos As Single, zpos As Single, xrot As Single, yrot As Single)
         Dim tmpPtr As Integer
 
         tmpPtr = RInt32(&H1378714)
@@ -651,7 +657,7 @@ Public Class frmForm1
 
 
     End Sub
-    Public Sub SetFreeCam(ByVal state As Boolean)
+    Public Sub setfreecam(ByVal state As Boolean)
         If state Then
             'WBytes(&HEFDBAF, {&H90, &H90, &H90, &H90, &H90})
             WBytes(&H404E59, {&H90, &H90, &H90, &H90, &H90})
@@ -672,14 +678,14 @@ Public Class frmForm1
 
         End If
     End Sub
-    Public Sub SetClearCount(ByVal clearCount As Integer)
+    Public Sub setclearcount(ByVal clearCount As Integer)
         Dim tmpPtr As Integer
         tmpPtr = RInt32(&H1378700)
 
         WInt32(tmpPtr + &H3C, clearCount)
 
     End Sub
-    Public Sub SetCaption(ByVal str As String)
+    Public Sub setcaption(ByVal str As String)
         Dim tmpptr As Integer
         Dim alpha As Byte
 
@@ -704,31 +710,31 @@ Public Class frmForm1
         WUniStr(tmpptr + &H12C, str & ChrW(0))
 
     End Sub
-    Public Sub SetSaveEnable(ByVal state As Byte)
+    Public Sub setsaveenable(ByVal state As Byte)
         Dim tmpPtr As Integer
         tmpPtr = RInt32(&H13784A0)
 
         WBytes(tmpPtr + &HB40, {state})
     End Sub
-    Public Sub SetSaveSlot(ByVal slot As Integer)
+    Public Sub setsaveslot(ByVal slot As Integer)
         WInt32(RInt32(&H13784A0) + &HA70, slot)
     End Sub
-    Public Sub SetUnknownNPCName(ByVal name As String)
+    Public Sub setunknownnpcname(ByVal name As String)
 
         If name.Length > 21 Then name = Strings.Left(name, 21) 'Prevent runover into code
         WUniStr(&H11A784C, name + ChrW(0))
     End Sub
-    Public Sub ShowHUD(ByVal state As Byte)
+    Public Sub showhud(ByVal state As Byte)
         Dim tmpptr As UInteger
         tmpptr = RUInt32(&H1378700)
         tmpptr = RUInt32(tmpptr + &H2C)
 
         WBytes(tmpptr + &HD, {state})
     End Sub
-    Public Sub PlayerHide(ByVal state As Byte)
+    Public Sub playerhide(ByVal state As Byte)
         WBytes(&H13784E7, {state})
     End Sub
-    Public Sub WaitForLoad()
+    Public Sub waitforload()
         Dim tmpptr As Integer
         tmpptr = RInt32(&H1378700)
 
@@ -744,16 +750,16 @@ Public Class frmForm1
     End Sub
 
 
-    Public Sub SetBriefingMsg(ByVal str As String)
+    Public Sub setbriefingmsg(ByVal str As String)
         Dim tmpptr As Integer
         tmpptr = RInt32(&H13785DC)
         tmpptr = RInt32(tmpptr + &H7C)
 
         WUniStr(tmpptr + &H3B7A, str + ChrW(0))
-        funcCall_old("RequestOpenBriefingMsg", {"10010721", "1", 0, 0, 0})
+        funccall_old("RequestOpenBriefingMsg", {"10010721", "1", 0, 0, 0})
 
     End Sub
-    Public Sub SetGenDialog(ByVal str As String, type As Integer, Optional btn0 As String = "", Optional btn1 As String = "")
+    Public Sub setgendialog(ByVal str As String, type As Integer, Optional btn0 As String = "", Optional btn1 As String = "")
         '50002 = Overridden Maintext
         '65000 = Overridden Button 0
         '70000 = Overridden Button 1
@@ -808,52 +814,52 @@ Public Class frmForm1
 
 
 
-    Public Sub BossAsylum()
+    Public Sub bossasylum()
 
         Dim bossDead As Boolean = False
         Dim firstTry As Boolean = True
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(16, False) 'Boss Death Flag
             SetEventFlag(11810000, False) 'Tutorial Complete Flag
             SetEventFlag(11815395, True) 'Boss at lower position
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
             WarpNextStage_Bonfire(1810998)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
-            funcCall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            waitforload()
+            blackscreen()
+            playerhide(True)
+            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
 
             Thread.Sleep(500)
             'facing 180 degrees
-            Warp_Coords(3.15, 198.15, -6)
+            warp_coords(3.15, 198.15, -6)
             SetEventFlag(11815390, True)
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
-            funcCall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            fadein()
+            showhud(True)
+            playerhide(False)
+            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
 
             If firstTry And rushName = "Normal" Then
-                ClearPlaytime()
+                clearplaytime()
                 firstTry = False
             End If
 
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H8000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -861,7 +867,7 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossBedOfChaos()
+    Public Sub bossbedofchaos()
 
 
         SetEventFlag(10, False) 'Boss 
@@ -874,19 +880,19 @@ Public Class frmForm1
         'non-standard transition to allow quit-out
         'warp before fog gate to set last solid position
 
-        PlayerHide(True)
-        ShowHUD(False)
-        FadeOut()
-        funcCall_old("SetHp", {10000, "1.0", 0, 0, 0})
+        playerhide(True)
+        showhud(False)
+        fadeout()
+        funccall_old("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1410980)
 
         Thread.Sleep(1000)
 
-        WaitForLoad()
-        BlackScreen()
-        PlayerHide(True)
-        funcCall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+        waitforload()
+        blackscreen()
+        playerhide(True)
+        funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
 
         Thread.Sleep(500)
         Warp(10000, 1412998)
@@ -894,18 +900,18 @@ Public Class frmForm1
         Warp(10000, 1412997)
 
         Thread.Sleep(1250)
-        FadeIn()
-        ShowHUD(True)
-        PlayerHide(False)
-        funcCall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+        fadein()
+        showhud(True)
+        playerhide(False)
+        funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
 
     End Sub
-    Public Sub BossBellGargoyles()
+    Public Sub bossbellgargoyles()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
             SetEventFlag(3, False) 'Boss Death Flag
             SetEventFlag(11010000, False) 'Boss Cinematic Viewed Flag
 
@@ -913,18 +919,18 @@ Public Class frmForm1
 
             'Non-standard due to co-ords warp
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
             WarpNextStage_Bonfire(1010998)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
-            funcCall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            waitforload()
+            blackscreen()
+            playerhide(True)
+            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
 
             Thread.Sleep(500)
 
@@ -933,31 +939,31 @@ Public Class frmForm1
             Thread.Sleep(250)
 
             'facing 0 degrees
-            Warp_Coords(10.8, 48.92, 87.26)
+            warp_coords(10.8, 48.92, 87.26)
 
 
             Thread.Sleep(1250)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
-            funcCall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            fadein()
+            showhud(True)
+            playerhide(False)
+            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
 
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H10000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossBlackDragonKalameet()
+    Public Sub bossblackdragonkalameet()
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
 
             SetEventFlag(11210004, False)
@@ -973,34 +979,34 @@ Public Class frmForm1
             SetEventFlag(11210592, True)
 
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
             WarpNextStage_Bonfire(1210998)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
-            funcCall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            waitforload()
+            blackscreen()
+            playerhide(True)
+            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
 
             Thread.Sleep(500)
             'facing 107 degrees
-            Warp_Coords(876.04, -344.73, 749.75)
+            warp_coords(876.04, -344.73, 749.75)
 
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
-            funcCall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            fadein()
+            showhud(True)
+            playerhide(False)
+            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
             If rushMode Then
                 bossDead = WaitForBossDeath(&H2300, &H8000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1008,46 +1014,46 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossCapraDemon()
+    Public Sub bosscaprademon()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(11010902, False)
 
 
             'Non-standard due to random deaths
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
             WarpNextStage_Bonfire(1010998)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
-            funcCall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            waitforload()
+            blackscreen()
+            playerhide(True)
+            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
             Thread.Sleep(500)
             'facing 238 degrees
-            Warp_Coords(-73.17, -43.56, -15.17)
+            warp_coords(-73.17, -43.56, -15.17)
             'Warp(10000, 1012887)
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
-            funcCall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            fadein()
+            showhud(True)
+            playerhide(False)
+            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
 
 
             If rushMode Then
                 bossDead = WaitForBossDeath(&HF70, &H2000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1055,12 +1061,12 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossCeaselessDischarge()
+    Public Sub bossceaselessdischarge()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(11410900, False) 'Boss death flag
             SetEventFlag(51410180, True) 'Corpse Loot reset
@@ -1072,39 +1078,39 @@ Public Class frmForm1
 
             'Non-standard due to co-ords warp
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
             WarpNextStage_Bonfire(1410998)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
-            funcCall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            waitforload()
+            blackscreen()
+            playerhide(True)
+            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
 
             Thread.Sleep(500)
 
-            Warp_Coords(250.53, -283.15, 72.1)
+            warp_coords(250.53, -283.15, 72.1)
             Thread.Sleep(250)
             'facing 30 degrees
-            Warp_Coords(402.45, -278.15, 15.5)
+            warp_coords(402.45, -278.15, 15.5)
 
 
 
 
             Thread.Sleep(1250)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
-            funcCall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            fadein()
+            showhud(True)
+            playerhide(False)
+            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
             If rushMode Then
                 bossDead = WaitForBossDeath(&H3C70, &H8000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1112,26 +1118,26 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossCentipedeDemon()
+    Public Sub bosscentipededemon()
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
             SetEventFlag(11410901, False)
 
             'StandardTransition(1410998, 1412896)
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
             WarpNextStage_Bonfire(1410998)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
+            waitforload()
+            blackscreen()
+            playerhide(True)
 
             Thread.Sleep(500)
 
@@ -1141,14 +1147,14 @@ Public Class frmForm1
             SetEventFlag(11415382, True)
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
+            fadein()
+            showhud(True)
+            playerhide(False)
             If rushMode Then
                 bossDead = WaitForBossDeath(&H3C70, &H4000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1156,44 +1162,44 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossChaosWitchQuelaag()
+    Public Sub bosschaoswitchquelaag()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(9, False)
             'StandardTransition(1400980, 1402997)
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
-            funcCall_old("SetHp", {10000, "1.0", 0, 0, 0})
+            funccall_old("SetHp", {10000, "1.0", 0, 0, 0})
 
             WarpNextStage_Bonfire(1400980)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
+            waitforload()
+            blackscreen()
+            playerhide(True)
 
             Thread.Sleep(500)
 
 
-            Warp_Coords(17.2, -236.9, 113.6)
+            warp_coords(17.2, -236.9, 113.6)
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
+            fadein()
+            showhud(True)
+            playerhide(False)
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H400000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1201,13 +1207,13 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossCrossbreedPriscilla()
+    Public Sub bosscrossbreedpriscilla()
 
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
             SetEventFlag(4, False) 'Boss Death flag
             SetEventFlag(1691, True) 'Priscilla Hostile flag
             SetEventFlag(1692, True) 'Priscilla Dead flag
@@ -1221,32 +1227,32 @@ Public Class frmForm1
 
             'StandardTransition(1102961, 1102997)
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
             WarpNextStage_Bonfire(1102961)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
+            waitforload()
+            blackscreen()
+            playerhide(True)
 
             Thread.Sleep(500)
 
 
-            Warp_Coords(-22.72, 60.55, 711.86)
+            warp_coords(-22.72, 60.55, 711.86)
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
+            fadein()
+            showhud(True)
+            playerhide(False)
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H8000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1254,43 +1260,43 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossDarkSunGwyndolin()
+    Public Sub bossdarksungwyndolin()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(11510900, False) 'Boss Death Flag
             SetEventFlag(11510523, False) 'Boss Disabled Flag
 
             'StandardTransition(1510982, 1512896)
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
             WarpNextStage_Bonfire(1510982)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
+            waitforload()
+            blackscreen()
+            playerhide(True)
 
             Thread.Sleep(500)
 
 
-            Warp_Coords(435.1, 60.2, 255.0)
+            warp_coords(435.1, 60.2, 255.0)
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
+            fadein()
+            showhud(True)
+            playerhide(False)
             If rushMode Then
                 bossDead = WaitForBossDeath(&H4670, &H8000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1298,44 +1304,44 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossDemonFiresage()
+    Public Sub bossdemonfiresage()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(11410410, False)
             'StandardTransition(1410998, 1412416)
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
 
             WarpNextStage_Bonfire(1410998)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
+            waitforload()
+            blackscreen()
+            playerhide(True)
 
             Thread.Sleep(500)
 
 
-            Warp_Coords(148.04, -341.04, 95.57)
+            warp_coords(148.04, -341.04, 95.57)
 
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
+            fadein()
+            showhud(True)
+            playerhide(False)
             If rushMode Then
                 bossDead = WaitForBossDeath(&H3C30, &H20)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1343,45 +1349,45 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossFourKings()
+    Public Sub bossfourkings()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(13, False)
             SetEventFlag(1677, True) 'Kaathe Angry/gone
             'StandardTransition(1600999, 1602996)
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
             WarpNextStage_Bonfire(1600999)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
+            waitforload()
+            blackscreen()
+            playerhide(True)
 
             Thread.Sleep(500)
 
 
-            Warp_Coords(82.24, -163.2, 0.29)
+            warp_coords(82.24, -163.2, 0.29)
 
-            DropItem("Rings", "Covenant of Artorias", 1)
+            dropitem("Rings", "Covenant of Artorias", 1)
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
+            fadein()
+            showhud(True)
+            playerhide(False)
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H40000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1389,28 +1395,28 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossGapingDragon()
+    Public Sub bossgapingdragon()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(2, False) 'Boss Death Flag
             SetEventFlag(11000853, True) 'Channeler Death Flag
             'StandardTransition(1000999, 1002997)
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
             WarpNextStage_Bonfire(1000999)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
+            waitforload()
+            blackscreen()
+            playerhide(True)
             Thread.Sleep(500)
             SetEventFlag(11005390, True)
             SetEventFlag(11005392, True)
@@ -1423,15 +1429,15 @@ Public Class frmForm1
             Warp(10000, 1002997)
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
+            fadein()
+            showhud(True)
+            playerhide(False)
 
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H20000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1440,47 +1446,47 @@ Public Class frmForm1
         Thread.Sleep(5000)
 
     End Sub
-    Public Sub BossGravelordNito()
+    Public Sub bossgravelordnito()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
 
             SetEventFlag(7, False)
             'StandardTransition(1310998, 1312110)
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
 
             WarpNextStage_Bonfire(1310998)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
-            funcCall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            waitforload()
+            blackscreen()
+            playerhide(True)
+            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
             Thread.Sleep(500)
 
             'Warp(10000, 1312110)
-            Warp_Coords(-126.84, -265.12, -30.78)
+            warp_coords(-126.84, -265.12, -30.78)
             SetEventFlag(11315390, True)
             SetEventFlag(11315393, True)
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
-            funcCall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            fadein()
+            showhud(True)
+            playerhide(False)
+            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H1000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1489,49 +1495,49 @@ Public Class frmForm1
         Thread.Sleep(5000)
 
     End Sub
-    Public Sub BossGwyn()
+    Public Sub bossgwyn()
 
         Dim bossDead As Boolean = False
         Dim firstTry As Boolean = True
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(15, False)
             'StandardTransition(1800999, 1802996)
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
             WarpNextStage_Bonfire(1800999)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
+            waitforload()
+            blackscreen()
+            playerhide(True)
 
             Thread.Sleep(500)
 
 
-            Warp_Coords(418.15, -115.92, 169.58)
+            warp_coords(418.15, -115.92, 169.58)
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
+            fadein()
+            showhud(True)
+            playerhide(False)
 
             If firstTry And rushName = "Reverse" Then
-                ClearPlaytime()
+                clearplaytime()
                 firstTry = False
             End If
 
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H10000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1539,43 +1545,43 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossIronGolem()
+    Public Sub bossirongolem()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(11, False) 'Boss Death Flag
             SetEventFlag(11500865, True) 'Bomb-Tossing Giant Death Flag
             'StandardTransition(1500999, 1502997)
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
             WarpNextStage_Bonfire(1500999)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
+            waitforload()
+            blackscreen()
+            playerhide(True)
 
             Thread.Sleep(500)
 
 
-            Warp_Coords(85.5, 82, 255.1)
+            warp_coords(85.5, 82, 255.1)
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
+            fadein()
+            showhud(True)
+            playerhide(False)
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H100000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1583,12 +1589,12 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossKnightArtorias()
+    Public Sub bossknightartorias()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
 
             SetEventFlag(11210001, False)
@@ -1596,35 +1602,35 @@ Public Class frmForm1
 
             'Non-standard due to co-ords warp
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
 
             WarpNextStage_Bonfire(1210998)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
-            funcCall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            waitforload()
+            blackscreen()
+            playerhide(True)
+            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
 
             Thread.Sleep(500)
             'facing 75.8 degrees
-            Warp_Coords(1034.11, -330.0, 810.68)
+            warp_coords(1034.11, -330.0, 810.68)
 
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
-            funcCall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            fadein()
+            showhud(True)
+            playerhide(False)
+            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
             If rushMode Then
                 bossDead = WaitForBossDeath(&H2300, &H40000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1632,43 +1638,43 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossManus()
+    Public Sub bossmanus()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(11210002, False)
             'StandardTransition(1210982, 1212997)
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
 
             WarpNextStage_Bonfire(1210982)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
+            waitforload()
+            blackscreen()
+            playerhide(True)
 
             Thread.Sleep(500)
 
 
-            Warp_Coords(857.53, -576.69, 873.38)
+            warp_coords(857.53, -576.69, 873.38)
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
+            fadein()
+            showhud(True)
+            playerhide(False)
             If rushMode Then
                 bossDead = WaitForBossDeath(&H2300, &H20000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1676,12 +1682,12 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossMoonlightButterfly()
+    Public Sub bossmoonlightbutterfly()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(11200900, False)
             SetEventFlag(11205383, False)
@@ -1690,42 +1696,42 @@ Public Class frmForm1
             'Non-standard due to flags
             'timing of warp/flags matters
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
             WarpNextStage_Bonfire(1200999)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
-            funcCall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            waitforload()
+            blackscreen()
+            playerhide(True)
+            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
 
 
 
 
             Thread.Sleep(500)
-            Warp_Coords(181.39, 7.53, 29.01)
+            warp_coords(181.39, 7.53, 29.01)
             Thread.Sleep(4000)
             SetEventFlag(11205383, True)
 
-            Warp_Coords(178.82, 8.12, 30.77)
+            warp_coords(178.82, 8.12, 30.77)
 
 
 
             Thread.Sleep(2000)
-            FadeIn()
-            ShowHUD(True)
+            fadein()
+            showhud(True)
 
-            PlayerHide(False)
-            funcCall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            playerhide(False)
+            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
             If rushMode Then
                 bossDead = WaitForBossDeath(&H1E70, &H8000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1734,12 +1740,12 @@ Public Class frmForm1
         Thread.Sleep(5000)
 
     End Sub
-    Public Sub BossOAndS()
+    Public Sub bossoands()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(12, False)
 
@@ -1747,34 +1753,34 @@ Public Class frmForm1
 
             'Non-standard due to co-ords warp
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
             WarpNextStage_Bonfire(1510998)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
-            funcCall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            waitforload()
+            blackscreen()
+            playerhide(True)
+            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
 
             Thread.Sleep(500)
             'facing 90 degrees
-            Warp_Coords(539.9, 142.6, 254.79)
+            warp_coords(539.9, 142.6, 254.79)
 
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
-            funcCall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            fadein()
+            showhud(True)
+            playerhide(False)
+            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H80000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1782,43 +1788,43 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossPinwheel()
+    Public Sub bosspinwheel()
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
 
             SetEventFlag(6, False)
             'StandardTransition(1300999, 1302999)
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
 
             WarpNextStage_Bonfire(1300999)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
+            waitforload()
+            blackscreen()
+            playerhide(True)
 
             Thread.Sleep(500)
 
 
-            Warp_Coords(46, -165.8, 152.02)
+            warp_coords(46, -165.8, 152.02)
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
+            fadein()
+            showhud(True)
+            playerhide(False)
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H2000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1826,12 +1832,12 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossSanctuaryGuardian()
+    Public Sub bosssanctuaryguardian()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(11210000, False)
             SetEventFlag(11210001, False)
@@ -1839,36 +1845,36 @@ Public Class frmForm1
 
             'Non-standard due to co-ords warp
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
-            funcCall_old("SetHp", {10000, "1.0", 0, 0, 0})
+            playerhide(True)
+            showhud(False)
+            fadeout()
+            funccall_old("SetHp", {10000, "1.0", 0, 0, 0})
 
             WarpNextStage_Bonfire(1210998)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
-            funcCall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            waitforload()
+            blackscreen()
+            playerhide(True)
+            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
 
 
             Thread.Sleep(500)
             'facing = 45 deg
-            Warp_Coords(931.82, -318.63, 472.45)
+            warp_coords(931.82, -318.63, 472.45)
 
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
-            funcCall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            fadein()
+            showhud(True)
+            playerhide(False)
+            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
             If rushMode Then
                 bossDead = WaitForBossDeath(&H2300, &H80000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1876,44 +1882,44 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossSeath()
+    Public Sub bossseath()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(14, False)
             SetEventFlag(11700000, False)
 
             'StandardTransition(1700999, 1702997)
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
 
             WarpNextStage_Bonfire(1700999)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
+            waitforload()
+            blackscreen()
+            playerhide(True)
 
             Thread.Sleep(500)
 
 
-            Warp_Coords(109, 134.05, 856.48)
+            warp_coords(109, 134.05, 856.48)
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
+            fadein()
+            showhud(True)
+            playerhide(False)
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H20000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1921,12 +1927,12 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossSif()
+    Public Sub bosssif()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(5, False)
             SetEventFlag(11200000, False)
@@ -1937,36 +1943,36 @@ Public Class frmForm1
             SetEventFlag(11205394, False)
             'StandardTransition(1200999, 1202999)
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
-            funcCall_old("SetHp", {10000, "1.0", 0, 0, 0})
+            funccall_old("SetHp", {10000, "1.0", 0, 0, 0})
 
             WarpNextStage_Bonfire(1200999)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
-            funcCall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            waitforload()
+            blackscreen()
+            playerhide(True)
+            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
             Thread.Sleep(500)
             'Warp_Coords(274, -19.82, -266.43)
             Thread.Sleep(500)
             'Warp(10000, 1202999)
-            Warp_Coords(254.31, -16.02, -320.32)
+            warp_coords(254.31, -16.02, -320.32)
 
             Thread.Sleep(1000)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
-            funcCall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            fadein()
+            showhud(True)
+            playerhide(False)
+            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H4000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1974,12 +1980,12 @@ Public Class frmForm1
         Loop While rushMode And Not bossDead
         Thread.Sleep(5000)
     End Sub
-    Public Sub BossStrayDemon()
+    Public Sub bossstraydemon()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
 
             SetEventFlag(11810000, True)
@@ -1988,34 +1994,34 @@ Public Class frmForm1
 
             'StandardTransition(1810998, 1812996)
 
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
             WarpNextStage_Bonfire(1810998)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
-            funcCall_old("DisableDamage", {10000, 1, 0, 0, 0})
+            waitforload()
+            blackscreen()
+            playerhide(True)
+            funccall_old("DisableDamage", {10000, 1, 0, 0, 0})
 
             Thread.Sleep(500)
 
             Warp(10000, 1812996)
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
+            fadein()
+            showhud(True)
+            playerhide(False)
             Thread.Sleep(1000)
-            funcCall_old("DisableDamage", {10000, 0, 0, 0, 0})
+            funccall_old("DisableDamage", {10000, 0, 0, 0, 0})
             If rushMode Then
                 bossDead = WaitForBossDeath(&H5A70, &H8000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -2025,42 +2031,42 @@ Public Class frmForm1
 
 
     End Sub
-    Public Sub BossTaurusDemon()
+    Public Sub bosstaurusdemon()
 
         Dim bossDead As Boolean = False
 
         Do
-            funcCall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
 
             SetEventFlag(11010901, False)
             'StandardTransition(1010998, 1012897)
-            PlayerHide(True)
-            ShowHUD(False)
-            FadeOut()
+            playerhide(True)
+            showhud(False)
+            fadeout()
 
             WarpNextStage_Bonfire(1010998)
 
             Thread.Sleep(1000)
 
-            WaitForLoad()
-            BlackScreen()
-            PlayerHide(True)
+            waitforload()
+            blackscreen()
+            playerhide(True)
 
             Thread.Sleep(500)
 
 
-            Warp_Coords(49.81, 16.9, -118.87)
+            warp_coords(49.81, 16.9, -118.87)
 
             Thread.Sleep(1500)
-            FadeIn()
-            ShowHUD(True)
-            PlayerHide(False)
+            fadein()
+            showhud(True)
+            playerhide(False)
 
             If rushMode Then
                 bossDead = WaitForBossDeath(&HF70, &H4000000)
                 If Not bossDead Then
-                    funcCall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funcCall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
+                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
                     Thread.Sleep(5000)
                 End If
             End If
@@ -2069,7 +2075,7 @@ Public Class frmForm1
         Thread.Sleep(5000)
     End Sub
 
-    Public Sub ScenarioArtoriasAndCiaran()
+    Public Sub scenarioartoriasandciaran()
 
 
         SetEventFlag(11210001, False) 'Artorias Disabled
@@ -2081,39 +2087,39 @@ Public Class frmForm1
 
         'Non-standard due to co-ords warp
 
-        PlayerHide(True)
-        ShowHUD(False)
-        FadeOut()
+        playerhide(True)
+        showhud(False)
+        fadeout()
 
-        funcCall_old("SetHp", {10000, "1.0", 0, 0, 0})
+        funccall_old("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1210998)
 
         Thread.Sleep(1000)
 
-        WaitForLoad()
-        BlackScreen()
+        waitforload()
+        blackscreen()
 
 
-        PlayerHide(True)
-        funcCall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+        playerhide(True)
+        funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
 
         Thread.Sleep(500)
         'facing 75.8 degrees
-        Warp_Coords(1034.11, -330.0, 810.68)
+        warp_coords(1034.11, -330.0, 810.68)
 
 
         Thread.Sleep(1500)
-        FadeIn()
-        ShowHUD(True)
-        PlayerHide(False)
-        funcCall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+        fadein()
+        showhud(True)
+        playerhide(False)
+        funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
 
         SetEventFlag(1863, True) 'Ciaran Hostile
-        funcCall_old("SetBossGauge", {6740, 1, 10001, 0, 0})
-        SetUnknownNPCName("Lord's Blade Ciaran")
+        funccall_old("SetBossGauge", {6740, 1, 10001, 0, 0})
+        setunknownnpcname("Lord's Blade Ciaran")
     End Sub
-    Public Sub ScenarioTripleSanctuaryGuardian()
+    Public Sub scenariotriplesanctuaryguardian()
 
 
 
@@ -2123,64 +2129,64 @@ Public Class frmForm1
 
         'Non-standard due to co-ords warp
 
-        PlayerHide(True)
-        ShowHUD(False)
-        FadeOut()
-        funcCall_old("SetHp", {10000, "1.0", 0, 0, 0})
+        playerhide(True)
+        showhud(False)
+        fadeout()
+        funccall_old("SetHp", {10000, "1.0", 0, 0, 0})
 
         WarpNextStage_Bonfire(1210998)
 
         Thread.Sleep(1000)
 
-        WaitForLoad()
-        BlackScreen()
-        PlayerHide(True)
-        funcCall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+        waitforload()
+        blackscreen()
+        playerhide(True)
+        funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
 
 
         Thread.Sleep(500)
         'facing = 45 deg
-        Warp_Coords(931.82, -318.63, 472.45)
+        warp_coords(931.82, -318.63, 472.45)
 
 
         Thread.Sleep(1500)
-        FadeIn()
-        ShowHUD(True)
-        PlayerHide(False)
-        funcCall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+        fadein()
+        showhud(True)
+        playerhide(False)
+        funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
     End Sub
 
-    Public Sub BeginBossRush()
+    Public Sub beginbossrush()
 
 
         Dim msg As String
 
-        ShowHUD(False)
+        showhud(False)
 
-        SetGenDialog("Choose your NG level wisely.\nValues above 6 are ignored.", 3, "Begin", "Wuss Out")
+        setgendialog("Choose your NG level wisely.\nValues above 6 are ignored.", 3, "Begin", "Wuss Out")
         If Not GenDiagResponse = 1 Then
-            SetGenDialog("So much shame...", 2, "I know", "I don't care")
-            ShowHUD(True)
+            setgendialog("So much shame...", 2, "I know", "I don't care")
+            showhud(True)
             WInt32(RInt32(&H13786D0) + &H154, -1)
             WInt32(RInt32(&H13786D0) + &H158, -1)
             Return
         End If
         If GenDiagVal > 6 Then GenDiagVal = 6
-        SetClearCount(GenDiagVal)
+        setclearcount(GenDiagVal)
 
         msg = "Welcome to the Boss Rush." & Environment.NewLine
         msg = msg & "Saving has been disabled." & Environment.NewLine
 
 
         For i = 10 To 1 Step -1
-            SetBriefingMsg(msg & i)
+            setbriefingmsg(msg & i)
             Thread.Sleep(1000)
         Next
 
 
-        SetBriefingMsg("Begin")
+        setbriefingmsg("Begin")
 
-        funcCall_old("CroseBriefingMsg", {0, 0, 0, 0, 0})
+        funccall_old("CroseBriefingMsg", {0, 0, 0, 0, 0})
         Thread.Sleep(1000)
 
 
@@ -2194,49 +2200,49 @@ Public Class frmForm1
         rushMode = True
         rushName = "Normal"
 
-        BossAsylum()
-        BossTaurusDemon()
-        BossBellGargoyles()
-        BossCapraDemon()
-        BossGapingDragon()
-        BossMoonlightButterfly()
-        BossSif()
-        BossChaosWitchQuelaag()
-        BossStrayDemon()
-        BossIronGolem()
-        BossOAndS()
-        BossPinwheel()
-        BossGravelordNito()
-        BossSanctuaryGuardian()
-        BossKnightArtorias()
-        BossManus()
-        BossCeaselessDischarge()
-        BossDemonFiresage()
-        BossCentipedeDemon()
-        BossBlackDragonKalameet()
-        BossSeath()
-        BossFourKings()
-        BossCrossbreedPriscilla()
-        BossDarkSunGwyndolin()
-        BossGwyn()
+        bossasylum()
+        bosstaurusdemon()
+        bossbellgargoyles()
+        bosscaprademon()
+        bossgapingdragon()
+        bossmoonlightbutterfly()
+        bosssif()
+        bosschaoswitchquelaag()
+        bossstraydemon()
+        bossirongolem()
+        bossoands()
+        bosspinwheel()
+        bossgravelordnito()
+        bosssanctuaryguardian()
+        bossknightartorias()
+        bossmanus()
+        bossceaselessdischarge()
+        bossdemonfiresage()
+        bosscentipededemon()
+        bossblackdragonkalameet()
+        bossseath()
+        bossfourkings()
+        bosscrossbreedpriscilla()
+        bossdarksungwyndolin()
+        bossgwyn()
 
 
         gamestatsptr = RInt32(&H1378700)
         Dim rushTime As TimeSpan
         rushTime = TimeSpan.FromMilliseconds(RInt32(gamestatsptr + &H68))
-        SetBriefingMsg("Congratulations." & ChrW(&HA) & Strings.Left(rushTime.ToString, 12) & ChrW(&HA) &
+        setbriefingmsg("Congratulations." & ChrW(&HA) & Strings.Left(rushTime.ToString, 12) & ChrW(&HA) &
                        "NG: " & RInt32(gamestatsptr + &H3C) & ChrW(&HA) &
                        "Deaths: " & RInt32(gamestatsptr + &H58))
-        BlackScreen()
-        ShowHUD(False)
+        blackscreen()
+        showhud(False)
         Thread.Sleep(10000)
-        FadeIn()
-        ShowHUD(True)
-        funcCall_old("CroseBriefingMsg", {0, 0, 0, 0, 0})
+        fadein()
+        showhud(True)
+        funccall_old("CroseBriefingMsg", {0, 0, 0, 0, 0})
 
         rushTimer.Abort()
     End Sub
-    Public Sub BeginReverseBossRush()
+    Public Sub beginreversebossrush()
         'Reverse Boss Order
         'Gwyn
         'Dark Sun Gwyndolin
@@ -2265,32 +2271,32 @@ Public Class frmForm1
         'Asylum Demon
         Dim msg As String
 
-        ShowHUD(False)
+        showhud(False)
 
-        SetGenDialog("Choose your NG level wisely.\nValues above 6 are ignored.", 3, "Begin", "Wuss Out")
+        setgendialog("Choose your NG level wisely.\nValues above 6 are ignored.", 3, "Begin", "Wuss Out")
         If Not GenDiagResponse = 1 Then
-            SetGenDialog("So much shame...", 2, "I know", "I don't care")
-            ShowHUD(True)
+            setgendialog("So much shame...", 2, "I know", "I don't care")
+            showhud(True)
             WInt32(RInt32(&H13786D0) + &H154, -1)
             WInt32(RInt32(&H13786D0) + &H158, -1)
             Return
         End If
         If GenDiagVal > 6 Then GenDiagVal = 6
-        SetClearCount(GenDiagVal)
+        setclearcount(GenDiagVal)
 
         msg = "Welcome to the Reverse Boss Rush." & Environment.NewLine
         msg = msg & "Saving has been disabled." & Environment.NewLine
 
 
         For i = 10 To 1 Step -1
-            SetBriefingMsg(msg & i)
+            setbriefingmsg(msg & i)
             Thread.Sleep(1000)
         Next
 
 
-        SetBriefingMsg("Begin")
+        setbriefingmsg("Begin")
 
-        funcCall_old("CroseBriefingMsg", {0, 0, 0, 0, 0})
+        funccall_old("CroseBriefingMsg", {0, 0, 0, 0, 0})
         Thread.Sleep(1000)
 
 
@@ -2305,44 +2311,44 @@ Public Class frmForm1
         rushName = "Reverse"
 
 
-        BossGwyn()
-        BossDarkSunGwyndolin()
-        BossCrossbreedPriscilla()
-        BossFourKings()
-        BossSeath()
-        BossBlackDragonKalameet()
-        BossCentipedeDemon()
-        BossDemonFiresage()
-        BossCeaselessDischarge()
-        BossManus()
-        BossKnightArtorias()
-        BossSanctuaryGuardian()
-        BossGravelordNito()
-        BossPinwheel()
-        BossOAndS()
-        BossIronGolem()
-        BossStrayDemon()
-        BossChaosWitchQuelaag()
-        BossSif()
-        BossMoonlightButterfly()
-        BossGapingDragon()
-        BossCapraDemon()
-        BossBellGargoyles()
-        BossTaurusDemon()
-        BossAsylum()
+        bossgwyn()
+        bossdarksungwyndolin()
+        bosscrossbreedpriscilla()
+        bossfourkings()
+        bossseath()
+        bossblackdragonkalameet()
+        bosscentipededemon()
+        bossdemonfiresage()
+        bossceaselessdischarge()
+        bossmanus()
+        bossknightartorias()
+        bosssanctuaryguardian()
+        bossgravelordnito()
+        bosspinwheel()
+        bossoands()
+        bossirongolem()
+        bossstraydemon()
+        bosschaoswitchquelaag()
+        bosssif()
+        bossmoonlightbutterfly()
+        bossgapingdragon()
+        bosscaprademon()
+        bossbellgargoyles()
+        bosstaurusdemon()
+        bossasylum()
 
         gamestatsptr = RInt32(&H1378700)
         Dim rushTime As TimeSpan
         rushTime = TimeSpan.FromMilliseconds(RInt32(gamestatsptr + &H68))
-        SetBriefingMsg("Congratulations." & ChrW(&HA) & Strings.Left(rushTime.ToString, 12) & ChrW(&HA) &
+        setbriefingmsg("Congratulations." & ChrW(&HA) & Strings.Left(rushTime.ToString, 12) & ChrW(&HA) &
                        "NG: " & RInt32(gamestatsptr + &H3C) & ChrW(&HA) &
                        "Deaths: " & RInt32(gamestatsptr + &H58))
-        BlackScreen()
-        ShowHUD(False)
+        blackscreen()
+        showhud(False)
         Thread.Sleep(10000)
-        FadeIn()
-        ShowHUD(True)
-        funcCall_old("CroseBriefingMsg", {0, 0, 0, 0, 0})
+        fadein()
+        showhud(True)
+        funccall_old("CroseBriefingMsg", {0, 0, 0, 0, 0})
 
         rushTimer.Abort()
 
@@ -2382,155 +2388,155 @@ Public Class frmForm1
 
 
     Private Sub btnBossAsylumDemon_Click(sender As Object, e As EventArgs) Handles btnBossAsylumDemon.Click, Button1.Click
-        trd = New Thread(AddressOf BossAsylum)
+        trd = New Thread(AddressOf bossasylum)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossBedOfChaos_Click(sender As Object, e As EventArgs) Handles btnBossBedOfChaos.Click, Button6.Click
-        trd = New Thread(AddressOf BossBedOfChaos)
+        trd = New Thread(AddressOf bossbedofchaos)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossBellGargoyles_Click(sender As Object, e As EventArgs) Handles btnBossBellGargoyles.Click, Button4.Click
-        trd = New Thread(AddressOf BossBellGargoyles)
+        trd = New Thread(AddressOf bossbellgargoyles)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossBlackDragonKalameet_Click(sender As Object, e As EventArgs) Handles btnBossBlackDragonKalameet.Click, Button26.Click
-        trd = New Thread(AddressOf BossBlackDragonKalameet)
+        trd = New Thread(AddressOf bossblackdragonkalameet)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossCapraDemon_Click(sender As Object, e As EventArgs) Handles btnBossCapraDemon.Click, Button3.Click
-        trd = New Thread(AddressOf BossCapraDemon)
+        trd = New Thread(AddressOf bosscaprademon)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossCeaselessDischarge_Click(sender As Object, e As EventArgs) Handles btnBossCeaselessDischarge.Click, Button5.Click
-        trd = New Thread(AddressOf BossCeaselessDischarge)
+        trd = New Thread(AddressOf bossceaselessdischarge)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossCentipedeDemon_Click(sender As Object, e As EventArgs) Handles btnBossCentipedeDemon.Click, Button7.Click
-        trd = New Thread(AddressOf BossCentipedeDemon)
+        trd = New Thread(AddressOf bosscentipededemon)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossChaosWitchQuelaag_Click(sender As Object, e As EventArgs) Handles btnBossChaosWitchQuelaag.Click, Button8.Click
-        trd = New Thread(AddressOf BossChaosWitchQuelaag)
+        trd = New Thread(AddressOf bosschaoswitchquelaag)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossCrossbreedPriscilla_Click(sender As Object, e As EventArgs) Handles btnBossCrossbreedPriscilla.Click, Button9.Click
-        trd = New Thread(AddressOf BossCrossbreedPriscilla)
+        trd = New Thread(AddressOf bosscrossbreedpriscilla)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossDarkSunGwyndolin_Click(sender As Object, e As EventArgs) Handles btnBossDarkSunGwyndolin.Click, Button10.Click
-        trd = New Thread(AddressOf BossDarkSunGwyndolin)
+        trd = New Thread(AddressOf bossdarksungwyndolin)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossDemonFiresage_Click(sender As Object, e As EventArgs) Handles btnBossDemonFiresage.Click, Button11.Click
-        trd = New Thread(AddressOf BossDemonFiresage)
+        trd = New Thread(AddressOf bossdemonfiresage)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossFourKings_Click(sender As Object, e As EventArgs) Handles btnBossFourKings.Click, Button13.Click
-        trd = New Thread(AddressOf BossFourKings)
+        trd = New Thread(AddressOf bossfourkings)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossGapingDragon_Click(sender As Object, e As EventArgs) Handles btnBossGapingDragon.Click, Button14.Click
-        trd = New Thread(AddressOf BossGapingDragon)
+        trd = New Thread(AddressOf bossgapingdragon)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossGravelordNito_Click(sender As Object, e As EventArgs) Handles btnBossGravelordNito.Click, Button15.Click
-        trd = New Thread(AddressOf BossGravelordNito)
+        trd = New Thread(AddressOf bossgravelordnito)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossGwyn_Click(sender As Object, e As EventArgs) Handles btnBossGwyn.Click, Button16.Click
-        trd = New Thread(AddressOf BossGwyn)
+        trd = New Thread(AddressOf bossgwyn)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossIronGolem_Click(sender As Object, e As EventArgs) Handles btnBossIronGolem.Click, Button17.Click
-        trd = New Thread(AddressOf BossIronGolem)
+        trd = New Thread(AddressOf bossirongolem)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossKnightArtorias_Click(sender As Object, e As EventArgs) Handles btnBossKnightArtorias.Click, Button18.Click
-        trd = New Thread(AddressOf BossKnightArtorias)
+        trd = New Thread(AddressOf bossknightartorias)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossManus_Click(sender As Object, e As EventArgs) Handles btnBossManus.Click, Button19.Click
-        trd = New Thread(AddressOf BossManus)
+        trd = New Thread(AddressOf bossmanus)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossMoonlightButterfly_Click(sender As Object, e As EventArgs) Handles btnBossMoonlightButterfly.Click, Button20.Click
-        trd = New Thread(AddressOf BossMoonlightButterfly)
+        trd = New Thread(AddressOf bossmoonlightbutterfly)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossOandS_Click(sender As Object, e As EventArgs) Handles btnBossOandS.Click, Button12.Click
-        trd = New Thread(AddressOf BossOAndS)
+        trd = New Thread(AddressOf bossoands)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossPinwheel_Click(sender As Object, e As EventArgs) Handles btnBossPinwheel.Click, Button2.Click
-        trd = New Thread(AddressOf BossPinwheel)
+        trd = New Thread(AddressOf bosspinwheel)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossSanctuaryGuardian_Click(sender As Object, e As EventArgs) Handles btnBossSanctuaryGuardian.Click, Button21.Click
-        trd = New Thread(AddressOf BossSanctuaryGuardian)
+        trd = New Thread(AddressOf bosssanctuaryguardian)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossSeath_Click(sender As Object, e As EventArgs) Handles btnBossSeath.Click, Button22.Click
-        trd = New Thread(AddressOf BossSeath)
+        trd = New Thread(AddressOf bossseath)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossSif_Click(sender As Object, e As EventArgs) Handles btnBossSif.Click, Button24.Click
-        trd = New Thread(AddressOf BossSif)
+        trd = New Thread(AddressOf bosssif)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossStrayDemon_Click(sender As Object, e As EventArgs) Handles btnBossStrayDemon.Click, Button23.Click
-        trd = New Thread(AddressOf BossStrayDemon)
+        trd = New Thread(AddressOf bossstraydemon)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossTaurusDemon_Click(sender As Object, e As EventArgs) Handles btnBossTaurusDemon.Click, Button25.Click
-        trd = New Thread(AddressOf BossTaurusDemon)
+        trd = New Thread(AddressOf bosstaurusdemon)
         trd.IsBackground = True
         trd.Start()
     End Sub
 
     Private Sub btnScenarioArtoriasCiaran_Click(sender As Object, e As EventArgs) Handles btnScenarioArtoriasCiaran.Click
-        trd = New Thread(AddressOf ScenarioArtoriasAndCiaran)
+        trd = New Thread(AddressOf scenarioartoriasandciaran)
         trd.IsBackground = True
         trd.Start()
     End Sub
 
     Private Sub btnScenarioTripleSanctuary_Click(sender As Object, e As EventArgs) Handles btnScenarioTripleSanctuary.Click
-        trd = New Thread(AddressOf ScenarioTripleSanctuaryGuardian)
+        trd = New Thread(AddressOf scenariotriplesanctuaryguardian)
         trd.IsBackground = True
         trd.Start()
     End Sub
 
     Private Sub btnBeginBossRush_Click(sender As Object, e As EventArgs) Handles btnBeginBossRush.Click
-        trd = New Thread(AddressOf BeginBossRush)
+        trd = New Thread(AddressOf beginbossrush)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBeginReverseRush_Click(sender As Object, e As EventArgs) Handles btnBeginReverseRush.Click
-        trd = New Thread(AddressOf BeginReverseBossRush)
+        trd = New Thread(AddressOf beginreversebossrush)
         trd.IsBackground = True
         trd.Start()
     End Sub
@@ -2592,7 +2598,7 @@ Public Class frmForm1
                 dropAlloc()
                 funcAlloc()
 
-                SetSaveEnable(False)
+                setsaveenable(False)
             End If
         End If
     End Sub
@@ -2621,11 +2627,17 @@ Public Class frmForm1
 
 
 
-        str = "funcCall SetHp, 10000, 1.0"
+        'str = "funcCall SetHp, 10000, 1.0"
         'str = "DisableAI true"
+        str = "SetHp 10000, 1.0"
 
 
-        action = str.Split(" ")(0)
+        action = str.Split(" ")(0).ToLower
+        If clsFuncLocs.Contains(action) Then
+            str = "funccall " & action & ", " & str.ToLower.Replace(action & " ", "")
+            action = "funccall"
+        End If
+
         If str.Contains(" ") Then
             str = str.Replace(action & " ", "")
             params = str.Replace(" ", "").Split(",")
@@ -2637,7 +2649,7 @@ Public Class frmForm1
         Next
 
         'Ugly hack to work around parameter count issue with funcCall
-        If action = "funcCall" Then
+        If action = "funccall" Then
             For i = 0 To (6 - params.Count) - 1
                 Array.Resize(params, params.Length + 1)
                 params(params.Length - 1) = "0"
@@ -2668,7 +2680,11 @@ Public Class frmForm1
 
         method.Invoke(Me, params)
 
+        Dim result As Integer
+        result = RInt32(funcPtr + &H200)
+        WInt32(funcPtr + &H200, 1337)
 
+        MsgBox(result)
 
 
 
@@ -2687,11 +2703,11 @@ Public Class frmForm1
     End Sub
 
     Private Sub btnDisableAI_Click(sender As Object, e As EventArgs) Handles btnDisableAI.Click
-        DisableAI(True)
+        disableai(True)
     End Sub
 
     Private Sub btnEnableAI_Click(sender As Object, e As EventArgs) Handles btnEnableAI.Click
-        DisableAI(False)
+        disableai(False)
     End Sub
 
     Private Sub nmbVitality_ValueChanged(sender As Object, e As EventArgs) Handles nmbVitality.ValueChanged
@@ -2744,7 +2760,7 @@ Public Class frmForm1
 
     Private Sub btnX_Click(sender As Object, e As EventArgs) Handles btnX.Click
 
-        ShowHUD(True)
+        showhud(True)
         WInt32(RInt32(&H13786D0) + &H154, -1)
         WInt32(RInt32(&H13786D0) + &H158, -1)
 
