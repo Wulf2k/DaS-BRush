@@ -556,19 +556,23 @@ Public Class frmForm1
     End Function
 
 
+
+    'TODO:  Correct boss funcs to use ParseScript, then remove these.
     Public Sub SetEventFlag(ByVal flag As Integer, state As Byte)
         'funccall_old("SetEventFlag", {flag, state, 0, 0, 0})
         funccall("SetEventFlag", flag, state, 0, 0, 0)
     End Sub
     Public Sub Warp(ByVal entityID As Integer, point As Integer)
-        funccall_old("Warp", {entityID, point, 0, 0, 0})
+        funccall("Warp", entityID, point)
     End Sub
     Public Sub WarpNextStage(ByVal world As Integer, block As Integer, area As Integer)
-        funccall_old("WarpNextStage", {world, block, 0, 0, area})
+        funccall("WarpNextStage", world, block, 0, 0, area)
     End Sub
     Public Sub WarpNextStage_Bonfire(ByVal bonfireID As Integer)
-        funccall_old("WarpNextStage_Bonfire", {bonfireID, 0, 0, 0, 0})
+        funccall("WarpNextStage_Bonfire", bonfireID)
     End Sub
+
+
     Public Sub warp_coords(ByVal x As Single, y As Single, z As Single)
         WFloat(charmapdataptr + &HD0, x)
         WFloat(charmapdataptr + &HD4, y)
@@ -733,15 +737,16 @@ Public Class frmForm1
         If name.Length > 21 Then name = Strings.Left(name, 21) 'Prevent runover into code
         WUniStr(&H11A784C, name + ChrW(0))
     End Sub
+
+    Public Sub playerhide(ByVal state As Byte)
+        WBytes(&H13784E7, {state})
+    End Sub
     Public Sub showhud(ByVal state As Byte)
         Dim tmpptr As UInteger
         tmpptr = RUInt32(&H1378700)
         tmpptr = RUInt32(tmpptr + &H2C)
 
         WBytes(tmpptr + &HD, {state})
-    End Sub
-    Public Sub playerhide(ByVal state As Byte)
-        WBytes(&H13784E7, {state})
     End Sub
     Public Sub waitforload()
         Dim tmpptr As Integer
@@ -2612,73 +2617,7 @@ Public Class frmForm1
         End If
     End Sub
 
-    Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
 
-        'SetEventFlag(16, 0)
-        warp_coords_facing(71.72, 60, 300.56, 1.0)
-
-    End Sub
-
-    Private sub ScriptParse(byval str As string)
-        Dim action As String
-        Dim params() As String = {}
-
-
-        action = str.Split(" ")(0).ToLower
-        If clsFuncLocs.Contains(action) Then
-            str = "funccall " & action & ", " & str.ToLower.Replace(action, "")
-            action = "funccall"
-        End If
-
-        If str.Contains(" ") Then
-            str = str.Replace(action & " ", "")
-            params = str.Replace(" ", "").Split(",")
-        End If
-
-        For i = 0 To params.Count - 1
-            If params(i).ToLower = "true" Then params(i) = "1"
-            If params(i).ToLower = "false" Then params(i) = "0"
-        Next
-
-
-        Dim t As Type = Me.GetType
-        Dim method As MethodInfo
-
-        method = t.GetMethod(action)
-
-
-        For i = 0 To (method.GetParameters.Count - params.Length) - 1
-            Array.Resize(params, params.Length + 1)
-            params(params.Length - 1) = "0"
-        Next
-
-
-
-
-
-        Dim typedParams() As Object = {}
-
-
-        For i = 0 To method.GetParameters.Count - 1
-            Array.Resize(typedParams, typedParams.Length + 1)
-
-            If method.GetParameters(i).ParameterType.IsByRef Then
-                typedParams(typedParams.Length - 1) = CTypeDynamic(params(i), method.GetParameters(i).ParameterType.GetElementType())
-            Else
-                typedParams(typedParams.Length - 1) = CTypeDynamic(params(i), method.GetParameters(i).ParameterType())
-            End If
-
-        Next
-
-        Dim result As Integer
-        result = method.Invoke(Me, typedparams)
-
-        WInt32(funcPtr + &H200, 1337)
-
-        txtConsoleResult.Text =  "Hex: 0x" & Hex(result) & Environment.NewLine & _
-            "Int: " & result & Environment.NewLine & _ 
-            "Float: " & bitconverter.ToSingle(BitConverter.GetBytes(result), 0)
-    End sub
 
     Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
         Dim updateWindow As New UpdateWindow(sender.Tag)
@@ -2758,13 +2697,86 @@ Public Class frmForm1
     End Sub
 
     Private Sub btnConsoleExecute_Click(sender As Object, e As EventArgs) Handles btnConsoleExecute.Click
-        For each line In txtConsole.Lines
+        For Each line In txtConsole.Lines
             Try
-                ScriptParse(line)
+                Dim result As Integer
+
+                result = ScriptParse(line)
+
+                txtConsoleResult.Text = "Hex: 0x" & Hex(result) & Environment.NewLine &
+                "Int: " & result & Environment.NewLine &
+                "Float: " & BitConverter.ToSingle(BitConverter.GetBytes(result), 0)
             Catch ex As Exception
                 MsgBox(line & Environment.NewLine & Environment.NewLine & ex.Message)
             End Try
-            
+
         Next
+    End Sub
+
+    Private Function ScriptParse(ByVal str As String) As Integer
+        Dim action As String
+        Dim params() As String = {}
+
+
+        action = str.Split(" ")(0).ToLower
+        If clsFuncLocs.Contains(action) Then
+            str = "funccall " & action & ", " & str.ToLower.Replace(action, "")
+            action = "funccall"
+        End If
+
+        If str.Contains(" ") Then
+            str = str.Replace(action & " ", "")
+            params = str.Replace(" ", "").Split(",")
+        End If
+
+        For i = 0 To params.Count - 1
+            If params(i).ToLower = "true" Then params(i) = "1"
+            If params(i).ToLower = "false" Then params(i) = "0"
+        Next
+
+
+        Dim t As Type = Me.GetType
+        Dim method As MethodInfo
+
+        method = t.GetMethod(action)
+
+
+        For i = 0 To (method.GetParameters.Count - params.Length) - 1
+            Array.Resize(params, params.Length + 1)
+            params(params.Length - 1) = "0"
+        Next
+
+
+
+
+
+        Dim typedParams() As Object = {}
+
+
+        For i = 0 To method.GetParameters.Count - 1
+            Array.Resize(typedParams, typedParams.Length + 1)
+
+            If method.GetParameters(i).ParameterType.IsByRef Then
+                typedParams(typedParams.Length - 1) = CTypeDynamic(params(i), method.GetParameters(i).ParameterType.GetElementType())
+            Else
+                typedParams(typedParams.Length - 1) = CTypeDynamic(params(i), method.GetParameters(i).ParameterType())
+            End If
+
+        Next
+
+        Dim result As Integer
+        result = method.Invoke(Me, typedParams)
+
+        WInt32(funcPtr + &H200, 1337)
+
+        Return result
+
+    End Function
+
+    Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
+
+        'SetEventFlag(16, 0)
+        warp_coords_facing(71.72, 60, 300.56, 1.0)
+
     End Sub
 End Class
