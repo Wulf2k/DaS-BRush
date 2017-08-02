@@ -543,7 +543,6 @@ Public Class frmForm1
 
 
         WriteProcessMemory(_targetProcessHandle, funcPtr, a.bytes, 1024, 0)
-        MsgBox(Hex(funcPtr))
         CreateRemoteThread(_targetProcessHandle, 0, 0, funcPtr, 0, 0, 0)
         Thread.Sleep(1)
 
@@ -2677,21 +2676,78 @@ Public Class frmForm1
 
         Next
 
-
-        method.Invoke(Me, params)
-
         Dim result As Integer
-        result = RInt32(funcPtr + &H200)
+        result = method.Invoke(Me, params)
+
+        'Dim result As Integer
+        'result = RInt32(funcPtr + &H200)
         WInt32(funcPtr + &H200, 1337)
 
-        MsgBox(result)
 
 
 
 
     End Sub
 
+    Private sub ScriptParse(byval str As string)
+        Dim action As String
+        Dim params() As String = {}
 
+
+        action = str.Split(" ")(0).ToLower
+        If clsFuncLocs.Contains(action) Then
+            str = "funccall " & action & ", " & str.ToLower.Replace(action, "")
+            action = "funccall"
+        End If
+
+        If str.Contains(" ") Then
+            str = str.Replace(action & " ", "")
+            params = str.Replace(" ", "").Split(",")
+        End If
+
+        For i = 0 To params.Count - 1
+            If params(i).ToLower = "true" Then params(i) = "1"
+            If params(i).ToLower = "false" Then params(i) = "0"
+        Next
+
+        'Ugly hack to work around parameter count issue with funcCall
+        If action = "funccall" Then
+            For i = 0 To (6 - params.Count) - 1
+                Array.Resize(params, params.Length + 1)
+                params(params.Length - 1) = "0"
+            Next
+        End If
+
+
+
+        Dim t As Type = Me.GetType
+        Dim method As MethodInfo
+
+        method = t.GetMethod(action)
+
+        Dim typedParams() As Object = {}
+
+
+        For i = 0 To method.GetParameters.Count - 1
+            Array.Resize(typedParams, typedParams.Length + 1)
+
+            If method.GetParameters(i).ParameterType.IsByRef Then
+                typedParams(typedParams.Length - 1) = CTypeDynamic(params(i), method.GetParameters(i).ParameterType.GetElementType())
+            Else
+                typedParams(typedParams.Length - 1) = CTypeDynamic(params(i), method.GetParameters(i).ParameterType())
+            End If
+
+        Next
+
+        Dim result As Integer
+        result = method.Invoke(Me, params)
+
+        WInt32(funcPtr + &H200, 1337)
+
+        txtConsoleResult.Text =  "Hex: 0x" & Hex(result) & Environment.NewLine & _
+            "Int: " & result & Environment.NewLine & _ 
+            "Float: " & bitconverter.ToSingle(BitConverter.GetBytes(result), 0)
+    End sub
 
     Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
         Dim updateWindow As New UpdateWindow(sender.Tag)
@@ -2768,5 +2824,16 @@ Public Class frmForm1
         rushMode = False
         trd.Abort()
         Console.WriteLine(trd.ThreadState)
+    End Sub
+
+    Private Sub btnConsoleExecute_Click(sender As Object, e As EventArgs) Handles btnConsoleExecute.Click
+        For each line In txtConsole.Lines
+            Try
+                ScriptParse(line)
+            Catch ex As Exception
+                MsgBox(line & Environment.NewLine & Environment.NewLine & ex.Message)
+            End Try
+            
+        Next
     End Sub
 End Class

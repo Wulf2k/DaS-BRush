@@ -147,6 +147,11 @@ Partial Class frmForm1
         Me.btnReconnect = New System.Windows.Forms.Button()
         Me.lblVer = New System.Windows.Forms.Label()
         Me.btnUpdate = New System.Windows.Forms.Button()
+        Me.tabConsole = New System.Windows.Forms.TabPage()
+        Me.txtConsole = New System.Windows.Forms.TextBox()
+        Me.txtConsoleResult = New System.Windows.Forms.TextBox()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.btnConsoleExecute = New System.Windows.Forms.Button()
         Me.tabs.SuspendLayout
         Me.tabBosses.SuspendLayout
         Me.gbBosses.SuspendLayout
@@ -171,6 +176,7 @@ Partial Class frmForm1
         Me.tabTests.SuspendLayout
         Me.tabNotes.SuspendLayout
         Me.tabDonate.SuspendLayout
+        Me.tabConsole.SuspendLayout
         Me.SuspendLayout
         '
         'tabs
@@ -184,6 +190,7 @@ Partial Class frmForm1
         Me.tabs.Controls.Add(Me.tabStats)
         Me.tabs.Controls.Add(Me.tabTests)
         Me.tabs.Controls.Add(Me.tabNotes)
+        Me.tabs.Controls.Add(Me.tabConsole)
         Me.tabs.Controls.Add(Me.tabDonate)
         Me.tabs.Location = New System.Drawing.Point(12, 34)
         Me.tabs.Name = "tabs"
@@ -1416,6 +1423,64 @@ Partial Class frmForm1
         Me.btnUpdate.UseVisualStyleBackColor = true
         Me.btnUpdate.Visible = false
         '
+        'tabConsole
+        '
+        Me.tabConsole.Controls.Add(Me.btnConsoleExecute)
+        Me.tabConsole.Controls.Add(Me.Label17)
+        Me.tabConsole.Controls.Add(Me.txtConsoleResult)
+        Me.tabConsole.Controls.Add(Me.txtConsole)
+        Me.tabConsole.Location = New System.Drawing.Point(4, 22)
+        Me.tabConsole.Name = "tabConsole"
+        Me.tabConsole.Size = New System.Drawing.Size(381, 446)
+        Me.tabConsole.TabIndex = 10
+        Me.tabConsole.Text = "Console"
+        Me.tabConsole.UseVisualStyleBackColor = true
+        '
+        'txtConsole
+        '
+        Me.txtConsole.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
+            Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.txtConsole.BackColor = System.Drawing.SystemColors.MenuText
+        Me.txtConsole.Font = New System.Drawing.Font("Consolas", 12!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.txtConsole.ForeColor = System.Drawing.Color.Lime
+        Me.txtConsole.Location = New System.Drawing.Point(9, 4)
+        Me.txtConsole.Multiline = true
+        Me.txtConsole.Name = "txtConsole"
+        Me.txtConsole.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtConsole.Size = New System.Drawing.Size(369, 368)
+        Me.txtConsole.TabIndex = 0
+        '
+        'txtConsoleResult
+        '
+        Me.txtConsoleResult.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.txtConsoleResult.Location = New System.Drawing.Point(144, 378)
+        Me.txtConsoleResult.Multiline = true
+        Me.txtConsoleResult.Name = "txtConsoleResult"
+        Me.txtConsoleResult.Size = New System.Drawing.Size(234, 60)
+        Me.txtConsoleResult.TabIndex = 1
+        '
+        'Label17
+        '
+        Me.Label17.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
+        Me.Label17.AutoSize = true
+        Me.Label17.Location = New System.Drawing.Point(75, 381)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(63, 13)
+        Me.Label17.TabIndex = 7
+        Me.Label17.Text = "Last Result:"
+        '
+        'btnConsoleExecute
+        '
+        Me.btnConsoleExecute.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
+        Me.btnConsoleExecute.Location = New System.Drawing.Point(9, 376)
+        Me.btnConsoleExecute.Name = "btnConsoleExecute"
+        Me.btnConsoleExecute.Size = New System.Drawing.Size(60, 23)
+        Me.btnConsoleExecute.TabIndex = 79
+        Me.btnConsoleExecute.Text = "Execute"
+        Me.btnConsoleExecute.UseVisualStyleBackColor = true
+        '
         'frmForm1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
@@ -1458,6 +1523,8 @@ Partial Class frmForm1
         Me.tabNotes.PerformLayout
         Me.tabDonate.ResumeLayout(false)
         Me.tabDonate.PerformLayout
+        Me.tabConsole.ResumeLayout(false)
+        Me.tabConsole.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1588,4 +1655,9 @@ End Sub
     Friend WithEvents Label16 As Label
     Friend WithEvents nmbClearCount As NumericUpDown
     Friend WithEvents btnX As Button
+    Friend WithEvents tabConsole As TabPage
+    Friend WithEvents txtConsole As TextBox
+    Friend WithEvents Label17 As Label
+    Friend WithEvents txtConsoleResult As TextBox
+    Friend WithEvents btnConsoleExecute As Button
 End Class
