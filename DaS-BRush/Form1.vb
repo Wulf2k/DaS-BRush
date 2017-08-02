@@ -273,6 +273,8 @@ Public Class frmForm1
             Dim tmpProtect As Integer
             VirtualProtectEx(_targetProcessHandle, &H10CC000, &H1DE000, 4, tmpProtect)
 
+            WBytes(RInt32(&H13784a0) + &HB4D, {0})
+
         Else
             If (RUInt32(&H400080) = &HE91B11E2&) Then
                 lblRelease.Text = "Dark Souls (Invalid Beta)"
@@ -489,7 +491,7 @@ Public Class frmForm1
     End Sub
 
 
-    Public Function funccall(func As String, param1 As String, param2 As String, param3 As String, param4 As String, param5 As String) As Integer
+    Public Function funccall(func As String, optional param1 As String = "", optional param2 As String = "", optional param3 As String = "", optional param4 As String = "", optional param5 As String = "") As Integer
 
         Dim Params() As String = {param1, param2, param3, param4, param5}
         Dim param As IntPtr = Marshal.AllocHGlobal(4)
@@ -497,10 +499,10 @@ Public Class frmForm1
         Dim floatParam As Single
         Dim a As New asm
 
-
+        func = func.ToLower
 
         a.pos = funcPtr
-        a.AddVar("funcloc", clsFuncLocs(func))
+        a.AddVar("funcloc", clsFuncLocs(func.tolower))
         a.AddVar("returnedloc", funcPtr + &H200)
 
         a.Asm("push ebp")
@@ -554,8 +556,9 @@ Public Class frmForm1
     End Function
 
 
-    Public Sub SetEventFlag(ByVal flag As Integer, state As Boolean)
-        funccall_old("SetEventFlag", {flag, state And 1, 0, 0, 0})
+    Public Sub SetEventFlag(ByVal flag As Integer, state As Byte)
+        'funccall_old("SetEventFlag", {flag, state, 0, 0, 0})
+        funccall("SetEventFlag", flag, state, 0, 0, 0)
     End Sub
     Public Sub Warp(ByVal entityID As Integer, point As Integer)
         funccall_old("Warp", {entityID, point, 0, 0, 0})
@@ -570,6 +573,13 @@ Public Class frmForm1
         WFloat(charmapdataptr + &HD0, x)
         WFloat(charmapdataptr + &HD4, y)
         WFloat(charmapdataptr + &HD8, z)
+        WBytes(charmapdataptr + &HC8, {1})
+    End Sub
+    Public Sub warp_coords_facing(ByVal x As Single, y As Single, z As Single, rotx As single)
+        WFloat(charmapdataptr + &HD0, x)
+        WFloat(charmapdataptr + &HD4, y)
+        WFloat(charmapdataptr + &HD8, z)
+        WFloat(charmapdataptr + &HE4, rotx)
         WBytes(charmapdataptr + &HC8, {1})
     End Sub
 
@@ -2604,88 +2614,8 @@ Public Class frmForm1
 
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
 
-
-        'SetGenDialog("These utensils were called\n'The Best Ever'\nBy Pro Utensils Magazine", 2, "Spoons", "Forks")
-
-        'Select Case GenDiagResponse
-        'Case 0
-        'SetGenDialog("You have failed to answer.", 1)
-        'Case 1
-        'SetGenDialog("You have selected Spoons.", 1)
-        'Case 2
-        'SetGenDialog("You have selected Forks.", 1)
-        'End Select
-
-        'SetBriefingMsg("Test")
-        'funcCall("SetTextEffect", {16, 0, 0, 0, 0})
-
-
-        Dim str As String
-        Dim action As String
-        Dim params() As String = {}
-
-
-
-        'str = "funcCall SetHp, 10000, 1.0"
-        'str = "DisableAI true"
-        str = "SetHp 10000, 1.0"
-
-
-        action = str.Split(" ")(0).ToLower
-        If clsFuncLocs.Contains(action) Then
-            str = "funccall " & action & ", " & str.ToLower.Replace(action & " ", "")
-            action = "funccall"
-        End If
-
-        If str.Contains(" ") Then
-            str = str.Replace(action & " ", "")
-            params = str.Replace(" ", "").Split(",")
-        End If
-
-        For i = 0 To params.Count - 1
-            If params(i).ToLower = "true" Then params(i) = "1"
-            If params(i).ToLower = "false" Then params(i) = "0"
-        Next
-
-        'Ugly hack to work around parameter count issue with funcCall
-        If action = "funccall" Then
-            For i = 0 To (6 - params.Count) - 1
-                Array.Resize(params, params.Length + 1)
-                params(params.Length - 1) = "0"
-            Next
-        End If
-
-
-
-        Dim t As Type = Me.GetType
-        Dim method As MethodInfo
-
-        method = t.GetMethod(action)
-
-        Dim typedParams() As Object = {}
-
-
-        For i = 0 To method.GetParameters.Count - 1
-            Array.Resize(typedParams, typedParams.Length + 1)
-
-            If method.GetParameters(i).ParameterType.IsByRef Then
-                typedParams(typedParams.Length - 1) = CTypeDynamic(params(i), method.GetParameters(i).ParameterType.GetElementType())
-            Else
-                typedParams(typedParams.Length - 1) = CTypeDynamic(params(i), method.GetParameters(i).ParameterType())
-            End If
-
-        Next
-
-        Dim result As Integer
-        result = method.Invoke(Me, params)
-
-        'Dim result As Integer
-        'result = RInt32(funcPtr + &H200)
-        WInt32(funcPtr + &H200, 1337)
-
-
-
-
+        'SetEventFlag(16, 0)
+        warp_coords_facing(71.72, 60, 300.56, 1.0)
 
     End Sub
 
@@ -2710,20 +2640,21 @@ Public Class frmForm1
             If params(i).ToLower = "false" Then params(i) = "0"
         Next
 
-        'Ugly hack to work around parameter count issue with funcCall
-        If action = "funccall" Then
-            For i = 0 To (6 - params.Count) - 1
-                Array.Resize(params, params.Length + 1)
-                params(params.Length - 1) = "0"
-            Next
-        End If
-
-
 
         Dim t As Type = Me.GetType
         Dim method As MethodInfo
 
         method = t.GetMethod(action)
+
+
+        For i = 0 To (method.GetParameters.Count - params.Length) - 1
+            Array.Resize(params, params.Length + 1)
+            params(params.Length - 1) = "0"
+        Next
+
+
+
+
 
         Dim typedParams() As Object = {}
 
@@ -2740,7 +2671,7 @@ Public Class frmForm1
         Next
 
         Dim result As Integer
-        result = method.Invoke(Me, params)
+        result = method.Invoke(Me, typedparams)
 
         WInt32(funcPtr + &H200, 1337)
 

@@ -1294,6 +1294,7 @@ Partial Class frmForm1
         '
         'btnTest
         '
+        Me.btnTest.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.btnTest.Location = New System.Drawing.Point(304, 3)
         Me.btnTest.Name = "btnTest"
         Me.btnTest.Size = New System.Drawing.Size(68, 23)
@@ -1410,7 +1411,7 @@ Partial Class frmForm1
         Me.lblVer.Name = "lblVer"
         Me.lblVer.Size = New System.Drawing.Size(76, 13)
         Me.lblVer.TabIndex = 77
-        Me.lblVer.Text = "2017-07-30-24"
+        Me.lblVer.Text = "2017-08-30-24"
         '
         'btnUpdate
         '
