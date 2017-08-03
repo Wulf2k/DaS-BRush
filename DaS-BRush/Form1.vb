@@ -465,8 +465,8 @@ Public Class frmForm1
 
         Thread.Sleep(5)
     End Sub
- 
-    Public Function funccall(func As String, optional param1 As String = "", optional param2 As String = "", optional param3 As String = "", optional param4 As String = "", optional param5 As String = "") As Integer
+
+    Public Function funccall(func As String, Optional param1 As String = "", Optional param2 As String = "", Optional param3 As String = "", Optional param4 As String = "", Optional param5 As String = "") As Integer
 
         Dim Params() As String = {param1, param2, param3, param4, param5}
         Dim param As IntPtr = Marshal.AllocHGlobal(4)
@@ -477,7 +477,7 @@ Public Class frmForm1
         func = func.ToLower
 
         a.pos = funcPtr
-        a.AddVar("funcloc", clsFuncLocs(func.tolower))
+        a.AddVar("funcloc", clsFuncLocs(func.ToLower))
         a.AddVar("returnedloc", funcPtr + &H200)
 
         a.Asm("push ebp")
@@ -531,13 +531,13 @@ Public Class frmForm1
     End Function
 
 
-    Public Sub warp_coords(ByVal x As Single, y As Single, z As Single, rotx As integer)
+    Public Sub warp_coords(ByVal x As Single, y As Single, z As Single, rotx As Integer)
         WFloat(charmapdataptr + &HD0, x)
         WFloat(charmapdataptr + &HD4, y)
         WFloat(charmapdataptr + &HD8, z)
 
         Dim facing As Single
-        facing = ((rotx / 360) * 2 * math.PI) - Math.PI
+        facing = ((rotx / 360) * 2 * Math.PI) - Math.PI
 
 
         WFloat(charmapdataptr + &HE4, facing)
@@ -719,7 +719,7 @@ Public Class frmForm1
         Loop
     End Sub
     Public Sub waittillload()
-        Dim tmpptr As integer
+        Dim tmpptr As Integer
         tmpptr = RInt32(&H1378700)
 
         Dim msPlayed As Integer
@@ -727,7 +727,7 @@ Public Class frmForm1
 
         msPlayed = RInt32(tmpptr + &H68)
 
-        Do While not loading
+        Do While Not loading
             loading = (msPlayed = RInt32(tmpptr + &H68))
             Thread.Sleep(33)
         Loop
@@ -793,9 +793,9 @@ Public Class frmForm1
         End While
         Script("Wait 500")
     End Sub
-    Public sub wait(val As Integer)
+    Public Sub wait(val As Integer)
         Thread.Sleep(val)
-    End sub
+    End Sub
 
     Public Function waitforbossdeath(ByVal boost As Integer, match As Integer) As Integer
         Dim eventPtr As Integer
@@ -868,7 +868,7 @@ Public Class frmForm1
             End If
 
             If rushMode Then
-                bossDead = WaitForBossDeath(0, &H8000)
+                bossDead = waitforbossdeath(0, &H8000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -956,7 +956,7 @@ Public Class frmForm1
             Script("SetDisableGravity 10000, 0")
 
             If rushMode Then
-                bossDead = WaitForBossDeath(0, &H10000000)
+                bossDead = waitforbossdeath(0, &H10000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1009,7 +1009,7 @@ Public Class frmForm1
             Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(&H2300, &H8000000)
+                bossDead = waitforbossdeath(&H2300, &H8000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1054,7 +1054,7 @@ Public Class frmForm1
 
 
             If rushMode Then
-                bossDead = WaitForBossDeath(&HF70, &H2000000)
+                bossDead = waitforbossdeath(&HF70, &H2000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1101,7 +1101,7 @@ Public Class frmForm1
 
             Script("Warp_Coords 250.53, -283.15, 72.1")
             Script("Wait 250")
-            
+
             Script("Warp_Coords 402.45, -278.15, 15.5, 30")
             Script("CamReset 10000, 1")
 
@@ -1114,7 +1114,7 @@ Public Class frmForm1
             Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(&H3C70, &H8000000)
+                bossDead = waitforbossdeath(&H3C70, &H8000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1158,7 +1158,7 @@ Public Class frmForm1
             Script("ShowHUD 1")
             Script("PlayerHide 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(&H3C70, &H4000000)
+                bossDead = waitforbossdeath(&H3C70, &H4000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1202,7 +1202,7 @@ Public Class frmForm1
             Script("ShowHUD 1")
             Script("PlayerHide 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(0, &H400000)
+                bossDead = waitforbossdeath(0, &H400000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1255,7 +1255,7 @@ Public Class frmForm1
             Script("ShowHUD 1")
             Script("PlayerHide 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(0, &H8000000)
+                bossDead = waitforbossdeath(0, &H8000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1299,7 +1299,7 @@ Public Class frmForm1
             Script("ShowHUD 1")
             Script("PlayerHide 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(&H4670, &H8000000)
+                bossDead = waitforbossdeath(&H4670, &H8000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1344,7 +1344,7 @@ Public Class frmForm1
             Script("ShowHUD 1")
             Script("PlayerHide 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(&H3C30, &H20)
+                bossDead = waitforbossdeath(&H3C30, &H20)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1392,7 +1392,7 @@ Public Class frmForm1
             Script("PlayerHide 0")
 
             If rushMode Then
-                bossDead = WaitForBossDeath(0, &H40000)
+                bossDead = waitforbossdeath(0, &H40000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     'Script("SetTextEffect 16")
@@ -1442,7 +1442,7 @@ Public Class frmForm1
             Script("PlayerHide 0")
 
             If rushMode Then
-                bossDead = WaitForBossDeath(0, &H20000000)
+                bossDead = waitforbossdeath(0, &H20000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1490,7 +1490,7 @@ Public Class frmForm1
             Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(0, &H1000000)
+                bossDead = waitforbossdeath(0, &H1000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1540,7 +1540,7 @@ Public Class frmForm1
             End If
 
             If rushMode Then
-                bossDead = WaitForBossDeath(0, &H10000)
+                bossDead = waitforbossdeath(0, &H10000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1583,7 +1583,7 @@ Public Class frmForm1
             Script("ShowHUD 1")
             Script("PlayerHide 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(0, &H100000)
+                bossDead = waitforbossdeath(0, &H100000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1632,7 +1632,7 @@ Public Class frmForm1
             Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(&H2300, &H40000000)
+                bossDead = waitforbossdeath(&H2300, &H40000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1675,7 +1675,7 @@ Public Class frmForm1
             Script("ShowHUD 1")
             Script("PlayerHide 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(&H2300, &H20000000)
+                bossDead = waitforbossdeath(&H2300, &H20000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1730,7 +1730,7 @@ Public Class frmForm1
             Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(&H1E70, &H8000000)
+                bossDead = waitforbossdeath(&H1E70, &H8000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1779,7 +1779,7 @@ Public Class frmForm1
             Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(0, &H80000)
+                bossDead = waitforbossdeath(0, &H80000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1822,7 +1822,7 @@ Public Class frmForm1
             Script("ShowHUD 1")
             Script("PlayerHide 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(0, &H2000000)
+                bossDead = waitforbossdeath(0, &H2000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1872,7 +1872,7 @@ Public Class frmForm1
             Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(&H2300, &H80000000)
+                bossDead = waitforbossdeath(&H2300, &H80000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1916,7 +1916,7 @@ Public Class frmForm1
             Script("ShowHUD 1")
             Script("PlayerHide 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(0, &H20000)
+                bossDead = waitforbossdeath(0, &H20000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -1969,7 +1969,7 @@ Public Class frmForm1
             Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(0, &H4000000)
+                bossDead = waitforbossdeath(0, &H4000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -2016,7 +2016,7 @@ Public Class frmForm1
             Script("Wait 1000")
             Script("DisableDamage 10000, 0")
             If rushMode Then
-                bossDead = WaitForBossDeath(&H5A70, &H8000000)
+                bossDead = waitforbossdeath(&H5A70, &H8000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -2061,7 +2061,7 @@ Public Class frmForm1
             Script("PlayerHide 0")
 
             If rushMode Then
-                bossDead = WaitForBossDeath(&HF70, &H4000000)
+                bossDead = waitforbossdeath(&HF70, &H4000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
@@ -2198,9 +2198,6 @@ Public Class frmForm1
         rushName = "Normal"
 
         bossasylum()
-
-        bossfourkings()
-
         bosstaurusdemon()
         bossbellgargoyles()
         bosscaprademon()
@@ -2354,7 +2351,7 @@ Public Class frmForm1
 
     End Sub
 
-    
+
 
 
 

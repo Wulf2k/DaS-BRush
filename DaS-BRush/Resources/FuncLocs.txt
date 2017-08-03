@@ -6,6 +6,7 @@
 14024912|addcurrentvowrankpoint
 14042560|addcustomroutepoint
 14016032|adddeathcount
+14028080|addeventparts
 14028016|addeventparts_ignore
 14035040|addeventsimpletalk
 14034976|addeventsimpletalktimer
@@ -30,8 +31,8 @@
 14049200|castpointspell
 14048912|casttargetspell
 14048848|casttargetspellplus
-14028144|changeinitposang
 14050256|changegreyghost
+14028144|changeinitposang
 14044272|changemodel
 14032288|changetarget
 14047392|changethink
