@@ -34,6 +34,7 @@ Public Class frmForm1
     Public Declare Function GetAsyncKeyState Lib "user32" (ByVal vKey As Integer) As Short
 
     Private trd As Thread
+    Private scriptTrd As Thread
     Private rushTimer As Thread
 
 
@@ -546,7 +547,7 @@ Public Class frmForm1
 
         WriteProcessMemory(_targetProcessHandle, funcPtr, a.bytes, 1024, 0)
         CreateRemoteThread(_targetProcessHandle, 0, 0, funcPtr, 0, 0, 0)
-        Thread.Sleep(1)
+        Thread.Sleep(5)
 
 
 
@@ -557,29 +558,14 @@ Public Class frmForm1
 
 
 
-    'TODO:  Correct boss funcs to use ParseScript, then remove these.
-    Public Sub SetEventFlag(ByVal flag As Integer, state As Byte)
-        'funccall_old("SetEventFlag", {flag, state, 0, 0, 0})
-        funccall("SetEventFlag", flag, state, 0, 0, 0)
-    End Sub
-    Public Sub Warp(ByVal entityID As Integer, point As Integer)
-        funccall("Warp", entityID, point)
-    End Sub
-    Public Sub WarpNextStage(ByVal world As Integer, block As Integer, area As Integer)
-        funccall("WarpNextStage", world, block, 0, 0, area)
-    End Sub
-    Public Sub WarpNextStage_Bonfire(ByVal bonfireID As Integer)
-        funccall("WarpNextStage_Bonfire", bonfireID)
-    End Sub
 
-
-    Public Sub warp_coords(ByVal x As Single, y As Single, z As Single)
+    Public Sub Warp_Coords_old(ByVal x As Single, y As Single, z As Single)
         WFloat(charmapdataptr + &HD0, x)
         WFloat(charmapdataptr + &HD4, y)
         WFloat(charmapdataptr + &HD8, z)
         WBytes(charmapdataptr + &HC8, {1})
     End Sub
-    Public Sub warp_coords_facing(ByVal x As Single, y As Single, z As Single, rotx As single)
+    Public Sub warp_coords(ByVal x As Single, y As Single, z As Single, rotx As Single)
         WFloat(charmapdataptr + &HD0, x)
         WFloat(charmapdataptr + &HD4, y)
         WFloat(charmapdataptr + &HD8, z)
@@ -834,35 +820,35 @@ Public Class frmForm1
         Dim firstTry As Boolean = True
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(16, False) 'Boss Death Flag
-            SetEventFlag(11810000, False) 'Tutorial Complete Flag
-            SetEventFlag(11815395, True) 'Boss at lower position
+            Script("SetEventFlag 16, False") 'Boss Death Flag
+            Script("SetEventFlag 11810000, False") 'Tutorial Complete Flag
+            Script("SetEventFlag 11815395, True") 'Boss at lower position
 
             playerhide(True)
             showhud(False)
             fadeout()
 
-            WarpNextStage_Bonfire(1810998)
+            Script("WarpNextStage_Bonfire 1810998")
 
             Thread.Sleep(1000)
 
             waitforload()
             blackscreen()
             playerhide(True)
-            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            Script("SetDisableGravity 10000, 1")
 
             Thread.Sleep(500)
             'facing 180 degrees
-            warp_coords(3.15, 198.15, -6)
-            SetEventFlag(11815390, True)
+            Script("Warp_Coords 3.15, 198.15, -6.0")
+            Script("SetEventFlag 11815390, True")
 
             Thread.Sleep(1500)
             fadein()
             showhud(True)
             playerhide(False)
-            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            Script("SetDisableGravity 10000, 0")
 
             If firstTry And rushName = "Normal" Then
                 clearplaytime()
@@ -872,8 +858,8 @@ Public Class frmForm1
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H8000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -884,12 +870,12 @@ Public Class frmForm1
     Public Sub bossbedofchaos()
 
 
-        SetEventFlag(10, False) 'Boss 
+        Script("SetEventFlag 10, False") 'Boss 
 
-        SetEventFlag(11410000, False)
-        SetEventFlag(11410200, False) 'Center Platform flag
-        SetEventFlag(11410291, False) 'Arm flag
-        SetEventFlag(11410292, False) 'Arm flag
+        Script("SetEventFlag 11410000, False")
+        Script("SetEventFlag 11410200, False") 'Center Platform flag
+        Script("SetEventFlag 11410291, False") 'Arm flag
+        Script("SetEventFlag 11410292, False") 'Arm flag
 
         'non-standard transition to allow quit-out
         'warp before fog gate to set last solid position
@@ -897,27 +883,27 @@ Public Class frmForm1
         playerhide(True)
         showhud(False)
         fadeout()
-        funccall_old("SetHp", {10000, "1.0", 0, 0, 0})
+        Script("SetHp 10000, 1.0")
 
-        WarpNextStage_Bonfire(1410980)
+        Script("WarpNextStage_Bonfire 1410980")
 
         Thread.Sleep(1000)
 
         waitforload()
         blackscreen()
         playerhide(True)
-        funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+        Script("SetDisableGravity 10000, 1")
 
         Thread.Sleep(500)
-        Warp(10000, 1412998)
+        Script("Warp 10000, 1412998")
         Thread.Sleep(250)
-        Warp(10000, 1412997)
+        Script("Warp 10000, 1412997")
 
         Thread.Sleep(1250)
         fadein()
         showhud(True)
         playerhide(False)
-        funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+        Script("SetDisableGravity 10000, 0")
 
     End Sub
     Public Sub bossbellgargoyles()
@@ -925,9 +911,9 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
-            SetEventFlag(3, False) 'Boss Death Flag
-            SetEventFlag(11010000, False) 'Boss Cinematic Viewed Flag
+            Script("RequestFullRecover")
+            Script("SetEventFlag 3, False") 'Boss Death Flag
+            Script("SetEventFlag 11010000, False") 'Boss Cinematic Viewed Flag
 
 
 
@@ -937,36 +923,36 @@ Public Class frmForm1
             showhud(False)
             fadeout()
 
-            WarpNextStage_Bonfire(1010998)
+            Script("WarpNextStage_Bonfire 1010998")
 
             Thread.Sleep(1000)
 
             waitforload()
             blackscreen()
             playerhide(True)
-            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            Script("SetDisableGravity 10000, 1")
 
             Thread.Sleep(500)
 
-            SetEventFlag(11015390, True) 'Boss Fog Used
-            SetEventFlag(11015393, True) 'Boss Area Entered
+            Script("SetEventFlag 11015390, True") 'Boss Fog Used
+            Script("SetEventFlag 11015393, True") 'Boss Area Entered
             Thread.Sleep(250)
 
             'facing 0 degrees
-            warp_coords(10.8, 48.92, 87.26)
+            Script("Warp_Coords 10.8, 48.92, 87.26")
 
 
             Thread.Sleep(1250)
             fadein()
             showhud(True)
             playerhide(False)
-            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            Script("SetDisableGravity 10000, 0")
 
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H10000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -977,50 +963,50 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
 
-            SetEventFlag(11210004, False)
+            Script("SetEventFlag 11210004, False")
 
-            SetEventFlag(121, False)
-            SetEventFlag(11210539, True)
-            SetEventFlag(11210535, True)
-            SetEventFlag(11210067, False)
-            SetEventFlag(11210066, False)
-            SetEventFlag(11210056, True)
+            Script("SetEventFlag 121, False")
+            Script("SetEventFlag 11210539, True")
+            Script("SetEventFlag 11210535, True")
+            Script("SetEventFlag 11210067, False")
+            Script("SetEventFlag 11210066, False")
+            Script("SetEventFlag 11210056, True")
 
-            SetEventFlag(1821, True)
-            SetEventFlag(11210592, True)
+            Script("SetEventFlag 1821, True")
+            Script("SetEventFlag 11210592, True")
 
 
             playerhide(True)
             showhud(False)
             fadeout()
 
-            WarpNextStage_Bonfire(1210998)
+            Script("WarpNextStage_Bonfire 1210998")
 
             Thread.Sleep(1000)
 
             waitforload()
             blackscreen()
             playerhide(True)
-            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            Script("SetDisableGravity 10000, 1")
 
             Thread.Sleep(500)
             'facing 107 degrees
-            warp_coords(876.04, -344.73, 749.75)
+            Script("Warp_Coords 876.04, -344.73, 749.75")
 
 
             Thread.Sleep(1500)
             fadein()
             showhud(True)
             playerhide(False)
-            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            Script("SetDisableGravity 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(&H2300, &H8000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1033,9 +1019,9 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(11010902, False)
+            Script("SetEventFlag 11010902, False")
 
 
             'Non-standard due to random deaths
@@ -1043,31 +1029,31 @@ Public Class frmForm1
             showhud(False)
             fadeout()
 
-            WarpNextStage_Bonfire(1010998)
+            Script("WarpNextStage_Bonfire 1010998")
 
             Thread.Sleep(1000)
 
             waitforload()
             blackscreen()
             playerhide(True)
-            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            Script("SetDisableGravity 10000, 1")
             Thread.Sleep(500)
             'facing 238 degrees
-            warp_coords(-73.17, -43.56, -15.17)
-            'Warp(10000, 1012887)
+            Script("Warp_Coords -73.17, -43.56, -15.17")
+
 
             Thread.Sleep(1500)
             fadein()
             showhud(True)
             playerhide(False)
-            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            Script("SetDisableGravity 10000, 0")
 
 
             If rushMode Then
                 bossDead = WaitForBossDeath(&HF70, &H2000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1080,37 +1066,35 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(11410900, False) 'Boss death flag
-            SetEventFlag(51410180, True) 'Corpse Loot reset
+            Script("SetEventFlag 11410900, False") 'Boss death flag
+            Script("SetEventFlag 51410180, True") 'Corpse Loot reset
 
-            SetEventFlag(11415385, True)
-            SetEventFlag(11415378, True)
-            SetEventFlag(11415373, True)
-            SetEventFlag(11415372, True)
-
-            'Non-standard due to co-ords warp
+            Script("SetEventFlag 11415385, True")
+            Script("SetEventFlag 11415378, True")
+            Script("SetEventFlag 11415373, True")
+            Script("SetEventFlag 11415372, True")
 
             playerhide(True)
             showhud(False)
             fadeout()
 
-            WarpNextStage_Bonfire(1410998)
+            Script("WarpNextStage_Bonfire 1410998")
 
             Thread.Sleep(1000)
 
             waitforload()
             blackscreen()
             playerhide(True)
-            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            Script("SetDisableGravity 10000, 1")
 
             Thread.Sleep(500)
 
-            warp_coords(250.53, -283.15, 72.1)
+            Script("Warp_Coords 250.53, -283.15, 72.1")
             Thread.Sleep(250)
             'facing 30 degrees
-            warp_coords(402.45, -278.15, 15.5)
+            Script("Warp_Coords 402.45, -278.15, 15.5")
 
 
 
@@ -1119,12 +1103,12 @@ Public Class frmForm1
             fadein()
             showhud(True)
             playerhide(False)
-            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            Script("SetDisableGravity 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(&H3C70, &H8000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1136,16 +1120,16 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
-            SetEventFlag(11410901, False)
+            Script("RequestFullRecover")
+            Script("SetEventFlag 11410901, False)
 
-            'StandardTransition(1410998, 1412896)
+            'StandardTransition(1410998, 1412896")
 
             playerhide(True)
             showhud(False)
             fadeout()
 
-            WarpNextStage_Bonfire(1410998)
+            Script("WarpNextStage_Bonfire 1410998")
 
             Thread.Sleep(1000)
 
@@ -1155,10 +1139,10 @@ Public Class frmForm1
 
             Thread.Sleep(500)
 
-            Warp(10000, 1412896)
-            SetEventFlag(11415380, True)
-            SetEventFlag(11415383, True)
-            SetEventFlag(11415382, True)
+            Script("Warp 10000, 1412896")
+            Script("SetEventFlag 11415380, True")
+            Script("SetEventFlag 11415383, True")
+            Script("SetEventFlag 11415382, True")
 
             Thread.Sleep(1500)
             fadein()
@@ -1167,8 +1151,8 @@ Public Class frmForm1
             If rushMode Then
                 bossDead = WaitForBossDeath(&H3C70, &H4000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1181,18 +1165,17 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(9, False)
-            'StandardTransition(1400980, 1402997)
+            Script("SetEventFlag 9, False")
 
             playerhide(True)
             showhud(False)
             fadeout()
 
-            funccall_old("SetHp", {10000, "1.0", 0, 0, 0})
+            Script("SetHp 10000, 1.0")
 
-            WarpNextStage_Bonfire(1400980)
+            Script("WarpNextStage_Bonfire 1400980")
 
             Thread.Sleep(1000)
 
@@ -1203,7 +1186,7 @@ Public Class frmForm1
             Thread.Sleep(500)
 
 
-            warp_coords(17.2, -236.9, 113.6)
+            Script("Warp_Coords 17.2, -236.9, 113.6")
 
             Thread.Sleep(1500)
             fadein()
@@ -1212,8 +1195,8 @@ Public Class frmForm1
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H400000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1227,14 +1210,14 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
-            SetEventFlag(4, False) 'Boss Death flag
-            SetEventFlag(1691, True) 'Priscilla Hostile flag
-            SetEventFlag(1692, True) 'Priscilla Dead flag
+            Script("RequestFullRecover")
+            Script("SetEventFlag 4, False") 'Boss Death flag
+            Script("SetEventFlag 1691, True") 'Priscilla Hostile flag
+            Script("SetEventFlag 1692, True") 'Priscilla Dead flag
 
-            SetEventFlag(11100531, False) 'Boss Disabled flag
+            Script("SetEventFlag 11100531, False") 'Boss Disabled flag
 
-            SetEventFlag(11100000, False) 'Previous victory flag
+            Script("SetEventFlag 11100000, False") 'Previous victory flag
 
 
 
@@ -1245,7 +1228,7 @@ Public Class frmForm1
             showhud(False)
             fadeout()
 
-            WarpNextStage_Bonfire(1102961)
+            Script("WarpNextStage_Bonfire 1102961")
 
             Thread.Sleep(1000)
 
@@ -1256,7 +1239,7 @@ Public Class frmForm1
             Thread.Sleep(500)
 
 
-            warp_coords(-22.72, 60.55, 711.86)
+            Script("Warp_Coords -22.72, 60.55, 711.86")
 
             Thread.Sleep(1500)
             fadein()
@@ -1265,8 +1248,8 @@ Public Class frmForm1
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H8000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1279,17 +1262,17 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(11510900, False) 'Boss Death Flag
-            SetEventFlag(11510523, False) 'Boss Disabled Flag
+            Script("SetEventFlag 11510900, False") 'Boss Death Flag
+            Script("SetEventFlag 11510523, False") 'Boss Disabled Flag
 
             'StandardTransition(1510982, 1512896)
             playerhide(True)
             showhud(False)
             fadeout()
 
-            WarpNextStage_Bonfire(1510982)
+            Script("WarpNextStage_Bonfire 1510982")
 
             Thread.Sleep(1000)
 
@@ -1300,7 +1283,7 @@ Public Class frmForm1
             Thread.Sleep(500)
 
 
-            warp_coords(435.1, 60.2, 255.0)
+            Script("Warp_Coords 435.1, 60.2, 255.0")
 
             Thread.Sleep(1500)
             fadein()
@@ -1309,8 +1292,8 @@ Public Class frmForm1
             If rushMode Then
                 bossDead = WaitForBossDeath(&H4670, &H8000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1323,9 +1306,9 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(11410410, False)
+            Script("SetEventFlag 11410410, False")
             'StandardTransition(1410998, 1412416)
 
             playerhide(True)
@@ -1333,7 +1316,7 @@ Public Class frmForm1
             fadeout()
 
 
-            WarpNextStage_Bonfire(1410998)
+            Script("WarpNextStage_Bonfire 1410998")
 
             Thread.Sleep(1000)
 
@@ -1344,7 +1327,7 @@ Public Class frmForm1
             Thread.Sleep(500)
 
 
-            warp_coords(148.04, -341.04, 95.57)
+            Script("Warp_Coords 148.04, -341.04, 95.57")
 
 
             Thread.Sleep(1500)
@@ -1354,8 +1337,8 @@ Public Class frmForm1
             If rushMode Then
                 bossDead = WaitForBossDeath(&H3C30, &H20)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1368,17 +1351,16 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(13, False)
-            SetEventFlag(1677, True) 'Kaathe Angry/gone
-            'StandardTransition(1600999, 1602996)
+            Script("SetEventFlag 13, False")
+            Script("SetEventFlag 1677, True") 'Kaathe Angry/gone
 
             playerhide(True)
             showhud(False)
             fadeout()
 
-            WarpNextStage_Bonfire(1600999)
+            Script("WarpNextStage_Bonfire 1600999")
 
             Thread.Sleep(1000)
 
@@ -1389,9 +1371,9 @@ Public Class frmForm1
             Thread.Sleep(500)
 
 
-            warp_coords(82.24, -163.2, 0.29)
+            Script("Warp_Coords 82.24, -163.2, 0.29")
 
-            dropitem("Rings", "Covenant of Artorias", 1)
+            dropitem("Rings", "Covenant Of Artorias", 1)
 
             Thread.Sleep(1500)
             fadein()
@@ -1400,8 +1382,8 @@ Public Class frmForm1
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H40000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1414,17 +1396,17 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(2, False) 'Boss Death Flag
-            SetEventFlag(11000853, True) 'Channeler Death Flag
+            Script("SetEventFlag 2, False") 'Boss Death Flag
+            Script("SetEventFlag 11000853, True") 'Channeler Death Flag
             'StandardTransition(1000999, 1002997)
 
             playerhide(True)
             showhud(False)
             fadeout()
 
-            WarpNextStage_Bonfire(1000999)
+            Script("WarpNextStage_Bonfire 1000999")
 
             Thread.Sleep(1000)
 
@@ -1432,15 +1414,15 @@ Public Class frmForm1
             blackscreen()
             playerhide(True)
             Thread.Sleep(500)
-            SetEventFlag(11005390, True)
-            SetEventFlag(11005392, True)
-            SetEventFlag(11005393, True)
-            SetEventFlag(11005394, True)
-            SetEventFlag(11005397, True)
-            SetEventFlag(11000000, False)
+            Script("SetEventFlag 11005390, True")
+            Script("SetEventFlag 11005392, True")
+            Script("SetEventFlag 11005393, True")
+            Script("SetEventFlag 11005394, True")
+            Script("SetEventFlag 11005397, True")
+            Script("SetEventFlag 11000000, False")
 
 
-            Warp(10000, 1002997)
+            Script("Warp 10000, 1002997")
 
             Thread.Sleep(1500)
             fadein()
@@ -1450,8 +1432,8 @@ Public Class frmForm1
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H20000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1465,42 +1447,41 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
 
-            SetEventFlag(7, False)
-            'StandardTransition(1310998, 1312110)
+            Script("SetEventFlag 7, False")
 
             playerhide(True)
             showhud(False)
             fadeout()
 
 
-            WarpNextStage_Bonfire(1310998)
+            Script("WarpNextStage_Bonfire 1310998")
 
             Thread.Sleep(1000)
 
             waitforload()
             blackscreen()
             playerhide(True)
-            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            Script("SetDisableGravity 10000, 1")
             Thread.Sleep(500)
 
-            'Warp(10000, 1312110)
-            warp_coords(-126.84, -265.12, -30.78)
-            SetEventFlag(11315390, True)
-            SetEventFlag(11315393, True)
+            'Script("Warp 10000, 1312110)
+            Script("Warp_Coords -126.84, -265.12, -30.78")
+            Script("SetEventFlag 11315390, True")
+            Script("SetEventFlag 11315393, True")
 
             Thread.Sleep(1500)
             fadein()
             showhud(True)
             playerhide(False)
-            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            Script("SetDisableGravity 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H1000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1515,16 +1496,15 @@ Public Class frmForm1
         Dim firstTry As Boolean = True
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(15, False)
-            'StandardTransition(1800999, 1802996)
+            Script("SetEventFlag 15, False")
 
             playerhide(True)
             showhud(False)
             fadeout()
 
-            WarpNextStage_Bonfire(1800999)
+            Script("WarpNextStage_Bonfire 1800999")
 
             Thread.Sleep(1000)
 
@@ -1535,7 +1515,7 @@ Public Class frmForm1
             Thread.Sleep(500)
 
 
-            warp_coords(418.15, -115.92, 169.58)
+            Script("Warp_Coords 418.15, -115.92, 169.58")
 
             Thread.Sleep(1500)
             fadein()
@@ -1550,8 +1530,8 @@ Public Class frmForm1
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H10000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1564,17 +1544,16 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(11, False) 'Boss Death Flag
-            SetEventFlag(11500865, True) 'Bomb-Tossing Giant Death Flag
-            'StandardTransition(1500999, 1502997)
+            Script("SetEventFlag 11, False") 'Boss Death Flag
+            Script("SetEventFlag 11500865, True") 'Bomb-Tossing Giant Death Flag
 
             playerhide(True)
             showhud(False)
             fadeout()
 
-            WarpNextStage_Bonfire(1500999)
+            Script("WarpNextStage_Bonfire 1500999")
 
             Thread.Sleep(1000)
 
@@ -1585,7 +1564,7 @@ Public Class frmForm1
             Thread.Sleep(500)
 
 
-            warp_coords(85.5, 82, 255.1)
+            Script("Warp_Coords 85.5, 82, 255.1")
 
             Thread.Sleep(1500)
             fadein()
@@ -1594,8 +1573,8 @@ Public Class frmForm1
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H100000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1608,11 +1587,11 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
 
-            SetEventFlag(11210001, False)
-            SetEventFlag(11210513, False) 'Ciaran Present
+            Script("SetEventFlag 11210001, False")
+            Script("SetEventFlag 11210513, False") 'Ciaran Present
 
             'Non-standard due to co-ords warp
 
@@ -1621,30 +1600,30 @@ Public Class frmForm1
             fadeout()
 
 
-            WarpNextStage_Bonfire(1210998)
+            Script("WarpNextStage_Bonfire 1210998")
 
             Thread.Sleep(1000)
 
             waitforload()
             blackscreen()
             playerhide(True)
-            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            Script("SetDisableGravity 10000, 1")
 
             Thread.Sleep(500)
             'facing 75.8 degrees
-            warp_coords(1034.11, -330.0, 810.68)
+            Script("Warp_Coords 1034.11, -330.0, 810.68")
 
 
             Thread.Sleep(1500)
             fadein()
             showhud(True)
             playerhide(False)
-            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            Script("SetDisableGravity 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(&H2300, &H40000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1657,17 +1636,16 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(11210002, False)
-            'StandardTransition(1210982, 1212997)
+            Script("SetEventFlag 11210002, False")
 
             playerhide(True)
             showhud(False)
             fadeout()
 
 
-            WarpNextStage_Bonfire(1210982)
+            Script("WarpNextStage_Bonfire 1210982")
 
             Thread.Sleep(1000)
 
@@ -1678,7 +1656,7 @@ Public Class frmForm1
             Thread.Sleep(500)
 
 
-            warp_coords(857.53, -576.69, 873.38)
+            Script("Warp_Coords 857.53, -576.69, 873.38")
 
             Thread.Sleep(1500)
             fadein()
@@ -1687,8 +1665,8 @@ Public Class frmForm1
             If rushMode Then
                 bossDead = WaitForBossDeath(&H2300, &H20000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1701,37 +1679,35 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(11200900, False)
-            SetEventFlag(11205383, False)
-            'StandardTransition(1200999, 1202245)
+            Script("SetEventFlag 11200900, False")
+            Script("SetEventFlag 11205383, False")
 
-            'Non-standard due to flags
             'timing of warp/flags matters
 
             playerhide(True)
             showhud(False)
             fadeout()
 
-            WarpNextStage_Bonfire(1200999)
+            Script("WarpNextStage_Bonfire 1200999")
 
             Thread.Sleep(1000)
 
             waitforload()
             blackscreen()
             playerhide(True)
-            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            Script("SetDisableGravity 10000, 1")
 
 
 
 
             Thread.Sleep(500)
-            warp_coords(181.39, 7.53, 29.01)
+            Script("Warp_Coords 181.39, 7.53, 29.01")
             Thread.Sleep(4000)
-            SetEventFlag(11205383, True)
+            Script("SetEventFlag 11205383, True")
 
-            warp_coords(178.82, 8.12, 30.77)
+            Script("Warp_Coords 178.82, 8.12, 30.77")
 
 
 
@@ -1740,12 +1716,12 @@ Public Class frmForm1
             showhud(True)
 
             playerhide(False)
-            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            Script("SetDisableGravity 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(&H1E70, &H8000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1759,9 +1735,9 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(12, False)
+            Script("SetEventFlag 12, False")
 
 
 
@@ -1771,30 +1747,30 @@ Public Class frmForm1
             showhud(False)
             fadeout()
 
-            WarpNextStage_Bonfire(1510998)
+            Script("WarpNextStage_Bonfire 1510998")
 
             Thread.Sleep(1000)
 
             waitforload()
             blackscreen()
             playerhide(True)
-            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            Script("SetDisableGravity 10000, 1")
 
             Thread.Sleep(500)
             'facing 90 degrees
-            warp_coords(539.9, 142.6, 254.79)
+            Script("Warp_Coords 539.9, 142.6, 254.79")
 
 
             Thread.Sleep(1500)
             fadein()
             showhud(True)
             playerhide(False)
-            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            Script("SetDisableGravity 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H80000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1806,18 +1782,17 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
 
-            SetEventFlag(6, False)
-            'StandardTransition(1300999, 1302999)
+            Script("SetEventFlag 6, False")
 
             playerhide(True)
             showhud(False)
             fadeout()
 
 
-            WarpNextStage_Bonfire(1300999)
+            Script("WarpNextStage_Bonfire 1300999")
 
             Thread.Sleep(1000)
 
@@ -1828,7 +1803,7 @@ Public Class frmForm1
             Thread.Sleep(500)
 
 
-            warp_coords(46, -165.8, 152.02)
+            Script("Warp_Coords 46, -165.8, 152.02")
 
             Thread.Sleep(1500)
             fadein()
@@ -1837,8 +1812,8 @@ Public Class frmForm1
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H2000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1851,10 +1826,10 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(11210000, False)
-            SetEventFlag(11210001, False)
+            Script("SetEventFlag 11210000, False")
+            Script("SetEventFlag 11210001, False")
 
 
             'Non-standard due to co-ords warp
@@ -1862,33 +1837,33 @@ Public Class frmForm1
             playerhide(True)
             showhud(False)
             fadeout()
-            funccall_old("SetHp", {10000, "1.0", 0, 0, 0})
+            Script("SetHp 10000, 1.0")
 
-            WarpNextStage_Bonfire(1210998)
+            Script("WarpNextStage_Bonfire 1210998")
 
             Thread.Sleep(1000)
 
             waitforload()
             blackscreen()
             playerhide(True)
-            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            Script("SetDisableGravity 10000, 1")
 
 
             Thread.Sleep(500)
             'facing = 45 deg
-            warp_coords(931.82, -318.63, 472.45)
+            Script("Warp_Coords 931.82, -318.63, 472.45")
 
 
             Thread.Sleep(1500)
             fadein()
             showhud(True)
             playerhide(False)
-            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            Script("SetDisableGravity 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(&H2300, &H80000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1901,18 +1876,17 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(14, False)
-            SetEventFlag(11700000, False)
+            Script("SetEventFlag 14, False")
+            Script("SetEventFlag 11700000, False")
 
-            'StandardTransition(1700999, 1702997)
             playerhide(True)
             showhud(False)
             fadeout()
 
 
-            WarpNextStage_Bonfire(1700999)
+            Script("WarpNextStage_Bonfire 1700999")
 
             Thread.Sleep(1000)
 
@@ -1923,7 +1897,7 @@ Public Class frmForm1
             Thread.Sleep(500)
 
 
-            warp_coords(109, 134.05, 856.48)
+            Script("Warp_Coords 109, 134.05, 856.48")
 
             Thread.Sleep(1500)
             fadein()
@@ -1932,8 +1906,8 @@ Public Class frmForm1
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H20000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1946,47 +1920,47 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(5, False)
-            SetEventFlag(11200000, False)
-            SetEventFlag(11200001, False)
-            SetEventFlag(11200002, False)
-            SetEventFlag(11205392, False)
-            SetEventFlag(11205393, False)
-            SetEventFlag(11205394, False)
-            'StandardTransition(1200999, 1202999)
+            Script("SetEventFlag 5, False")
+            Script("SetEventFlag 11200000, False")
+            Script("SetEventFlag 11200001, False")
+            Script("SetEventFlag 11200002, False")
+            Script("SetEventFlag 11205392, False")
+            Script("SetEventFlag 11205393, False")
+            Script("SetEventFlag 11205394, False")
+
 
             playerhide(True)
             showhud(False)
             fadeout()
 
-            funccall_old("SetHp", {10000, "1.0", 0, 0, 0})
+            Script("SetHp 10000, 1.0")
 
-            WarpNextStage_Bonfire(1200999)
+            Script("WarpNextStage_Bonfire 1200999")
 
             Thread.Sleep(1000)
 
             waitforload()
             blackscreen()
             playerhide(True)
-            funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+            Script("SetDisableGravity 10000, 1")
             Thread.Sleep(500)
-            'Warp_Coords(274, -19.82, -266.43)
+            'Script("Warp_Coords 274, -19.82, -266.43)
             Thread.Sleep(500)
-            'Warp(10000, 1202999)
-            warp_coords(254.31, -16.02, -320.32)
+            'Script("Warp 10000, 1202999)
+            Script("Warp_Coords 254.31, -16.02, -320.32")
 
             Thread.Sleep(1000)
             fadein()
             showhud(True)
             playerhide(False)
-            funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+            Script("SetDisableGravity 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H4000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -1999,43 +1973,41 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
 
-            SetEventFlag(11810000, True)
-            SetEventFlag(11810900, False)
+            Script("SetEventFlag 11810000, True")
+            Script("SetEventFlag 11810900, False")
 
-
-            'StandardTransition(1810998, 1812996)
 
             playerhide(True)
             showhud(False)
             fadeout()
 
-            WarpNextStage_Bonfire(1810998)
+            Script("WarpNextStage_Bonfire 1810998")
 
             Thread.Sleep(1000)
 
             waitforload()
             blackscreen()
             playerhide(True)
-            funccall_old("DisableDamage", {10000, 1, 0, 0, 0})
+            Script("DisableDamage 10000, 1")
 
             Thread.Sleep(500)
 
-            Warp(10000, 1812996)
+            Script("Warp 10000, 1812996")
 
             Thread.Sleep(1500)
             fadein()
             showhud(True)
             playerhide(False)
             Thread.Sleep(1000)
-            funccall_old("DisableDamage", {10000, 0, 0, 0, 0})
+            Script("DisableDamage 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(&H5A70, &H8000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -2050,15 +2022,15 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
-            funccall_old("RequestFullRecover", {0, 0, 0, 0, 0})
+            Script("RequestFullRecover")
 
-            SetEventFlag(11010901, False)
-            'StandardTransition(1010998, 1012897)
+            Script("SetEventFlag 11010901, False")
+
             playerhide(True)
             showhud(False)
             fadeout()
 
-            WarpNextStage_Bonfire(1010998)
+            Script("WarpNextStage_Bonfire 1010998")
 
             Thread.Sleep(1000)
 
@@ -2069,7 +2041,7 @@ Public Class frmForm1
             Thread.Sleep(500)
 
 
-            warp_coords(49.81, 16.9, -118.87)
+            Script("Warp_Coords 49.81, 16.9, -118.87")
 
             Thread.Sleep(1500)
             fadein()
@@ -2079,8 +2051,8 @@ Public Class frmForm1
             If rushMode Then
                 bossDead = WaitForBossDeath(&HF70, &H4000000)
                 If Not bossDead Then
-                    funccall_old("AddTrueDeathCount", {0, 0, 0, 0, 0})
-                    funccall_old("SetTextEffect", {16, 0, 0, 0, 0})
+                    Script("AddTrueDeathCount")
+                    Script("SetTextEffect 16")
                     Thread.Sleep(5000)
                 End If
             End If
@@ -2092,22 +2064,20 @@ Public Class frmForm1
     Public Sub scenarioartoriasandciaran()
 
 
-        SetEventFlag(11210001, False) 'Artorias Disabled
-        SetEventFlag(11210513, True) 'Ciaran Present
+        Script("SetEventFlag 11210001, False") 'Artorias Disabled
+        Script("SetEventFlag 11210513, True") 'Ciaran Present
 
 
-        SetEventFlag(1863, False) 'Ciaran Hostile
-        SetEventFlag(1864, False) 'Ciaran Dead
-
-        'Non-standard due to co-ords warp
+        Script("SetEventFlag 1863, False") 'Ciaran Hostile
+        Script("SetEventFlag 1864, False") 'Ciaran Dead
 
         playerhide(True)
         showhud(False)
         fadeout()
 
-        funccall_old("SetHp", {10000, "1.0", 0, 0, 0})
+        Script("SetHp 10000, 1.0")
 
-        WarpNextStage_Bonfire(1210998)
+        Script("WarpNextStage_Bonfire 1210998")
 
         Thread.Sleep(1000)
 
@@ -2116,29 +2086,30 @@ Public Class frmForm1
 
 
         playerhide(True)
-        funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+        Script("SetDisableGravity 10000, 1")
 
         Thread.Sleep(500)
         'facing 75.8 degrees
-        warp_coords(1034.11, -330.0, 810.68)
+        Script("Warp_Coords 1034.11, -330.0, 810.68")
 
 
         Thread.Sleep(1500)
         fadein()
         showhud(True)
         playerhide(False)
-        funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+        Script("SetDisableGravity 10000, 0")
 
-        SetEventFlag(1863, True) 'Ciaran Hostile
-        funccall_old("SetBossGauge", {6740, 1, 10001, 0, 0})
+        Script("SetEventFlag 1863, True") 'Ciaran Hostile
+        'funccall_old("SetBossGauge", {6740, 1, 10001, 0, 0})
+        Script("SetBossGauge 6740, 1, 10001")
         setunknownnpcname("Lord's Blade Ciaran")
     End Sub
     Public Sub scenariotriplesanctuaryguardian()
 
 
 
-        SetEventFlag(11210000, False)
-        SetEventFlag(11210001, True)
+        Script("SetEventFlag 11210000, False")
+        Script("SetEventFlag 11210001, True")
 
 
         'Non-standard due to co-ords warp
@@ -2146,28 +2117,28 @@ Public Class frmForm1
         playerhide(True)
         showhud(False)
         fadeout()
-        funccall_old("SetHp", {10000, "1.0", 0, 0, 0})
+        Script("SetHp 10000, 1.0")
 
-        WarpNextStage_Bonfire(1210998)
+        Script("WarpNextStage_Bonfire 1210998")
 
         Thread.Sleep(1000)
 
         waitforload()
         blackscreen()
         playerhide(True)
-        funccall_old("SetDisableGravity", {10000, 1, 0, 0, 0})
+        Script("SetDisableGravity 10000, 1")
 
 
         Thread.Sleep(500)
         'facing = 45 deg
-        warp_coords(931.82, -318.63, 472.45)
+        Script("Warp_Coords 931.82, -318.63, 472.45")
 
 
         Thread.Sleep(1500)
         fadein()
         showhud(True)
         playerhide(False)
-        funccall_old("SetDisableGravity", {10000, 0, 0, 0, 0})
+        Script("SetDisableGravity 10000, 0")
     End Sub
 
     Public Sub beginbossrush()
@@ -2180,7 +2151,7 @@ Public Class frmForm1
         setgendialog("Choose your NG level wisely.\nValues above 6 are ignored.", 3, "Begin", "Wuss Out")
         If Not GenDiagResponse = 1 Then
             setgendialog("So much shame...", 2, "I know", "I don't care")
-            showhud(True)
+        showhud(True)
             WInt32(RInt32(&H13786D0) + &H154, -1)
             WInt32(RInt32(&H13786D0) + &H158, -1)
             Return
@@ -2200,7 +2171,7 @@ Public Class frmForm1
 
         setbriefingmsg("Begin")
 
-        funccall_old("CroseBriefingMsg", {0, 0, 0, 0, 0})
+        Script("CroseBriefingMsg")
         Thread.Sleep(1000)
 
 
@@ -2252,7 +2223,7 @@ Public Class frmForm1
         Thread.Sleep(10000)
         fadein()
         showhud(True)
-        funccall_old("CroseBriefingMsg", {0, 0, 0, 0, 0})
+        Script("CroseBriefingMsg")
 
         rushTimer.Abort()
     End Sub
@@ -2310,7 +2281,7 @@ Public Class frmForm1
 
         setbriefingmsg("Begin")
 
-        funccall_old("CroseBriefingMsg", {0, 0, 0, 0, 0})
+        Script("CroseBriefingMsg")
         Thread.Sleep(1000)
 
 
@@ -2362,7 +2333,7 @@ Public Class frmForm1
         Thread.Sleep(10000)
         fadein()
         showhud(True)
-        funccall_old("CroseBriefingMsg", {0, 0, 0, 0, 0})
+        Script("CroseBriefingMsg")
 
         rushTimer.Abort()
 
@@ -2701,7 +2672,7 @@ Public Class frmForm1
             Try
                 Dim result As Integer
 
-                result = ScriptParse(line)
+                result = Script(line)
 
                 txtConsoleResult.Text = "Hex: 0x" & Hex(result) & Environment.NewLine &
                 "Int: " & result & Environment.NewLine &
@@ -2713,7 +2684,7 @@ Public Class frmForm1
         Next
     End Sub
 
-    Private Function ScriptParse(ByVal str As String) As Integer
+    Private Function Script(ByVal str As String) As Integer
         Dim action As String
         Dim params() As String = {}
 
@@ -2722,6 +2693,8 @@ Public Class frmForm1
         If clsFuncLocs.Contains(action) Then
             str = "funccall " & action & ", " & str.ToLower.Replace(action, "")
             action = "funccall"
+        Else
+            str = str.ToLower.Replace(action, "")
         End If
 
         If str.Contains(" ") Then
@@ -2767,7 +2740,7 @@ Public Class frmForm1
         Dim result As Integer
         result = method.Invoke(Me, typedParams)
 
-        WInt32(funcPtr + &H200, 1337)
+        'WInt32(funcPtr + &H200, 1337)
 
         Return result
 
@@ -2775,8 +2748,8 @@ Public Class frmForm1
 
     Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
 
-        'SetEventFlag(16, 0)
-        warp_coords_facing(71.72, 60, 300.56, 1.0)
+        'Script("SetEventFlag 16, 0)
+        'warp_coords_facing(71.72, 60, 300.56, 1.0)
 
     End Sub
 End Class

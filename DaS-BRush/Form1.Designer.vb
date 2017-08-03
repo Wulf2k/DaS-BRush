@@ -1374,7 +1374,7 @@ Partial Class frmForm1
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtConsole.BackColor = System.Drawing.SystemColors.MenuText
-        Me.txtConsole.Font = New System.Drawing.Font("Consolas", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtConsole.Font = New System.Drawing.Font("Consolas", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtConsole.ForeColor = System.Drawing.Color.Lime
         Me.txtConsole.Location = New System.Drawing.Point(9, 4)
         Me.txtConsole.Multiline = True
