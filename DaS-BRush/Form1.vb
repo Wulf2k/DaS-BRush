@@ -219,7 +219,7 @@ Public Class frmForm1
                 Sub()
                     Try
                         'Give the old version time to shut down
-                        Thread.Sleep(1000)
+                        Script("Wait 1000")
                         File.Delete(oldFileArg)
                     Catch ex As Exception
                         Me.Invoke(Function() MsgBox("Deleting old version failed: " & vbCrLf & ex.Message, MsgBoxStyle.Exclamation))
@@ -274,7 +274,9 @@ Public Class frmForm1
             Dim tmpProtect As Integer
             VirtualProtectEx(_targetProcessHandle, &H10CC000, &H1DE000, 4, tmpProtect)
 
-            WBytes(RInt32(&H13784a0) + &HB4D, {0})
+            WBytes(&HBE73FE, {&H20})
+            WBytes(&HBE719F, {&H20})
+            WBytes(&HBE722B, {&H20})
 
         Else
             If (RUInt32(&H400080) = &HE91B11E2&) Then
@@ -417,7 +419,7 @@ Public Class frmForm1
 
 
 
-    Public Sub dropitem(ByVal cat As String, item As String, num As Integer)
+    Private Sub dropitem(ByVal cat As String, item As String, num As Integer)
         Dim TargetBufferSize = 1024
         Dim Rtn As Integer
 
@@ -463,35 +465,7 @@ Public Class frmForm1
 
         Thread.Sleep(5)
     End Sub
-    Public Sub funccall_old(ByVal func As String, LUAparams() As String)
-        Dim bytes() As Byte
-        Dim bytes2() As Byte
-
-        Dim bytParams = New Integer() {&H1D, &H17, &H11, &HB, &H5}
-        Dim bytJmp As Integer = &H23
-
-        bytes = {&H55, &H8B, &HEC, &H50, &HB8, 0, 0, 0, 0, &H50, &HB8, 0, 0, 0, 0, &H50, &HB8, 0, 0, 0, 0, &H50, &HB8, 0, 0, 0, 0, &H50, &HB8, 0, 0, 0, 0, &H50, &HE8, 0, 0, 0, 0, &H58, &H58, &H58, &H58, &H58, &H58, &H8B, &HE5, &H5D, &HC3}
-
-        For i As Integer = 4 To 0 Step -1
-            If LUAparams(i) = "False" Then LUAparams(i) = 0
-            If LUAparams(i) = "True" Then LUAparams(i) = 1
-            If LUAparams(i).Contains(".") Then
-                bytes2 = BitConverter.GetBytes(Convert.ToSingle(LUAparams(i), New CultureInfo("en-us")))
-            Else
-                bytes2 = BitConverter.GetBytes(Convert.ToInt32(LUAparams(i), New CultureInfo("en-us")))
-            End If
-
-            Array.Copy(bytes2, 0, bytes, bytParams(i), bytes2.Length)
-        Next
-        bytes2 = BitConverter.GetBytes(CInt(0 - ((funcPtr + bytJmp + 4) - clsFuncLocs(func))))
-
-        Array.Copy(bytes2, 0, bytes, bytJmp, bytes2.Length)
-        WriteProcessMemory(_targetProcessHandle, funcPtr, bytes, 1024, 0)
-        CreateRemoteThread(_targetProcessHandle, 0, 0, funcPtr, 0, 0, 0)
-        Thread.Sleep(5)
-    End Sub
-
-
+ 
     Public Function funccall(func As String, optional param1 As String = "", optional param2 As String = "", optional param3 As String = "", optional param4 As String = "", optional param5 As String = "") As Integer
 
         Dim Params() As String = {param1, param2, param3, param4, param5}
@@ -557,19 +531,16 @@ Public Class frmForm1
     End Function
 
 
-
-
-    Public Sub Warp_Coords_old(ByVal x As Single, y As Single, z As Single)
+    Public Sub warp_coords(ByVal x As Single, y As Single, z As Single, rotx As integer)
         WFloat(charmapdataptr + &HD0, x)
         WFloat(charmapdataptr + &HD4, y)
         WFloat(charmapdataptr + &HD8, z)
-        WBytes(charmapdataptr + &HC8, {1})
-    End Sub
-    Public Sub warp_coords(ByVal x As Single, y As Single, z As Single, rotx As Single)
-        WFloat(charmapdataptr + &HD0, x)
-        WFloat(charmapdataptr + &HD4, y)
-        WFloat(charmapdataptr + &HD8, z)
-        WFloat(charmapdataptr + &HE4, rotx)
+
+        Dim facing As Single
+        facing = ((rotx / 360) * 2 * math.PI) - Math.PI
+
+
+        WFloat(charmapdataptr + &HE4, facing)
         WBytes(charmapdataptr + &HC8, {1})
     End Sub
 
@@ -656,7 +627,7 @@ Public Class frmForm1
 
 
     End Sub
-    Public Sub setfreecam(ByVal state As Boolean)
+    Public Sub setfreecam(ByVal state As Byte)
         If state Then
             'WBytes(&HEFDBAF, {&H90, &H90, &H90, &H90, &H90})
             WBytes(&H404E59, {&H90, &H90, &H90, &H90, &H90})
@@ -684,7 +655,7 @@ Public Class frmForm1
         WInt32(tmpPtr + &H3C, clearCount)
 
     End Sub
-    Public Sub setcaption(ByVal str As String)
+    Private Sub setcaption(ByVal str As String)
         Dim tmpptr As Integer
         Dim alpha As Byte
 
@@ -718,8 +689,7 @@ Public Class frmForm1
     Public Sub setsaveslot(ByVal slot As Integer)
         WInt32(RInt32(&H13784A0) + &HA70, slot)
     End Sub
-    Public Sub setunknownnpcname(ByVal name As String)
-
+    Private Sub setunknownnpcname(ByVal name As String)
         If name.Length > 21 Then name = Strings.Left(name, 21) 'Prevent runover into code
         WUniStr(&H11A784C, name + ChrW(0))
     End Sub
@@ -748,18 +718,32 @@ Public Class frmForm1
             Thread.Sleep(33)
         Loop
     End Sub
+    Public Sub waittillload()
+        Dim tmpptr As integer
+        tmpptr = RInt32(&H1378700)
+
+        Dim msPlayed As Integer
+        Dim loading As Boolean = False
+
+        msPlayed = RInt32(tmpptr + &H68)
+
+        Do While not loading
+            loading = (msPlayed = RInt32(tmpptr + &H68))
+            Thread.Sleep(33)
+        Loop
+    End Sub
 
 
-    Public Sub setbriefingmsg(ByVal str As String)
+    Private Sub setbriefingmsg(ByVal str As String)
         Dim tmpptr As Integer
         tmpptr = RInt32(&H13785DC)
         tmpptr = RInt32(tmpptr + &H7C)
 
         WUniStr(tmpptr + &H3B7A, str + ChrW(0))
-        funccall_old("RequestOpenBriefingMsg", {"10010721", "1", 0, 0, 0})
+        Script("RequestOpenBriefingMsg 10010721, 1")
 
     End Sub
-    Public Sub setgendialog(ByVal str As String, type As Integer, Optional btn0 As String = "", Optional btn1 As String = "")
+    Private Sub setgendialog(ByVal str As String, type As Integer, Optional btn0 As String = "", Optional btn1 As String = "")
         '50002 = Overridden Maintext
         '65000 = Overridden Button 0
         '70000 = Overridden Button 1
@@ -807,11 +791,39 @@ Public Class frmForm1
             GenDiagVal = RInt32(tmpptr + &H4)
             Thread.Sleep(33)
         End While
-        Thread.Sleep(500)
-
-
+        Script("Wait 500")
     End Sub
+    Public sub wait(val As Integer)
+        Thread.Sleep(val)
+    End sub
 
+    Public Function waitforbossdeath(ByVal boost As Integer, match As Integer) As Integer
+        Dim eventPtr As Integer
+        eventPtr = RInt32(&H137D7D4)
+        eventPtr = RInt32(eventPtr)
+
+        Dim hpPtr As Integer
+        hpPtr = RInt32(&H137DC70)
+        hpPtr = RInt32(hpPtr + 4)
+        hpPtr = RInt32(hpPtr)
+        hpPtr = hpPtr + &H2D4
+
+        Dim bossdead As Boolean = False
+        Dim selfdead As Boolean = False
+
+        While Not (bossdead Or selfdead)
+            bossdead = (RInt32(eventPtr + boost) And match)
+            selfdead = (RInt32(hpPtr) = 0)
+            Console.WriteLine(Hex(eventPtr) & " - " & Hex(RInt32(eventPtr)))
+            Thread.Sleep(33)
+        End While
+
+        If bossdead Then
+            Return 1
+        Else
+            Return 0
+        End If
+    End Function
 
 
     Public Sub bossasylum()
@@ -826,32 +838,32 @@ Public Class frmForm1
             Script("SetEventFlag 11810000, False") 'Tutorial Complete Flag
             Script("SetEventFlag 11815395, True") 'Boss at lower position
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("WarpNextStage_Bonfire 1810998")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
             Script("SetDisableGravity 10000, 1")
 
-            Thread.Sleep(500)
-            'facing 180 degrees
-            Script("Warp_Coords 3.15, 198.15, -6.0")
+            Script("Wait 500")
+            Script("Warp_Coords 3.15, 198.15, -6.0, 180")
+            Script("CamReset 10000, 1")
             Script("SetEventFlag 11815390, True")
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
 
             If firstTry And rushName = "Normal" Then
-                clearplaytime()
+                Script("ClearPlayTime")
                 firstTry = False
             End If
 
@@ -860,12 +872,12 @@ Public Class frmForm1
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bossbedofchaos()
 
@@ -877,32 +889,31 @@ Public Class frmForm1
         Script("SetEventFlag 11410291, False") 'Arm flag
         Script("SetEventFlag 11410292, False") 'Arm flag
 
-        'non-standard transition to allow quit-out
         'warp before fog gate to set last solid position
 
-        playerhide(True)
-        showhud(False)
-        fadeout()
+        Script("PlayerHide 1")
+        Script("ShowHUD False")
+        Script("FadeOut")
         Script("SetHp 10000, 1.0")
 
         Script("WarpNextStage_Bonfire 1410980")
 
-        Thread.Sleep(1000)
+        Script("Wait 1000")
 
-        waitforload()
-        blackscreen()
-        playerhide(True)
+        Script("WaitForLoad")
+        Script("BlackScreen")
+        Script("PlayerHide 1")
         Script("SetDisableGravity 10000, 1")
 
-        Thread.Sleep(500)
+        Script("Wait 500")
         Script("Warp 10000, 1412998")
-        Thread.Sleep(250)
+        Script("Wait 250")
         Script("Warp 10000, 1412997")
 
-        Thread.Sleep(1250)
-        fadein()
-        showhud(True)
-        playerhide(False)
+        Script("Wait 1250")
+        Script("FadeIn")
+        Script("ShowHUD 1")
+        Script("PlayerHide 0")
         Script("SetDisableGravity 10000, 0")
 
     End Sub
@@ -915,37 +926,33 @@ Public Class frmForm1
             Script("SetEventFlag 3, False") 'Boss Death Flag
             Script("SetEventFlag 11010000, False") 'Boss Cinematic Viewed Flag
 
-
-
-            'Non-standard due to co-ords warp
-
-            playerhide(True)
-            showhud(False)
-            fadeout()
-
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
             Script("WarpNextStage_Bonfire 1010998")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
             Script("SetDisableGravity 10000, 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
 
             Script("SetEventFlag 11015390, True") 'Boss Fog Used
             Script("SetEventFlag 11015393, True") 'Boss Area Entered
-            Thread.Sleep(250)
+            Script("Wait 250")
 
             'facing 0 degrees
             Script("Warp_Coords 10.8, 48.92, 87.26")
+            Script("CamReset 10000, 1")
 
 
-            Thread.Sleep(1250)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1250")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
 
             If rushMode Then
@@ -953,11 +960,11 @@ Public Class frmForm1
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bossblackdragonkalameet()
         Dim bossDead As Boolean = False
@@ -979,40 +986,39 @@ Public Class frmForm1
             Script("SetEventFlag 11210592, True")
 
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("WarpNextStage_Bonfire 1210998")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
             Script("SetDisableGravity 10000, 1")
 
-            Thread.Sleep(500)
-            'facing 107 degrees
-            Script("Warp_Coords 876.04, -344.73, 749.75")
+            Script("Wait 500")
+            Script("Warp_Coords 876.04, -344.73, 749.75, 240")
+            Script("CamReset 10000, 1")
 
-
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(&H2300, &H8000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bosscaprademon()
 
@@ -1023,29 +1029,27 @@ Public Class frmForm1
 
             Script("SetEventFlag 11010902, False")
 
-
-            'Non-standard due to random deaths
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("WarpNextStage_Bonfire 1010998")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
             Script("SetDisableGravity 10000, 1")
-            Thread.Sleep(500)
-            'facing 238 degrees
-            Script("Warp_Coords -73.17, -43.56, -15.17")
+            Script("Wait 500")
 
+            Script("Warp_Coords -73.17, -43.56, -15.17, 321")
+            Script("CamReset 10000, 1")
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
 
 
@@ -1054,12 +1058,12 @@ Public Class frmForm1
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bossceaselessdischarge()
 
@@ -1068,97 +1072,102 @@ Public Class frmForm1
         Do
             Script("RequestFullRecover")
 
+            Script("SetEventFlag 11410800, False")
+            Script("SetEventFlag 11410801, False")
             Script("SetEventFlag 11410900, False") 'Boss death flag
             Script("SetEventFlag 51410180, True") 'Corpse Loot reset
 
+
+            Script("SetEventFlag 11415379, False")
             Script("SetEventFlag 11415385, True")
             Script("SetEventFlag 11415378, True")
             Script("SetEventFlag 11415373, True")
             Script("SetEventFlag 11415372, True")
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("WarpNextStage_Bonfire 1410998")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
             Script("SetDisableGravity 10000, 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
 
             Script("Warp_Coords 250.53, -283.15, 72.1")
-            Thread.Sleep(250)
-            'facing 30 degrees
-            Script("Warp_Coords 402.45, -278.15, 15.5")
+            Script("Wait 250")
+            
+            Script("Warp_Coords 402.45, -278.15, 15.5, 30")
+            Script("CamReset 10000, 1")
 
 
 
 
-            Thread.Sleep(1250)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1250")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(&H3C70, &H8000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bosscentipededemon()
         Dim bossDead As Boolean = False
 
         Do
             Script("RequestFullRecover")
-            Script("SetEventFlag 11410901, False)
+            Script("SetEventFlag 11410002, False") 'Cinematic flag
+            Script("SetEventFlag 11410901, False")
 
-            'StandardTransition(1410998, 1412896")
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("WarpNextStage_Bonfire 1410998")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
 
             Script("Warp 10000, 1412896")
             Script("SetEventFlag 11415380, True")
             Script("SetEventFlag 11415383, True")
             Script("SetEventFlag 11415382, True")
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(&H3C70, &H4000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bosschaoswitchquelaag()
 
@@ -1168,41 +1177,41 @@ Public Class frmForm1
             Script("RequestFullRecover")
 
             Script("SetEventFlag 9, False")
+            Script("SetEventFlag 11400000, False") 'Cinematic flag
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
-
-            Script("SetHp 10000, 1.0")
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("WarpNextStage_Bonfire 1400980")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
 
 
-            Script("Warp_Coords 17.2, -236.9, 113.6")
+            Script("Warp_Coords 17.2, -236.9, 113.6, 75")
+            Script("CamReset 10000, 1")
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H400000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bosscrossbreedpriscilla()
 
@@ -1224,38 +1233,38 @@ Public Class frmForm1
 
             'StandardTransition(1102961, 1102997)
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("WarpNextStage_Bonfire 1102961")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
 
 
             Script("Warp_Coords -22.72, 60.55, 711.86")
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H8000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bossdarksungwyndolin()
 
@@ -1268,38 +1277,38 @@ Public Class frmForm1
             Script("SetEventFlag 11510523, False") 'Boss Disabled Flag
 
             'StandardTransition(1510982, 1512896)
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("WarpNextStage_Bonfire 1510982")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
 
 
             Script("Warp_Coords 435.1, 60.2, 255.0")
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(&H4670, &H8000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bossdemonfiresage()
 
@@ -1311,40 +1320,40 @@ Public Class frmForm1
             Script("SetEventFlag 11410410, False")
             'StandardTransition(1410998, 1412416)
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
 
             Script("WarpNextStage_Bonfire 1410998")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
 
 
             Script("Warp_Coords 148.04, -341.04, 95.57")
 
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(&H3C30, &H20)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bossfourkings()
 
@@ -1356,40 +1365,43 @@ Public Class frmForm1
             Script("SetEventFlag 13, False")
             Script("SetEventFlag 1677, True") 'Kaathe Angry/gone
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("WarpNextStage_Bonfire 1600999")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
 
 
-            Script("Warp_Coords 82.24, -163.2, 0.29")
+            'Script("Warp_Coords 82.24, -163.2, 0.29")
+            'Facing 185.98
+            Script("Warp_Coords 85.18, -191.99, 4.95, 185")
+            Script("CamReset 10000, 1")
 
-            dropitem("Rings", "Covenant Of Artorias", 1)
+            Script("Wait 1500")
+            dropitem("Rings", "Covenant of Artorias", 1)
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H40000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
-                    Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    'Script("SetTextEffect 16")
+                    Script("WaitTillLoad")
+                    Script("WaitForLoad")
                 End If
             End If
-
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bossgapingdragon()
 
@@ -1402,18 +1414,18 @@ Public Class frmForm1
             Script("SetEventFlag 11000853, True") 'Channeler Death Flag
             'StandardTransition(1000999, 1002997)
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("WarpNextStage_Bonfire 1000999")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
-            Thread.Sleep(500)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
+            Script("Wait 500")
             Script("SetEventFlag 11005390, True")
             Script("SetEventFlag 11005392, True")
             Script("SetEventFlag 11005393, True")
@@ -1424,22 +1436,22 @@ Public Class frmForm1
 
             Script("Warp 10000, 1002997")
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
 
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H20000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
 
     End Sub
     Public Sub bossgravelordnito()
@@ -1452,42 +1464,42 @@ Public Class frmForm1
 
             Script("SetEventFlag 7, False")
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
 
             Script("WarpNextStage_Bonfire 1310998")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
             Script("SetDisableGravity 10000, 1")
-            Thread.Sleep(500)
+            Script("Wait 500")
 
             'Script("Warp 10000, 1312110)
             Script("Warp_Coords -126.84, -265.12, -30.78")
             Script("SetEventFlag 11315390, True")
             Script("SetEventFlag 11315393, True")
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H1000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
 
     End Sub
     Public Sub bossgwyn()
@@ -1500,30 +1512,30 @@ Public Class frmForm1
 
             Script("SetEventFlag 15, False")
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("WarpNextStage_Bonfire 1800999")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
 
 
             Script("Warp_Coords 418.15, -115.92, 169.58")
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
 
             If firstTry And rushName = "Reverse" Then
-                clearplaytime()
+                Script("ClearPlayTime")
                 firstTry = False
             End If
 
@@ -1532,12 +1544,12 @@ Public Class frmForm1
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bossirongolem()
 
@@ -1549,38 +1561,38 @@ Public Class frmForm1
             Script("SetEventFlag 11, False") 'Boss Death Flag
             Script("SetEventFlag 11500865, True") 'Bomb-Tossing Giant Death Flag
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("WarpNextStage_Bonfire 1500999")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
 
 
             Script("Warp_Coords 85.5, 82, 255.1")
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H100000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bossknightartorias()
 
@@ -1595,41 +1607,41 @@ Public Class frmForm1
 
             'Non-standard due to co-ords warp
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
 
             Script("WarpNextStage_Bonfire 1210998")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
             Script("SetDisableGravity 10000, 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
             'facing 75.8 degrees
             Script("Warp_Coords 1034.11, -330.0, 810.68")
 
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(&H2300, &H40000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bossmanus()
 
@@ -1640,39 +1652,39 @@ Public Class frmForm1
 
             Script("SetEventFlag 11210002, False")
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
 
             Script("WarpNextStage_Bonfire 1210982")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
 
 
             Script("Warp_Coords 857.53, -576.69, 873.38")
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(&H2300, &H20000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bossmoonlightbutterfly()
 
@@ -1686,23 +1698,23 @@ Public Class frmForm1
 
             'timing of warp/flags matters
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("WarpNextStage_Bonfire 1200999")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
             Script("SetDisableGravity 10000, 1")
 
 
 
 
-            Thread.Sleep(500)
+            Script("Wait 500")
             Script("Warp_Coords 181.39, 7.53, 29.01")
             Thread.Sleep(4000)
             Script("SetEventFlag 11205383, True")
@@ -1712,22 +1724,22 @@ Public Class frmForm1
 
 
             Thread.Sleep(2000)
-            fadein()
-            showhud(True)
+            Script("FadeIn")
+            Script("ShowHUD 1")
 
-            playerhide(False)
+            Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(&H1E70, &H8000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
 
     End Sub
     Public Sub bossoands()
@@ -1743,40 +1755,40 @@ Public Class frmForm1
 
             'Non-standard due to co-ords warp
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("WarpNextStage_Bonfire 1510998")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
             Script("SetDisableGravity 10000, 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
             'facing 90 degrees
             Script("Warp_Coords 539.9, 142.6, 254.79")
 
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H80000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bosspinwheel()
         Dim bossDead As Boolean = False
@@ -1787,39 +1799,39 @@ Public Class frmForm1
 
             Script("SetEventFlag 6, False")
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
 
             Script("WarpNextStage_Bonfire 1300999")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
 
 
             Script("Warp_Coords 46, -165.8, 152.02")
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H2000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bosssanctuaryguardian()
 
@@ -1834,42 +1846,42 @@ Public Class frmForm1
 
             'Non-standard due to co-ords warp
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
             Script("SetHp 10000, 1.0")
 
             Script("WarpNextStage_Bonfire 1210998")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
             Script("SetDisableGravity 10000, 1")
 
 
-            Thread.Sleep(500)
+            Script("Wait 500")
             'facing = 45 deg
             Script("Warp_Coords 931.82, -318.63, 472.45")
 
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(&H2300, &H80000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bossseath()
 
@@ -1881,39 +1893,39 @@ Public Class frmForm1
             Script("SetEventFlag 14, False")
             Script("SetEventFlag 11700000, False")
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
 
             Script("WarpNextStage_Bonfire 1700999")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
 
 
             Script("Warp_Coords 109, 134.05, 856.48")
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H20000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bosssif()
 
@@ -1931,42 +1943,42 @@ Public Class frmForm1
             Script("SetEventFlag 11205394, False")
 
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("SetHp 10000, 1.0")
 
             Script("WarpNextStage_Bonfire 1200999")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
             Script("SetDisableGravity 10000, 1")
-            Thread.Sleep(500)
+            Script("Wait 500")
             'Script("Warp_Coords 274, -19.82, -266.43)
-            Thread.Sleep(500)
+            Script("Wait 500")
             'Script("Warp 10000, 1202999)
             Script("Warp_Coords 254.31, -16.02, -320.32")
 
-            Thread.Sleep(1000)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1000")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
             Script("SetDisableGravity 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(0, &H4000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
     Public Sub bossstraydemon()
 
@@ -1980,40 +1992,40 @@ Public Class frmForm1
             Script("SetEventFlag 11810900, False")
 
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("WarpNextStage_Bonfire 1810998")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
             Script("DisableDamage 10000, 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
 
             Script("Warp 10000, 1812996")
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
-            Thread.Sleep(1000)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
+            Script("Wait 1000")
             Script("DisableDamage 10000, 0")
             If rushMode Then
                 bossDead = WaitForBossDeath(&H5A70, &H8000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
 
 
     End Sub
@@ -2026,39 +2038,39 @@ Public Class frmForm1
 
             Script("SetEventFlag 11010901, False")
 
-            playerhide(True)
-            showhud(False)
-            fadeout()
+            Script("PlayerHide 1")
+            Script("ShowHUD False")
+            Script("FadeOut")
 
             Script("WarpNextStage_Bonfire 1010998")
 
-            Thread.Sleep(1000)
+            Script("Wait 1000")
 
-            waitforload()
-            blackscreen()
-            playerhide(True)
+            Script("WaitForLoad")
+            Script("BlackScreen")
+            Script("PlayerHide 1")
 
-            Thread.Sleep(500)
+            Script("Wait 500")
 
 
             Script("Warp_Coords 49.81, 16.9, -118.87")
 
-            Thread.Sleep(1500)
-            fadein()
-            showhud(True)
-            playerhide(False)
+            Script("Wait 1500")
+            Script("FadeIn")
+            Script("ShowHUD 1")
+            Script("PlayerHide 0")
 
             If rushMode Then
                 bossDead = WaitForBossDeath(&HF70, &H4000000)
                 If Not bossDead Then
                     Script("AddTrueDeathCount")
                     Script("SetTextEffect 16")
-                    Thread.Sleep(5000)
+                    Script("Wait 5000")
                 End If
             End If
 
         Loop While rushMode And Not bossDead
-        Thread.Sleep(5000)
+        Script("Wait 5000")
     End Sub
 
     Public Sub scenarioartoriasandciaran()
@@ -2071,32 +2083,32 @@ Public Class frmForm1
         Script("SetEventFlag 1863, False") 'Ciaran Hostile
         Script("SetEventFlag 1864, False") 'Ciaran Dead
 
-        playerhide(True)
-        showhud(False)
-        fadeout()
+        Script("PlayerHide 1")
+        Script("ShowHUD False")
+        Script("FadeOut")
 
         Script("SetHp 10000, 1.0")
 
         Script("WarpNextStage_Bonfire 1210998")
 
-        Thread.Sleep(1000)
+        Script("Wait 1000")
 
-        waitforload()
-        blackscreen()
+        Script("WaitForLoad")
+        Script("BlackScreen")
 
 
-        playerhide(True)
+        Script("PlayerHide 1")
         Script("SetDisableGravity 10000, 1")
 
-        Thread.Sleep(500)
+        Script("Wait 500")
         'facing 75.8 degrees
         Script("Warp_Coords 1034.11, -330.0, 810.68")
 
 
-        Thread.Sleep(1500)
-        fadein()
-        showhud(True)
-        playerhide(False)
+        Script("Wait 1500")
+        Script("FadeIn")
+        Script("ShowHUD 1")
+        Script("PlayerHide 0")
         Script("SetDisableGravity 10000, 0")
 
         Script("SetEventFlag 1863, True") 'Ciaran Hostile
@@ -2114,30 +2126,30 @@ Public Class frmForm1
 
         'Non-standard due to co-ords warp
 
-        playerhide(True)
-        showhud(False)
-        fadeout()
+        Script("PlayerHide 1")
+        Script("ShowHUD False")
+        Script("FadeOut")
         Script("SetHp 10000, 1.0")
 
         Script("WarpNextStage_Bonfire 1210998")
 
-        Thread.Sleep(1000)
+        Script("Wait 1000")
 
-        waitforload()
-        blackscreen()
-        playerhide(True)
+        Script("WaitForLoad")
+        Script("BlackScreen")
+        Script("PlayerHide 1")
         Script("SetDisableGravity 10000, 1")
 
 
-        Thread.Sleep(500)
+        Script("Wait 500")
         'facing = 45 deg
         Script("Warp_Coords 931.82, -318.63, 472.45")
 
 
-        Thread.Sleep(1500)
-        fadein()
-        showhud(True)
-        playerhide(False)
+        Script("Wait 1500")
+        Script("FadeIn")
+        Script("ShowHUD 1")
+        Script("PlayerHide 0")
         Script("SetDisableGravity 10000, 0")
     End Sub
 
@@ -2146,12 +2158,12 @@ Public Class frmForm1
 
         Dim msg As String
 
-        showhud(False)
+        Script("ShowHUD False")
 
         setgendialog("Choose your NG level wisely.\nValues above 6 are ignored.", 3, "Begin", "Wuss Out")
         If Not GenDiagResponse = 1 Then
             setgendialog("So much shame...", 2, "I know", "I don't care")
-        showhud(True)
+            Script("ShowHUD 1")
             WInt32(RInt32(&H13786D0) + &H154, -1)
             WInt32(RInt32(&H13786D0) + &H158, -1)
             Return
@@ -2165,14 +2177,14 @@ Public Class frmForm1
 
         For i = 10 To 1 Step -1
             setbriefingmsg(msg & i)
-            Thread.Sleep(1000)
+            Script("Wait 1000")
         Next
 
 
         setbriefingmsg("Begin")
 
         Script("CroseBriefingMsg")
-        Thread.Sleep(1000)
+        Script("Wait 1000")
 
 
         rushTimer = New Thread(AddressOf BeginRushTimer)
@@ -2186,6 +2198,9 @@ Public Class frmForm1
         rushName = "Normal"
 
         bossasylum()
+
+        bossfourkings()
+
         bosstaurusdemon()
         bossbellgargoyles()
         bosscaprademon()
@@ -2218,11 +2233,11 @@ Public Class frmForm1
         setbriefingmsg("Congratulations." & ChrW(&HA) & Strings.Left(rushTime.ToString, 12) & ChrW(&HA) &
                        "NG: " & RInt32(gamestatsptr + &H3C) & ChrW(&HA) &
                        "Deaths: " & RInt32(gamestatsptr + &H58))
-        blackscreen()
-        showhud(False)
-        Thread.Sleep(10000)
-        fadein()
-        showhud(True)
+        Script("BlackScreen")
+        Script("ShowHUD False")
+        Script("Wait 10000")
+        Script("FadeIn")
+        Script("ShowHUD 1")
         Script("CroseBriefingMsg")
 
         rushTimer.Abort()
@@ -2256,12 +2271,12 @@ Public Class frmForm1
         'Asylum Demon
         Dim msg As String
 
-        showhud(False)
+        Script("ShowHUD False")
 
         setgendialog("Choose your NG level wisely.\nValues above 6 are ignored.", 3, "Begin", "Wuss Out")
         If Not GenDiagResponse = 1 Then
             setgendialog("So much shame...", 2, "I know", "I don't care")
-            showhud(True)
+            Script("ShowHUD 1")
             WInt32(RInt32(&H13786D0) + &H154, -1)
             WInt32(RInt32(&H13786D0) + &H158, -1)
             Return
@@ -2275,14 +2290,14 @@ Public Class frmForm1
 
         For i = 10 To 1 Step -1
             setbriefingmsg(msg & i)
-            Thread.Sleep(1000)
+            Script("Wait 1000")
         Next
 
 
         setbriefingmsg("Begin")
 
         Script("CroseBriefingMsg")
-        Thread.Sleep(1000)
+        Script("Wait 1000")
 
 
         rushTimer = New Thread(AddressOf BeginRushTimer)
@@ -2328,46 +2343,18 @@ Public Class frmForm1
         setbriefingmsg("Congratulations." & ChrW(&HA) & Strings.Left(rushTime.ToString, 12) & ChrW(&HA) &
                        "NG: " & RInt32(gamestatsptr + &H3C) & ChrW(&HA) &
                        "Deaths: " & RInt32(gamestatsptr + &H58))
-        blackscreen()
-        showhud(False)
-        Thread.Sleep(10000)
-        fadein()
-        showhud(True)
+        Script("BlackScreen")
+        Script("ShowHUD False")
+        Script("Wait 10000")
+        Script("FadeIn")
+        Script("ShowHUD 1")
         Script("CroseBriefingMsg")
 
         rushTimer.Abort()
 
     End Sub
 
-    Private Function WaitForBossDeath(ByVal boost As Integer, match As Integer) As Boolean
-        Dim eventPtr As Integer
-        eventPtr = RInt32(&H137D7D4)
-        eventPtr = RInt32(eventPtr)
-
-        Dim hpPtr As Integer
-        hpPtr = RInt32(&H137DC70)
-        hpPtr = RInt32(hpPtr + 4)
-        hpPtr = RInt32(hpPtr)
-        hpPtr = hpPtr + &H2D4
-
-        Dim bossdead As Boolean = False
-        Dim selfdead As Boolean = False
-
-        While Not (bossdead Or selfdead)
-            bossdead = (RInt32(eventPtr + boost) And match)
-            selfdead = (RInt32(hpPtr) = 0)
-            Console.WriteLine(Hex(eventPtr) & " - " & Hex(RInt32(eventPtr)))
-            Thread.Sleep(33)
-        End While
-
-        If bossdead Then
-            Return True
-        Else
-            Return False
-        End If
-
-
-    End Function
+    
 
 
 
@@ -2657,7 +2644,7 @@ Public Class frmForm1
 
     Private Sub btnX_Click(sender As Object, e As EventArgs) Handles btnX.Click
 
-        showhud(True)
+        Script("ShowHUD 1")
         WInt32(RInt32(&H13786D0) + &H154, -1)
         WInt32(RInt32(&H13786D0) + &H158, -1)
 
@@ -2751,5 +2738,10 @@ Public Class frmForm1
         'Script("SetEventFlag 16, 0)
         'warp_coords_facing(71.72, 60, 300.56, 1.0)
 
+    End Sub
+
+    Private Sub btnConsoleHelp_Click(sender As Object, e As EventArgs) Handles btnConsoleHelp.Click
+        Dim webAddress As String = "https://docs.google.com/spreadsheets/d/1Gff9pSGpYCJeNAXzUamqAInqFUwk4BhC6dC9Qk3_cDI/edit#gid=0"
+        Process.Start(webAddress)
     End Sub
 End Class
