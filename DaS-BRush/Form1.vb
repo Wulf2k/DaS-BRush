@@ -107,6 +107,9 @@ Public Class frmForm1
     Dim GenDiagResponse As Integer
     Dim GenDiagVal As Integer
 
+    Public intvar1 As Integer
+    Public intvar2 As Integer
+
 
     Private Async Sub updatecheck()
         Try
@@ -558,6 +561,18 @@ Public Class frmForm1
     Public Sub clearplaytime()
         Dim tmpPtr As Integer = RIntPtr(&H1378700)
         WInt32(tmpPtr + &H68, 0)
+    End Sub
+    Public Sub controlentity(entityPtr As Integer, state As Byte)
+        entityPtr = RInt32(entityPtr + &H28)
+
+        Dim ctrlptr As Integer = RInt32(&H137DC70)
+        ctrlptr = RInt32(ctrlptr + 4)
+        ctrlptr = RInt32(ctrlptr)
+        ctrlptr = RInt32(ctrlptr + &H28)
+        ctrlptr = RInt32(ctrlptr + &H54)
+
+        WInt32(entityPtr + &H244, ctrlptr * (state And 1))
+
     End Sub
     Public Sub disableai(ByVal state As Byte)
         WBytes(&H13784EE, {state})
@@ -2672,6 +2687,13 @@ Public Class frmForm1
         Dim action As String
         Dim params() As String = {}
 
+        Dim storedVal As String = ""
+
+        If str.Contains("=") Then
+            storedVal = str.Replace(" ", "").Split("=")(0)
+            str = str.Split("=")(1).TrimStart(" ")
+        End If
+
 
         action = str.Split(" ")(0).ToLower
         If clsFuncLocs.Contains(action) Then
@@ -2689,27 +2711,20 @@ Public Class frmForm1
         For i = 0 To params.Count - 1
             If params(i).ToLower = "true" Then params(i) = "1"
             If params(i).ToLower = "false" Then params(i) = "0"
+            If params(i).ToLower = "intvar1" Then params(i) = intvar1.ToString
         Next
 
 
         Dim t As Type = Me.GetType
         Dim method As MethodInfo
-
         method = t.GetMethod(action)
-
 
         For i = 0 To (method.GetParameters.Count - params.Length) - 1
             Array.Resize(params, params.Length + 1)
             params(params.Length - 1) = "0"
         Next
 
-
-
-
-
         Dim typedParams() As Object = {}
-
-
         For i = 0 To method.GetParameters.Count - 1
             Array.Resize(typedParams, typedParams.Length + 1)
 
@@ -2718,13 +2733,16 @@ Public Class frmForm1
             Else
                 typedParams(typedParams.Length - 1) = CTypeDynamic(params(i), method.GetParameters(i).ParameterType())
             End If
-
         Next
+
 
         Dim result As Integer
         result = method.Invoke(Me, typedParams)
 
-        'WInt32(funcPtr + &H200, 1337)
+        Select Case storedVal
+            Case "intvar1"
+                intvar1 = result
+        End Select
 
         Return result
 
@@ -2734,6 +2752,10 @@ Public Class frmForm1
 
         'Script("SetEventFlag 16, 0)
         'warp_coords_facing(71.72, 60, 300.56, 1.0)
+
+        Script("intvar1 = ChrFadeIn 1010700, 1.0")
+        Script("ControlEntity intvar1, 0")
+
 
     End Sub
 
