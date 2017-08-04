@@ -81,6 +81,7 @@ Partial Class frmForm1
         Me.Button13 = New System.Windows.Forms.Button()
         Me.btnBeginReverseRush = New System.Windows.Forms.Button()
         Me.tabScenarios = New System.Windows.Forms.TabPage()
+        Me.btnScenarioPinwheelDefense = New System.Windows.Forms.Button()
         Me.btnScenarioTripleSanctuary = New System.Windows.Forms.Button()
         Me.btnScenarioArtoriasCiaran = New System.Windows.Forms.Button()
         Me.tabMain = New System.Windows.Forms.TabPage()
@@ -153,39 +154,38 @@ Partial Class frmForm1
         Me.btnReconnect = New System.Windows.Forms.Button()
         Me.lblVer = New System.Windows.Forms.Label()
         Me.btnUpdate = New System.Windows.Forms.Button()
-        Me.btnScenarioPinwheelDefense = New System.Windows.Forms.Button()
-        Me.tabs.SuspendLayout
-        Me.tabBosses.SuspendLayout
-        Me.gbBosses.SuspendLayout
-        Me.tabScenarios.SuspendLayout
-        Me.tabMain.SuspendLayout
-        Me.GroupBox2.SuspendLayout
-        Me.GroupBox1.SuspendLayout
-        Me.tabStats.SuspendLayout
-        CType(Me.nmbClearCount,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.nmbMaxHP,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.nmbMaxStam,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.nmbGender,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.nmbVitality,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.nmbAttunement,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.nmbEnd,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.nmbStr,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.nmbDex,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.nmbResistance,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.nmbIntelligence,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.nmbFaith,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.nmbHumanity,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.tabTests.SuspendLayout
-        Me.tabNotes.SuspendLayout
-        Me.tabConsole.SuspendLayout
-        Me.tabDonate.SuspendLayout
-        Me.SuspendLayout
+        Me.tabs.SuspendLayout()
+        Me.tabBosses.SuspendLayout()
+        Me.gbBosses.SuspendLayout()
+        Me.tabScenarios.SuspendLayout()
+        Me.tabMain.SuspendLayout()
+        Me.GroupBox2.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
+        Me.tabStats.SuspendLayout()
+        CType(Me.nmbClearCount, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nmbMaxHP, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nmbMaxStam, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nmbGender, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nmbVitality, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nmbAttunement, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nmbEnd, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nmbStr, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nmbDex, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nmbResistance, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nmbIntelligence, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nmbFaith, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nmbHumanity, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tabTests.SuspendLayout()
+        Me.tabNotes.SuspendLayout()
+        Me.tabConsole.SuspendLayout()
+        Me.tabDonate.SuspendLayout()
+        Me.SuspendLayout()
         '
         'tabs
         '
-        Me.tabs.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
-            Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.tabs.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.tabs.Controls.Add(Me.tabBosses)
         Me.tabs.Controls.Add(Me.tabScenarios)
         Me.tabs.Controls.Add(Me.tabMain)
@@ -211,7 +211,7 @@ Partial Class frmForm1
         Me.tabBosses.Size = New System.Drawing.Size(381, 446)
         Me.tabBosses.TabIndex = 5
         Me.tabBosses.Text = "Bosses"
-        Me.tabBosses.UseVisualStyleBackColor = true
+        Me.tabBosses.UseVisualStyleBackColor = True
         '
         'btnX
         '
@@ -220,7 +220,7 @@ Partial Class frmForm1
         Me.btnX.Size = New System.Drawing.Size(19, 23)
         Me.btnX.TabIndex = 78
         Me.btnX.Text = "X"
-        Me.btnX.UseVisualStyleBackColor = false
+        Me.btnX.UseVisualStyleBackColor = False
         '
         'btnBeginBossRush
         '
@@ -229,7 +229,7 @@ Partial Class frmForm1
         Me.btnBeginBossRush.Size = New System.Drawing.Size(160, 23)
         Me.btnBeginBossRush.TabIndex = 77
         Me.btnBeginBossRush.Text = "Begin Boss Rush"
-        Me.btnBeginBossRush.UseVisualStyleBackColor = false
+        Me.btnBeginBossRush.UseVisualStyleBackColor = False
         '
         'gbBosses
         '
@@ -289,7 +289,7 @@ Partial Class frmForm1
         Me.gbBosses.Name = "gbBosses"
         Me.gbBosses.Size = New System.Drawing.Size(369, 400)
         Me.gbBosses.TabIndex = 76
-        Me.gbBosses.TabStop = false
+        Me.gbBosses.TabStop = False
         Me.gbBosses.Text = "Bosses"
         '
         'Button1
@@ -299,7 +299,7 @@ Partial Class frmForm1
         Me.Button1.Size = New System.Drawing.Size(160, 23)
         Me.Button1.TabIndex = 48
         Me.Button1.Text = "Asylum Demon"
-        Me.Button1.UseVisualStyleBackColor = false
+        Me.Button1.UseVisualStyleBackColor = False
         '
         'Button26
         '
@@ -308,7 +308,7 @@ Partial Class frmForm1
         Me.Button26.Size = New System.Drawing.Size(160, 23)
         Me.Button26.TabIndex = 73
         Me.Button26.Text = "Black Dragon Kalameet"
-        Me.Button26.UseVisualStyleBackColor = false
+        Me.Button26.UseVisualStyleBackColor = False
         '
         'btnBossAsylumDemon
         '
@@ -317,7 +317,7 @@ Partial Class frmForm1
         Me.btnBossAsylumDemon.Size = New System.Drawing.Size(160, 23)
         Me.btnBossAsylumDemon.TabIndex = 48
         Me.btnBossAsylumDemon.Text = "Asylum Demon"
-        Me.btnBossAsylumDemon.UseVisualStyleBackColor = false
+        Me.btnBossAsylumDemon.UseVisualStyleBackColor = False
         '
         'btnBossPinwheel
         '
@@ -326,7 +326,7 @@ Partial Class frmForm1
         Me.btnBossPinwheel.Size = New System.Drawing.Size(160, 23)
         Me.btnBossPinwheel.TabIndex = 49
         Me.btnBossPinwheel.Text = "Pinwheel"
-        Me.btnBossPinwheel.UseVisualStyleBackColor = false
+        Me.btnBossPinwheel.UseVisualStyleBackColor = False
         '
         'Button25
         '
@@ -335,7 +335,7 @@ Partial Class frmForm1
         Me.Button25.Size = New System.Drawing.Size(160, 23)
         Me.Button25.TabIndex = 72
         Me.Button25.Text = "Taurus Demon"
-        Me.Button25.UseVisualStyleBackColor = false
+        Me.Button25.UseVisualStyleBackColor = False
         '
         'btnBossCapraDemon
         '
@@ -344,7 +344,7 @@ Partial Class frmForm1
         Me.btnBossCapraDemon.Size = New System.Drawing.Size(160, 23)
         Me.btnBossCapraDemon.TabIndex = 50
         Me.btnBossCapraDemon.Text = "Capra Demon"
-        Me.btnBossCapraDemon.UseVisualStyleBackColor = false
+        Me.btnBossCapraDemon.UseVisualStyleBackColor = False
         '
         'btnBossBlackDragonKalameet
         '
@@ -353,7 +353,7 @@ Partial Class frmForm1
         Me.btnBossBlackDragonKalameet.Size = New System.Drawing.Size(160, 23)
         Me.btnBossBlackDragonKalameet.TabIndex = 73
         Me.btnBossBlackDragonKalameet.Text = "Black Dragon Kalameet"
-        Me.btnBossBlackDragonKalameet.UseVisualStyleBackColor = false
+        Me.btnBossBlackDragonKalameet.UseVisualStyleBackColor = False
         '
         'Button2
         '
@@ -362,7 +362,7 @@ Partial Class frmForm1
         Me.Button2.Size = New System.Drawing.Size(160, 23)
         Me.Button2.TabIndex = 49
         Me.Button2.Text = "Pinwheel"
-        Me.Button2.UseVisualStyleBackColor = false
+        Me.Button2.UseVisualStyleBackColor = False
         '
         'Button24
         '
@@ -371,7 +371,7 @@ Partial Class frmForm1
         Me.Button24.Size = New System.Drawing.Size(160, 23)
         Me.Button24.TabIndex = 71
         Me.Button24.Text = "Sif"
-        Me.Button24.UseVisualStyleBackColor = false
+        Me.Button24.UseVisualStyleBackColor = False
         '
         'btnBossBellGargoyles
         '
@@ -380,7 +380,7 @@ Partial Class frmForm1
         Me.btnBossBellGargoyles.Size = New System.Drawing.Size(160, 23)
         Me.btnBossBellGargoyles.TabIndex = 51
         Me.btnBossBellGargoyles.Text = "Bell Gargoyles"
-        Me.btnBossBellGargoyles.UseVisualStyleBackColor = false
+        Me.btnBossBellGargoyles.UseVisualStyleBackColor = False
         '
         'btnBossTaurusDemon
         '
@@ -389,7 +389,7 @@ Partial Class frmForm1
         Me.btnBossTaurusDemon.Size = New System.Drawing.Size(160, 23)
         Me.btnBossTaurusDemon.TabIndex = 72
         Me.btnBossTaurusDemon.Text = "Taurus Demon"
-        Me.btnBossTaurusDemon.UseVisualStyleBackColor = false
+        Me.btnBossTaurusDemon.UseVisualStyleBackColor = False
         '
         'Button3
         '
@@ -398,7 +398,7 @@ Partial Class frmForm1
         Me.Button3.Size = New System.Drawing.Size(160, 23)
         Me.Button3.TabIndex = 50
         Me.Button3.Text = "Capra Demon"
-        Me.Button3.UseVisualStyleBackColor = false
+        Me.Button3.UseVisualStyleBackColor = False
         '
         'Button23
         '
@@ -407,7 +407,7 @@ Partial Class frmForm1
         Me.Button23.Size = New System.Drawing.Size(160, 23)
         Me.Button23.TabIndex = 70
         Me.Button23.Text = "Stray Demon"
-        Me.Button23.UseVisualStyleBackColor = false
+        Me.Button23.UseVisualStyleBackColor = False
         '
         'btnBossCeaselessDischarge
         '
@@ -416,7 +416,7 @@ Partial Class frmForm1
         Me.btnBossCeaselessDischarge.Size = New System.Drawing.Size(160, 23)
         Me.btnBossCeaselessDischarge.TabIndex = 52
         Me.btnBossCeaselessDischarge.Text = "Ceaseless Discharge"
-        Me.btnBossCeaselessDischarge.UseVisualStyleBackColor = false
+        Me.btnBossCeaselessDischarge.UseVisualStyleBackColor = False
         '
         'btnBossSif
         '
@@ -425,7 +425,7 @@ Partial Class frmForm1
         Me.btnBossSif.Size = New System.Drawing.Size(160, 23)
         Me.btnBossSif.TabIndex = 71
         Me.btnBossSif.Text = "Sif"
-        Me.btnBossSif.UseVisualStyleBackColor = false
+        Me.btnBossSif.UseVisualStyleBackColor = False
         '
         'Button4
         '
@@ -434,7 +434,7 @@ Partial Class frmForm1
         Me.Button4.Size = New System.Drawing.Size(160, 23)
         Me.Button4.TabIndex = 51
         Me.Button4.Text = "Bell Gargoyles"
-        Me.Button4.UseVisualStyleBackColor = false
+        Me.Button4.UseVisualStyleBackColor = False
         '
         'Button22
         '
@@ -443,7 +443,7 @@ Partial Class frmForm1
         Me.Button22.Size = New System.Drawing.Size(160, 23)
         Me.Button22.TabIndex = 69
         Me.Button22.Text = "Seath"
-        Me.Button22.UseVisualStyleBackColor = false
+        Me.Button22.UseVisualStyleBackColor = False
         '
         'btnBossBedOfChaos
         '
@@ -452,7 +452,7 @@ Partial Class frmForm1
         Me.btnBossBedOfChaos.Size = New System.Drawing.Size(160, 23)
         Me.btnBossBedOfChaos.TabIndex = 53
         Me.btnBossBedOfChaos.Text = "Bed of Chaos"
-        Me.btnBossBedOfChaos.UseVisualStyleBackColor = false
+        Me.btnBossBedOfChaos.UseVisualStyleBackColor = False
         '
         'btnBossStrayDemon
         '
@@ -461,7 +461,7 @@ Partial Class frmForm1
         Me.btnBossStrayDemon.Size = New System.Drawing.Size(160, 23)
         Me.btnBossStrayDemon.TabIndex = 70
         Me.btnBossStrayDemon.Text = "Stray Demon"
-        Me.btnBossStrayDemon.UseVisualStyleBackColor = false
+        Me.btnBossStrayDemon.UseVisualStyleBackColor = False
         '
         'Button5
         '
@@ -470,7 +470,7 @@ Partial Class frmForm1
         Me.Button5.Size = New System.Drawing.Size(160, 23)
         Me.Button5.TabIndex = 52
         Me.Button5.Text = "Ceaseless Discharge"
-        Me.Button5.UseVisualStyleBackColor = false
+        Me.Button5.UseVisualStyleBackColor = False
         '
         'Button21
         '
@@ -479,7 +479,7 @@ Partial Class frmForm1
         Me.Button21.Size = New System.Drawing.Size(160, 23)
         Me.Button21.TabIndex = 68
         Me.Button21.Text = "Sanctuary Guardian"
-        Me.Button21.UseVisualStyleBackColor = false
+        Me.Button21.UseVisualStyleBackColor = False
         '
         'btnBossCentipedeDemon
         '
@@ -488,7 +488,7 @@ Partial Class frmForm1
         Me.btnBossCentipedeDemon.Size = New System.Drawing.Size(160, 23)
         Me.btnBossCentipedeDemon.TabIndex = 54
         Me.btnBossCentipedeDemon.Text = "Centipede Demon"
-        Me.btnBossCentipedeDemon.UseVisualStyleBackColor = false
+        Me.btnBossCentipedeDemon.UseVisualStyleBackColor = False
         '
         'btnBossSeath
         '
@@ -497,7 +497,7 @@ Partial Class frmForm1
         Me.btnBossSeath.Size = New System.Drawing.Size(160, 23)
         Me.btnBossSeath.TabIndex = 69
         Me.btnBossSeath.Text = "Seath"
-        Me.btnBossSeath.UseVisualStyleBackColor = false
+        Me.btnBossSeath.UseVisualStyleBackColor = False
         '
         'Button6
         '
@@ -506,7 +506,7 @@ Partial Class frmForm1
         Me.Button6.Size = New System.Drawing.Size(160, 23)
         Me.Button6.TabIndex = 53
         Me.Button6.Text = "Bed of Chaos"
-        Me.Button6.UseVisualStyleBackColor = false
+        Me.Button6.UseVisualStyleBackColor = False
         '
         'Button20
         '
@@ -515,7 +515,7 @@ Partial Class frmForm1
         Me.Button20.Size = New System.Drawing.Size(160, 23)
         Me.Button20.TabIndex = 67
         Me.Button20.Text = "Moonlight Butterfly"
-        Me.Button20.UseVisualStyleBackColor = false
+        Me.Button20.UseVisualStyleBackColor = False
         '
         'btnBossChaosWitchQuelaag
         '
@@ -524,7 +524,7 @@ Partial Class frmForm1
         Me.btnBossChaosWitchQuelaag.Size = New System.Drawing.Size(160, 23)
         Me.btnBossChaosWitchQuelaag.TabIndex = 55
         Me.btnBossChaosWitchQuelaag.Text = "Chaos Witch Quelaag"
-        Me.btnBossChaosWitchQuelaag.UseVisualStyleBackColor = false
+        Me.btnBossChaosWitchQuelaag.UseVisualStyleBackColor = False
         '
         'btnBossSanctuaryGuardian
         '
@@ -533,7 +533,7 @@ Partial Class frmForm1
         Me.btnBossSanctuaryGuardian.Size = New System.Drawing.Size(160, 23)
         Me.btnBossSanctuaryGuardian.TabIndex = 68
         Me.btnBossSanctuaryGuardian.Text = "Sanctuary Guardian"
-        Me.btnBossSanctuaryGuardian.UseVisualStyleBackColor = false
+        Me.btnBossSanctuaryGuardian.UseVisualStyleBackColor = False
         '
         'Button7
         '
@@ -542,7 +542,7 @@ Partial Class frmForm1
         Me.Button7.Size = New System.Drawing.Size(160, 23)
         Me.Button7.TabIndex = 54
         Me.Button7.Text = "Centipede Demon"
-        Me.Button7.UseVisualStyleBackColor = false
+        Me.Button7.UseVisualStyleBackColor = False
         '
         'Button19
         '
@@ -551,7 +551,7 @@ Partial Class frmForm1
         Me.Button19.Size = New System.Drawing.Size(160, 23)
         Me.Button19.TabIndex = 66
         Me.Button19.Text = "Manus"
-        Me.Button19.UseVisualStyleBackColor = false
+        Me.Button19.UseVisualStyleBackColor = False
         '
         'btnBossCrossbreedPriscilla
         '
@@ -560,7 +560,7 @@ Partial Class frmForm1
         Me.btnBossCrossbreedPriscilla.Size = New System.Drawing.Size(160, 23)
         Me.btnBossCrossbreedPriscilla.TabIndex = 56
         Me.btnBossCrossbreedPriscilla.Text = "Crossbreed Priscilla"
-        Me.btnBossCrossbreedPriscilla.UseVisualStyleBackColor = false
+        Me.btnBossCrossbreedPriscilla.UseVisualStyleBackColor = False
         '
         'btnBossMoonlightButterfly
         '
@@ -569,7 +569,7 @@ Partial Class frmForm1
         Me.btnBossMoonlightButterfly.Size = New System.Drawing.Size(160, 23)
         Me.btnBossMoonlightButterfly.TabIndex = 67
         Me.btnBossMoonlightButterfly.Text = "Moonlight Butterfly"
-        Me.btnBossMoonlightButterfly.UseVisualStyleBackColor = false
+        Me.btnBossMoonlightButterfly.UseVisualStyleBackColor = False
         '
         'Button8
         '
@@ -578,7 +578,7 @@ Partial Class frmForm1
         Me.Button8.Size = New System.Drawing.Size(160, 23)
         Me.Button8.TabIndex = 55
         Me.Button8.Text = "Chaos Witch Quelaag"
-        Me.Button8.UseVisualStyleBackColor = false
+        Me.Button8.UseVisualStyleBackColor = False
         '
         'Button18
         '
@@ -587,7 +587,7 @@ Partial Class frmForm1
         Me.Button18.Size = New System.Drawing.Size(160, 23)
         Me.Button18.TabIndex = 65
         Me.Button18.Text = "Knight Artorias"
-        Me.Button18.UseVisualStyleBackColor = false
+        Me.Button18.UseVisualStyleBackColor = False
         '
         'btnBossDarkSunGwyndolin
         '
@@ -596,7 +596,7 @@ Partial Class frmForm1
         Me.btnBossDarkSunGwyndolin.Size = New System.Drawing.Size(160, 23)
         Me.btnBossDarkSunGwyndolin.TabIndex = 57
         Me.btnBossDarkSunGwyndolin.Text = "Dark Sun Gwyndolin"
-        Me.btnBossDarkSunGwyndolin.UseVisualStyleBackColor = false
+        Me.btnBossDarkSunGwyndolin.UseVisualStyleBackColor = False
         '
         'btnBossManus
         '
@@ -605,7 +605,7 @@ Partial Class frmForm1
         Me.btnBossManus.Size = New System.Drawing.Size(160, 23)
         Me.btnBossManus.TabIndex = 66
         Me.btnBossManus.Text = "Manus"
-        Me.btnBossManus.UseVisualStyleBackColor = false
+        Me.btnBossManus.UseVisualStyleBackColor = False
         '
         'Button9
         '
@@ -614,7 +614,7 @@ Partial Class frmForm1
         Me.Button9.Size = New System.Drawing.Size(160, 23)
         Me.Button9.TabIndex = 56
         Me.Button9.Text = "Crossbreed Priscilla"
-        Me.Button9.UseVisualStyleBackColor = false
+        Me.Button9.UseVisualStyleBackColor = False
         '
         'Button17
         '
@@ -623,7 +623,7 @@ Partial Class frmForm1
         Me.Button17.Size = New System.Drawing.Size(160, 23)
         Me.Button17.TabIndex = 64
         Me.Button17.Text = "Iron Golem"
-        Me.Button17.UseVisualStyleBackColor = false
+        Me.Button17.UseVisualStyleBackColor = False
         '
         'btnBossDemonFiresage
         '
@@ -632,7 +632,7 @@ Partial Class frmForm1
         Me.btnBossDemonFiresage.Size = New System.Drawing.Size(160, 23)
         Me.btnBossDemonFiresage.TabIndex = 58
         Me.btnBossDemonFiresage.Text = "Demon Firesage"
-        Me.btnBossDemonFiresage.UseVisualStyleBackColor = false
+        Me.btnBossDemonFiresage.UseVisualStyleBackColor = False
         '
         'btnBossKnightArtorias
         '
@@ -641,7 +641,7 @@ Partial Class frmForm1
         Me.btnBossKnightArtorias.Size = New System.Drawing.Size(160, 23)
         Me.btnBossKnightArtorias.TabIndex = 65
         Me.btnBossKnightArtorias.Text = "Knight Artorias"
-        Me.btnBossKnightArtorias.UseVisualStyleBackColor = false
+        Me.btnBossKnightArtorias.UseVisualStyleBackColor = False
         '
         'Button10
         '
@@ -650,7 +650,7 @@ Partial Class frmForm1
         Me.Button10.Size = New System.Drawing.Size(160, 23)
         Me.Button10.TabIndex = 57
         Me.Button10.Text = "Dark Sun Gwyndolin"
-        Me.Button10.UseVisualStyleBackColor = false
+        Me.Button10.UseVisualStyleBackColor = False
         '
         'Button16
         '
@@ -659,7 +659,7 @@ Partial Class frmForm1
         Me.Button16.Size = New System.Drawing.Size(160, 23)
         Me.Button16.TabIndex = 63
         Me.Button16.Text = "Gwyn"
-        Me.Button16.UseVisualStyleBackColor = false
+        Me.Button16.UseVisualStyleBackColor = False
         '
         'btnBossOandS
         '
@@ -668,7 +668,7 @@ Partial Class frmForm1
         Me.btnBossOandS.Size = New System.Drawing.Size(160, 23)
         Me.btnBossOandS.TabIndex = 59
         Me.btnBossOandS.Text = "Ornstein and Smough"
-        Me.btnBossOandS.UseVisualStyleBackColor = false
+        Me.btnBossOandS.UseVisualStyleBackColor = False
         '
         'btnBossIronGolem
         '
@@ -677,7 +677,7 @@ Partial Class frmForm1
         Me.btnBossIronGolem.Size = New System.Drawing.Size(160, 23)
         Me.btnBossIronGolem.TabIndex = 64
         Me.btnBossIronGolem.Text = "Iron Golem"
-        Me.btnBossIronGolem.UseVisualStyleBackColor = false
+        Me.btnBossIronGolem.UseVisualStyleBackColor = False
         '
         'Button11
         '
@@ -686,7 +686,7 @@ Partial Class frmForm1
         Me.Button11.Size = New System.Drawing.Size(160, 23)
         Me.Button11.TabIndex = 58
         Me.Button11.Text = "Demon Firesage"
-        Me.Button11.UseVisualStyleBackColor = false
+        Me.Button11.UseVisualStyleBackColor = False
         '
         'Button15
         '
@@ -695,7 +695,7 @@ Partial Class frmForm1
         Me.Button15.Size = New System.Drawing.Size(160, 23)
         Me.Button15.TabIndex = 62
         Me.Button15.Text = "Gravelord Nito"
-        Me.Button15.UseVisualStyleBackColor = false
+        Me.Button15.UseVisualStyleBackColor = False
         '
         'btnBossFourKings
         '
@@ -704,7 +704,7 @@ Partial Class frmForm1
         Me.btnBossFourKings.Size = New System.Drawing.Size(160, 23)
         Me.btnBossFourKings.TabIndex = 60
         Me.btnBossFourKings.Text = "Four Kings"
-        Me.btnBossFourKings.UseVisualStyleBackColor = false
+        Me.btnBossFourKings.UseVisualStyleBackColor = False
         '
         'btnBossGwyn
         '
@@ -713,7 +713,7 @@ Partial Class frmForm1
         Me.btnBossGwyn.Size = New System.Drawing.Size(160, 23)
         Me.btnBossGwyn.TabIndex = 63
         Me.btnBossGwyn.Text = "Gwyn"
-        Me.btnBossGwyn.UseVisualStyleBackColor = false
+        Me.btnBossGwyn.UseVisualStyleBackColor = False
         '
         'Button12
         '
@@ -722,7 +722,7 @@ Partial Class frmForm1
         Me.Button12.Size = New System.Drawing.Size(160, 23)
         Me.Button12.TabIndex = 59
         Me.Button12.Text = "Ornstein and Smough"
-        Me.Button12.UseVisualStyleBackColor = false
+        Me.Button12.UseVisualStyleBackColor = False
         '
         'Button14
         '
@@ -731,7 +731,7 @@ Partial Class frmForm1
         Me.Button14.Size = New System.Drawing.Size(160, 23)
         Me.Button14.TabIndex = 61
         Me.Button14.Text = "Gaping Dragon"
-        Me.Button14.UseVisualStyleBackColor = false
+        Me.Button14.UseVisualStyleBackColor = False
         '
         'btnBossGapingDragon
         '
@@ -740,7 +740,7 @@ Partial Class frmForm1
         Me.btnBossGapingDragon.Size = New System.Drawing.Size(160, 23)
         Me.btnBossGapingDragon.TabIndex = 61
         Me.btnBossGapingDragon.Text = "Gaping Dragon"
-        Me.btnBossGapingDragon.UseVisualStyleBackColor = false
+        Me.btnBossGapingDragon.UseVisualStyleBackColor = False
         '
         'btnBossGravelordNito
         '
@@ -749,7 +749,7 @@ Partial Class frmForm1
         Me.btnBossGravelordNito.Size = New System.Drawing.Size(160, 23)
         Me.btnBossGravelordNito.TabIndex = 62
         Me.btnBossGravelordNito.Text = "Gravelord Nito"
-        Me.btnBossGravelordNito.UseVisualStyleBackColor = false
+        Me.btnBossGravelordNito.UseVisualStyleBackColor = False
         '
         'Button13
         '
@@ -758,7 +758,7 @@ Partial Class frmForm1
         Me.Button13.Size = New System.Drawing.Size(160, 23)
         Me.Button13.TabIndex = 60
         Me.Button13.Text = "Four Kings"
-        Me.Button13.UseVisualStyleBackColor = false
+        Me.Button13.UseVisualStyleBackColor = False
         '
         'btnBeginReverseRush
         '
@@ -767,7 +767,7 @@ Partial Class frmForm1
         Me.btnBeginReverseRush.Size = New System.Drawing.Size(160, 23)
         Me.btnBeginReverseRush.TabIndex = 75
         Me.btnBeginReverseRush.Text = "Begin Reverse Rush"
-        Me.btnBeginReverseRush.UseVisualStyleBackColor = false
+        Me.btnBeginReverseRush.UseVisualStyleBackColor = False
         '
         'tabScenarios
         '
@@ -779,7 +779,16 @@ Partial Class frmForm1
         Me.tabScenarios.Size = New System.Drawing.Size(381, 446)
         Me.tabScenarios.TabIndex = 9
         Me.tabScenarios.Text = "Scenarios"
-        Me.tabScenarios.UseVisualStyleBackColor = true
+        Me.tabScenarios.UseVisualStyleBackColor = True
+        '
+        'btnScenarioPinwheelDefense
+        '
+        Me.btnScenarioPinwheelDefense.Location = New System.Drawing.Point(200, 36)
+        Me.btnScenarioPinwheelDefense.Name = "btnScenarioPinwheelDefense"
+        Me.btnScenarioPinwheelDefense.Size = New System.Drawing.Size(160, 23)
+        Me.btnScenarioPinwheelDefense.TabIndex = 71
+        Me.btnScenarioPinwheelDefense.Text = "Pinwheel's Defense"
+        Me.btnScenarioPinwheelDefense.UseVisualStyleBackColor = False
         '
         'btnScenarioTripleSanctuary
         '
@@ -788,7 +797,7 @@ Partial Class frmForm1
         Me.btnScenarioTripleSanctuary.Size = New System.Drawing.Size(160, 23)
         Me.btnScenarioTripleSanctuary.TabIndex = 70
         Me.btnScenarioTripleSanctuary.Text = "3x Sanctuary Guardian"
-        Me.btnScenarioTripleSanctuary.UseVisualStyleBackColor = false
+        Me.btnScenarioTripleSanctuary.UseVisualStyleBackColor = False
         '
         'btnScenarioArtoriasCiaran
         '
@@ -797,11 +806,11 @@ Partial Class frmForm1
         Me.btnScenarioArtoriasCiaran.Size = New System.Drawing.Size(160, 23)
         Me.btnScenarioArtoriasCiaran.TabIndex = 69
         Me.btnScenarioArtoriasCiaran.Text = "Knight Artorias + Ciaran"
-        Me.btnScenarioArtoriasCiaran.UseVisualStyleBackColor = false
+        Me.btnScenarioArtoriasCiaran.UseVisualStyleBackColor = False
         '
         'tabMain
         '
-        Me.tabMain.AutoScroll = true
+        Me.tabMain.AutoScroll = True
         Me.tabMain.Controls.Add(Me.GroupBox2)
         Me.tabMain.Controls.Add(Me.GroupBox1)
         Me.tabMain.Location = New System.Drawing.Point(4, 22)
@@ -820,12 +829,12 @@ Partial Class frmForm1
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(371, 116)
         Me.GroupBox2.TabIndex = 48
-        Me.GroupBox2.TabStop = false
+        Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Status"
         '
         'lblPlaytime
         '
-        Me.lblPlaytime.AutoSize = true
+        Me.lblPlaytime.AutoSize = True
         Me.lblPlaytime.Location = New System.Drawing.Point(13, 63)
         Me.lblPlaytime.Name = "lblPlaytime"
         Me.lblPlaytime.Size = New System.Drawing.Size(33, 13)
@@ -834,7 +843,7 @@ Partial Class frmForm1
         '
         'lblHP
         '
-        Me.lblHP.AutoSize = true
+        Me.lblHP.AutoSize = True
         Me.lblHP.Location = New System.Drawing.Point(13, 27)
         Me.lblHP.Name = "lblHP"
         Me.lblHP.Size = New System.Drawing.Size(31, 13)
@@ -843,7 +852,7 @@ Partial Class frmForm1
         '
         'lblStam
         '
-        Me.lblStam.AutoSize = true
+        Me.lblStam.AutoSize = True
         Me.lblStam.Location = New System.Drawing.Point(13, 40)
         Me.lblStam.Name = "lblStam"
         Me.lblStam.Size = New System.Drawing.Size(51, 13)
@@ -871,7 +880,7 @@ Partial Class frmForm1
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(371, 306)
         Me.GroupBox1.TabIndex = 47
-        Me.GroupBox1.TabStop = false
+        Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Location"
         '
         'lblstableZpos
@@ -903,7 +912,7 @@ Partial Class frmForm1
         '
         'Label32
         '
-        Me.Label32.AutoSize = true
+        Me.Label32.AutoSize = True
         Me.Label32.Location = New System.Drawing.Point(230, 44)
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(60, 13)
@@ -912,7 +921,7 @@ Partial Class frmForm1
         '
         'Label31
         '
-        Me.Label31.AutoSize = true
+        Me.Label31.AutoSize = True
         Me.Label31.Location = New System.Drawing.Point(236, 57)
         Me.Label31.Name = "Label31"
         Me.Label31.Size = New System.Drawing.Size(47, 13)
@@ -921,7 +930,7 @@ Partial Class frmForm1
         '
         'Label27
         '
-        Me.Label27.AutoSize = true
+        Me.Label27.AutoSize = True
         Me.Label27.Location = New System.Drawing.Point(19, 55)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(47, 13)
@@ -931,7 +940,7 @@ Partial Class frmForm1
         'cmbBonfire
         '
         Me.cmbBonfire.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cmbBonfire.FormattingEnabled = true
+        Me.cmbBonfire.FormattingEnabled = True
         Me.cmbBonfire.Location = New System.Drawing.Point(43, 260)
         Me.cmbBonfire.Name = "cmbBonfire"
         Me.cmbBonfire.Size = New System.Drawing.Size(240, 21)
@@ -939,7 +948,7 @@ Partial Class frmForm1
         '
         'lblBonfire
         '
-        Me.lblBonfire.AutoSize = true
+        Me.lblBonfire.AutoSize = True
         Me.lblBonfire.Location = New System.Drawing.Point(19, 244)
         Me.lblBonfire.Name = "lblBonfire"
         Me.lblBonfire.Size = New System.Drawing.Size(66, 13)
@@ -948,7 +957,7 @@ Partial Class frmForm1
         '
         'Label24
         '
-        Me.Label24.AutoSize = true
+        Me.Label24.AutoSize = True
         Me.Label24.Location = New System.Drawing.Point(23, 131)
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(20, 13)
@@ -957,7 +966,7 @@ Partial Class frmForm1
         '
         'Label25
         '
-        Me.Label25.AutoSize = true
+        Me.Label25.AutoSize = True
         Me.Label25.Location = New System.Drawing.Point(23, 106)
         Me.Label25.Name = "Label25"
         Me.Label25.Size = New System.Drawing.Size(20, 13)
@@ -966,7 +975,7 @@ Partial Class frmForm1
         '
         'Label26
         '
-        Me.Label26.AutoSize = true
+        Me.Label26.AutoSize = True
         Me.Label26.Location = New System.Drawing.Point(23, 81)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(20, 13)
@@ -975,7 +984,7 @@ Partial Class frmForm1
         '
         'lblFacing
         '
-        Me.lblFacing.AutoSize = true
+        Me.lblFacing.AutoSize = True
         Me.lblFacing.Location = New System.Drawing.Point(19, 28)
         Me.lblFacing.Name = "lblFacing"
         Me.lblFacing.Size = New System.Drawing.Size(45, 13)
@@ -1011,7 +1020,7 @@ Partial Class frmForm1
         '
         'tabStats
         '
-        Me.tabStats.AutoScroll = true
+        Me.tabStats.AutoScroll = True
         Me.tabStats.Controls.Add(Me.Label16)
         Me.tabStats.Controls.Add(Me.nmbClearCount)
         Me.tabStats.Controls.Add(Me.Label3)
@@ -1046,7 +1055,7 @@ Partial Class frmForm1
         '
         'Label16
         '
-        Me.Label16.AutoSize = true
+        Me.Label16.AutoSize = True
         Me.Label16.Location = New System.Drawing.Point(56, 332)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(52, 13)
@@ -1063,7 +1072,7 @@ Partial Class frmForm1
         '
         'Label3
         '
-        Me.Label3.AutoSize = true
+        Me.Label3.AutoSize = True
         Me.Label3.Location = New System.Drawing.Point(65, 47)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(45, 13)
@@ -1080,7 +1089,7 @@ Partial Class frmForm1
         '
         'Label7
         '
-        Me.Label7.AutoSize = true
+        Me.Label7.AutoSize = True
         Me.Label7.Location = New System.Drawing.Point(42, 70)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(68, 13)
@@ -1097,7 +1106,7 @@ Partial Class frmForm1
         '
         'Label2
         '
-        Me.Label2.AutoSize = true
+        Me.Label2.AutoSize = True
         Me.Label2.Location = New System.Drawing.Point(22, 306)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(86, 13)
@@ -1114,7 +1123,7 @@ Partial Class frmForm1
         '
         'Label12
         '
-        Me.Label12.AutoSize = true
+        Me.Label12.AutoSize = True
         Me.Label12.Location = New System.Drawing.Point(71, 96)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(37, 13)
@@ -1131,7 +1140,7 @@ Partial Class frmForm1
         '
         'Label13
         '
-        Me.Label13.AutoSize = true
+        Me.Label13.AutoSize = True
         Me.Label13.Location = New System.Drawing.Point(49, 119)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(61, 13)
@@ -1148,7 +1157,7 @@ Partial Class frmForm1
         '
         'Label14
         '
-        Me.Label14.AutoSize = true
+        Me.Label14.AutoSize = True
         Me.Label14.Location = New System.Drawing.Point(51, 142)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(59, 13)
@@ -1165,7 +1174,7 @@ Partial Class frmForm1
         '
         'Label15
         '
-        Me.Label15.AutoSize = true
+        Me.Label15.AutoSize = True
         Me.Label15.Location = New System.Drawing.Point(61, 165)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(47, 13)
@@ -1182,7 +1191,7 @@ Partial Class frmForm1
         '
         'Label11
         '
-        Me.Label11.AutoSize = true
+        Me.Label11.AutoSize = True
         Me.Label11.Location = New System.Drawing.Point(62, 188)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(48, 13)
@@ -1199,7 +1208,7 @@ Partial Class frmForm1
         '
         'Label10
         '
-        Me.Label10.AutoSize = true
+        Me.Label10.AutoSize = True
         Me.Label10.Location = New System.Drawing.Point(48, 209)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(60, 13)
@@ -1216,7 +1225,7 @@ Partial Class frmForm1
         '
         'Label9
         '
-        Me.Label9.AutoSize = true
+        Me.Label9.AutoSize = True
         Me.Label9.Location = New System.Drawing.Point(49, 234)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(61, 13)
@@ -1233,7 +1242,7 @@ Partial Class frmForm1
         '
         'Label8
         '
-        Me.Label8.AutoSize = true
+        Me.Label8.AutoSize = True
         Me.Label8.Location = New System.Drawing.Point(78, 257)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(30, 13)
@@ -1250,7 +1259,7 @@ Partial Class frmForm1
         '
         'Label1
         '
-        Me.Label1.AutoSize = true
+        Me.Label1.AutoSize = True
         Me.Label1.Location = New System.Drawing.Point(57, 280)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(51, 13)
@@ -1275,7 +1284,7 @@ Partial Class frmForm1
         Me.tabTests.Size = New System.Drawing.Size(381, 446)
         Me.tabTests.TabIndex = 7
         Me.tabTests.Text = "Tests"
-        Me.tabTests.UseVisualStyleBackColor = true
+        Me.tabTests.UseVisualStyleBackColor = True
         '
         'btnEnableAI
         '
@@ -1284,7 +1293,7 @@ Partial Class frmForm1
         Me.btnEnableAI.Size = New System.Drawing.Size(160, 23)
         Me.btnEnableAI.TabIndex = 81
         Me.btnEnableAI.Text = "Enable AI"
-        Me.btnEnableAI.UseVisualStyleBackColor = false
+        Me.btnEnableAI.UseVisualStyleBackColor = False
         '
         'btnDisableAI
         '
@@ -1293,17 +1302,17 @@ Partial Class frmForm1
         Me.btnDisableAI.Size = New System.Drawing.Size(160, 23)
         Me.btnDisableAI.TabIndex = 80
         Me.btnDisableAI.Text = "Disable AI"
-        Me.btnDisableAI.UseVisualStyleBackColor = false
+        Me.btnDisableAI.UseVisualStyleBackColor = False
         '
         'btnTest
         '
-        Me.btnTest.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.btnTest.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnTest.Location = New System.Drawing.Point(304, 3)
         Me.btnTest.Name = "btnTest"
         Me.btnTest.Size = New System.Drawing.Size(68, 23)
         Me.btnTest.TabIndex = 77
         Me.btnTest.Text = "Test"
-        Me.btnTest.UseVisualStyleBackColor = false
+        Me.btnTest.UseVisualStyleBackColor = False
         '
         'tabNotes
         '
@@ -1313,16 +1322,16 @@ Partial Class frmForm1
         Me.tabNotes.Size = New System.Drawing.Size(381, 446)
         Me.tabNotes.TabIndex = 8
         Me.tabNotes.Text = "Notes"
-        Me.tabNotes.UseVisualStyleBackColor = true
+        Me.tabNotes.UseVisualStyleBackColor = True
         '
         'txtNotes
         '
-        Me.txtNotes.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
-            Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.txtNotes.Enabled = false
+        Me.txtNotes.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtNotes.Enabled = False
         Me.txtNotes.Location = New System.Drawing.Point(9, 4)
-        Me.txtNotes.Multiline = true
+        Me.txtNotes.Multiline = True
         Me.txtNotes.Name = "txtNotes"
         Me.txtNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.txtNotes.Size = New System.Drawing.Size(362, 439)
@@ -1340,32 +1349,32 @@ Partial Class frmForm1
         Me.tabConsole.Size = New System.Drawing.Size(381, 446)
         Me.tabConsole.TabIndex = 10
         Me.tabConsole.Text = "Console"
-        Me.tabConsole.UseVisualStyleBackColor = true
+        Me.tabConsole.UseVisualStyleBackColor = True
         '
         'btnConsoleHelp
         '
-        Me.btnConsoleHelp.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
+        Me.btnConsoleHelp.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnConsoleHelp.Location = New System.Drawing.Point(9, 415)
         Me.btnConsoleHelp.Name = "btnConsoleHelp"
         Me.btnConsoleHelp.Size = New System.Drawing.Size(60, 23)
         Me.btnConsoleHelp.TabIndex = 80
         Me.btnConsoleHelp.Text = "Help"
-        Me.btnConsoleHelp.UseVisualStyleBackColor = true
+        Me.btnConsoleHelp.UseVisualStyleBackColor = True
         '
         'btnConsoleExecute
         '
-        Me.btnConsoleExecute.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
+        Me.btnConsoleExecute.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnConsoleExecute.Location = New System.Drawing.Point(9, 376)
         Me.btnConsoleExecute.Name = "btnConsoleExecute"
         Me.btnConsoleExecute.Size = New System.Drawing.Size(60, 23)
         Me.btnConsoleExecute.TabIndex = 79
         Me.btnConsoleExecute.Text = "Execute"
-        Me.btnConsoleExecute.UseVisualStyleBackColor = true
+        Me.btnConsoleExecute.UseVisualStyleBackColor = True
         '
         'Label17
         '
-        Me.Label17.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-        Me.Label17.AutoSize = true
+        Me.Label17.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Label17.AutoSize = True
         Me.Label17.Location = New System.Drawing.Point(75, 381)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(63, 13)
@@ -1374,24 +1383,24 @@ Partial Class frmForm1
         '
         'txtConsoleResult
         '
-        Me.txtConsoleResult.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.txtConsoleResult.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtConsoleResult.Location = New System.Drawing.Point(144, 378)
-        Me.txtConsoleResult.Multiline = true
+        Me.txtConsoleResult.Multiline = True
         Me.txtConsoleResult.Name = "txtConsoleResult"
         Me.txtConsoleResult.Size = New System.Drawing.Size(234, 60)
         Me.txtConsoleResult.TabIndex = 1
         '
         'txtConsole
         '
-        Me.txtConsole.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
-            Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.txtConsole.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtConsole.BackColor = System.Drawing.SystemColors.MenuText
-        Me.txtConsole.Font = New System.Drawing.Font("Consolas", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.txtConsole.Font = New System.Drawing.Font("Consolas", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtConsole.ForeColor = System.Drawing.Color.Lime
         Me.txtConsole.Location = New System.Drawing.Point(9, 4)
-        Me.txtConsole.Multiline = true
+        Me.txtConsole.Multiline = True
         Me.txtConsole.Name = "txtConsole"
         Me.txtConsole.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.txtConsole.Size = New System.Drawing.Size(369, 368)
@@ -1408,7 +1417,7 @@ Partial Class frmForm1
         Me.tabDonate.Size = New System.Drawing.Size(381, 446)
         Me.tabDonate.TabIndex = 6
         Me.tabDonate.Text = "$$$"
-        Me.tabDonate.UseVisualStyleBackColor = true
+        Me.tabDonate.UseVisualStyleBackColor = True
         '
         'btnDonate
         '
@@ -1417,11 +1426,11 @@ Partial Class frmForm1
         Me.btnDonate.Size = New System.Drawing.Size(149, 23)
         Me.btnDonate.TabIndex = 3
         Me.btnDonate.Text = "http://paypal.me/wulf2k"
-        Me.btnDonate.UseVisualStyleBackColor = true
+        Me.btnDonate.UseVisualStyleBackColor = True
         '
         'Label6
         '
-        Me.Label6.AutoSize = true
+        Me.Label6.AutoSize = True
         Me.Label6.Location = New System.Drawing.Point(160, 199)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(53, 13)
@@ -1430,7 +1439,7 @@ Partial Class frmForm1
         '
         'Label5
         '
-        Me.Label5.AutoSize = true
+        Me.Label5.AutoSize = True
         Me.Label5.Location = New System.Drawing.Point(202, 172)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(58, 13)
@@ -1439,7 +1448,7 @@ Partial Class frmForm1
         '
         'Label4
         '
-        Me.Label4.AutoSize = true
+        Me.Label4.AutoSize = True
         Me.Label4.Location = New System.Drawing.Point(108, 144)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(152, 13)
@@ -1448,7 +1457,7 @@ Partial Class frmForm1
         '
         'Label22
         '
-        Me.Label22.AutoSize = true
+        Me.Label22.AutoSize = True
         Me.Label22.Location = New System.Drawing.Point(12, 9)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(64, 13)
@@ -1457,8 +1466,8 @@ Partial Class frmForm1
         '
         'lblRelease
         '
-        Me.lblRelease.AutoSize = true
-        Me.lblRelease.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.lblRelease.AutoSize = True
+        Me.lblRelease.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblRelease.Location = New System.Drawing.Point(75, 9)
         Me.lblRelease.Name = "lblRelease"
         Me.lblRelease.Size = New System.Drawing.Size(51, 13)
@@ -1467,43 +1476,34 @@ Partial Class frmForm1
         '
         'btnReconnect
         '
-        Me.btnReconnect.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.btnReconnect.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnReconnect.Location = New System.Drawing.Point(320, 5)
         Me.btnReconnect.Name = "btnReconnect"
         Me.btnReconnect.Size = New System.Drawing.Size(81, 23)
         Me.btnReconnect.TabIndex = 76
         Me.btnReconnect.Text = "Reconnect"
-        Me.btnReconnect.UseVisualStyleBackColor = false
+        Me.btnReconnect.UseVisualStyleBackColor = False
         '
         'lblVer
         '
-        Me.lblVer.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.lblVer.AutoSize = true
+        Me.lblVer.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblVer.AutoSize = True
         Me.lblVer.Location = New System.Drawing.Point(300, 513)
         Me.lblVer.Name = "lblVer"
         Me.lblVer.Size = New System.Drawing.Size(76, 13)
         Me.lblVer.TabIndex = 77
-        Me.lblVer.Text = "2017-08-04-02"
+        Me.lblVer.Text = "2017-08-04-09"
         '
         'btnUpdate
         '
-        Me.btnUpdate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
+        Me.btnUpdate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnUpdate.Location = New System.Drawing.Point(25, 508)
         Me.btnUpdate.Name = "btnUpdate"
         Me.btnUpdate.Size = New System.Drawing.Size(160, 23)
         Me.btnUpdate.TabIndex = 78
         Me.btnUpdate.Text = "Update BRush"
-        Me.btnUpdate.UseVisualStyleBackColor = true
-        Me.btnUpdate.Visible = false
-        '
-        'btnScenarioPinwheelDefense
-        '
-        Me.btnScenarioPinwheelDefense.Location = New System.Drawing.Point(200, 36)
-        Me.btnScenarioPinwheelDefense.Name = "btnScenarioPinwheelDefense"
-        Me.btnScenarioPinwheelDefense.Size = New System.Drawing.Size(160, 23)
-        Me.btnScenarioPinwheelDefense.TabIndex = 71
-        Me.btnScenarioPinwheelDefense.Text = "Pinwheel's Defense"
-        Me.btnScenarioPinwheelDefense.UseVisualStyleBackColor = false
+        Me.btnUpdate.UseVisualStyleBackColor = True
+        Me.btnUpdate.Visible = False
         '
         'frmForm1
         '

@@ -538,7 +538,7 @@ Public Class frmForm1
         charptr1 = RInt32(&H137DC70)
         charptr1 = RInt32(charptr1 + &H4)
         charptr1 = RInt32(charptr1)
-	    charmapdataptr = RInt32(charptr1 + &H28)
+        charmapdataptr = RInt32(charptr1 + &H28)
 
         WFloat(charmapdataptr + &HD0, x)
         WFloat(charmapdataptr + &HD4, y)
@@ -551,7 +551,7 @@ Public Class frmForm1
         WFloat(charmapdataptr + &HE4, facing)
         WBytes(charmapdataptr + &HC8, {1})
     End Sub
-    Public sub warpentity_coords(entityPtr As Integer, x As Single, y As Single, z As Single, rotx As Integer)
+    Public Sub warpentity_coords(entityPtr As Integer, x As Single, y As Single, z As Single, rotx As Integer)
         entityPtr = RInt32(entityPtr + &H28)
         WFloat(entityPtr + &HD0, x)
         WFloat(entityPtr + &HD4, y)
@@ -563,7 +563,7 @@ Public Class frmForm1
 
         WFloat(entityPtr + &HE4, facing)
         WBytes(entityPtr + &HC8, {1})
-    End sub
+    End Sub
 
 
     Public Sub blackscreen()
@@ -577,11 +577,11 @@ Public Class frmForm1
         WFloat(tmpptr + &H274, 0)
         WFloat(tmpptr + &H278, 0)
     End Sub
-    Public sub camfocusentity(entityptr As Integer)
+    Public Sub camfocusentity(entityptr As Integer)
         Dim camPtr As Integer = RInt32(&H137D648) + &HEC
 
         WInt32(camPtr, entityptr)
-    End sub
+    End Sub
     Public Sub clearplaytime()
         Dim tmpPtr As Integer = RIntPtr(&H1378700)
         WInt32(tmpPtr + &H68, 0)
@@ -644,10 +644,10 @@ Public Class frmForm1
             Thread.Sleep(33)
         Next
     End Sub
-    Public Sub forceentitydrawgroup(entityptr As integer)
+    Public Sub forceentitydrawgroup(entityptr As Integer)
         WInt32(entityptr + &H264, -1)
         WInt32(entityptr + &H268, -1)
-        WInt32(entityptr + &H26c, -1)
+        WInt32(entityptr + &H26C, -1)
         WInt32(entityptr + &H270, -1)
     End Sub
 
@@ -2198,7 +2198,7 @@ Public Class frmForm1
         Script("PlayerHide 0")
         Script("SetDisableGravity 10000, 0")
     End Sub
-    Public sub scenariopinwheeldefense()
+    Public Sub scenariopinwheeldefense()
         Script("SetEventFlag 6, False")
         Script("WarpNextStage_Bonfire 1300999")
         Script("wait 1000")
@@ -2224,7 +2224,7 @@ Public Class frmForm1
         Script("camfocusentity intvar1")
         Script("wait 1000")
         Script("fadein")
-    End sub
+    End Sub
 
     Public Sub beginbossrush()
 
@@ -2774,6 +2774,7 @@ Public Class frmForm1
 
 
         Dim t As Type = Me.GetType
+        Dim pt As Type
         Dim method As MethodInfo
         method = t.GetMethod(action)
 
@@ -2787,9 +2788,16 @@ Public Class frmForm1
             Array.Resize(typedParams, typedParams.Length + 1)
 
             If method.GetParameters(i).ParameterType.IsByRef Then
-                typedParams(typedParams.Length - 1) = CTypeDynamic(params(i), method.GetParameters(i).ParameterType.GetElementType())
+                pt = method.GetParameters(i).ParameterType.GetElementType()
             Else
-                typedParams(typedParams.Length - 1) = CTypeDynamic(params(i), method.GetParameters(i).ParameterType())
+                pt = method.GetParameters(i).ParameterType()
+            End If
+
+            'Fix for non-decimal using regions
+            If pt.Name = "Single" Then
+                typedParams(typedParams.Length - 1) = Convert.ToSingle(params(i), New CultureInfo("en-us"))
+            Else
+                typedParams(typedParams.Length - 1) = CTypeDynamic(params(i), pt)
             End If
         Next
 
