@@ -535,6 +535,11 @@ Public Class frmForm1
 
 
     Public Sub warp_coords(ByVal x As Single, y As Single, z As Single, rotx As Integer)
+        charptr1 = RInt32(&H137DC70)
+        charptr1 = RInt32(charptr1 + &H4)
+        charptr1 = RInt32(charptr1)
+	    charmapdataptr = RInt32(charptr1 + &H28)
+
         WFloat(charmapdataptr + &HD0, x)
         WFloat(charmapdataptr + &HD4, y)
         WFloat(charmapdataptr + &HD8, z)
@@ -546,6 +551,20 @@ Public Class frmForm1
         WFloat(charmapdataptr + &HE4, facing)
         WBytes(charmapdataptr + &HC8, {1})
     End Sub
+    Public sub warpentity_coords(entityPtr As Integer, x As Single, y As Single, z As Single, rotx As Integer)
+        entityPtr = RInt32(entityPtr + &H28)
+        WFloat(entityPtr + &HD0, x)
+        WFloat(entityPtr + &HD4, y)
+        WFloat(entityPtr + &HD8, z)
+
+        Dim facing As Single
+        facing = ((rotx / 360) * 2 * Math.PI) - Math.PI
+
+
+        WFloat(entityPtr + &HE4, facing)
+        WBytes(entityPtr + &HC8, {1})
+    End sub
+
 
     Public Sub blackscreen()
         Dim tmpptr As Integer
@@ -558,6 +577,11 @@ Public Class frmForm1
         WFloat(tmpptr + &H274, 0)
         WFloat(tmpptr + &H278, 0)
     End Sub
+    Public sub camfocusentity(entityptr As Integer)
+        Dim camPtr As Integer = RInt32(&H137D648) + &HEC
+
+        WInt32(camPtr, entityptr)
+    End sub
     Public Sub clearplaytime()
         Dim tmpPtr As Integer = RIntPtr(&H1378700)
         WInt32(tmpPtr + &H68, 0)
@@ -619,6 +643,12 @@ Public Class frmForm1
             WFloat(tmpptr + &H278, val)
             Thread.Sleep(33)
         Next
+    End Sub
+    Public Sub forceentitydrawgroup(entityptr As integer)
+        WInt32(entityptr + &H264, -1)
+        WInt32(entityptr + &H268, -1)
+        WInt32(entityptr + &H26c, -1)
+        WInt32(entityptr + &H270, -1)
     End Sub
 
     Public Sub setcampos(ByVal xpos As Single, ypos As Single, zpos As Single, xrot As Single, yrot As Single)
@@ -1809,8 +1839,8 @@ Public Class frmForm1
         Dim bossDead As Boolean = False
 
         Do
+            'Pinwheel Entity ID = 1300800
             Script("RequestFullRecover")
-
 
             Script("SetEventFlag 6, False")
 
@@ -1830,7 +1860,8 @@ Public Class frmForm1
             Script("Wait 500")
 
 
-            Script("Warp_Coords 46, -165.8, 152.02")
+            Script("Warp_Coords 46.0, -165.8, 152.02, 180")
+            Script("CamReset 10000, 1")
 
             Script("Wait 1500")
             Script("FadeIn")
@@ -2167,6 +2198,33 @@ Public Class frmForm1
         Script("PlayerHide 0")
         Script("SetDisableGravity 10000, 0")
     End Sub
+    Public sub scenariopinwheeldefense()
+        Script("SetEventFlag 6, False")
+        Script("WarpNextStage_Bonfire 1300999")
+        Script("wait 1000")
+        Script("waitforload")
+        Script("blackscreen")
+        Script("wait 200")
+        Script("warp_coords 42.88, -144.56, 236.94")
+        Script("camreset 10000, 1")
+        Script("setdisable 6550, 0")
+        Script("wait 100")
+        Script("intvar1 = chrfadein 6550, 0, 0")
+        Script("forceentitydrawgroup intvar1")
+        Script("warpentity_coords intvar1, 46.0, -165.8, 152.02, 180")
+        Script("warp_coords 46.0, -165.8, 152.02")
+        Script("camreset 10000, 1")
+        Script("enablelogic 6550, 1")
+        Script("enablelogic 10000, 0")
+        Script("setdrawenable 10000, 0")
+        Script("setdrawenable 6550, 1")
+        Script("intvar1 = chrfadein 1300800, 0, 0")
+        Script("setdisable 10000, 1")
+        Script("controlentity intvar1, 1")
+        Script("camfocusentity intvar1")
+        Script("wait 1000")
+        Script("fadein")
+    End sub
 
     Public Sub beginbossrush()
 
@@ -2762,5 +2820,11 @@ Public Class frmForm1
     Private Sub btnConsoleHelp_Click(sender As Object, e As EventArgs) Handles btnConsoleHelp.Click
         Dim webAddress As String = "https://docs.google.com/spreadsheets/d/1Gff9pSGpYCJeNAXzUamqAInqFUwk4BhC6dC9Qk3_cDI/edit#gid=0"
         Process.Start(webAddress)
+    End Sub
+
+    Private Sub btnScenarioPinwheelDefense_Click(sender As Object, e As EventArgs) Handles btnScenarioPinwheelDefense.Click
+        trd = New Thread(AddressOf scenariopinwheeldefense)
+        trd.IsBackground = True
+        trd.Start()
     End Sub
 End Class

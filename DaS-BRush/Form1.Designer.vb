@@ -138,6 +138,7 @@ Partial Class frmForm1
         Me.tabNotes = New System.Windows.Forms.TabPage()
         Me.txtNotes = New System.Windows.Forms.TextBox()
         Me.tabConsole = New System.Windows.Forms.TabPage()
+        Me.btnConsoleHelp = New System.Windows.Forms.Button()
         Me.btnConsoleExecute = New System.Windows.Forms.Button()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.txtConsoleResult = New System.Windows.Forms.TextBox()
@@ -152,7 +153,7 @@ Partial Class frmForm1
         Me.btnReconnect = New System.Windows.Forms.Button()
         Me.lblVer = New System.Windows.Forms.Label()
         Me.btnUpdate = New System.Windows.Forms.Button()
-        Me.btnConsoleHelp = New System.Windows.Forms.Button()
+        Me.btnScenarioPinwheelDefense = New System.Windows.Forms.Button()
         Me.tabs.SuspendLayout
         Me.tabBosses.SuspendLayout
         Me.gbBosses.SuspendLayout
@@ -770,6 +771,7 @@ Partial Class frmForm1
         '
         'tabScenarios
         '
+        Me.tabScenarios.Controls.Add(Me.btnScenarioPinwheelDefense)
         Me.tabScenarios.Controls.Add(Me.btnScenarioTripleSanctuary)
         Me.tabScenarios.Controls.Add(Me.btnScenarioArtoriasCiaran)
         Me.tabScenarios.Location = New System.Drawing.Point(4, 22)
@@ -1340,6 +1342,16 @@ Partial Class frmForm1
         Me.tabConsole.Text = "Console"
         Me.tabConsole.UseVisualStyleBackColor = true
         '
+        'btnConsoleHelp
+        '
+        Me.btnConsoleHelp.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
+        Me.btnConsoleHelp.Location = New System.Drawing.Point(9, 415)
+        Me.btnConsoleHelp.Name = "btnConsoleHelp"
+        Me.btnConsoleHelp.Size = New System.Drawing.Size(60, 23)
+        Me.btnConsoleHelp.TabIndex = 80
+        Me.btnConsoleHelp.Text = "Help"
+        Me.btnConsoleHelp.UseVisualStyleBackColor = true
+        '
         'btnConsoleExecute
         '
         Me.btnConsoleExecute.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
@@ -1471,7 +1483,7 @@ Partial Class frmForm1
         Me.lblVer.Name = "lblVer"
         Me.lblVer.Size = New System.Drawing.Size(76, 13)
         Me.lblVer.TabIndex = 77
-        Me.lblVer.Text = "2017-08-03-00"
+        Me.lblVer.Text = "2017-08-04-02"
         '
         'btnUpdate
         '
@@ -1484,15 +1496,14 @@ Partial Class frmForm1
         Me.btnUpdate.UseVisualStyleBackColor = true
         Me.btnUpdate.Visible = false
         '
-        'btnConsoleHelp
+        'btnScenarioPinwheelDefense
         '
-        Me.btnConsoleHelp.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-        Me.btnConsoleHelp.Location = New System.Drawing.Point(9, 415)
-        Me.btnConsoleHelp.Name = "btnConsoleHelp"
-        Me.btnConsoleHelp.Size = New System.Drawing.Size(60, 23)
-        Me.btnConsoleHelp.TabIndex = 80
-        Me.btnConsoleHelp.Text = "Help"
-        Me.btnConsoleHelp.UseVisualStyleBackColor = true
+        Me.btnScenarioPinwheelDefense.Location = New System.Drawing.Point(200, 36)
+        Me.btnScenarioPinwheelDefense.Name = "btnScenarioPinwheelDefense"
+        Me.btnScenarioPinwheelDefense.Size = New System.Drawing.Size(160, 23)
+        Me.btnScenarioPinwheelDefense.TabIndex = 71
+        Me.btnScenarioPinwheelDefense.Text = "Pinwheel's Defense"
+        Me.btnScenarioPinwheelDefense.UseVisualStyleBackColor = false
         '
         'frmForm1
         '
@@ -1674,4 +1685,5 @@ End Sub
     Friend WithEvents txtConsoleResult As TextBox
     Friend WithEvents btnConsoleExecute As Button
     Friend WithEvents btnConsoleHelp As Button
+    Friend WithEvents btnScenarioPinwheelDefense As Button
 End Class
