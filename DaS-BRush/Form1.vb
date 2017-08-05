@@ -821,14 +821,15 @@ Public Class frmForm1
         Loop
     End Sub
     Public Sub warpentity_player(entityptr As Integer)
-        Dim playerptr As Integer = Script("ChrFadeIn 10000, 0.0, 0.0")
+        Dim playerptr As Integer = Script("GetEntityPtr 10000")
         Script("warpentity_entity " & entityptr & ", " & playerptr)
     End Sub
     Public Sub warpplayer_entity(entityptr As Integer)
-        Dim playerptr As Integer = Script("ChrFadeIn 10000, 0.0, 0.0")
+        Dim playerptr As Integer = Script("GetEntityPtr 10000")
         Script("warpentity_entity " & playerptr & ", " & entityptr)
     End Sub
     Public Sub warpentity_entity(entityptrSrc As Integer, entityptrDest As Integer)
+        'TODO: Check validity of entity pointers
         Dim destEntityPosPtr = RInt32(entityptrDest + &H28)
         destEntityPosPtr = RInt32(destEntityPosPtr + &H1C)
         Dim facing = RInt32(destEntityPosPtr + &H4)
@@ -838,7 +839,15 @@ Public Class frmForm1
 
         warpentity_coords(entityptrSrc, posX, posY, posZ, facing)
     End Sub
-
+    ''' <summary>
+    ''' TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+    ''' </summary>
+    ''' <param name="entityId">TODO</param>
+    Public Function getentityptr(entityId As Integer) As Integer 'TODO
+        'TODO 
+        Return Script("ChrFadeIn " & entityId & ", 0, 0") 'TODO 
+        'TODO 
+    End Function 'TODO
 
 
     Private Sub setbriefingmsg(ByVal str As String)
@@ -2271,7 +2280,7 @@ Public Class frmForm1
         Script("camreset 10000, 1")
         Script("setdisable 6550, 0")
         Script("wait 100")
-        Script("intvar1 = chrfadein 6550, 0, 0")
+        Script("intvar1 = getentityptr 6550")
         Script("forceentitydrawgroup intvar1")
         Script("warpentity_coords intvar1, 46.0, -165.8, 152.02, 180")
         Script("warp_coords 46.0, -165.8, 152.02")
@@ -2280,7 +2289,7 @@ Public Class frmForm1
         Script("enablelogic 10000, 0")
         Script("setdrawenable 10000, 0")
         Script("setdrawenable 6550, 1")
-        Script("intvar1 = chrfadein 1300800, 0, 0")
+        Script("intvar1 = getentityptr 1300800")
         Script("setdisable 10000, 1")
         Script("controlentity intvar1, 1")
         Script("camfocusentity intvar1")
@@ -2920,7 +2929,7 @@ Public Class frmForm1
         'Script("SetEventFlag 16, 0)
         'warp_coords_facing(71.72, 60, 300.56, 1.0)
 
-        Script("intvar1 = ChrFadeIn 1010700, 1.0")
+        Script("intvar1 = GetEntityPtr 1010700")
         Script("ControlEntity intvar1, 0")
     End Sub
 
