@@ -1414,7 +1414,7 @@ Partial Class frmForm1
         Me.toolstripTest.Location = New System.Drawing.Point(2, 2)
         Me.toolstripTest.Name = "toolstripTest"
         Me.toolstripTest.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-        Me.toolstripTest.Size = New System.Drawing.Size(150, 150)
+        Me.toolstripTest.Size = New System.Drawing.Size(150, 131)
         Me.toolstripTest.TabIndex = 85
         '
         'ToolStripDropDownButton1
@@ -1429,7 +1429,7 @@ Partial Class frmForm1
         'tsmiTestSomething
         '
         Me.tsmiTestSomething.Name = "tsmiTestSomething"
-        Me.tsmiTestSomething.Size = New System.Drawing.Size(152, 22)
+        Me.tsmiTestSomething.Size = New System.Drawing.Size(146, 22)
         Me.tsmiTestSomething.Text = "Something...?"
         '
         'ToolStripSeparator1
@@ -1503,7 +1503,7 @@ Partial Class frmForm1
         Me.txtNotes.Name = "txtNotes"
         Me.txtNotes.ReadOnly = True
         Me.txtNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtNotes.Size = New System.Drawing.Size(446, 200)
+        Me.txtNotes.Size = New System.Drawing.Size(506, 230)
         Me.txtNotes.TabIndex = 0
         '
         'tabConsole
