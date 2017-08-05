@@ -224,7 +224,7 @@ Partial Class frmForm1
         Me.tabBosses.Location = New System.Drawing.Point(4, 22)
         Me.tabBosses.Margin = New System.Windows.Forms.Padding(0)
         Me.tabBosses.Name = "tabBosses"
-        Me.tabBosses.Size = New System.Drawing.Size(449, 291)
+        Me.tabBosses.Size = New System.Drawing.Size(512, 236)
         Me.tabBosses.TabIndex = 5
         Me.tabBosses.Text = "Boss Rush"
         Me.tabBosses.UseVisualStyleBackColor = True
@@ -1398,7 +1398,7 @@ Partial Class frmForm1
         Me.tabTests.Controls.Add(Me.toolstripTest)
         Me.tabTests.Location = New System.Drawing.Point(4, 22)
         Me.tabTests.Name = "tabTests"
-        Me.tabTests.Size = New System.Drawing.Size(452, 206)
+        Me.tabTests.Size = New System.Drawing.Size(512, 236)
         Me.tabTests.TabIndex = 7
         Me.tabTests.Text = "Tests"
         '
@@ -1414,7 +1414,7 @@ Partial Class frmForm1
         Me.toolstripTest.Location = New System.Drawing.Point(2, 2)
         Me.toolstripTest.Name = "toolstripTest"
         Me.toolstripTest.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-        Me.toolstripTest.Size = New System.Drawing.Size(150, 131)
+        Me.toolstripTest.Size = New System.Drawing.Size(150, 150)
         Me.toolstripTest.TabIndex = 85
         '
         'ToolStripDropDownButton1
@@ -1515,7 +1515,7 @@ Partial Class frmForm1
         Me.tabConsole.Controls.Add(Me.txtConsole)
         Me.tabConsole.Location = New System.Drawing.Point(4, 22)
         Me.tabConsole.Name = "tabConsole"
-        Me.tabConsole.Size = New System.Drawing.Size(449, 291)
+        Me.tabConsole.Size = New System.Drawing.Size(512, 236)
         Me.tabConsole.TabIndex = 10
         Me.tabConsole.Text = "Console"
         Me.tabConsole.UseVisualStyleBackColor = True
@@ -1523,7 +1523,7 @@ Partial Class frmForm1
         'btnConsoleHelp
         '
         Me.btnConsoleHelp.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnConsoleHelp.Location = New System.Drawing.Point(4, 265)
+        Me.btnConsoleHelp.Location = New System.Drawing.Point(4, 210)
         Me.btnConsoleHelp.Name = "btnConsoleHelp"
         Me.btnConsoleHelp.Size = New System.Drawing.Size(73, 23)
         Me.btnConsoleHelp.TabIndex = 80
@@ -1533,7 +1533,7 @@ Partial Class frmForm1
         'btnConsoleExecute
         '
         Me.btnConsoleExecute.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnConsoleExecute.Location = New System.Drawing.Point(378, 234)
+        Me.btnConsoleExecute.Location = New System.Drawing.Point(441, 179)
         Me.btnConsoleExecute.Name = "btnConsoleExecute"
         Me.btnConsoleExecute.Size = New System.Drawing.Size(68, 54)
         Me.btnConsoleExecute.TabIndex = 79
@@ -1544,7 +1544,7 @@ Partial Class frmForm1
         '
         Me.Label17.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(13, 238)
+        Me.Label17.Location = New System.Drawing.Point(13, 183)
         Me.Label17.Margin = New System.Windows.Forms.Padding(0)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(63, 13)
@@ -1555,12 +1555,12 @@ Partial Class frmForm1
         '
         Me.txtConsoleResult.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtConsoleResult.Location = New System.Drawing.Point(79, 235)
+        Me.txtConsoleResult.Location = New System.Drawing.Point(79, 180)
         Me.txtConsoleResult.Multiline = True
         Me.txtConsoleResult.Name = "txtConsoleResult"
         Me.txtConsoleResult.ReadOnly = True
         Me.txtConsoleResult.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtConsoleResult.Size = New System.Drawing.Size(297, 52)
+        Me.txtConsoleResult.Size = New System.Drawing.Size(360, 52)
         Me.txtConsoleResult.TabIndex = 1
         '
         'txtConsole
@@ -1575,7 +1575,7 @@ Partial Class frmForm1
         Me.txtConsole.Multiline = True
         Me.txtConsole.Name = "txtConsole"
         Me.txtConsole.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtConsole.Size = New System.Drawing.Size(445, 231)
+        Me.txtConsole.Size = New System.Drawing.Size(508, 176)
         Me.txtConsole.TabIndex = 0
         '
         'tabAbout
