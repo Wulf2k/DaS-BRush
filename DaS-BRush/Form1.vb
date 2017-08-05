@@ -2784,12 +2784,21 @@ Public Class frmForm1
         For Each line In txtConsole.Lines
             Try
                 Dim result As Integer
+                Dim trimmedLine = line.Trim()
+                If Not trimmedLine.Any(
+                    Function(x As Char) As Boolean
+                        Return Not (x = " "c)
+                    End Function
+                ) Then
+                    Continue For
+                End If
 
-                result = Script(line)
+
+                result = Script(trimmedLine)
 
                 txtConsoleResult.Text = "Hex: 0x" & Hex(result) & Environment.NewLine &
-                "Int: " & result & Environment.NewLine &
-                "Float: " & BitConverter.ToSingle(BitConverter.GetBytes(result), 0)
+                                           "Int: " & result & Environment.NewLine &
+                                           "Float: " & BitConverter.ToSingle(BitConverter.GetBytes(result), 0)
             Catch ex As Exception
                 MsgBox(line & Environment.NewLine & Environment.NewLine & ex.Message)
             End Try
