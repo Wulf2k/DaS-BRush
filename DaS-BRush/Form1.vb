@@ -2879,17 +2879,6 @@ Public Class frmForm1
 
     End Function
 
-    Private Sub btnTest_Click(sender As Object, e As EventArgs)
-
-        'Script("SetEventFlag 16, 0)
-        'warp_coords_facing(71.72, 60, 300.56, 1.0)
-
-        Script("intvar1 = ChrFadeIn 1010700, 1.0")
-        Script("ControlEntity intvar1, 0")
-
-
-    End Sub
-
     Private Sub btnConsoleHelp_Click(sender As Object, e As EventArgs) Handles btnConsoleHelp.Click
         Dim webAddress As String = "https://docs.google.com/spreadsheets/d/1Gff9pSGpYCJeNAXzUamqAInqFUwk4BhC6dC9Qk3_cDI/edit#gid=0"
         Process.Start(webAddress)
@@ -2901,19 +2890,7 @@ Public Class frmForm1
         trd.Start()
     End Sub
 
-    Private Sub btnTestEnablePlayerExterminate_Click(sender As Object, e As EventArgs)
-
-    End Sub
-
-    Private Sub btnTestDisablePlayerExterminate_Click(sender As Object, e As EventArgs)
-        test_playerexterminate(False)
-    End Sub
-
-    Private Sub DisableAIToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
-    End Sub
-
-    Private Sub TestToolStripMenuItem_Click(sender As Object, e As EventArgs)
+    Private Sub SomethingToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles tsmiTestSomething.Click
         'Script("SetEventFlag 16, 0)
         'warp_coords_facing(71.72, 60, 300.56, 1.0)
 
@@ -2921,35 +2898,19 @@ Public Class frmForm1
         Script("ControlEntity intvar1, 0")
     End Sub
 
-    Private Sub EnablePlayerExterminateToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        test_playerexterminate(1)
-    End Sub
-
-    Private Sub DisablePlayerExterminateToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        test_playerexterminate(0)
-    End Sub
-
-    Private Sub SomethingToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SomethingToolStripMenuItem.Click
-        'Script("SetEventFlag 16, 0)
-        'warp_coords_facing(71.72, 60, 300.56, 1.0)
-
-        Script("intvar1 = ChrFadeIn 1010700, 1.0")
-        Script("ControlEntity intvar1, 0")
-    End Sub
-
-    Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
+    Private Sub tsbtnDisableAI_Click(sender As Object, e As EventArgs) Handles tsbtnDisableAI.Click
         test_disableai(True)
     End Sub
 
-    Private Sub ToolStripButton2_Click(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
+    Private Sub tsbtnEnableAI_Click(sender As Object, e As EventArgs) Handles tsbtnEnableAI.Click
         test_disableai(False)
     End Sub
 
-    Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
+    Private Sub tsbtnEnablePlayerExterminate_Click(sender As Object, e As EventArgs) Handles tsbtnEnablePlayerExterminate.Click
         test_playerexterminate(True)
     End Sub
 
-    Private Sub ToolStripButton4_Click(sender As Object, e As EventArgs) Handles ToolStripButton4.Click
+    Private Sub tsbtnDisablePlayerExterminate_Click(sender As Object, e As EventArgs) Handles tsbtnDisablePlayerExterminate.Click
         test_playerexterminate(False)
     End Sub
 End Class

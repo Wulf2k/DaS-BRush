@@ -135,13 +135,13 @@ Partial Class frmForm1
         Me.tabTests = New System.Windows.Forms.TabPage()
         Me.toolstripTest = New System.Windows.Forms.ToolStrip()
         Me.ToolStripDropDownButton1 = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.SomethingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiTestSomething = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnDisableAI = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnEnableAI = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton4 = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnEnablePlayerExterminate = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnDisablePlayerExterminate = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.tabNotes = New System.Windows.Forms.TabPage()
         Me.txtNotes = New System.Windows.Forms.TextBox()
@@ -152,6 +152,10 @@ Partial Class frmForm1
         Me.txtConsoleResult = New System.Windows.Forms.TextBox()
         Me.txtConsole = New System.Windows.Forms.TextBox()
         Me.tabAbout = New System.Windows.Forms.TabPage()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.Label19 = New System.Windows.Forms.Label()
         Me.btnDonate = New System.Windows.Forms.Button()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -162,10 +166,6 @@ Partial Class frmForm1
         Me.lblVer = New System.Windows.Forms.Label()
         Me.btnUpdate = New System.Windows.Forms.Button()
         Me.Label18 = New System.Windows.Forms.Label()
-        Me.Label19 = New System.Windows.Forms.Label()
-        Me.Label20 = New System.Windows.Forms.Label()
-        Me.Label21 = New System.Windows.Forms.Label()
-        Me.Label23 = New System.Windows.Forms.Label()
         Me.tabs.SuspendLayout()
         Me.tabBosses.SuspendLayout()
         Me.gbBosses.SuspendLayout()
@@ -890,7 +890,7 @@ Partial Class frmForm1
         Me.tabScenarios.Controls.Add(Me.btnScenarioArtoriasCiaran)
         Me.tabScenarios.Location = New System.Drawing.Point(4, 22)
         Me.tabScenarios.Name = "tabScenarios"
-        Me.tabScenarios.Size = New System.Drawing.Size(452, 206)
+        Me.tabScenarios.Size = New System.Drawing.Size(512, 236)
         Me.tabScenarios.TabIndex = 9
         Me.tabScenarios.Text = "Scenarios"
         Me.tabScenarios.UseVisualStyleBackColor = True
@@ -931,7 +931,7 @@ Partial Class frmForm1
         Me.tabMain.Location = New System.Drawing.Point(4, 22)
         Me.tabMain.Name = "tabMain"
         Me.tabMain.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabMain.Size = New System.Drawing.Size(452, 206)
+        Me.tabMain.Size = New System.Drawing.Size(512, 236)
         Me.tabMain.TabIndex = 0
         Me.tabMain.Text = "Player"
         '
@@ -1165,7 +1165,7 @@ Partial Class frmForm1
         Me.tabStats.Controls.Add(Me.nmbHumanity)
         Me.tabStats.Location = New System.Drawing.Point(4, 22)
         Me.tabStats.Name = "tabStats"
-        Me.tabStats.Size = New System.Drawing.Size(452, 206)
+        Me.tabStats.Size = New System.Drawing.Size(512, 236)
         Me.tabStats.TabIndex = 2
         Me.tabStats.Text = "Stats"
         '
@@ -1409,7 +1409,7 @@ Partial Class frmForm1
         Me.toolstripTest.CanOverflow = False
         Me.toolstripTest.Dock = System.Windows.Forms.DockStyle.None
         Me.toolstripTest.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.toolstripTest.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripDropDownButton1, Me.ToolStripSeparator1, Me.ToolStripButton1, Me.ToolStripButton2, Me.ToolStripSeparator2, Me.ToolStripButton3, Me.ToolStripButton4, Me.ToolStripSeparator3})
+        Me.toolstripTest.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripDropDownButton1, Me.ToolStripSeparator1, Me.tsbtnDisableAI, Me.tsbtnEnableAI, Me.ToolStripSeparator2, Me.tsbtnEnablePlayerExterminate, Me.tsbtnDisablePlayerExterminate, Me.ToolStripSeparator3})
         Me.toolstripTest.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.VerticalStackWithOverflow
         Me.toolstripTest.Location = New System.Drawing.Point(2, 2)
         Me.toolstripTest.Name = "toolstripTest"
@@ -1419,64 +1419,64 @@ Partial Class frmForm1
         '
         'ToolStripDropDownButton1
         '
-        Me.ToolStripDropDownButton1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SomethingToolStripMenuItem})
+        Me.ToolStripDropDownButton1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiTestSomething})
         Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
         Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
         Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(148, 20)
         Me.ToolStripDropDownButton1.Text = "(Developer Test Stuff)"
         '
-        'SomethingToolStripMenuItem
+        'tsmiTestSomething
         '
-        Me.SomethingToolStripMenuItem.Name = "SomethingToolStripMenuItem"
-        Me.SomethingToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
-        Me.SomethingToolStripMenuItem.Text = "Something...?"
+        Me.tsmiTestSomething.Name = "tsmiTestSomething"
+        Me.tsmiTestSomething.Size = New System.Drawing.Size(152, 22)
+        Me.tsmiTestSomething.Text = "Something...?"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
         Me.ToolStripSeparator1.Size = New System.Drawing.Size(148, 6)
         '
-        'ToolStripButton1
+        'tsbtnDisableAI
         '
-        Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.ToolStripButton1.Image = CType(resources.GetObject("ToolStripButton1.Image"), System.Drawing.Image)
-        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(148, 19)
-        Me.ToolStripButton1.Text = "Disable AI"
+        Me.tsbtnDisableAI.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.tsbtnDisableAI.Image = CType(resources.GetObject("tsbtnDisableAI.Image"), System.Drawing.Image)
+        Me.tsbtnDisableAI.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnDisableAI.Name = "tsbtnDisableAI"
+        Me.tsbtnDisableAI.Size = New System.Drawing.Size(148, 19)
+        Me.tsbtnDisableAI.Text = "Disable AI"
         '
-        'ToolStripButton2
+        'tsbtnEnableAI
         '
-        Me.ToolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.ToolStripButton2.Image = CType(resources.GetObject("ToolStripButton2.Image"), System.Drawing.Image)
-        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton2.Name = "ToolStripButton2"
-        Me.ToolStripButton2.Size = New System.Drawing.Size(148, 19)
-        Me.ToolStripButton2.Text = "Enable AI"
+        Me.tsbtnEnableAI.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.tsbtnEnableAI.Image = CType(resources.GetObject("tsbtnEnableAI.Image"), System.Drawing.Image)
+        Me.tsbtnEnableAI.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnEnableAI.Name = "tsbtnEnableAI"
+        Me.tsbtnEnableAI.Size = New System.Drawing.Size(148, 19)
+        Me.tsbtnEnableAI.Text = "Enable AI"
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
         Me.ToolStripSeparator2.Size = New System.Drawing.Size(148, 6)
         '
-        'ToolStripButton3
+        'tsbtnEnablePlayerExterminate
         '
-        Me.ToolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.ToolStripButton3.Image = CType(resources.GetObject("ToolStripButton3.Image"), System.Drawing.Image)
-        Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton3.Name = "ToolStripButton3"
-        Me.ToolStripButton3.Size = New System.Drawing.Size(148, 19)
-        Me.ToolStripButton3.Text = "Enable Player Exterminate"
+        Me.tsbtnEnablePlayerExterminate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.tsbtnEnablePlayerExterminate.Image = CType(resources.GetObject("tsbtnEnablePlayerExterminate.Image"), System.Drawing.Image)
+        Me.tsbtnEnablePlayerExterminate.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnEnablePlayerExterminate.Name = "tsbtnEnablePlayerExterminate"
+        Me.tsbtnEnablePlayerExterminate.Size = New System.Drawing.Size(148, 19)
+        Me.tsbtnEnablePlayerExterminate.Text = "Enable Player Exterminate"
         '
-        'ToolStripButton4
+        'tsbtnDisablePlayerExterminate
         '
-        Me.ToolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.ToolStripButton4.Image = CType(resources.GetObject("ToolStripButton4.Image"), System.Drawing.Image)
-        Me.ToolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton4.Name = "ToolStripButton4"
-        Me.ToolStripButton4.Size = New System.Drawing.Size(148, 19)
-        Me.ToolStripButton4.Text = "Disable Player Exterminate"
+        Me.tsbtnDisablePlayerExterminate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.tsbtnDisablePlayerExterminate.Image = CType(resources.GetObject("tsbtnDisablePlayerExterminate.Image"), System.Drawing.Image)
+        Me.tsbtnDisablePlayerExterminate.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnDisablePlayerExterminate.Name = "tsbtnDisablePlayerExterminate"
+        Me.tsbtnDisablePlayerExterminate.Size = New System.Drawing.Size(148, 19)
+        Me.tsbtnDisablePlayerExterminate.Text = "Disable Player Exterminate"
         '
         'ToolStripSeparator3
         '
@@ -1488,7 +1488,7 @@ Partial Class frmForm1
         Me.tabNotes.Controls.Add(Me.txtNotes)
         Me.tabNotes.Location = New System.Drawing.Point(4, 22)
         Me.tabNotes.Name = "tabNotes"
-        Me.tabNotes.Size = New System.Drawing.Size(449, 291)
+        Me.tabNotes.Size = New System.Drawing.Size(512, 236)
         Me.tabNotes.TabIndex = 8
         Me.tabNotes.Text = "Notes"
         Me.tabNotes.UseVisualStyleBackColor = True
@@ -1597,6 +1597,47 @@ Partial Class frmForm1
         Me.tabAbout.Text = "About"
         Me.tabAbout.UseVisualStyleBackColor = True
         '
+        'Label23
+        '
+        Me.Label23.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label23.Font = New System.Drawing.Font("Myriad Pro", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label23.Location = New System.Drawing.Point(13, 129)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(314, 59)
+        Me.Label23.TabIndex = 7
+        Me.Label23.Text = "Meowmaritus"
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Font = New System.Drawing.Font("Myriad Pro", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label21.Location = New System.Drawing.Point(48, 38)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(59, 20)
+        Me.Label21.TabIndex = 6
+        Me.Label21.Text = "Wulf2k"
+        '
+        'Label20
+        '
+        Me.Label20.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label20.AutoSize = True
+        Me.Label20.Font = New System.Drawing.Font("Myriad Pro Cond", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label20.Location = New System.Drawing.Point(441, 81)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(44, 17)
+        Me.Label20.TabIndex = 5
+        Me.Label20.Text = "- wulf2k"
+        '
+        'Label19
+        '
+        Me.Label19.Font = New System.Drawing.Font("Myriad Pro Cond", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label19.Location = New System.Drawing.Point(9, 13)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(255, 112)
+        Me.Label19.TabIndex = 4
+        Me.Label19.Text = "Main Programmer and Reverse Engineer:" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Additional Contributors:"
+        '
         'btnDonate
         '
         Me.btnDonate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -1700,47 +1741,6 @@ Partial Class frmForm1
         Me.Label18.Size = New System.Drawing.Size(45, 13)
         Me.Label18.TabIndex = 79
         Me.Label18.Text = "Version:"
-        '
-        'Label19
-        '
-        Me.Label19.Font = New System.Drawing.Font("Myriad Pro Cond", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label19.Location = New System.Drawing.Point(9, 13)
-        Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(255, 112)
-        Me.Label19.TabIndex = 4
-        Me.Label19.Text = "Main Programmer and Reverse Engineer:" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Additional Contributors:"
-        '
-        'Label20
-        '
-        Me.Label20.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label20.AutoSize = True
-        Me.Label20.Font = New System.Drawing.Font("Myriad Pro Cond", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label20.Location = New System.Drawing.Point(441, 81)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(44, 17)
-        Me.Label20.TabIndex = 5
-        Me.Label20.Text = "- wulf2k"
-        '
-        'Label21
-        '
-        Me.Label21.AutoSize = True
-        Me.Label21.Font = New System.Drawing.Font("Myriad Pro", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label21.Location = New System.Drawing.Point(48, 38)
-        Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(59, 20)
-        Me.Label21.TabIndex = 6
-        Me.Label21.Text = "Wulf2k"
-        '
-        'Label23
-        '
-        Me.Label23.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label23.Font = New System.Drawing.Font("Myriad Pro", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label23.Location = New System.Drawing.Point(13, 129)
-        Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(314, 59)
-        Me.Label23.TabIndex = 7
-        Me.Label23.Text = "Meowmaritus"
         '
         'frmForm1
         '
@@ -1876,13 +1876,13 @@ End Sub
     Friend WithEvents cboxReverseOrder As CheckBox
     Friend WithEvents toolstripTest As ToolStrip
     Friend WithEvents ToolStripDropDownButton1 As ToolStripDropDownButton
-    Friend WithEvents SomethingToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents tsmiTestSomething As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
-    Friend WithEvents ToolStripButton1 As ToolStripButton
-    Friend WithEvents ToolStripButton2 As ToolStripButton
+    Friend WithEvents tsbtnDisableAI As ToolStripButton
+    Friend WithEvents tsbtnEnableAI As ToolStripButton
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
-    Friend WithEvents ToolStripButton3 As ToolStripButton
-    Friend WithEvents ToolStripButton4 As ToolStripButton
+    Friend WithEvents tsbtnEnablePlayerExterminate As ToolStripButton
+    Friend WithEvents tsbtnDisablePlayerExterminate As ToolStripButton
     Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
     Friend WithEvents gbBosses As GroupBox
     Friend WithEvents Button1 As Button
