@@ -2781,7 +2781,11 @@ Public Class frmForm1
     End Sub
 
     Private Sub btnConsoleExecute_Click(sender As Object, e As EventArgs) Handles btnConsoleExecute.Click
-        For Each line In txtConsole.Lines
+        Dim lineNumber As Integer = 0
+        For Each line In rtbConsole.Lines
+
+            lineNumber = lineNumber + 1
+
             Try
                 Dim result As Integer
                 Dim trimmedLine = line.Trim()
@@ -2800,7 +2804,10 @@ Public Class frmForm1
                                            "Int: " & result & Environment.NewLine &
                                            "Float: " & BitConverter.ToSingle(BitConverter.GetBytes(result), 0)
             Catch ex As Exception
-                MsgBox(line & Environment.NewLine & Environment.NewLine & ex.Message)
+                MsgBox("Could not parse line " & lineNumber & " (""" & line & """):" & Environment.NewLine & Environment.NewLine & ex.Message)
+
+                'Just show the first error each time
+                Return
             End Try
 
         Next
@@ -2912,13 +2919,5 @@ Public Class frmForm1
 
     Private Sub tsbtnDisablePlayerExterminate_Click(sender As Object, e As EventArgs) Handles tsbtnDisablePlayerExterminate.Click
         test_playerexterminate(False)
-    End Sub
-
-    Private Sub txtConsole_KeyDown(sender As Object, e As KeyEventArgs) Handles txtConsole.KeyDown
-        If e.KeyCode = Keys.A And e.Control Then
-            txtConsole.SelectAll()
-            e.Handled = True
-            e.SuppressKeyPress = True
-        End If
     End Sub
 End Class

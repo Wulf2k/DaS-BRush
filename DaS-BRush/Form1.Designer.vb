@@ -146,11 +146,11 @@ Partial Class frmForm1
         Me.tabNotes = New System.Windows.Forms.TabPage()
         Me.txtNotes = New System.Windows.Forms.TextBox()
         Me.tabConsole = New System.Windows.Forms.TabPage()
+        Me.rtbConsole = New System.Windows.Forms.RichTextBox()
         Me.btnConsoleHelp = New System.Windows.Forms.Button()
         Me.btnConsoleExecute = New System.Windows.Forms.Button()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.txtConsoleResult = New System.Windows.Forms.TextBox()
-        Me.txtConsole = New System.Windows.Forms.TextBox()
         Me.tabAbout = New System.Windows.Forms.TabPage()
         Me.Label23 = New System.Windows.Forms.Label()
         Me.Label21 = New System.Windows.Forms.Label()
@@ -1508,17 +1508,33 @@ Partial Class frmForm1
         '
         'tabConsole
         '
+        Me.tabConsole.Controls.Add(Me.rtbConsole)
         Me.tabConsole.Controls.Add(Me.btnConsoleHelp)
         Me.tabConsole.Controls.Add(Me.btnConsoleExecute)
         Me.tabConsole.Controls.Add(Me.Label17)
         Me.tabConsole.Controls.Add(Me.txtConsoleResult)
-        Me.tabConsole.Controls.Add(Me.txtConsole)
         Me.tabConsole.Location = New System.Drawing.Point(4, 22)
         Me.tabConsole.Name = "tabConsole"
         Me.tabConsole.Size = New System.Drawing.Size(512, 236)
         Me.tabConsole.TabIndex = 10
         Me.tabConsole.Text = "Console"
         Me.tabConsole.UseVisualStyleBackColor = True
+        '
+        'rtbConsole
+        '
+        Me.rtbConsole.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.rtbConsole.BackColor = System.Drawing.Color.Black
+        Me.rtbConsole.Font = New System.Drawing.Font("Courier New", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.rtbConsole.ForeColor = System.Drawing.Color.Lime
+        Me.rtbConsole.Location = New System.Drawing.Point(0, 0)
+        Me.rtbConsole.Name = "rtbConsole"
+        Me.rtbConsole.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical
+        Me.rtbConsole.ShowSelectionMargin = True
+        Me.rtbConsole.Size = New System.Drawing.Size(512, 180)
+        Me.rtbConsole.TabIndex = 81
+        Me.rtbConsole.Text = ""
         '
         'btnConsoleHelp
         '
@@ -1562,21 +1578,6 @@ Partial Class frmForm1
         Me.txtConsoleResult.ScrollBars = System.Windows.Forms.ScrollBars.Both
         Me.txtConsoleResult.Size = New System.Drawing.Size(360, 52)
         Me.txtConsoleResult.TabIndex = 1
-        '
-        'txtConsole
-        '
-        Me.txtConsole.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtConsole.BackColor = System.Drawing.Color.Black
-        Me.txtConsole.Font = New System.Drawing.Font("Courier New", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtConsole.ForeColor = System.Drawing.Color.Lime
-        Me.txtConsole.Location = New System.Drawing.Point(2, 2)
-        Me.txtConsole.Multiline = True
-        Me.txtConsole.Name = "txtConsole"
-        Me.txtConsole.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtConsole.Size = New System.Drawing.Size(508, 176)
-        Me.txtConsole.TabIndex = 0
         '
         'tabAbout
         '
@@ -1866,7 +1867,6 @@ End Sub
     Friend WithEvents Label16 As Label
     Friend WithEvents nmbClearCount As NumericUpDown
     Friend WithEvents tabConsole As TabPage
-    Friend WithEvents txtConsole As TextBox
     Friend WithEvents Label17 As Label
     Friend WithEvents txtConsoleResult As TextBox
     Friend WithEvents btnConsoleExecute As Button
@@ -1941,4 +1941,5 @@ End Sub
     Friend WithEvents Label19 As Label
     Friend WithEvents Label23 As Label
     Friend WithEvents Label21 As Label
+    Friend WithEvents rtbConsole As RichTextBox
 End Class
