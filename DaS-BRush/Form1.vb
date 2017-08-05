@@ -201,10 +201,7 @@ Public Class frmForm1
         Return nameList
     End Function
 
-
-
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
 
         Dim oldFileArg As String = Nothing
         For Each arg In Environment.GetCommandLineArgs().Skip(1)
@@ -254,7 +251,6 @@ Public Class frmForm1
             End If
         End If
 
-
     End Sub
 
     Private Sub funcAlloc()
@@ -292,32 +288,75 @@ Public Class frmForm1
         End If
     End Sub
 
-    Private Sub refTimer_Tick() Handles refTimer.Tick
-
-
+    Private Function getIsBossRushThreadActive() As Boolean
 
         If Not trd Is Nothing Then
 
-            If trd.ThreadState = &H10 Or trd.ThreadState = &H100 Then
-                gbBosses.Visible = True
-                btnBeginBossRush.Enabled = True
-                btnBeginReverseRush.Enabled = True
-                btnX.Visible = False
-                btnX.Enabled = False
-            Else
-                gbBosses.Visible = False
-                btnBeginBossRush.Enabled = False
-                btnBeginReverseRush.Enabled = False
-                btnX.Visible = True
-                btnX.Enabled = True
-            End If
+            'TODO: Check this shit
+            'If no worky, replace with
+            'If trd.ThreadState = ThreadState.Stopped Or trd.ThreadState = ThreadState.Aborted Then
+            'etc...
+            Return trd.IsAlive
         Else
-            gbBosses.Visible = True
-            btnBeginBossRush.Enabled = True
-            btnBeginReverseRush.Enabled = True
-            btnX.Visible = False
-            btnX.Enabled = False
+            Return False
         End If
+
+    End Function
+
+    Private Sub RefreshGUI()
+
+        Dim isBossRushing = getIsBossRushThreadActive()
+
+        gbBosses.Enabled = Not isBossRushing
+
+        For Each bossBtn As Button In gbBosses.Controls
+            If bossBtn Is Nothing Then
+                Continue For
+            Else
+                bossBtn.Enabled = Not isBossRushing
+            End If
+        Next
+
+        'btnBeginBossRush.Enabled = Not isBossRushing
+        'btnBeginBossRush.Visible = Not isBossRushing
+        cboxReverseOrder.Enabled = Not isBossRushing
+        'btnX.Visible = isBossRushing
+        'btnX.Enabled = isBossRushing
+
+        If isBossRushing Then
+            btnBeginBossRush.Text = "End Boss Rush"
+        Else
+            btnBeginBossRush.Text = "Begin Boss Rush"
+        End If
+
+        'If Not trd Is Nothing Then
+
+        '    'TODO: Check this shit
+        '    'If no worky, replace with
+        '    'If trd.ThreadState = ThreadState.Stopped Or trd.ThreadState = ThreadState.Aborted Then
+        '    If Not trd.IsAlive Then
+        '        gbBosses.Visible = True
+        '        btnBeginBossRush.Enabled = True
+        '        btnBeginBossRush.Visible = True
+        '        cboxReverseOrder.Enabled = True
+        '        btnX.Visible = False
+        '        btnX.Enabled = False
+        '    Else
+        '        gbBosses.Visible = False
+        '        btnBeginBossRush.Enabled = False
+        '        btnBeginBossRush.Visible = False
+        '        cboxReverseOrder.Enabled = False
+        '        btnX.Visible = True
+        '        btnX.Enabled = True
+        '    End If
+        'Else
+        '    gbBosses.Visible = True
+        '    btnBeginBossRush.Enabled = True
+        '    btnBeginBossRush.Visible = True
+        '    cboxReverseOrder.Enabled = True
+        '    btnX.Visible = False
+        '    btnX.Enabled = False
+        'End If
 
         checkDarkSoulsVersion()
 
@@ -415,12 +454,13 @@ Public Class frmForm1
                 End Try
         End Select
 
-
     End Sub
 
+    Private Sub refTimer_Tick() Handles refTimer.Tick
 
+        RefreshGUI()
 
-
+    End Sub
 
     Private Sub dropitem(ByVal cat As String, item As String, num As Integer)
         Dim TargetBufferSize = 1024
@@ -598,8 +638,11 @@ Public Class frmForm1
         WInt32(entityPtr + &H244, ctrlptr * (state And 1))
 
     End Sub
-    Public Sub disableai(ByVal state As Byte)
+    Public Sub test_disableai(ByVal state As Byte)
         WBytes(&H13784EE, {state})
+    End Sub
+    Public Sub test_playerexterminate(ByVal state As Byte)
+        WBytes(&H13784D3, {state})
     End Sub
     Public Sub fadein()
         Dim tmpptr As Integer
@@ -2573,14 +2616,27 @@ Public Class frmForm1
     End Sub
 
     Private Sub btnBeginBossRush_Click(sender As Object, e As EventArgs) Handles btnBeginBossRush.Click
-        trd = New Thread(AddressOf beginbossrush)
-        trd.IsBackground = True
-        trd.Start()
-    End Sub
-    Private Sub btnBeginReverseRush_Click(sender As Object, e As EventArgs) Handles btnBeginReverseRush.Click
-        trd = New Thread(AddressOf beginreversebossrush)
-        trd.IsBackground = True
-        trd.Start()
+
+        If getIsBossRushThreadActive() Then
+
+            Script("ShowHUD 1")
+            WInt32(RInt32(&H13786D0) + &H154, -1)
+            WInt32(RInt32(&H13786D0) + &H158, -1)
+
+            If rushMode Then rushTimer.Abort()
+            rushMode = False
+            trd.Abort()
+            Console.WriteLine(trd.ThreadState)
+        Else
+            If (cboxReverseOrder.Checked) Then
+                trd = New Thread(AddressOf beginreversebossrush)
+            Else
+                trd = New Thread(AddressOf beginbossrush)
+            End If
+            trd.IsBackground = True
+            trd.Start()
+        End If
+
     End Sub
     Private Sub BeginRushTimer()
 
@@ -2656,12 +2712,12 @@ Public Class frmForm1
         End If
     End Sub
 
-    Private Sub btnDisableAI_Click(sender As Object, e As EventArgs) Handles btnDisableAI.Click
-        disableai(True)
+    Private Sub btnTestDisableAI_Click(sender As Object, e As EventArgs)
+        test_disableai(True)
     End Sub
 
-    Private Sub btnEnableAI_Click(sender As Object, e As EventArgs) Handles btnEnableAI.Click
-        disableai(False)
+    Private Sub btnTestEnableAI_Click(sender As Object, e As EventArgs)
+        test_disableai(False)
     End Sub
 
     Private Sub nmbVitality_ValueChanged(sender As Object, e As EventArgs) Handles nmbVitality.ValueChanged
@@ -2712,7 +2768,7 @@ Public Class frmForm1
         WInt32(charptr2 + &H30, sender.Value)
     End Sub
 
-    Private Sub btnX_Click(sender As Object, e As EventArgs) Handles btnX.Click
+    Private Sub btnX_Click(sender As Object, e As EventArgs)
 
         Script("ShowHUD 1")
         WInt32(RInt32(&H13786D0) + &H154, -1)
@@ -2728,12 +2784,21 @@ Public Class frmForm1
         For Each line In txtConsole.Lines
             Try
                 Dim result As Integer
+                Dim trimmedLine = line.Trim()
+                If Not trimmedLine.Any(
+                    Function(x As Char) As Boolean
+                        Return Not (x = " "c)
+                    End Function
+                ) Then
+                    Continue For
+                End If
 
-                result = Script(line)
+
+                result = Script(trimmedLine)
 
                 txtConsoleResult.Text = "Hex: 0x" & Hex(result) & Environment.NewLine &
-                "Int: " & result & Environment.NewLine &
-                "Float: " & BitConverter.ToSingle(BitConverter.GetBytes(result), 0)
+                                           "Int: " & result & Environment.NewLine &
+                                           "Float: " & BitConverter.ToSingle(BitConverter.GetBytes(result), 0)
             Catch ex As Exception
                 MsgBox(line & Environment.NewLine & Environment.NewLine & ex.Message)
             End Try
@@ -2814,7 +2879,7 @@ Public Class frmForm1
 
     End Function
 
-    Private Sub btnTest_Click(sender As Object, e As EventArgs) Handles btnTest.Click
+    Private Sub btnTest_Click(sender As Object, e As EventArgs)
 
         'Script("SetEventFlag 16, 0)
         'warp_coords_facing(71.72, 60, 300.56, 1.0)
@@ -2834,5 +2899,57 @@ Public Class frmForm1
         trd = New Thread(AddressOf scenariopinwheeldefense)
         trd.IsBackground = True
         trd.Start()
+    End Sub
+
+    Private Sub btnTestEnablePlayerExterminate_Click(sender As Object, e As EventArgs)
+
+    End Sub
+
+    Private Sub btnTestDisablePlayerExterminate_Click(sender As Object, e As EventArgs)
+        test_playerexterminate(False)
+    End Sub
+
+    Private Sub DisableAIToolStripMenuItem_Click(sender As Object, e As EventArgs)
+
+    End Sub
+
+    Private Sub TestToolStripMenuItem_Click(sender As Object, e As EventArgs)
+        'Script("SetEventFlag 16, 0)
+        'warp_coords_facing(71.72, 60, 300.56, 1.0)
+
+        Script("intvar1 = ChrFadeIn 1010700, 1.0")
+        Script("ControlEntity intvar1, 0")
+    End Sub
+
+    Private Sub EnablePlayerExterminateToolStripMenuItem_Click(sender As Object, e As EventArgs)
+        test_playerexterminate(1)
+    End Sub
+
+    Private Sub DisablePlayerExterminateToolStripMenuItem_Click(sender As Object, e As EventArgs)
+        test_playerexterminate(0)
+    End Sub
+
+    Private Sub SomethingToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SomethingToolStripMenuItem.Click
+        'Script("SetEventFlag 16, 0)
+        'warp_coords_facing(71.72, 60, 300.56, 1.0)
+
+        Script("intvar1 = ChrFadeIn 1010700, 1.0")
+        Script("ControlEntity intvar1, 0")
+    End Sub
+
+    Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
+        test_disableai(True)
+    End Sub
+
+    Private Sub ToolStripButton2_Click(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
+        test_disableai(False)
+    End Sub
+
+    Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
+        test_playerexterminate(True)
+    End Sub
+
+    Private Sub ToolStripButton4_Click(sender As Object, e As EventArgs) Handles ToolStripButton4.Click
+        test_playerexterminate(False)
     End Sub
 End Class
