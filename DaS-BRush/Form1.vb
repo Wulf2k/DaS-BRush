@@ -2913,4 +2913,12 @@ Public Class frmForm1
     Private Sub tsbtnDisablePlayerExterminate_Click(sender As Object, e As EventArgs) Handles tsbtnDisablePlayerExterminate.Click
         test_playerexterminate(False)
     End Sub
+
+    Private Sub txtConsole_KeyDown(sender As Object, e As KeyEventArgs) Handles txtConsole.KeyDown
+        If e.KeyCode = Keys.A And e.Control Then
+            txtConsole.SelectAll()
+            e.Handled = True
+            e.SuppressKeyPress = True
+        End If
+    End Sub
 End Class

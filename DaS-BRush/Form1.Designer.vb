@@ -1754,7 +1754,6 @@ Partial Class frmForm1
         Me.Controls.Add(Me.Label22)
         Me.Controls.Add(Me.lblRelease)
         Me.Controls.Add(Me.tabs)
-        Me.DoubleBuffered = True
         Me.MinimumSize = New System.Drawing.Size(540, 360)
         Me.Name = "frmForm1"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
