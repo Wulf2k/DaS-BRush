@@ -22,9 +22,10 @@ Partial Class frmForm1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmForm1))
         Me.tabs = New System.Windows.Forms.TabControl()
         Me.tabBosses = New System.Windows.Forms.TabPage()
-        Me.btnX = New System.Windows.Forms.Button()
+        Me.cboxReverseOrder = New System.Windows.Forms.CheckBox()
         Me.btnBeginBossRush = New System.Windows.Forms.Button()
         Me.gbBosses = New System.Windows.Forms.GroupBox()
         Me.Button1 = New System.Windows.Forms.Button()
@@ -79,7 +80,6 @@ Partial Class frmForm1
         Me.btnBossGapingDragon = New System.Windows.Forms.Button()
         Me.btnBossGravelordNito = New System.Windows.Forms.Button()
         Me.Button13 = New System.Windows.Forms.Button()
-        Me.btnBeginReverseRush = New System.Windows.Forms.Button()
         Me.tabScenarios = New System.Windows.Forms.TabPage()
         Me.btnScenarioPinwheelDefense = New System.Windows.Forms.Button()
         Me.btnScenarioTripleSanctuary = New System.Windows.Forms.Button()
@@ -133,18 +133,29 @@ Partial Class frmForm1
         Me.Label1 = New System.Windows.Forms.Label()
         Me.nmbHumanity = New System.Windows.Forms.NumericUpDown()
         Me.tabTests = New System.Windows.Forms.TabPage()
-        Me.btnEnableAI = New System.Windows.Forms.Button()
-        Me.btnDisableAI = New System.Windows.Forms.Button()
-        Me.btnTest = New System.Windows.Forms.Button()
+        Me.toolstripTest = New System.Windows.Forms.ToolStrip()
+        Me.ToolStripDropDownButton1 = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.tsmiTestSomething = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tsbtnDisableAI = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnEnableAI = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tsbtnEnablePlayerExterminate = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnDisablePlayerExterminate = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.tabNotes = New System.Windows.Forms.TabPage()
         Me.txtNotes = New System.Windows.Forms.TextBox()
         Me.tabConsole = New System.Windows.Forms.TabPage()
+        Me.rtbConsole = New System.Windows.Forms.RichTextBox()
         Me.btnConsoleHelp = New System.Windows.Forms.Button()
         Me.btnConsoleExecute = New System.Windows.Forms.Button()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.txtConsoleResult = New System.Windows.Forms.TextBox()
-        Me.txtConsole = New System.Windows.Forms.TextBox()
-        Me.tabDonate = New System.Windows.Forms.TabPage()
+        Me.tabAbout = New System.Windows.Forms.TabPage()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.Label19 = New System.Windows.Forms.Label()
         Me.btnDonate = New System.Windows.Forms.Button()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -154,6 +165,7 @@ Partial Class frmForm1
         Me.btnReconnect = New System.Windows.Forms.Button()
         Me.lblVer = New System.Windows.Forms.Label()
         Me.btnUpdate = New System.Windows.Forms.Button()
+        Me.Label18 = New System.Windows.Forms.Label()
         Me.tabs.SuspendLayout()
         Me.tabBosses.SuspendLayout()
         Me.gbBosses.SuspendLayout()
@@ -176,9 +188,10 @@ Partial Class frmForm1
         CType(Me.nmbFaith, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nmbHumanity, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabTests.SuspendLayout()
+        Me.toolstripTest.SuspendLayout()
         Me.tabNotes.SuspendLayout()
         Me.tabConsole.SuspendLayout()
-        Me.tabDonate.SuspendLayout()
+        Me.tabAbout.SuspendLayout()
         Me.SuspendLayout()
         '
         'tabs
@@ -193,40 +206,44 @@ Partial Class frmForm1
         Me.tabs.Controls.Add(Me.tabTests)
         Me.tabs.Controls.Add(Me.tabNotes)
         Me.tabs.Controls.Add(Me.tabConsole)
-        Me.tabs.Controls.Add(Me.tabDonate)
-        Me.tabs.Location = New System.Drawing.Point(12, 34)
+        Me.tabs.Controls.Add(Me.tabAbout)
+        Me.tabs.HotTrack = True
+        Me.tabs.Location = New System.Drawing.Point(2, 34)
         Me.tabs.Name = "tabs"
         Me.tabs.SelectedIndex = 0
-        Me.tabs.Size = New System.Drawing.Size(389, 472)
+        Me.tabs.Size = New System.Drawing.Size(520, 262)
         Me.tabs.TabIndex = 4
         '
         'tabBosses
         '
-        Me.tabBosses.Controls.Add(Me.btnX)
+        Me.tabBosses.AutoScroll = True
+        Me.tabBosses.AutoScrollMargin = New System.Drawing.Size(8, 8)
+        Me.tabBosses.Controls.Add(Me.cboxReverseOrder)
         Me.tabBosses.Controls.Add(Me.btnBeginBossRush)
         Me.tabBosses.Controls.Add(Me.gbBosses)
-        Me.tabBosses.Controls.Add(Me.btnBeginReverseRush)
         Me.tabBosses.Location = New System.Drawing.Point(4, 22)
+        Me.tabBosses.Margin = New System.Windows.Forms.Padding(0)
         Me.tabBosses.Name = "tabBosses"
-        Me.tabBosses.Size = New System.Drawing.Size(381, 446)
+        Me.tabBosses.Size = New System.Drawing.Size(512, 236)
         Me.tabBosses.TabIndex = 5
-        Me.tabBosses.Text = "Bosses"
+        Me.tabBosses.Text = "Boss Rush"
         Me.tabBosses.UseVisualStyleBackColor = True
         '
-        'btnX
+        'cboxReverseOrder
         '
-        Me.btnX.Location = New System.Drawing.Point(175, 14)
-        Me.btnX.Name = "btnX"
-        Me.btnX.Size = New System.Drawing.Size(19, 23)
-        Me.btnX.TabIndex = 78
-        Me.btnX.Text = "X"
-        Me.btnX.UseVisualStyleBackColor = False
+        Me.cboxReverseOrder.AutoSize = True
+        Me.cboxReverseOrder.Location = New System.Drawing.Point(29, 34)
+        Me.cboxReverseOrder.Name = "cboxReverseOrder"
+        Me.cboxReverseOrder.Size = New System.Drawing.Size(149, 17)
+        Me.cboxReverseOrder.TabIndex = 79
+        Me.cboxReverseOrder.Text = "Reverse Boss Rush Order"
+        Me.cboxReverseOrder.UseVisualStyleBackColor = True
         '
         'btnBeginBossRush
         '
-        Me.btnBeginBossRush.Location = New System.Drawing.Point(9, 14)
+        Me.btnBeginBossRush.Location = New System.Drawing.Point(6, 5)
         Me.btnBeginBossRush.Name = "btnBeginBossRush"
-        Me.btnBeginBossRush.Size = New System.Drawing.Size(160, 23)
+        Me.btnBeginBossRush.Size = New System.Drawing.Size(144, 23)
         Me.btnBeginBossRush.TabIndex = 77
         Me.btnBeginBossRush.Text = "Begin Boss Rush"
         Me.btnBeginBossRush.UseVisualStyleBackColor = False
@@ -285,525 +302,622 @@ Partial Class frmForm1
         Me.gbBosses.Controls.Add(Me.btnBossGapingDragon)
         Me.gbBosses.Controls.Add(Me.btnBossGravelordNito)
         Me.gbBosses.Controls.Add(Me.Button13)
-        Me.gbBosses.Location = New System.Drawing.Point(3, 43)
+        Me.gbBosses.Location = New System.Drawing.Point(9, 86)
         Me.gbBosses.Name = "gbBosses"
-        Me.gbBosses.Size = New System.Drawing.Size(369, 400)
+        Me.gbBosses.Size = New System.Drawing.Size(171, 779)
         Me.gbBosses.TabIndex = 76
         Me.gbBosses.TabStop = False
-        Me.gbBosses.Text = "Bosses"
+        Me.gbBosses.Text = "Load Individual Boss Scenario:"
         '
         'Button1
         '
+        Me.Button1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button1.Location = New System.Drawing.Point(6, 19)
         Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(160, 23)
+        Me.Button1.Size = New System.Drawing.Size(159, 23)
         Me.Button1.TabIndex = 48
         Me.Button1.Text = "Asylum Demon"
         Me.Button1.UseVisualStyleBackColor = False
         '
         'Button26
         '
+        Me.Button26.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button26.Location = New System.Drawing.Point(6, 106)
         Me.Button26.Name = "Button26"
-        Me.Button26.Size = New System.Drawing.Size(160, 23)
+        Me.Button26.Size = New System.Drawing.Size(159, 23)
         Me.Button26.TabIndex = 73
         Me.Button26.Text = "Black Dragon Kalameet"
         Me.Button26.UseVisualStyleBackColor = False
         '
         'btnBossAsylumDemon
         '
+        Me.btnBossAsylumDemon.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnBossAsylumDemon.Location = New System.Drawing.Point(6, 19)
         Me.btnBossAsylumDemon.Name = "btnBossAsylumDemon"
-        Me.btnBossAsylumDemon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossAsylumDemon.Size = New System.Drawing.Size(159, 23)
         Me.btnBossAsylumDemon.TabIndex = 48
         Me.btnBossAsylumDemon.Text = "Asylum Demon"
         Me.btnBossAsylumDemon.UseVisualStyleBackColor = False
         '
         'btnBossPinwheel
         '
-        Me.btnBossPinwheel.Location = New System.Drawing.Point(197, 222)
+        Me.btnBossPinwheel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnBossPinwheel.Location = New System.Drawing.Point(6, 599)
         Me.btnBossPinwheel.Name = "btnBossPinwheel"
-        Me.btnBossPinwheel.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossPinwheel.Size = New System.Drawing.Size(159, 23)
         Me.btnBossPinwheel.TabIndex = 49
         Me.btnBossPinwheel.Text = "Pinwheel"
         Me.btnBossPinwheel.UseVisualStyleBackColor = False
         '
         'Button25
         '
-        Me.Button25.Location = New System.Drawing.Point(197, 367)
+        Me.Button25.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button25.Location = New System.Drawing.Point(6, 744)
         Me.Button25.Name = "Button25"
-        Me.Button25.Size = New System.Drawing.Size(160, 23)
+        Me.Button25.Size = New System.Drawing.Size(159, 23)
         Me.Button25.TabIndex = 72
         Me.Button25.Text = "Taurus Demon"
         Me.Button25.UseVisualStyleBackColor = False
         '
         'btnBossCapraDemon
         '
+        Me.btnBossCapraDemon.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnBossCapraDemon.Location = New System.Drawing.Point(6, 135)
         Me.btnBossCapraDemon.Name = "btnBossCapraDemon"
-        Me.btnBossCapraDemon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossCapraDemon.Size = New System.Drawing.Size(159, 23)
         Me.btnBossCapraDemon.TabIndex = 50
         Me.btnBossCapraDemon.Text = "Capra Demon"
         Me.btnBossCapraDemon.UseVisualStyleBackColor = False
         '
         'btnBossBlackDragonKalameet
         '
+        Me.btnBossBlackDragonKalameet.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnBossBlackDragonKalameet.Location = New System.Drawing.Point(6, 106)
         Me.btnBossBlackDragonKalameet.Name = "btnBossBlackDragonKalameet"
-        Me.btnBossBlackDragonKalameet.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossBlackDragonKalameet.Size = New System.Drawing.Size(159, 23)
         Me.btnBossBlackDragonKalameet.TabIndex = 73
         Me.btnBossBlackDragonKalameet.Text = "Black Dragon Kalameet"
         Me.btnBossBlackDragonKalameet.UseVisualStyleBackColor = False
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(197, 222)
+        Me.Button2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button2.Location = New System.Drawing.Point(6, 599)
         Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(160, 23)
+        Me.Button2.Size = New System.Drawing.Size(159, 23)
         Me.Button2.TabIndex = 49
         Me.Button2.Text = "Pinwheel"
         Me.Button2.UseVisualStyleBackColor = False
         '
         'Button24
         '
-        Me.Button24.Location = New System.Drawing.Point(197, 309)
+        Me.Button24.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button24.Location = New System.Drawing.Point(6, 686)
         Me.Button24.Name = "Button24"
-        Me.Button24.Size = New System.Drawing.Size(160, 23)
+        Me.Button24.Size = New System.Drawing.Size(159, 23)
         Me.Button24.TabIndex = 71
         Me.Button24.Text = "Sif"
         Me.Button24.UseVisualStyleBackColor = False
         '
         'btnBossBellGargoyles
         '
+        Me.btnBossBellGargoyles.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnBossBellGargoyles.Location = New System.Drawing.Point(6, 77)
         Me.btnBossBellGargoyles.Name = "btnBossBellGargoyles"
-        Me.btnBossBellGargoyles.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossBellGargoyles.Size = New System.Drawing.Size(159, 23)
         Me.btnBossBellGargoyles.TabIndex = 51
         Me.btnBossBellGargoyles.Text = "Bell Gargoyles"
         Me.btnBossBellGargoyles.UseVisualStyleBackColor = False
         '
         'btnBossTaurusDemon
         '
-        Me.btnBossTaurusDemon.Location = New System.Drawing.Point(197, 367)
+        Me.btnBossTaurusDemon.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnBossTaurusDemon.Location = New System.Drawing.Point(6, 744)
         Me.btnBossTaurusDemon.Name = "btnBossTaurusDemon"
-        Me.btnBossTaurusDemon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossTaurusDemon.Size = New System.Drawing.Size(159, 23)
         Me.btnBossTaurusDemon.TabIndex = 72
         Me.btnBossTaurusDemon.Text = "Taurus Demon"
         Me.btnBossTaurusDemon.UseVisualStyleBackColor = False
         '
         'Button3
         '
+        Me.Button3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button3.Location = New System.Drawing.Point(6, 135)
         Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(160, 23)
+        Me.Button3.Size = New System.Drawing.Size(159, 23)
         Me.Button3.TabIndex = 50
         Me.Button3.Text = "Capra Demon"
         Me.Button3.UseVisualStyleBackColor = False
         '
         'Button23
         '
-        Me.Button23.Location = New System.Drawing.Point(197, 338)
+        Me.Button23.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button23.Location = New System.Drawing.Point(6, 715)
         Me.Button23.Name = "Button23"
-        Me.Button23.Size = New System.Drawing.Size(160, 23)
+        Me.Button23.Size = New System.Drawing.Size(159, 23)
         Me.Button23.TabIndex = 70
         Me.Button23.Text = "Stray Demon"
         Me.Button23.UseVisualStyleBackColor = False
         '
         'btnBossCeaselessDischarge
         '
+        Me.btnBossCeaselessDischarge.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnBossCeaselessDischarge.Location = New System.Drawing.Point(6, 164)
         Me.btnBossCeaselessDischarge.Name = "btnBossCeaselessDischarge"
-        Me.btnBossCeaselessDischarge.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossCeaselessDischarge.Size = New System.Drawing.Size(159, 23)
         Me.btnBossCeaselessDischarge.TabIndex = 52
         Me.btnBossCeaselessDischarge.Text = "Ceaseless Discharge"
         Me.btnBossCeaselessDischarge.UseVisualStyleBackColor = False
         '
         'btnBossSif
         '
-        Me.btnBossSif.Location = New System.Drawing.Point(197, 309)
+        Me.btnBossSif.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnBossSif.Location = New System.Drawing.Point(6, 686)
         Me.btnBossSif.Name = "btnBossSif"
-        Me.btnBossSif.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossSif.Size = New System.Drawing.Size(159, 23)
         Me.btnBossSif.TabIndex = 71
         Me.btnBossSif.Text = "Sif"
         Me.btnBossSif.UseVisualStyleBackColor = False
         '
         'Button4
         '
+        Me.Button4.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button4.Location = New System.Drawing.Point(6, 77)
         Me.Button4.Name = "Button4"
-        Me.Button4.Size = New System.Drawing.Size(160, 23)
+        Me.Button4.Size = New System.Drawing.Size(159, 23)
         Me.Button4.TabIndex = 51
         Me.Button4.Text = "Bell Gargoyles"
         Me.Button4.UseVisualStyleBackColor = False
         '
         'Button22
         '
-        Me.Button22.Location = New System.Drawing.Point(197, 280)
+        Me.Button22.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button22.Location = New System.Drawing.Point(6, 657)
         Me.Button22.Name = "Button22"
-        Me.Button22.Size = New System.Drawing.Size(160, 23)
+        Me.Button22.Size = New System.Drawing.Size(159, 23)
         Me.Button22.TabIndex = 69
         Me.Button22.Text = "Seath"
         Me.Button22.UseVisualStyleBackColor = False
         '
         'btnBossBedOfChaos
         '
+        Me.btnBossBedOfChaos.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnBossBedOfChaos.Location = New System.Drawing.Point(6, 48)
         Me.btnBossBedOfChaos.Name = "btnBossBedOfChaos"
-        Me.btnBossBedOfChaos.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossBedOfChaos.Size = New System.Drawing.Size(159, 23)
         Me.btnBossBedOfChaos.TabIndex = 53
         Me.btnBossBedOfChaos.Text = "Bed of Chaos"
         Me.btnBossBedOfChaos.UseVisualStyleBackColor = False
         '
         'btnBossStrayDemon
         '
-        Me.btnBossStrayDemon.Location = New System.Drawing.Point(197, 338)
+        Me.btnBossStrayDemon.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnBossStrayDemon.Location = New System.Drawing.Point(6, 715)
         Me.btnBossStrayDemon.Name = "btnBossStrayDemon"
-        Me.btnBossStrayDemon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossStrayDemon.Size = New System.Drawing.Size(159, 23)
         Me.btnBossStrayDemon.TabIndex = 70
         Me.btnBossStrayDemon.Text = "Stray Demon"
         Me.btnBossStrayDemon.UseVisualStyleBackColor = False
         '
         'Button5
         '
+        Me.Button5.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button5.Location = New System.Drawing.Point(6, 164)
         Me.Button5.Name = "Button5"
-        Me.Button5.Size = New System.Drawing.Size(160, 23)
+        Me.Button5.Size = New System.Drawing.Size(159, 23)
         Me.Button5.TabIndex = 52
         Me.Button5.Text = "Ceaseless Discharge"
         Me.Button5.UseVisualStyleBackColor = False
         '
         'Button21
         '
-        Me.Button21.Location = New System.Drawing.Point(197, 251)
+        Me.Button21.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button21.Location = New System.Drawing.Point(6, 628)
         Me.Button21.Name = "Button21"
-        Me.Button21.Size = New System.Drawing.Size(160, 23)
+        Me.Button21.Size = New System.Drawing.Size(159, 23)
         Me.Button21.TabIndex = 68
         Me.Button21.Text = "Sanctuary Guardian"
         Me.Button21.UseVisualStyleBackColor = False
         '
         'btnBossCentipedeDemon
         '
+        Me.btnBossCentipedeDemon.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnBossCentipedeDemon.Location = New System.Drawing.Point(6, 193)
         Me.btnBossCentipedeDemon.Name = "btnBossCentipedeDemon"
-        Me.btnBossCentipedeDemon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossCentipedeDemon.Size = New System.Drawing.Size(159, 23)
         Me.btnBossCentipedeDemon.TabIndex = 54
         Me.btnBossCentipedeDemon.Text = "Centipede Demon"
         Me.btnBossCentipedeDemon.UseVisualStyleBackColor = False
         '
         'btnBossSeath
         '
-        Me.btnBossSeath.Location = New System.Drawing.Point(197, 280)
+        Me.btnBossSeath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnBossSeath.Location = New System.Drawing.Point(6, 657)
         Me.btnBossSeath.Name = "btnBossSeath"
-        Me.btnBossSeath.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossSeath.Size = New System.Drawing.Size(159, 23)
         Me.btnBossSeath.TabIndex = 69
         Me.btnBossSeath.Text = "Seath"
         Me.btnBossSeath.UseVisualStyleBackColor = False
         '
         'Button6
         '
+        Me.Button6.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button6.Location = New System.Drawing.Point(6, 48)
         Me.Button6.Name = "Button6"
-        Me.Button6.Size = New System.Drawing.Size(160, 23)
+        Me.Button6.Size = New System.Drawing.Size(159, 23)
         Me.Button6.TabIndex = 53
         Me.Button6.Text = "Bed of Chaos"
         Me.Button6.UseVisualStyleBackColor = False
         '
         'Button20
         '
-        Me.Button20.Location = New System.Drawing.Point(197, 164)
+        Me.Button20.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button20.Location = New System.Drawing.Point(6, 541)
         Me.Button20.Name = "Button20"
-        Me.Button20.Size = New System.Drawing.Size(160, 23)
+        Me.Button20.Size = New System.Drawing.Size(159, 23)
         Me.Button20.TabIndex = 67
         Me.Button20.Text = "Moonlight Butterfly"
         Me.Button20.UseVisualStyleBackColor = False
         '
         'btnBossChaosWitchQuelaag
         '
+        Me.btnBossChaosWitchQuelaag.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnBossChaosWitchQuelaag.Location = New System.Drawing.Point(6, 222)
         Me.btnBossChaosWitchQuelaag.Name = "btnBossChaosWitchQuelaag"
-        Me.btnBossChaosWitchQuelaag.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossChaosWitchQuelaag.Size = New System.Drawing.Size(159, 23)
         Me.btnBossChaosWitchQuelaag.TabIndex = 55
         Me.btnBossChaosWitchQuelaag.Text = "Chaos Witch Quelaag"
         Me.btnBossChaosWitchQuelaag.UseVisualStyleBackColor = False
         '
         'btnBossSanctuaryGuardian
         '
-        Me.btnBossSanctuaryGuardian.Location = New System.Drawing.Point(197, 251)
+        Me.btnBossSanctuaryGuardian.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnBossSanctuaryGuardian.Location = New System.Drawing.Point(6, 628)
         Me.btnBossSanctuaryGuardian.Name = "btnBossSanctuaryGuardian"
-        Me.btnBossSanctuaryGuardian.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossSanctuaryGuardian.Size = New System.Drawing.Size(159, 23)
         Me.btnBossSanctuaryGuardian.TabIndex = 68
         Me.btnBossSanctuaryGuardian.Text = "Sanctuary Guardian"
         Me.btnBossSanctuaryGuardian.UseVisualStyleBackColor = False
         '
         'Button7
         '
+        Me.Button7.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button7.Location = New System.Drawing.Point(6, 193)
         Me.Button7.Name = "Button7"
-        Me.Button7.Size = New System.Drawing.Size(160, 23)
+        Me.Button7.Size = New System.Drawing.Size(159, 23)
         Me.Button7.TabIndex = 54
         Me.Button7.Text = "Centipede Demon"
         Me.Button7.UseVisualStyleBackColor = False
         '
         'Button19
         '
-        Me.Button19.Location = New System.Drawing.Point(197, 135)
+        Me.Button19.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button19.Location = New System.Drawing.Point(6, 512)
         Me.Button19.Name = "Button19"
-        Me.Button19.Size = New System.Drawing.Size(160, 23)
+        Me.Button19.Size = New System.Drawing.Size(159, 23)
         Me.Button19.TabIndex = 66
         Me.Button19.Text = "Manus"
         Me.Button19.UseVisualStyleBackColor = False
         '
         'btnBossCrossbreedPriscilla
         '
+        Me.btnBossCrossbreedPriscilla.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnBossCrossbreedPriscilla.Location = New System.Drawing.Point(6, 251)
         Me.btnBossCrossbreedPriscilla.Name = "btnBossCrossbreedPriscilla"
-        Me.btnBossCrossbreedPriscilla.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossCrossbreedPriscilla.Size = New System.Drawing.Size(159, 23)
         Me.btnBossCrossbreedPriscilla.TabIndex = 56
         Me.btnBossCrossbreedPriscilla.Text = "Crossbreed Priscilla"
         Me.btnBossCrossbreedPriscilla.UseVisualStyleBackColor = False
         '
         'btnBossMoonlightButterfly
         '
-        Me.btnBossMoonlightButterfly.Location = New System.Drawing.Point(197, 164)
+        Me.btnBossMoonlightButterfly.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnBossMoonlightButterfly.Location = New System.Drawing.Point(6, 541)
         Me.btnBossMoonlightButterfly.Name = "btnBossMoonlightButterfly"
-        Me.btnBossMoonlightButterfly.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossMoonlightButterfly.Size = New System.Drawing.Size(159, 23)
         Me.btnBossMoonlightButterfly.TabIndex = 67
         Me.btnBossMoonlightButterfly.Text = "Moonlight Butterfly"
         Me.btnBossMoonlightButterfly.UseVisualStyleBackColor = False
         '
         'Button8
         '
+        Me.Button8.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button8.Location = New System.Drawing.Point(6, 222)
         Me.Button8.Name = "Button8"
-        Me.Button8.Size = New System.Drawing.Size(160, 23)
+        Me.Button8.Size = New System.Drawing.Size(159, 23)
         Me.Button8.TabIndex = 55
         Me.Button8.Text = "Chaos Witch Quelaag"
         Me.Button8.UseVisualStyleBackColor = False
         '
         'Button18
         '
-        Me.Button18.Location = New System.Drawing.Point(197, 106)
+        Me.Button18.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button18.Location = New System.Drawing.Point(6, 483)
         Me.Button18.Name = "Button18"
-        Me.Button18.Size = New System.Drawing.Size(160, 23)
+        Me.Button18.Size = New System.Drawing.Size(159, 23)
         Me.Button18.TabIndex = 65
         Me.Button18.Text = "Knight Artorias"
         Me.Button18.UseVisualStyleBackColor = False
         '
         'btnBossDarkSunGwyndolin
         '
+        Me.btnBossDarkSunGwyndolin.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnBossDarkSunGwyndolin.Location = New System.Drawing.Point(6, 280)
         Me.btnBossDarkSunGwyndolin.Name = "btnBossDarkSunGwyndolin"
-        Me.btnBossDarkSunGwyndolin.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossDarkSunGwyndolin.Size = New System.Drawing.Size(159, 23)
         Me.btnBossDarkSunGwyndolin.TabIndex = 57
         Me.btnBossDarkSunGwyndolin.Text = "Dark Sun Gwyndolin"
         Me.btnBossDarkSunGwyndolin.UseVisualStyleBackColor = False
         '
         'btnBossManus
         '
-        Me.btnBossManus.Location = New System.Drawing.Point(197, 135)
+        Me.btnBossManus.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnBossManus.Location = New System.Drawing.Point(6, 512)
         Me.btnBossManus.Name = "btnBossManus"
-        Me.btnBossManus.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossManus.Size = New System.Drawing.Size(159, 23)
         Me.btnBossManus.TabIndex = 66
         Me.btnBossManus.Text = "Manus"
         Me.btnBossManus.UseVisualStyleBackColor = False
         '
         'Button9
         '
+        Me.Button9.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button9.Location = New System.Drawing.Point(6, 251)
         Me.Button9.Name = "Button9"
-        Me.Button9.Size = New System.Drawing.Size(160, 23)
+        Me.Button9.Size = New System.Drawing.Size(159, 23)
         Me.Button9.TabIndex = 56
         Me.Button9.Text = "Crossbreed Priscilla"
         Me.Button9.UseVisualStyleBackColor = False
         '
         'Button17
         '
-        Me.Button17.Location = New System.Drawing.Point(197, 77)
+        Me.Button17.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button17.Location = New System.Drawing.Point(6, 454)
         Me.Button17.Name = "Button17"
-        Me.Button17.Size = New System.Drawing.Size(160, 23)
+        Me.Button17.Size = New System.Drawing.Size(159, 23)
         Me.Button17.TabIndex = 64
         Me.Button17.Text = "Iron Golem"
         Me.Button17.UseVisualStyleBackColor = False
         '
         'btnBossDemonFiresage
         '
+        Me.btnBossDemonFiresage.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnBossDemonFiresage.Location = New System.Drawing.Point(6, 309)
         Me.btnBossDemonFiresage.Name = "btnBossDemonFiresage"
-        Me.btnBossDemonFiresage.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossDemonFiresage.Size = New System.Drawing.Size(159, 23)
         Me.btnBossDemonFiresage.TabIndex = 58
         Me.btnBossDemonFiresage.Text = "Demon Firesage"
         Me.btnBossDemonFiresage.UseVisualStyleBackColor = False
         '
         'btnBossKnightArtorias
         '
-        Me.btnBossKnightArtorias.Location = New System.Drawing.Point(197, 106)
+        Me.btnBossKnightArtorias.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnBossKnightArtorias.Location = New System.Drawing.Point(6, 483)
         Me.btnBossKnightArtorias.Name = "btnBossKnightArtorias"
-        Me.btnBossKnightArtorias.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossKnightArtorias.Size = New System.Drawing.Size(159, 23)
         Me.btnBossKnightArtorias.TabIndex = 65
         Me.btnBossKnightArtorias.Text = "Knight Artorias"
         Me.btnBossKnightArtorias.UseVisualStyleBackColor = False
         '
         'Button10
         '
+        Me.Button10.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button10.Location = New System.Drawing.Point(6, 280)
         Me.Button10.Name = "Button10"
-        Me.Button10.Size = New System.Drawing.Size(160, 23)
+        Me.Button10.Size = New System.Drawing.Size(159, 23)
         Me.Button10.TabIndex = 57
         Me.Button10.Text = "Dark Sun Gwyndolin"
         Me.Button10.UseVisualStyleBackColor = False
         '
         'Button16
         '
-        Me.Button16.Location = New System.Drawing.Point(197, 48)
+        Me.Button16.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button16.Location = New System.Drawing.Point(6, 425)
         Me.Button16.Name = "Button16"
-        Me.Button16.Size = New System.Drawing.Size(160, 23)
+        Me.Button16.Size = New System.Drawing.Size(159, 23)
         Me.Button16.TabIndex = 63
         Me.Button16.Text = "Gwyn"
         Me.Button16.UseVisualStyleBackColor = False
         '
         'btnBossOandS
         '
-        Me.btnBossOandS.Location = New System.Drawing.Point(197, 193)
+        Me.btnBossOandS.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnBossOandS.Location = New System.Drawing.Point(6, 570)
         Me.btnBossOandS.Name = "btnBossOandS"
-        Me.btnBossOandS.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossOandS.Size = New System.Drawing.Size(159, 23)
         Me.btnBossOandS.TabIndex = 59
         Me.btnBossOandS.Text = "Ornstein and Smough"
         Me.btnBossOandS.UseVisualStyleBackColor = False
         '
         'btnBossIronGolem
         '
-        Me.btnBossIronGolem.Location = New System.Drawing.Point(197, 77)
+        Me.btnBossIronGolem.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnBossIronGolem.Location = New System.Drawing.Point(6, 454)
         Me.btnBossIronGolem.Name = "btnBossIronGolem"
-        Me.btnBossIronGolem.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossIronGolem.Size = New System.Drawing.Size(159, 23)
         Me.btnBossIronGolem.TabIndex = 64
         Me.btnBossIronGolem.Text = "Iron Golem"
         Me.btnBossIronGolem.UseVisualStyleBackColor = False
         '
         'Button11
         '
+        Me.Button11.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button11.Location = New System.Drawing.Point(6, 309)
         Me.Button11.Name = "Button11"
-        Me.Button11.Size = New System.Drawing.Size(160, 23)
+        Me.Button11.Size = New System.Drawing.Size(159, 23)
         Me.Button11.TabIndex = 58
         Me.Button11.Text = "Demon Firesage"
         Me.Button11.UseVisualStyleBackColor = False
         '
         'Button15
         '
-        Me.Button15.Location = New System.Drawing.Point(197, 19)
+        Me.Button15.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button15.Location = New System.Drawing.Point(6, 396)
         Me.Button15.Name = "Button15"
-        Me.Button15.Size = New System.Drawing.Size(160, 23)
+        Me.Button15.Size = New System.Drawing.Size(159, 23)
         Me.Button15.TabIndex = 62
         Me.Button15.Text = "Gravelord Nito"
         Me.Button15.UseVisualStyleBackColor = False
         '
         'btnBossFourKings
         '
+        Me.btnBossFourKings.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnBossFourKings.Location = New System.Drawing.Point(6, 338)
         Me.btnBossFourKings.Name = "btnBossFourKings"
-        Me.btnBossFourKings.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossFourKings.Size = New System.Drawing.Size(159, 23)
         Me.btnBossFourKings.TabIndex = 60
         Me.btnBossFourKings.Text = "Four Kings"
         Me.btnBossFourKings.UseVisualStyleBackColor = False
         '
         'btnBossGwyn
         '
-        Me.btnBossGwyn.Location = New System.Drawing.Point(197, 48)
+        Me.btnBossGwyn.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnBossGwyn.Location = New System.Drawing.Point(6, 425)
         Me.btnBossGwyn.Name = "btnBossGwyn"
-        Me.btnBossGwyn.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossGwyn.Size = New System.Drawing.Size(159, 23)
         Me.btnBossGwyn.TabIndex = 63
         Me.btnBossGwyn.Text = "Gwyn"
         Me.btnBossGwyn.UseVisualStyleBackColor = False
         '
         'Button12
         '
-        Me.Button12.Location = New System.Drawing.Point(197, 193)
+        Me.Button12.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button12.Location = New System.Drawing.Point(6, 570)
         Me.Button12.Name = "Button12"
-        Me.Button12.Size = New System.Drawing.Size(160, 23)
+        Me.Button12.Size = New System.Drawing.Size(159, 23)
         Me.Button12.TabIndex = 59
         Me.Button12.Text = "Ornstein and Smough"
         Me.Button12.UseVisualStyleBackColor = False
         '
         'Button14
         '
+        Me.Button14.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button14.Location = New System.Drawing.Point(6, 367)
         Me.Button14.Name = "Button14"
-        Me.Button14.Size = New System.Drawing.Size(160, 23)
+        Me.Button14.Size = New System.Drawing.Size(159, 23)
         Me.Button14.TabIndex = 61
         Me.Button14.Text = "Gaping Dragon"
         Me.Button14.UseVisualStyleBackColor = False
         '
         'btnBossGapingDragon
         '
+        Me.btnBossGapingDragon.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnBossGapingDragon.Location = New System.Drawing.Point(6, 367)
         Me.btnBossGapingDragon.Name = "btnBossGapingDragon"
-        Me.btnBossGapingDragon.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossGapingDragon.Size = New System.Drawing.Size(159, 23)
         Me.btnBossGapingDragon.TabIndex = 61
         Me.btnBossGapingDragon.Text = "Gaping Dragon"
         Me.btnBossGapingDragon.UseVisualStyleBackColor = False
         '
         'btnBossGravelordNito
         '
-        Me.btnBossGravelordNito.Location = New System.Drawing.Point(197, 19)
+        Me.btnBossGravelordNito.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnBossGravelordNito.Location = New System.Drawing.Point(6, 396)
         Me.btnBossGravelordNito.Name = "btnBossGravelordNito"
-        Me.btnBossGravelordNito.Size = New System.Drawing.Size(160, 23)
+        Me.btnBossGravelordNito.Size = New System.Drawing.Size(159, 23)
         Me.btnBossGravelordNito.TabIndex = 62
         Me.btnBossGravelordNito.Text = "Gravelord Nito"
         Me.btnBossGravelordNito.UseVisualStyleBackColor = False
         '
         'Button13
         '
+        Me.Button13.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button13.Location = New System.Drawing.Point(6, 338)
         Me.Button13.Name = "Button13"
-        Me.Button13.Size = New System.Drawing.Size(160, 23)
+        Me.Button13.Size = New System.Drawing.Size(159, 23)
         Me.Button13.TabIndex = 60
         Me.Button13.Text = "Four Kings"
         Me.Button13.UseVisualStyleBackColor = False
         '
-        'btnBeginReverseRush
-        '
-        Me.btnBeginReverseRush.Location = New System.Drawing.Point(200, 14)
-        Me.btnBeginReverseRush.Name = "btnBeginReverseRush"
-        Me.btnBeginReverseRush.Size = New System.Drawing.Size(160, 23)
-        Me.btnBeginReverseRush.TabIndex = 75
-        Me.btnBeginReverseRush.Text = "Begin Reverse Rush"
-        Me.btnBeginReverseRush.UseVisualStyleBackColor = False
-        '
         'tabScenarios
         '
+        Me.tabScenarios.AutoScroll = True
+        Me.tabScenarios.AutoScrollMargin = New System.Drawing.Size(8, 8)
         Me.tabScenarios.Controls.Add(Me.btnScenarioPinwheelDefense)
         Me.tabScenarios.Controls.Add(Me.btnScenarioTripleSanctuary)
         Me.tabScenarios.Controls.Add(Me.btnScenarioArtoriasCiaran)
         Me.tabScenarios.Location = New System.Drawing.Point(4, 22)
         Me.tabScenarios.Name = "tabScenarios"
-        Me.tabScenarios.Size = New System.Drawing.Size(381, 446)
+        Me.tabScenarios.Size = New System.Drawing.Size(512, 236)
         Me.tabScenarios.TabIndex = 9
         Me.tabScenarios.Text = "Scenarios"
         Me.tabScenarios.UseVisualStyleBackColor = True
         '
         'btnScenarioPinwheelDefense
         '
-        Me.btnScenarioPinwheelDefense.Location = New System.Drawing.Point(200, 36)
+        Me.btnScenarioPinwheelDefense.Location = New System.Drawing.Point(3, 65)
         Me.btnScenarioPinwheelDefense.Name = "btnScenarioPinwheelDefense"
-        Me.btnScenarioPinwheelDefense.Size = New System.Drawing.Size(160, 23)
+        Me.btnScenarioPinwheelDefense.Size = New System.Drawing.Size(198, 23)
         Me.btnScenarioPinwheelDefense.TabIndex = 71
         Me.btnScenarioPinwheelDefense.Text = "Pinwheel's Defense"
         Me.btnScenarioPinwheelDefense.UseVisualStyleBackColor = False
         '
         'btnScenarioTripleSanctuary
         '
-        Me.btnScenarioTripleSanctuary.Location = New System.Drawing.Point(9, 65)
+        Me.btnScenarioTripleSanctuary.Location = New System.Drawing.Point(3, 36)
         Me.btnScenarioTripleSanctuary.Name = "btnScenarioTripleSanctuary"
-        Me.btnScenarioTripleSanctuary.Size = New System.Drawing.Size(160, 23)
+        Me.btnScenarioTripleSanctuary.Size = New System.Drawing.Size(198, 23)
         Me.btnScenarioTripleSanctuary.TabIndex = 70
         Me.btnScenarioTripleSanctuary.Text = "3x Sanctuary Guardian"
         Me.btnScenarioTripleSanctuary.UseVisualStyleBackColor = False
         '
         'btnScenarioArtoriasCiaran
         '
-        Me.btnScenarioArtoriasCiaran.Location = New System.Drawing.Point(9, 36)
+        Me.btnScenarioArtoriasCiaran.Location = New System.Drawing.Point(3, 7)
         Me.btnScenarioArtoriasCiaran.Name = "btnScenarioArtoriasCiaran"
-        Me.btnScenarioArtoriasCiaran.Size = New System.Drawing.Size(160, 23)
+        Me.btnScenarioArtoriasCiaran.Size = New System.Drawing.Size(198, 23)
         Me.btnScenarioArtoriasCiaran.TabIndex = 69
         Me.btnScenarioArtoriasCiaran.Text = "Knight Artorias + Ciaran"
         Me.btnScenarioArtoriasCiaran.UseVisualStyleBackColor = False
@@ -811,12 +925,13 @@ Partial Class frmForm1
         'tabMain
         '
         Me.tabMain.AutoScroll = True
+        Me.tabMain.AutoScrollMargin = New System.Drawing.Size(8, 8)
         Me.tabMain.Controls.Add(Me.GroupBox2)
         Me.tabMain.Controls.Add(Me.GroupBox1)
         Me.tabMain.Location = New System.Drawing.Point(4, 22)
         Me.tabMain.Name = "tabMain"
         Me.tabMain.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabMain.Size = New System.Drawing.Size(381, 446)
+        Me.tabMain.Size = New System.Drawing.Size(512, 236)
         Me.tabMain.TabIndex = 0
         Me.tabMain.Text = "Player"
         '
@@ -1021,6 +1136,7 @@ Partial Class frmForm1
         'tabStats
         '
         Me.tabStats.AutoScroll = True
+        Me.tabStats.AutoScrollMargin = New System.Drawing.Size(8, 8)
         Me.tabStats.Controls.Add(Me.Label16)
         Me.tabStats.Controls.Add(Me.nmbClearCount)
         Me.tabStats.Controls.Add(Me.Label3)
@@ -1049,14 +1165,14 @@ Partial Class frmForm1
         Me.tabStats.Controls.Add(Me.nmbHumanity)
         Me.tabStats.Location = New System.Drawing.Point(4, 22)
         Me.tabStats.Name = "tabStats"
-        Me.tabStats.Size = New System.Drawing.Size(381, 446)
+        Me.tabStats.Size = New System.Drawing.Size(512, 236)
         Me.tabStats.TabIndex = 2
         Me.tabStats.Text = "Stats"
         '
         'Label16
         '
         Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(56, 332)
+        Me.Label16.Location = New System.Drawing.Point(40, 294)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(52, 13)
         Me.Label16.TabIndex = 29
@@ -1064,7 +1180,7 @@ Partial Class frmForm1
         '
         'nmbClearCount
         '
-        Me.nmbClearCount.Location = New System.Drawing.Point(124, 330)
+        Me.nmbClearCount.Location = New System.Drawing.Point(108, 292)
         Me.nmbClearCount.Maximum = New Decimal(New Integer() {1900, 0, 0, 0})
         Me.nmbClearCount.Name = "nmbClearCount"
         Me.nmbClearCount.Size = New System.Drawing.Size(65, 20)
@@ -1073,7 +1189,7 @@ Partial Class frmForm1
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(65, 47)
+        Me.Label3.Location = New System.Drawing.Point(49, 9)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(45, 13)
         Me.Label3.TabIndex = 27
@@ -1081,7 +1197,7 @@ Partial Class frmForm1
         '
         'nmbMaxHP
         '
-        Me.nmbMaxHP.Location = New System.Drawing.Point(124, 45)
+        Me.nmbMaxHP.Location = New System.Drawing.Point(108, 7)
         Me.nmbMaxHP.Maximum = New Decimal(New Integer() {1900, 0, 0, 0})
         Me.nmbMaxHP.Name = "nmbMaxHP"
         Me.nmbMaxHP.Size = New System.Drawing.Size(65, 20)
@@ -1090,7 +1206,7 @@ Partial Class frmForm1
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(42, 70)
+        Me.Label7.Location = New System.Drawing.Point(26, 32)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(68, 13)
         Me.Label7.TabIndex = 25
@@ -1098,7 +1214,7 @@ Partial Class frmForm1
         '
         'nmbMaxStam
         '
-        Me.nmbMaxStam.Location = New System.Drawing.Point(124, 68)
+        Me.nmbMaxStam.Location = New System.Drawing.Point(108, 30)
         Me.nmbMaxStam.Maximum = New Decimal(New Integer() {160, 0, 0, 0})
         Me.nmbMaxStam.Name = "nmbMaxStam"
         Me.nmbMaxStam.Size = New System.Drawing.Size(65, 20)
@@ -1107,7 +1223,7 @@ Partial Class frmForm1
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(22, 306)
+        Me.Label2.Location = New System.Drawing.Point(6, 268)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(86, 13)
         Me.Label2.TabIndex = 23
@@ -1115,7 +1231,7 @@ Partial Class frmForm1
         '
         'nmbGender
         '
-        Me.nmbGender.Location = New System.Drawing.Point(124, 304)
+        Me.nmbGender.Location = New System.Drawing.Point(108, 266)
         Me.nmbGender.Maximum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nmbGender.Name = "nmbGender"
         Me.nmbGender.Size = New System.Drawing.Size(65, 20)
@@ -1124,7 +1240,7 @@ Partial Class frmForm1
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(71, 96)
+        Me.Label12.Location = New System.Drawing.Point(55, 58)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(37, 13)
         Me.Label12.TabIndex = 21
@@ -1132,7 +1248,7 @@ Partial Class frmForm1
         '
         'nmbVitality
         '
-        Me.nmbVitality.Location = New System.Drawing.Point(124, 94)
+        Me.nmbVitality.Location = New System.Drawing.Point(108, 56)
         Me.nmbVitality.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbVitality.Name = "nmbVitality"
         Me.nmbVitality.Size = New System.Drawing.Size(65, 20)
@@ -1141,7 +1257,7 @@ Partial Class frmForm1
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(49, 119)
+        Me.Label13.Location = New System.Drawing.Point(33, 81)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(61, 13)
         Me.Label13.TabIndex = 19
@@ -1149,7 +1265,7 @@ Partial Class frmForm1
         '
         'nmbAttunement
         '
-        Me.nmbAttunement.Location = New System.Drawing.Point(124, 117)
+        Me.nmbAttunement.Location = New System.Drawing.Point(108, 79)
         Me.nmbAttunement.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbAttunement.Name = "nmbAttunement"
         Me.nmbAttunement.Size = New System.Drawing.Size(65, 20)
@@ -1158,7 +1274,7 @@ Partial Class frmForm1
         'Label14
         '
         Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(51, 142)
+        Me.Label14.Location = New System.Drawing.Point(35, 104)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(59, 13)
         Me.Label14.TabIndex = 17
@@ -1166,7 +1282,7 @@ Partial Class frmForm1
         '
         'nmbEnd
         '
-        Me.nmbEnd.Location = New System.Drawing.Point(124, 140)
+        Me.nmbEnd.Location = New System.Drawing.Point(108, 102)
         Me.nmbEnd.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbEnd.Name = "nmbEnd"
         Me.nmbEnd.Size = New System.Drawing.Size(65, 20)
@@ -1175,7 +1291,7 @@ Partial Class frmForm1
         'Label15
         '
         Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(61, 165)
+        Me.Label15.Location = New System.Drawing.Point(45, 127)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(47, 13)
         Me.Label15.TabIndex = 15
@@ -1183,7 +1299,7 @@ Partial Class frmForm1
         '
         'nmbStr
         '
-        Me.nmbStr.Location = New System.Drawing.Point(124, 163)
+        Me.nmbStr.Location = New System.Drawing.Point(108, 125)
         Me.nmbStr.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbStr.Name = "nmbStr"
         Me.nmbStr.Size = New System.Drawing.Size(65, 20)
@@ -1192,7 +1308,7 @@ Partial Class frmForm1
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(62, 188)
+        Me.Label11.Location = New System.Drawing.Point(46, 150)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(48, 13)
         Me.Label11.TabIndex = 13
@@ -1200,7 +1316,7 @@ Partial Class frmForm1
         '
         'nmbDex
         '
-        Me.nmbDex.Location = New System.Drawing.Point(124, 186)
+        Me.nmbDex.Location = New System.Drawing.Point(108, 148)
         Me.nmbDex.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbDex.Name = "nmbDex"
         Me.nmbDex.Size = New System.Drawing.Size(65, 20)
@@ -1209,7 +1325,7 @@ Partial Class frmForm1
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(48, 209)
+        Me.Label10.Location = New System.Drawing.Point(32, 171)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(60, 13)
         Me.Label10.TabIndex = 11
@@ -1217,7 +1333,7 @@ Partial Class frmForm1
         '
         'nmbResistance
         '
-        Me.nmbResistance.Location = New System.Drawing.Point(124, 209)
+        Me.nmbResistance.Location = New System.Drawing.Point(108, 171)
         Me.nmbResistance.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbResistance.Name = "nmbResistance"
         Me.nmbResistance.Size = New System.Drawing.Size(65, 20)
@@ -1226,7 +1342,7 @@ Partial Class frmForm1
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(49, 234)
+        Me.Label9.Location = New System.Drawing.Point(33, 196)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(61, 13)
         Me.Label9.TabIndex = 9
@@ -1234,7 +1350,7 @@ Partial Class frmForm1
         '
         'nmbIntelligence
         '
-        Me.nmbIntelligence.Location = New System.Drawing.Point(124, 232)
+        Me.nmbIntelligence.Location = New System.Drawing.Point(108, 194)
         Me.nmbIntelligence.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbIntelligence.Name = "nmbIntelligence"
         Me.nmbIntelligence.Size = New System.Drawing.Size(65, 20)
@@ -1243,7 +1359,7 @@ Partial Class frmForm1
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(78, 257)
+        Me.Label8.Location = New System.Drawing.Point(62, 219)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(30, 13)
         Me.Label8.TabIndex = 7
@@ -1251,7 +1367,7 @@ Partial Class frmForm1
         '
         'nmbFaith
         '
-        Me.nmbFaith.Location = New System.Drawing.Point(124, 255)
+        Me.nmbFaith.Location = New System.Drawing.Point(108, 217)
         Me.nmbFaith.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbFaith.Name = "nmbFaith"
         Me.nmbFaith.Size = New System.Drawing.Size(65, 20)
@@ -1260,7 +1376,7 @@ Partial Class frmForm1
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(57, 280)
+        Me.Label1.Location = New System.Drawing.Point(41, 242)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(51, 13)
         Me.Label1.TabIndex = 1
@@ -1268,7 +1384,7 @@ Partial Class frmForm1
         '
         'nmbHumanity
         '
-        Me.nmbHumanity.Location = New System.Drawing.Point(124, 278)
+        Me.nmbHumanity.Location = New System.Drawing.Point(108, 240)
         Me.nmbHumanity.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.nmbHumanity.Name = "nmbHumanity"
         Me.nmbHumanity.Size = New System.Drawing.Size(65, 20)
@@ -1276,50 +1392,103 @@ Partial Class frmForm1
         '
         'tabTests
         '
-        Me.tabTests.Controls.Add(Me.btnEnableAI)
-        Me.tabTests.Controls.Add(Me.btnDisableAI)
-        Me.tabTests.Controls.Add(Me.btnTest)
+        Me.tabTests.AutoScroll = True
+        Me.tabTests.AutoScrollMargin = New System.Drawing.Size(8, 8)
+        Me.tabTests.BackColor = System.Drawing.Color.Transparent
+        Me.tabTests.Controls.Add(Me.toolstripTest)
         Me.tabTests.Location = New System.Drawing.Point(4, 22)
         Me.tabTests.Name = "tabTests"
-        Me.tabTests.Size = New System.Drawing.Size(381, 446)
+        Me.tabTests.Size = New System.Drawing.Size(512, 236)
         Me.tabTests.TabIndex = 7
         Me.tabTests.Text = "Tests"
-        Me.tabTests.UseVisualStyleBackColor = True
         '
-        'btnEnableAI
+        'toolstripTest
         '
-        Me.btnEnableAI.Location = New System.Drawing.Point(9, 68)
-        Me.btnEnableAI.Name = "btnEnableAI"
-        Me.btnEnableAI.Size = New System.Drawing.Size(160, 23)
-        Me.btnEnableAI.TabIndex = 81
-        Me.btnEnableAI.Text = "Enable AI"
-        Me.btnEnableAI.UseVisualStyleBackColor = False
+        Me.toolstripTest.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.toolstripTest.CanOverflow = False
+        Me.toolstripTest.Dock = System.Windows.Forms.DockStyle.None
+        Me.toolstripTest.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.toolstripTest.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripDropDownButton1, Me.ToolStripSeparator1, Me.tsbtnDisableAI, Me.tsbtnEnableAI, Me.ToolStripSeparator2, Me.tsbtnEnablePlayerExterminate, Me.tsbtnDisablePlayerExterminate, Me.ToolStripSeparator3})
+        Me.toolstripTest.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.VerticalStackWithOverflow
+        Me.toolstripTest.Location = New System.Drawing.Point(2, 2)
+        Me.toolstripTest.Name = "toolstripTest"
+        Me.toolstripTest.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
+        Me.toolstripTest.Size = New System.Drawing.Size(150, 131)
+        Me.toolstripTest.TabIndex = 85
         '
-        'btnDisableAI
+        'ToolStripDropDownButton1
         '
-        Me.btnDisableAI.Location = New System.Drawing.Point(9, 39)
-        Me.btnDisableAI.Name = "btnDisableAI"
-        Me.btnDisableAI.Size = New System.Drawing.Size(160, 23)
-        Me.btnDisableAI.TabIndex = 80
-        Me.btnDisableAI.Text = "Disable AI"
-        Me.btnDisableAI.UseVisualStyleBackColor = False
+        Me.ToolStripDropDownButton1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiTestSomething})
+        Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
+        Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
+        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(148, 20)
+        Me.ToolStripDropDownButton1.Text = "(Developer Test Stuff)"
         '
-        'btnTest
+        'tsmiTestSomething
         '
-        Me.btnTest.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnTest.Location = New System.Drawing.Point(304, 3)
-        Me.btnTest.Name = "btnTest"
-        Me.btnTest.Size = New System.Drawing.Size(68, 23)
-        Me.btnTest.TabIndex = 77
-        Me.btnTest.Text = "Test"
-        Me.btnTest.UseVisualStyleBackColor = False
+        Me.tsmiTestSomething.Name = "tsmiTestSomething"
+        Me.tsmiTestSomething.Size = New System.Drawing.Size(146, 22)
+        Me.tsmiTestSomething.Text = "Something...?"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(148, 6)
+        '
+        'tsbtnDisableAI
+        '
+        Me.tsbtnDisableAI.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.tsbtnDisableAI.Image = CType(resources.GetObject("tsbtnDisableAI.Image"), System.Drawing.Image)
+        Me.tsbtnDisableAI.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnDisableAI.Name = "tsbtnDisableAI"
+        Me.tsbtnDisableAI.Size = New System.Drawing.Size(148, 19)
+        Me.tsbtnDisableAI.Text = "Disable AI"
+        '
+        'tsbtnEnableAI
+        '
+        Me.tsbtnEnableAI.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.tsbtnEnableAI.Image = CType(resources.GetObject("tsbtnEnableAI.Image"), System.Drawing.Image)
+        Me.tsbtnEnableAI.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnEnableAI.Name = "tsbtnEnableAI"
+        Me.tsbtnEnableAI.Size = New System.Drawing.Size(148, 19)
+        Me.tsbtnEnableAI.Text = "Enable AI"
+        '
+        'ToolStripSeparator2
+        '
+        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(148, 6)
+        '
+        'tsbtnEnablePlayerExterminate
+        '
+        Me.tsbtnEnablePlayerExterminate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.tsbtnEnablePlayerExterminate.Image = CType(resources.GetObject("tsbtnEnablePlayerExterminate.Image"), System.Drawing.Image)
+        Me.tsbtnEnablePlayerExterminate.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnEnablePlayerExterminate.Name = "tsbtnEnablePlayerExterminate"
+        Me.tsbtnEnablePlayerExterminate.Size = New System.Drawing.Size(148, 19)
+        Me.tsbtnEnablePlayerExterminate.Text = "Enable Player Exterminate"
+        '
+        'tsbtnDisablePlayerExterminate
+        '
+        Me.tsbtnDisablePlayerExterminate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.tsbtnDisablePlayerExterminate.Image = CType(resources.GetObject("tsbtnDisablePlayerExterminate.Image"), System.Drawing.Image)
+        Me.tsbtnDisablePlayerExterminate.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnDisablePlayerExterminate.Name = "tsbtnDisablePlayerExterminate"
+        Me.tsbtnDisablePlayerExterminate.Size = New System.Drawing.Size(148, 19)
+        Me.tsbtnDisablePlayerExterminate.Text = "Disable Player Exterminate"
+        '
+        'ToolStripSeparator3
+        '
+        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(148, 6)
         '
         'tabNotes
         '
         Me.tabNotes.Controls.Add(Me.txtNotes)
         Me.tabNotes.Location = New System.Drawing.Point(4, 22)
         Me.tabNotes.Name = "tabNotes"
-        Me.tabNotes.Size = New System.Drawing.Size(381, 446)
+        Me.tabNotes.Size = New System.Drawing.Size(512, 236)
         Me.tabNotes.TabIndex = 8
         Me.tabNotes.Text = "Notes"
         Me.tabNotes.UseVisualStyleBackColor = True
@@ -1329,44 +1498,60 @@ Partial Class frmForm1
         Me.txtNotes.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtNotes.Enabled = False
-        Me.txtNotes.Location = New System.Drawing.Point(9, 4)
+        Me.txtNotes.Location = New System.Drawing.Point(3, 3)
         Me.txtNotes.Multiline = True
         Me.txtNotes.Name = "txtNotes"
+        Me.txtNotes.ReadOnly = True
         Me.txtNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtNotes.Size = New System.Drawing.Size(362, 439)
+        Me.txtNotes.Size = New System.Drawing.Size(506, 230)
         Me.txtNotes.TabIndex = 0
         '
         'tabConsole
         '
+        Me.tabConsole.Controls.Add(Me.rtbConsole)
         Me.tabConsole.Controls.Add(Me.btnConsoleHelp)
         Me.tabConsole.Controls.Add(Me.btnConsoleExecute)
         Me.tabConsole.Controls.Add(Me.Label17)
         Me.tabConsole.Controls.Add(Me.txtConsoleResult)
-        Me.tabConsole.Controls.Add(Me.txtConsole)
         Me.tabConsole.Location = New System.Drawing.Point(4, 22)
         Me.tabConsole.Name = "tabConsole"
-        Me.tabConsole.Size = New System.Drawing.Size(381, 446)
+        Me.tabConsole.Size = New System.Drawing.Size(512, 236)
         Me.tabConsole.TabIndex = 10
         Me.tabConsole.Text = "Console"
         Me.tabConsole.UseVisualStyleBackColor = True
         '
+        'rtbConsole
+        '
+        Me.rtbConsole.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.rtbConsole.BackColor = System.Drawing.Color.Black
+        Me.rtbConsole.Font = New System.Drawing.Font("Courier New", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.rtbConsole.ForeColor = System.Drawing.Color.Lime
+        Me.rtbConsole.Location = New System.Drawing.Point(0, 0)
+        Me.rtbConsole.Name = "rtbConsole"
+        Me.rtbConsole.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical
+        Me.rtbConsole.ShowSelectionMargin = True
+        Me.rtbConsole.Size = New System.Drawing.Size(512, 180)
+        Me.rtbConsole.TabIndex = 81
+        Me.rtbConsole.Text = ""
+        '
         'btnConsoleHelp
         '
         Me.btnConsoleHelp.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnConsoleHelp.Location = New System.Drawing.Point(9, 415)
+        Me.btnConsoleHelp.Location = New System.Drawing.Point(4, 210)
         Me.btnConsoleHelp.Name = "btnConsoleHelp"
-        Me.btnConsoleHelp.Size = New System.Drawing.Size(60, 23)
+        Me.btnConsoleHelp.Size = New System.Drawing.Size(73, 23)
         Me.btnConsoleHelp.TabIndex = 80
         Me.btnConsoleHelp.Text = "Help"
         Me.btnConsoleHelp.UseVisualStyleBackColor = True
         '
         'btnConsoleExecute
         '
-        Me.btnConsoleExecute.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnConsoleExecute.Location = New System.Drawing.Point(9, 376)
+        Me.btnConsoleExecute.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnConsoleExecute.Location = New System.Drawing.Point(441, 179)
         Me.btnConsoleExecute.Name = "btnConsoleExecute"
-        Me.btnConsoleExecute.Size = New System.Drawing.Size(60, 23)
+        Me.btnConsoleExecute.Size = New System.Drawing.Size(68, 54)
         Me.btnConsoleExecute.TabIndex = 79
         Me.btnConsoleExecute.Text = "Execute"
         Me.btnConsoleExecute.UseVisualStyleBackColor = True
@@ -1375,7 +1560,8 @@ Partial Class frmForm1
         '
         Me.Label17.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(75, 381)
+        Me.Label17.Location = New System.Drawing.Point(13, 183)
+        Me.Label17.Margin = New System.Windows.Forms.Padding(0)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(63, 13)
         Me.Label17.TabIndex = 7
@@ -1385,80 +1571,122 @@ Partial Class frmForm1
         '
         Me.txtConsoleResult.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtConsoleResult.Location = New System.Drawing.Point(144, 378)
+        Me.txtConsoleResult.Location = New System.Drawing.Point(79, 180)
         Me.txtConsoleResult.Multiline = True
         Me.txtConsoleResult.Name = "txtConsoleResult"
-        Me.txtConsoleResult.Size = New System.Drawing.Size(234, 60)
+        Me.txtConsoleResult.ReadOnly = True
+        Me.txtConsoleResult.ScrollBars = System.Windows.Forms.ScrollBars.Both
+        Me.txtConsoleResult.Size = New System.Drawing.Size(360, 52)
         Me.txtConsoleResult.TabIndex = 1
         '
-        'txtConsole
+        'tabAbout
         '
-        Me.txtConsole.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.tabAbout.AutoScroll = True
+        Me.tabAbout.AutoScrollMargin = New System.Drawing.Size(0, 8)
+        Me.tabAbout.Controls.Add(Me.Label23)
+        Me.tabAbout.Controls.Add(Me.Label21)
+        Me.tabAbout.Controls.Add(Me.Label20)
+        Me.tabAbout.Controls.Add(Me.Label19)
+        Me.tabAbout.Controls.Add(Me.btnDonate)
+        Me.tabAbout.Controls.Add(Me.Label6)
+        Me.tabAbout.Controls.Add(Me.Label5)
+        Me.tabAbout.Controls.Add(Me.Label4)
+        Me.tabAbout.Location = New System.Drawing.Point(4, 22)
+        Me.tabAbout.Name = "tabAbout"
+        Me.tabAbout.Size = New System.Drawing.Size(512, 236)
+        Me.tabAbout.TabIndex = 6
+        Me.tabAbout.Text = "About"
+        Me.tabAbout.UseVisualStyleBackColor = True
+        '
+        'Label23
+        '
+        Me.Label23.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtConsole.BackColor = System.Drawing.SystemColors.MenuText
-        Me.txtConsole.Font = New System.Drawing.Font("Consolas", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtConsole.ForeColor = System.Drawing.Color.Lime
-        Me.txtConsole.Location = New System.Drawing.Point(9, 4)
-        Me.txtConsole.Multiline = True
-        Me.txtConsole.Name = "txtConsole"
-        Me.txtConsole.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtConsole.Size = New System.Drawing.Size(369, 368)
-        Me.txtConsole.TabIndex = 0
+        Me.Label23.Font = New System.Drawing.Font("Myriad Pro", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label23.Location = New System.Drawing.Point(13, 129)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(314, 59)
+        Me.Label23.TabIndex = 7
+        Me.Label23.Text = "Meowmaritus"
         '
-        'tabDonate
+        'Label21
         '
-        Me.tabDonate.Controls.Add(Me.btnDonate)
-        Me.tabDonate.Controls.Add(Me.Label6)
-        Me.tabDonate.Controls.Add(Me.Label5)
-        Me.tabDonate.Controls.Add(Me.Label4)
-        Me.tabDonate.Location = New System.Drawing.Point(4, 22)
-        Me.tabDonate.Name = "tabDonate"
-        Me.tabDonate.Size = New System.Drawing.Size(381, 446)
-        Me.tabDonate.TabIndex = 6
-        Me.tabDonate.Text = "$$$"
-        Me.tabDonate.UseVisualStyleBackColor = True
+        Me.Label21.AutoSize = True
+        Me.Label21.Font = New System.Drawing.Font("Myriad Pro", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label21.Location = New System.Drawing.Point(48, 38)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(59, 20)
+        Me.Label21.TabIndex = 6
+        Me.Label21.Text = "Wulf2k"
+        '
+        'Label20
+        '
+        Me.Label20.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label20.AutoSize = True
+        Me.Label20.Font = New System.Drawing.Font("Myriad Pro Cond", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label20.Location = New System.Drawing.Point(441, 81)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(44, 17)
+        Me.Label20.TabIndex = 5
+        Me.Label20.Text = "- wulf2k"
+        '
+        'Label19
+        '
+        Me.Label19.Font = New System.Drawing.Font("Myriad Pro Cond", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label19.Location = New System.Drawing.Point(9, 13)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(255, 112)
+        Me.Label19.TabIndex = 4
+        Me.Label19.Text = "Main Programmer and Reverse Engineer:" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Additional Contributors:"
         '
         'btnDonate
         '
-        Me.btnDonate.Location = New System.Drawing.Point(111, 235)
+        Me.btnDonate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnDonate.Font = New System.Drawing.Font("Myriad Pro", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDonate.Location = New System.Drawing.Point(333, 101)
         Me.btnDonate.Name = "btnDonate"
-        Me.btnDonate.Size = New System.Drawing.Size(149, 23)
+        Me.btnDonate.Size = New System.Drawing.Size(163, 48)
         Me.btnDonate.TabIndex = 3
-        Me.btnDonate.Text = "http://paypal.me/wulf2k"
+        Me.btnDonate.Text = "Donate to Wulf2k" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "via PayPal"
         Me.btnDonate.UseVisualStyleBackColor = True
         '
         'Label6
         '
+        Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(160, 199)
+        Me.Label6.Font = New System.Drawing.Font("Myriad Pro Cond", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label6.Location = New System.Drawing.Point(381, 71)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(53, 13)
+        Me.Label6.Size = New System.Drawing.Size(59, 19)
         Me.Label6.TabIndex = 2
-        Me.Label6.Text = "And beer."
+        Me.Label6.Text = "And beer."""
         '
         'Label5
         '
+        Me.Label5.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(202, 172)
+        Me.Label5.Font = New System.Drawing.Font("Myriad Pro Cond", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label5.Location = New System.Drawing.Point(423, 44)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(58, 13)
+        Me.Label5.Size = New System.Drawing.Size(61, 19)
         Me.Label5.TabIndex = 1
         Me.Label5.Text = "And steak."
         '
         'Label4
         '
+        Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(108, 144)
+        Me.Label4.Font = New System.Drawing.Font("Myriad Pro Cond", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.Location = New System.Drawing.Point(329, 16)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(152, 13)
+        Me.Label4.Size = New System.Drawing.Size(167, 19)
         Me.Label4.TabIndex = 0
-        Me.Label4.Text = "No obligation, but I like money."
+        Me.Label4.Text = """No obligation, but I like money."
         '
         'Label22
         '
         Me.Label22.AutoSize = True
-        Me.Label22.Location = New System.Drawing.Point(12, 9)
+        Me.Label22.Location = New System.Drawing.Point(12, 11)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(64, 13)
         Me.Label22.TabIndex = 6
@@ -1468,7 +1696,7 @@ Partial Class frmForm1
         '
         Me.lblRelease.AutoSize = True
         Me.lblRelease.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblRelease.Location = New System.Drawing.Point(75, 9)
+        Me.lblRelease.Location = New System.Drawing.Point(77, 11)
         Me.lblRelease.Name = "lblRelease"
         Me.lblRelease.Size = New System.Drawing.Size(51, 13)
         Me.lblRelease.TabIndex = 5
@@ -1477,7 +1705,7 @@ Partial Class frmForm1
         'btnReconnect
         '
         Me.btnReconnect.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnReconnect.Location = New System.Drawing.Point(320, 5)
+        Me.btnReconnect.Location = New System.Drawing.Point(431, 5)
         Me.btnReconnect.Name = "btnReconnect"
         Me.btnReconnect.Size = New System.Drawing.Size(81, 23)
         Me.btnReconnect.TabIndex = 76
@@ -1488,7 +1716,7 @@ Partial Class frmForm1
         '
         Me.lblVer.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblVer.AutoSize = True
-        Me.lblVer.Location = New System.Drawing.Point(300, 513)
+        Me.lblVer.Location = New System.Drawing.Point(411, 303)
         Me.lblVer.Name = "lblVer"
         Me.lblVer.Size = New System.Drawing.Size(76, 13)
         Me.lblVer.TabIndex = 77
@@ -1497,59 +1725,76 @@ Partial Class frmForm1
         'btnUpdate
         '
         Me.btnUpdate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnUpdate.Location = New System.Drawing.Point(25, 508)
+        Me.btnUpdate.Location = New System.Drawing.Point(2, 296)
         Me.btnUpdate.Name = "btnUpdate"
-        Me.btnUpdate.Size = New System.Drawing.Size(160, 23)
+        Me.btnUpdate.Size = New System.Drawing.Size(205, 23)
         Me.btnUpdate.TabIndex = 78
         Me.btnUpdate.Text = "Update BRush"
         Me.btnUpdate.UseVisualStyleBackColor = True
         Me.btnUpdate.Visible = False
         '
+        'Label18
+        '
+        Me.Label18.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label18.AutoSize = True
+        Me.Label18.Location = New System.Drawing.Point(360, 302)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(45, 13)
+        Me.Label18.TabIndex = 79
+        Me.Label18.Text = "Version:"
+        '
         'frmForm1
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(413, 531)
+        Me.ClientSize = New System.Drawing.Size(524, 321)
+        Me.Controls.Add(Me.Label18)
         Me.Controls.Add(Me.btnUpdate)
         Me.Controls.Add(Me.lblVer)
         Me.Controls.Add(Me.btnReconnect)
         Me.Controls.Add(Me.Label22)
         Me.Controls.Add(Me.lblRelease)
         Me.Controls.Add(Me.tabs)
+        Me.MinimumSize = New System.Drawing.Size(540, 360)
         Me.Name = "frmForm1"
+        Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
         Me.Text = "BRush! With Death! ....Super-Mega-Pre-Alpha"
-        Me.tabs.ResumeLayout(false)
-        Me.tabBosses.ResumeLayout(false)
-        Me.gbBosses.ResumeLayout(false)
-        Me.tabScenarios.ResumeLayout(false)
-        Me.tabMain.ResumeLayout(false)
-        Me.GroupBox2.ResumeLayout(false)
-        Me.GroupBox2.PerformLayout
-        Me.GroupBox1.ResumeLayout(false)
-        Me.GroupBox1.PerformLayout
-        Me.tabStats.ResumeLayout(false)
-        Me.tabStats.PerformLayout
-        CType(Me.nmbClearCount,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.nmbMaxHP,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.nmbMaxStam,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.nmbGender,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.nmbVitality,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.nmbAttunement,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.nmbEnd,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.nmbStr,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.nmbDex,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.nmbResistance,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.nmbIntelligence,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.nmbFaith,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.nmbHumanity,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tabTests.ResumeLayout(false)
-        Me.tabNotes.ResumeLayout(false)
-        Me.tabNotes.PerformLayout
-        Me.tabConsole.ResumeLayout(false)
-        Me.tabConsole.PerformLayout
-        Me.tabDonate.ResumeLayout(false)
-        Me.tabDonate.PerformLayout
-        Me.ResumeLayout(false)
+        Me.tabs.ResumeLayout(False)
+        Me.tabBosses.ResumeLayout(False)
+        Me.tabBosses.PerformLayout()
+        Me.gbBosses.ResumeLayout(False)
+        Me.tabScenarios.ResumeLayout(False)
+        Me.tabMain.ResumeLayout(False)
+        Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox2.PerformLayout()
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
+        Me.tabStats.ResumeLayout(False)
+        Me.tabStats.PerformLayout()
+        CType(Me.nmbClearCount, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nmbMaxHP, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nmbMaxStam, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nmbGender, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nmbVitality, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nmbAttunement, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nmbEnd, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nmbStr, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nmbDex, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nmbResistance, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nmbIntelligence, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nmbFaith, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nmbHumanity, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tabTests.ResumeLayout(False)
+        Me.tabTests.PerformLayout()
+        Me.toolstripTest.ResumeLayout(False)
+        Me.toolstripTest.PerformLayout()
+        Me.tabNotes.ResumeLayout(False)
+        Me.tabNotes.PerformLayout()
+        Me.tabConsole.ResumeLayout(False)
+        Me.tabConsole.PerformLayout()
+        Me.tabAbout.ResumeLayout(False)
+        Me.tabAbout.PerformLayout()
+        Me.ResumeLayout(False)
         Me.PerformLayout
 
 End Sub
@@ -1597,76 +1842,19 @@ End Sub
     Friend WithEvents Label22 As Label
     Friend WithEvents lblRelease As Label
     Friend WithEvents tabBosses As TabPage
-    Friend WithEvents btnBossAsylumDemon As Button
-    Friend WithEvents btnBossPinwheel As Button
     Friend WithEvents lblPlaytime As Label
-    Friend WithEvents btnBossCapraDemon As Button
-    Friend WithEvents btnBossBellGargoyles As Button
-    Friend WithEvents btnBossCeaselessDischarge As Button
-    Friend WithEvents btnBossBedOfChaos As Button
-    Friend WithEvents btnBossCentipedeDemon As Button
-    Friend WithEvents btnBossChaosWitchQuelaag As Button
-    Friend WithEvents btnBossCrossbreedPriscilla As Button
-    Friend WithEvents btnBossDarkSunGwyndolin As Button
-    Friend WithEvents btnBossDemonFiresage As Button
-    Friend WithEvents btnBossOandS As Button
-    Friend WithEvents btnBossFourKings As Button
-    Friend WithEvents btnBossGapingDragon As Button
-    Friend WithEvents btnBossGravelordNito As Button
-    Friend WithEvents btnBossGwyn As Button
-    Friend WithEvents btnBossIronGolem As Button
-    Friend WithEvents btnBossKnightArtorias As Button
-    Friend WithEvents btnBossManus As Button
-    Friend WithEvents btnBossMoonlightButterfly As Button
-    Friend WithEvents btnBossSanctuaryGuardian As Button
-    Friend WithEvents btnBossSeath As Button
-    Friend WithEvents btnBossStrayDemon As Button
-    Friend WithEvents btnBossSif As Button
-    Friend WithEvents btnBossTaurusDemon As Button
-    Friend WithEvents btnBossBlackDragonKalameet As Button
-    Friend WithEvents btnBeginReverseRush As Button
-    Friend WithEvents gbBosses As GroupBox
-    Friend WithEvents Button1 As Button
-    Friend WithEvents Button26 As Button
-    Friend WithEvents Button25 As Button
-    Friend WithEvents Button2 As Button
-    Friend WithEvents Button24 As Button
-    Friend WithEvents Button3 As Button
-    Friend WithEvents Button23 As Button
-    Friend WithEvents Button4 As Button
-    Friend WithEvents Button22 As Button
-    Friend WithEvents Button5 As Button
-    Friend WithEvents Button21 As Button
-    Friend WithEvents Button6 As Button
-    Friend WithEvents Button20 As Button
-    Friend WithEvents Button7 As Button
-    Friend WithEvents Button19 As Button
-    Friend WithEvents Button8 As Button
-    Friend WithEvents Button18 As Button
-    Friend WithEvents Button9 As Button
-    Friend WithEvents Button17 As Button
-    Friend WithEvents Button10 As Button
-    Friend WithEvents Button16 As Button
-    Friend WithEvents Button11 As Button
-    Friend WithEvents Button15 As Button
-    Friend WithEvents Button12 As Button
-    Friend WithEvents Button14 As Button
-    Friend WithEvents Button13 As Button
-    Friend WithEvents tabDonate As TabPage
+    Friend WithEvents tabAbout As TabPage
     Friend WithEvents btnDonate As Button
     Friend WithEvents Label6 As Label
     Friend WithEvents Label5 As Label
     Friend WithEvents Label4 As Label
     Friend WithEvents btnReconnect As Button
-    Friend WithEvents btnTest As Button
     Friend WithEvents tabTests As TabPage
     Friend WithEvents btnBeginBossRush As Button
     Friend WithEvents lblVer As Label
     Friend WithEvents btnUpdate As Button
     Friend WithEvents tabNotes As TabPage
     Friend WithEvents txtNotes As TextBox
-    Friend WithEvents btnEnableAI As Button
-    Friend WithEvents btnDisableAI As Button
     Friend WithEvents Label2 As Label
     Friend WithEvents nmbGender As NumericUpDown
     Friend WithEvents Label3 As Label
@@ -1678,12 +1866,80 @@ End Sub
     Friend WithEvents btnScenarioArtoriasCiaran As Button
     Friend WithEvents Label16 As Label
     Friend WithEvents nmbClearCount As NumericUpDown
-    Friend WithEvents btnX As Button
     Friend WithEvents tabConsole As TabPage
-    Friend WithEvents txtConsole As TextBox
     Friend WithEvents Label17 As Label
     Friend WithEvents txtConsoleResult As TextBox
     Friend WithEvents btnConsoleExecute As Button
     Friend WithEvents btnConsoleHelp As Button
     Friend WithEvents btnScenarioPinwheelDefense As Button
+    Friend WithEvents cboxReverseOrder As CheckBox
+    Friend WithEvents toolstripTest As ToolStrip
+    Friend WithEvents ToolStripDropDownButton1 As ToolStripDropDownButton
+    Friend WithEvents tsmiTestSomething As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+    Friend WithEvents tsbtnDisableAI As ToolStripButton
+    Friend WithEvents tsbtnEnableAI As ToolStripButton
+    Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
+    Friend WithEvents tsbtnEnablePlayerExterminate As ToolStripButton
+    Friend WithEvents tsbtnDisablePlayerExterminate As ToolStripButton
+    Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
+    Friend WithEvents gbBosses As GroupBox
+    Friend WithEvents Button1 As Button
+    Friend WithEvents Button26 As Button
+    Friend WithEvents btnBossAsylumDemon As Button
+    Friend WithEvents btnBossPinwheel As Button
+    Friend WithEvents Button25 As Button
+    Friend WithEvents btnBossCapraDemon As Button
+    Friend WithEvents btnBossBlackDragonKalameet As Button
+    Friend WithEvents Button2 As Button
+    Friend WithEvents Button24 As Button
+    Friend WithEvents btnBossBellGargoyles As Button
+    Friend WithEvents btnBossTaurusDemon As Button
+    Friend WithEvents Button3 As Button
+    Friend WithEvents Button23 As Button
+    Friend WithEvents btnBossCeaselessDischarge As Button
+    Friend WithEvents btnBossSif As Button
+    Friend WithEvents Button4 As Button
+    Friend WithEvents Button22 As Button
+    Friend WithEvents btnBossBedOfChaos As Button
+    Friend WithEvents btnBossStrayDemon As Button
+    Friend WithEvents Button5 As Button
+    Friend WithEvents Button21 As Button
+    Friend WithEvents btnBossCentipedeDemon As Button
+    Friend WithEvents btnBossSeath As Button
+    Friend WithEvents Button6 As Button
+    Friend WithEvents Button20 As Button
+    Friend WithEvents btnBossChaosWitchQuelaag As Button
+    Friend WithEvents btnBossSanctuaryGuardian As Button
+    Friend WithEvents Button7 As Button
+    Friend WithEvents Button19 As Button
+    Friend WithEvents btnBossCrossbreedPriscilla As Button
+    Friend WithEvents btnBossMoonlightButterfly As Button
+    Friend WithEvents Button8 As Button
+    Friend WithEvents Button18 As Button
+    Friend WithEvents btnBossDarkSunGwyndolin As Button
+    Friend WithEvents btnBossManus As Button
+    Friend WithEvents Button9 As Button
+    Friend WithEvents Button17 As Button
+    Friend WithEvents btnBossDemonFiresage As Button
+    Friend WithEvents btnBossKnightArtorias As Button
+    Friend WithEvents Button10 As Button
+    Friend WithEvents Button16 As Button
+    Friend WithEvents btnBossOandS As Button
+    Friend WithEvents btnBossIronGolem As Button
+    Friend WithEvents Button11 As Button
+    Friend WithEvents Button15 As Button
+    Friend WithEvents btnBossFourKings As Button
+    Friend WithEvents btnBossGwyn As Button
+    Friend WithEvents Button12 As Button
+    Friend WithEvents Button14 As Button
+    Friend WithEvents btnBossGapingDragon As Button
+    Friend WithEvents btnBossGravelordNito As Button
+    Friend WithEvents Button13 As Button
+    Friend WithEvents Label18 As Label
+    Friend WithEvents Label20 As Label
+    Friend WithEvents Label19 As Label
+    Friend WithEvents Label23 As Label
+    Friend WithEvents Label21 As Label
+    Friend WithEvents rtbConsole As RichTextBox
 End Class

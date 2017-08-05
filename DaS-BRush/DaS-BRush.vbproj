@@ -152,5 +152,6 @@
   <ItemGroup>
     <None Include="Resources\Weapons.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
