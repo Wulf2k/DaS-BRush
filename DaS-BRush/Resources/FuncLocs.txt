@@ -314,7 +314,6 @@
 14020896|setobjdeactivate
 14021440|setobjdisablebreak
 14024576|setobjeventcollisionfill
-14033696|setobjsfx
 14015600|setreturnpointentityid
 14018176|setrevivewait
 14024688|setselfbloodmapuid
@@ -332,7 +331,6 @@
 14017584|settexteffect
 14016640|settutorialsummonedpos
 14017984|setvalidtalk
-14020336|showgendialog
 14014816|showrankingdialog
 14024640|stoploopanimation
 14027088|stopplayer
@@ -359,7 +357,6 @@
 14014480|util_requestrespawn
 14020640|validpointlight
 14020768|validsfx
-14032976|warn
 14032192|warp
 14043760|warpdmy
 14036224|warpnextstage
