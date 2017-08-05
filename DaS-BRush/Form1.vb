@@ -820,6 +820,25 @@ Public Class frmForm1
             Thread.Sleep(33)
         Loop
     End Sub
+    Public Sub warpentity_player(entityptr As Integer)
+        Dim playerptr As Integer = Script("ChrFadeIn 10000, 0.0, 0.0")
+        Script("warpentity_entity " & entityptr & ", " & playerptr)
+    End Sub
+    Public Sub warpplayer_entity(entityptr As Integer)
+        Dim playerptr As Integer = Script("ChrFadeIn 10000, 0.0, 0.0")
+        Script("warpentity_entity " & playerptr & ", " & entityptr)
+    End Sub
+    Public Sub warpentity_entity(entityptrSrc As Integer, entityptrDest As Integer)
+        Dim destEntityPosPtr = RInt32(entityptrDest + &H28)
+        destEntityPosPtr = RInt32(destEntityPosPtr + &H1C)
+        Dim facing = RInt32(destEntityPosPtr + &H4)
+        Dim posX = RFloat(destEntityPosPtr + &H10)
+        Dim posY = RFloat(destEntityPosPtr + &H14)
+        Dim posZ = RFloat(destEntityPosPtr + &H18)
+
+        warpentity_coords(entityptrSrc, posX, posY, posZ, facing)
+    End Sub
+
 
 
     Private Sub setbriefingmsg(ByVal str As String)
