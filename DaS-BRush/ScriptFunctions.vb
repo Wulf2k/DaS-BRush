@@ -67,10 +67,10 @@ Public Class ScriptFunction
         WInt32(entityPtr + &H244, ctrlptr * (state And 1))
 
     End Sub
-    Public Shared Sub test_disableai(ByVal state As Byte)
+    Public Shared Sub disableai(ByVal state As Byte)
         WBytes(&H13784EE, {state})
     End Sub
-    Public Shared Sub test_playerexterminate(ByVal state As Byte)
+    Public Shared Sub playerexterminate(ByVal state As Byte)
         WBytes(&H13784D3, {state})
     End Sub
     Public Shared Sub fadein()

@@ -2277,11 +2277,11 @@ Public Class frmForm1
     End Sub
 
     Private Sub btnTestDisableAI_Click(sender As Object, e As EventArgs)
-        ScriptFunction.test_disableai(True)
+        ScriptFunction.disableai(True)
     End Sub
 
     Private Sub btnTestEnableAI_Click(sender As Object, e As EventArgs)
-        ScriptFunction.test_disableai(False)
+        ScriptFunction.disableai(False)
     End Sub
 
     Private Sub nmbVitality_ValueChanged(sender As Object, e As EventArgs) Handles nmbVitality.ValueChanged
@@ -2353,14 +2353,14 @@ Public Class frmForm1
 
             lineNumber = lineNumber + 1
 
-            'Try
-            Dim result As Integer
+            Try
+                Dim result As Integer
                 Dim trimmedLine = line.Trim()
                 If Not trimmedLine.Any(
-                    Function(x As Char) As Boolean
-                        Return Not (x = " "c)
-                    End Function
-                ) Then
+                        Function(x As Char) As Boolean
+                            Return Not (x = " "c)
+                        End Function
+                    ) Then
                     Continue For
                 End If
 
@@ -2368,14 +2368,13 @@ Public Class frmForm1
                 result = ScriptEnvironment.Run(trimmedLine)
 
                 txtConsoleResult.Text = "Hex: 0x" & Hex(result) & Environment.NewLine &
-                                           "Int: " & result & Environment.NewLine &
-                                           "Float: " & BitConverter.ToSingle(BitConverter.GetBytes(result), 0)
-            'Catch ex As Exception
-            '    MsgBox("Could not parse line " & lineNumber & " (""" & line & """):" & Environment.NewLine & Environment.NewLine & ex.Message)
-
-            '    'Just show the first error each time
-            '    Return
-            'End Try
+                                               "Int: " & result & Environment.NewLine &
+                                               "Float: " & BitConverter.ToSingle(BitConverter.GetBytes(result), 0)
+            Catch ex As Exception
+                If MsgBox("Could not parse line " & lineNumber & " (""" & line & """):" & Environment.NewLine & Environment.NewLine & ex.Message & Environment.NewLine & Environment.NewLine & "Would you like to continue executing the script from the next line?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then
+                    Return
+                End If
+            End Try
 
         Next
     End Sub
@@ -2402,19 +2401,19 @@ Public Class frmForm1
     End Sub
 
     Private Sub tsbtnDisableAI_Click(sender As Object, e As EventArgs) Handles tsbtnDisableAI.Click
-        ScriptFunction.test_disableai(True)
+        ScriptFunction.disableai(True)
     End Sub
 
     Private Sub tsbtnEnableAI_Click(sender As Object, e As EventArgs) Handles tsbtnEnableAI.Click
-        ScriptFunction.test_disableai(False)
+        ScriptFunction.disableai(False)
     End Sub
 
     Private Sub tsbtnEnablePlayerExterminate_Click(sender As Object, e As EventArgs) Handles tsbtnEnablePlayerExterminate.Click
-        ScriptFunction.test_playerexterminate(True)
+        ScriptFunction.playerexterminate(True)
     End Sub
 
     Private Sub tsbtnDisablePlayerExterminate_Click(sender As Object, e As EventArgs) Handles tsbtnDisablePlayerExterminate.Click
-        ScriptFunction.test_playerexterminate(False)
+        ScriptFunction.playerexterminate(False)
     End Sub
 
     Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
