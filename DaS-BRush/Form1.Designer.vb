@@ -166,6 +166,7 @@ Partial Class frmForm1
         Me.lblVer = New System.Windows.Forms.Label()
         Me.btnUpdate = New System.Windows.Forms.Button()
         Me.Label18 = New System.Windows.Forms.Label()
+        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.tabs.SuspendLayout()
         Me.tabBosses.SuspendLayout()
         Me.gbBosses.SuspendLayout()
@@ -1409,12 +1410,12 @@ Partial Class frmForm1
         Me.toolstripTest.CanOverflow = False
         Me.toolstripTest.Dock = System.Windows.Forms.DockStyle.None
         Me.toolstripTest.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.toolstripTest.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripDropDownButton1, Me.ToolStripSeparator1, Me.tsbtnDisableAI, Me.tsbtnEnableAI, Me.ToolStripSeparator2, Me.tsbtnEnablePlayerExterminate, Me.tsbtnDisablePlayerExterminate, Me.ToolStripSeparator3})
+        Me.toolstripTest.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripDropDownButton1, Me.ToolStripSeparator1, Me.tsbtnDisableAI, Me.tsbtnEnableAI, Me.ToolStripSeparator2, Me.tsbtnEnablePlayerExterminate, Me.tsbtnDisablePlayerExterminate, Me.ToolStripSeparator3, Me.ToolStripButton1})
         Me.toolstripTest.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.VerticalStackWithOverflow
         Me.toolstripTest.Location = New System.Drawing.Point(2, 2)
         Me.toolstripTest.Name = "toolstripTest"
         Me.toolstripTest.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-        Me.toolstripTest.Size = New System.Drawing.Size(150, 131)
+        Me.toolstripTest.Size = New System.Drawing.Size(150, 172)
         Me.toolstripTest.TabIndex = 85
         '
         'ToolStripDropDownButton1
@@ -1743,6 +1744,15 @@ Partial Class frmForm1
         Me.Label18.TabIndex = 79
         Me.Label18.Text = "Version:"
         '
+        'ToolStripButton1
+        '
+        Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.ToolStripButton1.Image = CType(resources.GetObject("ToolStripButton1.Image"), System.Drawing.Image)
+        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton1.Name = "ToolStripButton1"
+        Me.ToolStripButton1.Size = New System.Drawing.Size(148, 19)
+        Me.ToolStripButton1.Text = "UserVarPlayerFadeTest"
+        '
         'frmForm1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1942,4 +1952,5 @@ End Sub
     Friend WithEvents Label23 As Label
     Friend WithEvents Label21 As Label
     Friend WithEvents rtbConsole As RichTextBox
+    Friend WithEvents ToolStripButton1 As ToolStripButton
 End Class
