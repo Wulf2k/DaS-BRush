@@ -40,6 +40,7 @@ Public Class frmForm1
 
     Dim delay As Integer = 33
 
+    
     Shared ConsoleOutputText As String = ""
 
 
@@ -57,6 +58,7 @@ Public Class frmForm1
 
     Public intvar1 As Integer
     Public intvar2 As Integer
+
 
 
     Private Async Sub updatecheck()
@@ -172,7 +174,10 @@ Public Class frmForm1
 
         lblRelease.Text = Hook.DetectedDarkSoulsVersion
 
-        txtConsoleResult.Text = consoleScriptParams.OutputStr
+        SyncLock consoleScript.outputLock
+            txtConsoleResult.Text = consoleScript.outStr
+        End SyncLock
+       
 
         Dim isBossRushing = getIsBossRushThreadActive()
 
@@ -224,19 +229,24 @@ Public Class frmForm1
 
 
             Case "Stats"
-                nmbMaxHP.FuckOff(Hook.Stats.MaxHP.ValueInt)
-                nmbMaxStam.FuckOff(Hook.Stats.MaxStamina.ValueInt)
-                nmbVitality.FuckOff(Hook.Stats.VIT.ValueInt)
-                nmbAttunement.FuckOff(Hook.Stats.ATN.ValueInt)
-                nmbEnd.FuckOff(Hook.Stats.ENDurance.ValueInt)
-                nmbStr.FuckOff(Hook.Stats.STR.ValueInt)
-                nmbDex.FuckOff(Hook.Stats.DEX.ValueInt)
-                nmbIntelligence.FuckOff(Hook.Stats.INT.ValueInt)
-                nmbFaith.FuckOff(Hook.Stats.FTH.ValueInt)
-                nmbResistance.FuckOff(Hook.Stats.RES.ValueInt)
-                nmbHumanity.FuckOff(Hook.Stats.Humanity.ValueInt)
-                nmbGender.FuckOff(Hook.Stats.ExternalGenitals.ValueInt)
-                nmbClearCount.FuckOff(Hook.GameStats.ClearCount.ValueInt)
+                Try
+                    nmbMaxHP.FuckOff(Hook.Stats.MaxHP.ValueInt)
+                    nmbMaxStam.FuckOff(Hook.Stats.MaxStamina.ValueInt)
+                    nmbVitality.FuckOff(Hook.Stats.VIT.ValueInt)
+                    nmbAttunement.FuckOff(Hook.Stats.ATN.ValueInt)
+                    nmbEnd.FuckOff(Hook.Stats.ENDurance.ValueInt)
+                    nmbStr.FuckOff(Hook.Stats.STR.ValueInt)
+                    nmbDex.FuckOff(Hook.Stats.DEX.ValueInt)
+                    nmbIntelligence.FuckOff(Hook.Stats.INT.ValueInt)
+                    nmbFaith.FuckOff(Hook.Stats.FTH.ValueInt)
+                    nmbResistance.FuckOff(Hook.Stats.RES.ValueInt)
+                    nmbHumanity.FuckOff(Hook.Stats.Humanity.ValueInt)
+                    nmbGender.FuckOff(Hook.Stats.ExternalGenitals.ValueInt)
+                    nmbClearCount.FuckOff(Hook.GameStats.ClearCount.ValueInt)
+                Catch ex As Exception
+                    Console.Writeline("Error displaying stats.")
+                End Try
+
         End Select
 
     End Sub
@@ -429,14 +439,6 @@ Public Class frmForm1
         End If
     End Sub
 
-    Private Sub btnTestDisableAI_Click(sender As Object, e As EventArgs)
-        Funcs.disableai(True)
-    End Sub
-
-    Private Sub btnTestEnableAI_Click(sender As Object, e As EventArgs)
-        Funcs.disableai(False)
-    End Sub
-
     Private Sub nmbVitality_ValueChanged(sender As Object, e As EventArgs) Handles nmbVitality.ValueChanged
         Hook.Stats.VIT.ValueInt = sender.Value
     End Sub
@@ -507,8 +509,10 @@ Public Class frmForm1
         'ScriptEnvironment.Run("SetEventFlag 16, 0)
         'warp_coords_facing(71.72, 60, 300.56, 1.0)
 
-        Script.RunOneLine("intvar1 = GetEntityPtr 1010700")
-        Script.RunOneLine("ControlEntity intvar1, 0")
+
+        'TODO:  Fix the below.  Non-console scripts should have persistent vars.
+        'Script.RunOneLine("New Int intvar = GetEntityPtr 6270")
+        'Script.RunOneLine("ControlEntity intvar1, 0")
     End Sub
 
     Private Sub tsbtnDisableAI_Click(sender As Object, e As EventArgs) Handles tsbtnDisableAI.Click

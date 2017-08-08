@@ -7,23 +7,25 @@ Public Structure ScriptThreadParams
     Public ThisThread As Thread
     Public IsItEvenAThread As Boolean
     Public IsFinished As Boolean
-    Public OutputStr As String
+
     Public Sub New(ByRef scrRef As Script, ByRef thisThred As Thread)
         ScriptRef = scrRef
         ThisThread = thisThred
         IsItEvenAThread = True
-        OutputStr = ""
         IsFinished = False
     End Sub
     Public Shared Function GetNoThread(ByRef scrRef As Script) As ScriptThreadParams
-        Return New ScriptThreadParams() With {.OutputStr = "", .IsItEvenAThread = False, .IsFinished = True, .ScriptRef = scrRef}
+        Return New ScriptThreadParams() With {.IsItEvenAThread = False, .IsFinished = True, .ScriptRef = scrRef}
     End Function
 End Structure
 
-Public Structure Script
+Public Class Script
     Public ReadOnly Lines As String()
     Public ReadOnly Name As String
     Public ReadOnly WorkerThreads As List(Of Thread)
+
+    Public outputLock As New object
+    Public outStr As String
 
     Public Sub New(name As String, scriptTxt As String)
         Lines = scriptTxt.FormatText.Split(Environment.NewLine)
@@ -55,10 +57,13 @@ Public Structure Script
 
                 result = ExecuteScriptLine(scriptVars, trimmedLine)
 
-                threadParams.OutputStr &= "''" & trimmedLine & "'':" & Environment.NewLine &
+                SyncLock outputLock
+                    outStr &= "''" & trimmedLine & "'':" & Environment.NewLine &
                            "    Hex: 0x" & Hex(result) & Environment.NewLine &
                            "    Int: " & result & Environment.NewLine &
                            "    Float: " & BitConverter.ToSingle(BitConverter.GetBytes(result), 0) & Environment.NewLine
+                End SyncLock
+                
             Catch tae As ThreadAbortException
                 Return ' Dont show error box every time u click cancel
             Catch ex As Exception
@@ -270,4 +275,4 @@ Public Structure Script
 
     End Function
 
-End Structure
+End Class
