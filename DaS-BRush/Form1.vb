@@ -3,6 +3,7 @@ Imports System.IO
 Imports System.Threading
 Imports System.Globalization
 Imports System.Reflection
+Imports System.Runtime.CompilerServices
 
 Public Class frmForm1
 
@@ -26,6 +27,8 @@ Public Class frmForm1
     '50001550 = Stop Rite of Kindling dropping?
     'Check ItemLotParam for boss soul EventFlags
 
+    Dim consoleScript As New Script("Untitled", "")
+    Dim consoleScriptParams As ScriptThreadParams = ScriptThreadParams.GetNoThread(consoleScript)
 
     Public Const VersionCheckUrl = "http://wulf2k.ca/pc/das/das-brush-ver.txt"
     Public Const NoteCheckUrl = "http://wulf2k.ca/pc/das/das-brush-notes.txt"
@@ -34,57 +37,10 @@ Public Class frmForm1
     Public Declare Function GetAsyncKeyState Lib "user32" (ByVal vKey As Integer) As Short
 
     Private trd As Thread
-    Private scriptTrd As Thread
-    Private rushTimer As Thread
-
-
-    Dim clsFuncNames As New Hashtable
-    Dim clsFuncLocs As New Hashtable
-
-    Dim clsBonfires As New Hashtable
-    Dim clsBonfiresIDs As New Hashtable
-
-    Dim clsItemCats As New Hashtable
-    Dim clsItemCatsIDs As New Hashtable
-
-
-    Dim cllItemCats As Hashtable()
-    Dim cllItemCatsIDs As Hashtable()
-
-    Dim clsWeapons As New Hashtable
-    Dim clsWeaponsIDs As New Hashtable
-
-    Dim clsArmor As New Hashtable
-    Dim clsArmorIDs As New Hashtable
-
-    Dim clsRings As New Hashtable
-    Dim clsRingsIDs As New Hashtable
-
-    Dim clsGoods As New Hashtable
-    Dim clsGoodsIDs As New Hashtable
-
-    Dim nodeDumpPtr As Integer = 0
-
-
-    Dim charptr1 As Integer
-    Dim charmapdataptr As Integer
-    Dim charposdataptr As Integer
-    Dim charptr2 As Integer
-    Dim charptr3 As Integer
-    Dim enemyptr As Integer
-    Dim enemyptr2 As Integer
-    Dim enemyptr3 As Integer
-    Dim enemyptr4 As Integer
-    Dim tendptr As Integer
-
-
-    Dim gamestatsptr As Integer
-    Dim bonfireptr As Integer
-
-    Dim dropPtr As Integer
-
 
     Dim delay As Integer = 33
+
+    Shared ConsoleOutputText As String = ""
 
 
     Dim playerHP As Integer
@@ -98,11 +54,6 @@ Public Class frmForm1
     Dim playerYpos As Single
     Dim playerZpos As Single
 
-    Dim rushMode As Boolean = False
-    Dim rushName As String = ""
-
-    Dim GenDiagResponse As Integer
-    Dim GenDiagVal As Integer
 
     Public intvar1 As Integer
     Public intvar2 As Integer
@@ -135,42 +86,7 @@ Public Class frmForm1
 
 
 
-    Private Sub initClls()
-        Dim nameList As New List(Of String)
 
-        cllItemCats = {clsWeapons, clsArmor, clsRings, clsGoods}
-        cllItemCatsIDs = {clsWeaponsIDs, clsArmorIDs, clsRingsIDs, clsGoodsIDs}
-
-
-
-        '-----------------------Bonfires-----------------------
-        nameList = DataHash.ParseItems(clsBonfires, clsBonfiresIDs, My.Resources.Bonfires)
-        For Each bonfire In nameList
-            cmbBonfire.Items.Add(bonfire)
-        Next
-        cmbBonfire.SelectedItem = "Nothing"
-
-
-        '-----------------------Item Categories-----------------------
-        clsItemCats.Clear()
-        clsItemCats.Add(0, "Weapons")
-        clsItemCats.Add(268435456, "Armor")
-        clsItemCats.Add(536870912, "Rings")
-        clsItemCats.Add(1073741824, "Goods")
-
-        clsItemCatsIDs.Clear()
-        For Each itemCat In clsItemCats.Keys
-            clsItemCatsIDs.Add(clsItemCats(itemCat), itemCat)
-        Next
-
-
-        '-----------------------Items-----------------------
-        DataHash.ParseItems(clsWeapons, clsWeaponsIDs, My.Resources.Weapons)
-        DataHash.ParseItems(clsArmor, clsArmorIDs, My.Resources.Armor)
-        DataHash.ParseItems(clsRings, clsRingsIDs, My.Resources.Rings)
-        DataHash.ParseItems(clsGoods, clsGoodsIDs, My.Resources.Goods)
-
-    End Sub
 
 
 
@@ -192,7 +108,7 @@ Public Class frmForm1
                 Sub()
                     Try
                         'Give the old version time to shut down
-                        ScriptEnvironment.Run("Wait 1000")
+                        Script.RunOneLine("Wait 1000")
                         File.Delete(oldFileArg)
                     Catch ex As Exception
                         Me.Invoke(Function() MsgBox("Deleting old version failed: " & vbCrLf & ex.Message, MsgBoxStyle.Exclamation))
@@ -206,55 +122,20 @@ Public Class frmForm1
 
         updatecheck()
 
-        initClls()
+        '-----------------------Bonfires-----------------------
+        For Each bonfire In Data.listBonfireNames
+            cmbBonfire.Items.Add(bonfire)
+        Next
+        cmbBonfire.SelectedItem = "Nothing"
+
+        If Hook.InitHook() Then
+            Funcs.setsaveenable(False)
+        End If
 
         refTimer = New System.Windows.Forms.Timer
         refTimer.Interval = delay
-        refTimer.Enabled = True
+        refTimer.Enabled = Hook.IsHooked
 
-
-        If ScanForProcess("DARK SOULS", True) Then
-            'Check if this process is even Dark Souls
-            checkDarkSoulsVersion()
-            If isHooked Then
-                dropAlloc()
-                ScriptEnvironment.Current.funcAlloc()
-
-                ScriptFunction.setsaveenable(False)
-            End If
-        End If
-
-    End Sub
-
-    Private Sub dropAlloc()
-        Dim TargetBufferSize = 1024
-        dropPtr = VirtualAllocEx(_targetProcessHandle, 0, TargetBufferSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE)
-    End Sub
-
-    Private Sub checkDarkSoulsVersion()
-        isHooked = True
-        refTimer.Enabled = True
-
-
-        If (RUInt32(&H400080) = &HFC293654&) Then
-            lblRelease.Text = "Dark Souls (Latest Release Ver.)"
-
-            Dim tmpProtect As Integer
-            VirtualProtectEx(_targetProcessHandle, &H10CC000, &H1DE000, 4, tmpProtect)
-
-            WBytes(&HBE73FE, {&H20})
-            WBytes(&HBE719F, {&H20})
-            WBytes(&HBE722B, {&H20})
-
-        Else
-            If (RUInt32(&H400080) = &HE91B11E2&) Then
-                lblRelease.Text = "Dark Souls (Invalid Beta)"
-            Else
-                lblRelease.Text = "None"
-            End If
-            isHooked = False
-            refTimer.Enabled = False
-        End If
     End Sub
 
     Private Function getIsBossRushThreadActive() As Boolean
@@ -272,7 +153,26 @@ Public Class frmForm1
 
     End Function
 
+    ReadOnly Property ConsoleExecuting As Boolean
+        Get
+            If consoleScriptParams.ThisThread Is Nothing Then
+                Return False
+            Else
+                If consoleScriptParams.ThisThread.IsAlive And Not consoleScriptParams.IsFinished Then
+                    Return True
+                End If
+            End If
+            Return False
+        End Get
+    End Property
+
     Private Sub RefreshGUI()
+
+        Hook.UpdateHook()
+
+        lblRelease.Text = Hook.DetectedDarkSoulsVersion
+
+        txtConsoleResult.Text = consoleScriptParams.OutputStr
 
         Dim isBossRushing = getIsBossRushThreadActive()
 
@@ -286,141 +186,57 @@ Public Class frmForm1
             End If
         Next
 
-        'btnBeginBossRush.Enabled = Not isBossRushing
-        'btnBeginBossRush.Visible = Not isBossRushing
         cboxReverseOrder.Enabled = Not isBossRushing
-        'btnX.Visible = isBossRushing
-        'btnX.Enabled = isBossRushing
+        btnBeginBossRush.Enabled = Not isBossRushing
+        btnCancelBossRush.Enabled = isBossRushing
 
-        If isBossRushing Then
-            btnBeginBossRush.Text = "End Boss Rush"
-        Else
-            btnBeginBossRush.Text = "Begin Boss Rush"
-        End If
+        Dim isConsoling = ConsoleExecuting()
 
-        'If Not trd Is Nothing Then
-
-        '    'TODO: Check this shit
-        '    'If no worky, replace with
-        '    'If trd.ThreadState = ThreadState.Stopped Or trd.ThreadState = ThreadState.Aborted Then
-        '    If Not trd.IsAlive Then
-        '        gbBosses.Visible = True
-        '        btnBeginBossRush.Enabled = True
-        '        btnBeginBossRush.Visible = True
-        '        cboxReverseOrder.Enabled = True
-        '        btnX.Visible = False
-        '        btnX.Enabled = False
-        '    Else
-        '        gbBosses.Visible = False
-        '        btnBeginBossRush.Enabled = False
-        '        btnBeginBossRush.Visible = False
-        '        cboxReverseOrder.Enabled = False
-        '        btnX.Visible = True
-        '        btnX.Enabled = True
-        '    End If
-        'Else
-        '    gbBosses.Visible = True
-        '    btnBeginBossRush.Enabled = True
-        '    btnBeginBossRush.Visible = True
-        '    cboxReverseOrder.Enabled = True
-        '    btnX.Visible = False
-        '    btnX.Enabled = False
-        'End If
-
-        checkDarkSoulsVersion()
-
-        If Not isHooked Then
-            Return
-        End If
-
-        bonfireptr = RUInt32(&H13784A0)
-        charptr1 = RInt32(&H137DC70)
-        charptr1 = RInt32(charptr1 + &H4)
-        charptr1 = RInt32(charptr1)
-
-        gamestatsptr = RUInt32(&H1378700)
-        charptr2 = RUInt32(gamestatsptr + &H8)
-
-        charmapdataptr = RInt32(charptr1 + &H28)
-        charposdataptr = RInt32(charmapdataptr + &H1C)
-
-
-
+        btnConsoleExecute.Enabled = Not isConsoling
+        btnConsoleCancel.Enabled = isConsoling
+        rtbConsole.Enabled = Not isConsoling
 
         Select Case tabs.TabPages(tabs.SelectedIndex).Text
             Case "Player"
-                playerHP = RInt32(charptr1 + &H2D4)
-                playerMaxHP = RInt32(charptr1 + &H2D8)
 
-                lblHP.Text = playerHP & " / " & playerMaxHP
-                lblStam.Text = playerStam & " / " & playerMaxStam
+                lblHP.Text = Hook.Player.HP.ValueInt & " / " & Hook.Player.MaxHP.ValueInt
+                lblStam.Text = Hook.Player.Stamina.ValueInt & " / " & Hook.Player.MaxStamina.ValueInt
 
-                playerStam = RInt32(charptr1 + &H2E4)
-                playerMaxStam = RInt32(charptr1 + &H2E8)
+                lblFacing.Text = "Heading: " & ((Hook.Player.Heading.ValueFloat + Math.PI) / (Math.PI * 2) * 360).ToString("0.00") & "°"
+                lblXpos.Text = Hook.Player.PosX.ValueFloat.ToString("0.00")
+                lblYpos.Text = Hook.Player.PosY.ValueFloat.ToString("0.00")
+                lblZpos.Text = Hook.Player.PosZ.ValueFloat.ToString("0.00")
 
-                playerFacing = (RFloat(charposdataptr + &H4) + Math.PI) / (Math.PI * 2) * 360
-                playerXpos = RFloat(charposdataptr + &H10)
-                playerYpos = RFloat(charposdataptr + &H14)
-                playerZpos = RFloat(charposdataptr + &H18)
-
-                Dim stableXpos As Single
-                Dim stableYpos As Single
-                Dim stableZpos As Single
-
-                Dim tmpptr As Integer
-                tmpptr = &H13784A0
-
-                tmpptr = RInt32(tmpptr)
-
-                stableXpos = RFloat(tmpptr + &HB70)
-                stableYpos = RFloat(tmpptr + &HB74)
-                stableZpos = RFloat(tmpptr + &HB78)
-
-
-                lblFacing.Text = "Heading: " & playerFacing.ToString("0.00") & "°"
-                lblXpos.Text = playerXpos.ToString("0.00")
-                lblYpos.Text = playerYpos.ToString("0.00")
-                lblZpos.Text = playerZpos.ToString("0.00")
-
-                lblstableXpos.Text = stableXpos.ToString("0.00")
-                lblstableYpos.Text = stableYpos.ToString("0.00")
-                lblstableZpos.Text = stableZpos.ToString("0.00")
+                lblstableXpos.Text = Hook.Player.StablePosX.ValueFloat.ToString("0.00")
+                lblstableYpos.Text = Hook.Player.StablePosY.ValueFloat.ToString("0.00")
+                lblstableZpos.Text = Hook.Player.StablePosZ.ValueFloat.ToString("0.00")
 
                 Dim bonfireID As Integer
-                bonfireID = RInt32(bonfireptr + &HB04)
+                bonfireID = Hook.Player.BonfireID.ValueInt
                 If Not cmbBonfire.DroppedDown Then
-                    If clsBonfires(bonfireID) = "" Then
-                        clsBonfires.Add(bonfireID, bonfireID.ToString)
-                        clsBonfiresIDs.Add(bonfireID.ToString, bonfireID)
+                    If Data.clsBonfires(bonfireID) = "" Then
+                        Data.clsBonfires.Add(bonfireID, bonfireID.ToString)
+                        Data.clsBonfiresIDs.Add(bonfireID.ToString, bonfireID)
                         cmbBonfire.Items.Add(bonfireID.ToString)
                     End If
-                    cmbBonfire.SelectedItem = clsBonfires(bonfireID)
+                    cmbBonfire.SelectedItem = Data.clsBonfires(bonfireID)
                 End If
 
 
             Case "Stats"
-                Try
-                    If Not nmbMaxHP.Focused Then nmbMaxHP.Value = RInt32(charptr2 + &H14)
-                    If Not nmbMaxStam.Focused Then nmbMaxStam.Value = RInt32(charptr2 + &H30)
-
-                    If Not nmbVitality.Focused Then nmbVitality.Value = RInt32(charptr2 + &H38)
-                    If Not nmbAttunement.Focused Then nmbAttunement.Value = RInt32(charptr2 + &H40)
-                    If Not nmbEnd.Focused Then nmbEnd.Value = RInt32(charptr2 + &H48)
-                    If Not nmbStr.Focused Then nmbStr.Value = RInt32(charptr2 + &H50)
-                    If Not nmbDex.Focused Then nmbDex.Value = RInt32(charptr2 + &H58)
-                    If Not nmbIntelligence.Focused Then nmbIntelligence.Value = RInt32(charptr2 + &H60)
-                    If Not nmbFaith.Focused Then nmbFaith.Value = RInt32(charptr2 + &H68)
-
-                    If Not nmbHumanity.Focused Then nmbHumanity.Value = RInt32(charptr2 + &H7C)
-                    If Not nmbResistance.Focused Then nmbResistance.Value = RInt32(charptr2 + &H80)
-
-                    If Not nmbGender.Focused Then nmbGender.Value = RInt32(charptr2 + &HC2)
-
-                    If Not nmbClearCount.Focused Then nmbClearCount.Value = RInt32(gamestatsptr + &H3C)
-
-                Catch ex As Exception
-
-                End Try
+                nmbMaxHP.FuckOff(Hook.Stats.MaxHP.ValueInt)
+                nmbMaxStam.FuckOff(Hook.Stats.MaxStamina.ValueInt)
+                nmbVitality.FuckOff(Hook.Stats.VIT.ValueInt)
+                nmbAttunement.FuckOff(Hook.Stats.ATN.ValueInt)
+                nmbEnd.FuckOff(Hook.Stats.ENDurance.ValueInt)
+                nmbStr.FuckOff(Hook.Stats.STR.ValueInt)
+                nmbDex.FuckOff(Hook.Stats.DEX.ValueInt)
+                nmbIntelligence.FuckOff(Hook.Stats.INT.ValueInt)
+                nmbFaith.FuckOff(Hook.Stats.FTH.ValueInt)
+                nmbResistance.FuckOff(Hook.Stats.RES.ValueInt)
+                nmbHumanity.FuckOff(Hook.Stats.Humanity.ValueInt)
+                nmbGender.FuckOff(Hook.Stats.ExternalGenitals.ValueInt)
+                nmbClearCount.FuckOff(Hook.GameStats.ClearCount.ValueInt)
         End Select
 
     End Sub
@@ -431,1605 +247,7 @@ Public Class frmForm1
 
     End Sub
 
-    Private Sub dropitem(ByVal cat As String, item As String, num As Integer)
-        Dim TargetBufferSize = 1024
-        Dim Rtn As Integer
 
-        Dim bytes() As Byte
-        Dim bytes2() As Byte
-
-        Dim bytcat As Integer = &H1
-        Dim bytitem As Integer = &H6
-        Dim bytcount As Integer = &H10
-        Dim bytptr1 As Integer = &H15
-        Dim bytptr2 As Integer = &H32
-        Dim bytjmp As Integer = &H38
-
-        bytes = {&HBD, 0, 0, 0, 0, &HBB, &HF0, &H0, &H0, &H0, &HB9, &HFF, &HFF, &HFF, &HFF, &HBA, 0, 0, 0, 0, &HA1, &HD0, &H86, &H37, &H1, &H89, &HA8, &H28, &H8, &H0, &H0, &H89, &H98, &H2C, &H8, &H0, &H0, &H89, &H88, &H30, &H8, &H0, &H0, &H89, &H90, &H34, &H8, &H0, &H0, &HA1, &HBC, &HD6, &H37, &H1, &H50, &HE8, 0, 0, 0, 0, &HC3}
-
-        'cllItemCatsIDs(clsItemCatsIDs("Weapons") / &H10000000)("Target Shield+15"))
-
-        bytes2 = BitConverter.GetBytes(Convert.ToInt32(clsItemCatsIDs(cat)))
-        Array.Copy(bytes2, 0, bytes, bytcat, bytes2.Length)
-
-        Dim tmpCat As Integer
-        tmpCat = Convert.ToInt32(clsItemCatsIDs(cat) / &H10000000)
-        If tmpCat = 4 Then tmpCat = 3
-
-        bytes2 = BitConverter.GetBytes(Convert.ToInt32(cllItemCatsIDs(tmpCat)(item)))
-        Array.Copy(bytes2, 0, bytes, bytitem, bytes2.Length)
-
-        bytes2 = BitConverter.GetBytes(Convert.ToInt32(num))
-        Array.Copy(bytes2, 0, bytes, bytcount, bytes2.Length)
-
-        bytes2 = BitConverter.GetBytes(Convert.ToInt32(&H13786D0))
-        Array.Copy(bytes2, 0, bytes, bytptr1, bytes2.Length)
-
-        bytes2 = BitConverter.GetBytes(Convert.ToInt32(&H137D6BC))
-        Array.Copy(bytes2, 0, bytes, bytptr2, bytes2.Length)
-
-        bytes2 = BitConverter.GetBytes(Convert.ToInt32(0 - ((dropPtr + &H3C) - (&HDC8C60))))
-        Array.Copy(bytes2, 0, bytes, bytjmp, bytes2.Length)
-
-        Rtn = WriteProcessMemory(_targetProcessHandle, dropPtr, bytes, TargetBufferSize, 0)
-        'MsgBox(Hex(dropPtr))
-        CreateRemoteThread(_targetProcessHandle, 0, 0, dropPtr, 0, 0, 0)
-
-        Thread.Sleep(5)
-    End Sub
-
-    Public Sub bossasylum()
-
-        Dim bossDead As Boolean = False
-        Dim firstTry As Boolean = True
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 16, False") 'Boss Death Flag
-            ScriptEnvironment.Run("SetEventFlag 11810000, False") 'Tutorial Complete Flag
-            ScriptEnvironment.Run("SetEventFlag 11815395, True") 'Boss at lower position
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1810998")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 1")
-
-            ScriptEnvironment.Run("Wait 500")
-            ScriptEnvironment.Run("Warp_Coords 3.15, 198.15, -6.0, 180")
-            ScriptEnvironment.Run("CamReset 10000, 1")
-            ScriptEnvironment.Run("SetEventFlag 11815390, True")
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 0")
-
-            If firstTry And rushName = "Normal" Then
-                ScriptEnvironment.Run("ClearPlayTime")
-                firstTry = False
-            End If
-
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(0, &H8000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bossbedofchaos()
-
-
-        ScriptEnvironment.Run("SetEventFlag 10, False") 'Boss 
-
-        ScriptEnvironment.Run("SetEventFlag 11410000, False")
-        ScriptEnvironment.Run("SetEventFlag 11410200, False") 'Center Platform flag
-        ScriptEnvironment.Run("SetEventFlag 11410291, False") 'Arm flag
-        ScriptEnvironment.Run("SetEventFlag 11410292, False") 'Arm flag
-
-        'warp before fog gate to set last solid position
-
-        ScriptEnvironment.Run("PlayerHide 1")
-        ScriptEnvironment.Run("ShowHUD False")
-        ScriptEnvironment.Run("FadeOut")
-        ScriptEnvironment.Run("SetHp 10000, 1.0")
-
-        ScriptEnvironment.Run("WarpNextStage_Bonfire 1410980")
-
-        ScriptEnvironment.Run("Wait 1000")
-
-        ScriptEnvironment.Run("WaitForLoad")
-        ScriptEnvironment.Run("BlackScreen")
-        ScriptEnvironment.Run("PlayerHide 1")
-        ScriptEnvironment.Run("SetDisableGravity 10000, 1")
-
-        ScriptEnvironment.Run("Wait 500")
-        ScriptEnvironment.Run("Warp 10000, 1412998")
-        ScriptEnvironment.Run("Wait 250")
-        ScriptEnvironment.Run("Warp 10000, 1412997")
-
-        ScriptEnvironment.Run("Wait 1250")
-        ScriptEnvironment.Run("FadeIn")
-        ScriptEnvironment.Run("ShowHUD 1")
-        ScriptEnvironment.Run("PlayerHide 0")
-        ScriptEnvironment.Run("SetDisableGravity 10000, 0")
-
-    End Sub
-    Public Sub bossbellgargoyles()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-            ScriptEnvironment.Run("SetEventFlag 3, False") 'Boss Death Flag
-            ScriptEnvironment.Run("SetEventFlag 11010000, False") 'Boss Cinematic Viewed Flag
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1010998")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 1")
-
-            ScriptEnvironment.Run("Wait 500")
-
-            ScriptEnvironment.Run("SetEventFlag 11015390, True") 'Boss Fog Used
-            ScriptEnvironment.Run("SetEventFlag 11015393, True") 'Boss Area Entered
-            ScriptEnvironment.Run("Wait 250")
-
-            'facing 0 degrees
-            ScriptEnvironment.Run("Warp_Coords 10.8, 48.92, 87.26")
-            ScriptEnvironment.Run("CamReset 10000, 1")
-
-
-            ScriptEnvironment.Run("Wait 1250")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 0")
-
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(0, &H10000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bossblackdragonkalameet()
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-
-            ScriptEnvironment.Run("SetEventFlag 11210004, False")
-
-            ScriptEnvironment.Run("SetEventFlag 121, False")
-            ScriptEnvironment.Run("SetEventFlag 11210539, True")
-            ScriptEnvironment.Run("SetEventFlag 11210535, True")
-            ScriptEnvironment.Run("SetEventFlag 11210067, False")
-            ScriptEnvironment.Run("SetEventFlag 11210066, False")
-            ScriptEnvironment.Run("SetEventFlag 11210056, True")
-
-            ScriptEnvironment.Run("SetEventFlag 1821, True")
-            ScriptEnvironment.Run("SetEventFlag 11210592, True")
-
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1210998")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 1")
-
-            ScriptEnvironment.Run("Wait 500")
-            ScriptEnvironment.Run("Warp_Coords 876.04, -344.73, 749.75, 240")
-            ScriptEnvironment.Run("CamReset 10000, 1")
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(&H2300, &H8000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bosscaprademon()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 11010902, False")
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1010998")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 1")
-            ScriptEnvironment.Run("Wait 500")
-
-            ScriptEnvironment.Run("Warp_Coords -73.17, -43.56, -15.17, 321")
-            ScriptEnvironment.Run("CamReset 10000, 1")
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 0")
-
-
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(&HF70, &H2000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bossceaselessdischarge()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 11410800, False")
-            ScriptEnvironment.Run("SetEventFlag 11410801, False")
-            ScriptEnvironment.Run("SetEventFlag 11410900, False") 'Boss death flag
-            ScriptEnvironment.Run("SetEventFlag 51410180, True") 'Corpse Loot reset
-
-
-            ScriptEnvironment.Run("SetEventFlag 11415379, False")
-            ScriptEnvironment.Run("SetEventFlag 11415385, True")
-            ScriptEnvironment.Run("SetEventFlag 11415378, True")
-            ScriptEnvironment.Run("SetEventFlag 11415373, True")
-            ScriptEnvironment.Run("SetEventFlag 11415372, True")
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1410998")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 1")
-
-            ScriptEnvironment.Run("Wait 500")
-
-            ScriptEnvironment.Run("Warp_Coords 250.53, -283.15, 72.1")
-            ScriptEnvironment.Run("Wait 250")
-
-            ScriptEnvironment.Run("Warp_Coords 402.45, -278.15, 15.5, 30")
-            ScriptEnvironment.Run("CamReset 10000, 1")
-
-
-
-
-            ScriptEnvironment.Run("Wait 1250")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(&H3C70, &H8000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bosscentipededemon()
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-            ScriptEnvironment.Run("SetEventFlag 11410002, False") 'Cinematic flag
-            ScriptEnvironment.Run("SetEventFlag 11410901, False")
-
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1410998")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-
-            ScriptEnvironment.Run("Wait 500")
-
-            ScriptEnvironment.Run("Warp 10000, 1412896")
-            ScriptEnvironment.Run("SetEventFlag 11415380, True")
-            ScriptEnvironment.Run("SetEventFlag 11415383, True")
-            ScriptEnvironment.Run("SetEventFlag 11415382, True")
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(&H3C70, &H4000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bosschaoswitchquelaag()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 9, False")
-            ScriptEnvironment.Run("SetEventFlag 11400000, False") 'Cinematic flag
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1400980")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-
-            ScriptEnvironment.Run("Wait 500")
-
-
-            ScriptEnvironment.Run("Warp_Coords 17.2, -236.9, 113.6, 75")
-            ScriptEnvironment.Run("CamReset 10000, 1")
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(0, &H400000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bosscrossbreedpriscilla()
-
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-            ScriptEnvironment.Run("SetEventFlag 4, False") 'Boss Death flag
-            ScriptEnvironment.Run("SetEventFlag 1691, True") 'Priscilla Hostile flag
-            ScriptEnvironment.Run("SetEventFlag 1692, True") 'Priscilla Dead flag
-
-            ScriptEnvironment.Run("SetEventFlag 11100531, False") 'Boss Disabled flag
-
-            ScriptEnvironment.Run("SetEventFlag 11100000, False") 'Previous victory flag
-
-
-
-
-            'StandardTransition(1102961, 1102997)
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1102961")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-
-            ScriptEnvironment.Run("Wait 500")
-
-
-            ScriptEnvironment.Run("Warp_Coords -22.72, 60.55, 711.86")
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(0, &H8000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bossdarksungwyndolin()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 11510900, False") 'Boss Death Flag
-            ScriptEnvironment.Run("SetEventFlag 11510523, False") 'Boss Disabled Flag
-
-            'StandardTransition(1510982, 1512896)
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1510982")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-
-            ScriptEnvironment.Run("Wait 500")
-
-
-            ScriptEnvironment.Run("Warp_Coords 435.1, 60.2, 255.0")
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(&H4670, &H8000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bossdemonfiresage()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 11410410, False")
-            'StandardTransition(1410998, 1412416)
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1410998")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-
-            ScriptEnvironment.Run("Wait 500")
-
-
-            ScriptEnvironment.Run("Warp_Coords 148.04, -341.04, 95.57")
-
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(&H3C30, &H20)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bossfourkings()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 13, False")
-            ScriptEnvironment.Run("SetEventFlag 1677, True") 'Kaathe Angry/gone
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1600999")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-
-            ScriptEnvironment.Run("Wait 500")
-
-
-            'ScriptEnvironment.Run("Warp_Coords 82.24, -163.2, 0.29")
-            'Facing 185.98
-            ScriptEnvironment.Run("Warp_Coords 85.18, -191.99, 4.95, 185")
-            ScriptEnvironment.Run("CamReset 10000, 1")
-
-            ScriptEnvironment.Run("Wait 1500")
-            dropitem("Rings", "Covenant of Artorias", 1)
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(0, &H40000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    'ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("WaitTillLoad")
-                    ScriptEnvironment.Run("WaitForLoad")
-                End If
-            End If
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bossgapingdragon()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 2, False") 'Boss Death Flag
-            ScriptEnvironment.Run("SetEventFlag 11000853, True") 'Channeler Death Flag
-            'StandardTransition(1000999, 1002997)
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1000999")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("Wait 500")
-            ScriptEnvironment.Run("SetEventFlag 11005390, True")
-            ScriptEnvironment.Run("SetEventFlag 11005392, True")
-            ScriptEnvironment.Run("SetEventFlag 11005393, True")
-            ScriptEnvironment.Run("SetEventFlag 11005394, True")
-            ScriptEnvironment.Run("SetEventFlag 11005397, True")
-            ScriptEnvironment.Run("SetEventFlag 11000000, False")
-
-
-            ScriptEnvironment.Run("Warp 10000, 1002997")
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(0, &H20000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-
-    End Sub
-    Public Sub bossgravelordnito()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-
-            ScriptEnvironment.Run("SetEventFlag 7, False")
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1310998")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 1")
-            ScriptEnvironment.Run("Wait 500")
-
-            'ScriptEnvironment.Run("Warp 10000, 1312110)
-            ScriptEnvironment.Run("Warp_Coords -126.84, -265.12, -30.78")
-            ScriptEnvironment.Run("SetEventFlag 11315390, True")
-            ScriptEnvironment.Run("SetEventFlag 11315393, True")
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(0, &H1000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-
-    End Sub
-    Public Sub bossgwyn()
-
-        Dim bossDead As Boolean = False
-        Dim firstTry As Boolean = True
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 15, False")
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1800999")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-
-            ScriptEnvironment.Run("Wait 500")
-
-
-            ScriptEnvironment.Run("Warp_Coords 418.15, -115.92, 169.58")
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-
-            If firstTry And rushName = "Reverse" Then
-                ScriptEnvironment.Run("ClearPlayTime")
-                firstTry = False
-            End If
-
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(0, &H10000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bossirongolem()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 11, False") 'Boss Death Flag
-            ScriptEnvironment.Run("SetEventFlag 11500865, True") 'Bomb-Tossing Giant Death Flag
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1500999")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-
-            ScriptEnvironment.Run("Wait 500")
-
-
-            ScriptEnvironment.Run("Warp_Coords 85.5, 82, 255.1")
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(0, &H100000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bossknightartorias()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-
-            ScriptEnvironment.Run("SetEventFlag 11210001, False")
-            ScriptEnvironment.Run("SetEventFlag 11210513, False") 'Ciaran Present
-
-            'Non-standard due to co-ords warp
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1210998")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 1")
-
-            ScriptEnvironment.Run("Wait 500")
-            'facing 75.8 degrees
-            ScriptEnvironment.Run("Warp_Coords 1034.11, -330.0, 810.68")
-
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(&H2300, &H40000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bossmanus()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 11210002, False")
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1210982")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-
-            ScriptEnvironment.Run("Wait 500")
-
-
-            ScriptEnvironment.Run("Warp_Coords 857.53, -576.69, 873.38")
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(&H2300, &H20000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bossmoonlightbutterfly()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 11200900, False")
-            ScriptEnvironment.Run("SetEventFlag 11205383, False")
-
-            'timing of warp/flags matters
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1200999")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 1")
-
-
-
-
-            ScriptEnvironment.Run("Wait 500")
-            ScriptEnvironment.Run("Warp_Coords 181.39, 7.53, 29.01")
-            Thread.Sleep(4000)
-            ScriptEnvironment.Run("SetEventFlag 11205383, True")
-
-            ScriptEnvironment.Run("Warp_Coords 178.82, 8.12, 30.77")
-
-
-
-            Thread.Sleep(2000)
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-
-            ScriptEnvironment.Run("PlayerHide 0")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(&H1E70, &H8000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-
-    End Sub
-    Public Sub bossoands()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 12, False")
-
-
-
-            'Non-standard due to co-ords warp
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1510998")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 1")
-
-            ScriptEnvironment.Run("Wait 500")
-            'facing 90 degrees
-            ScriptEnvironment.Run("Warp_Coords 539.9, 142.6, 254.79")
-
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(0, &H80000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bosspinwheel()
-        Dim bossDead As Boolean = False
-
-        Do
-            'Pinwheel Entity ID = 1300800
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 6, False")
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1300999")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-
-            ScriptEnvironment.Run("Wait 500")
-
-
-            ScriptEnvironment.Run("Warp_Coords 46.0, -165.8, 152.02, 180")
-            ScriptEnvironment.Run("CamReset 10000, 1")
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(0, &H2000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bosssanctuaryguardian()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 11210000, False")
-            ScriptEnvironment.Run("SetEventFlag 11210001, False")
-
-
-            'Non-standard due to co-ords warp
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-            ScriptEnvironment.Run("SetHp 10000, 1.0")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1210998")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 1")
-
-
-            ScriptEnvironment.Run("Wait 500")
-            'facing = 45 deg
-            ScriptEnvironment.Run("Warp_Coords 931.82, -318.63, 472.45")
-
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(&H2300, &H80000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bossseath()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 14, False")
-            ScriptEnvironment.Run("SetEventFlag 11700000, False")
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1700999")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-
-            ScriptEnvironment.Run("Wait 500")
-
-
-            ScriptEnvironment.Run("Warp_Coords 109, 134.05, 856.48")
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(0, &H20000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bosssif()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 5, False")
-            ScriptEnvironment.Run("SetEventFlag 11200000, False")
-            ScriptEnvironment.Run("SetEventFlag 11200001, False")
-            ScriptEnvironment.Run("SetEventFlag 11200002, False")
-            ScriptEnvironment.Run("SetEventFlag 11205392, False")
-            ScriptEnvironment.Run("SetEventFlag 11205393, False")
-            ScriptEnvironment.Run("SetEventFlag 11205394, False")
-
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("SetHp 10000, 1.0")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1200999")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 1")
-            ScriptEnvironment.Run("Wait 500")
-            'ScriptEnvironment.Run("Warp_Coords 274, -19.82, -266.43)
-            ScriptEnvironment.Run("Wait 500")
-            'ScriptEnvironment.Run("Warp 10000, 1202999)
-            ScriptEnvironment.Run("Warp_Coords 254.31, -16.02, -320.32")
-
-            ScriptEnvironment.Run("Wait 1000")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            ScriptEnvironment.Run("SetDisableGravity 10000, 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(0, &H4000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-    Public Sub bossstraydemon()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-
-            ScriptEnvironment.Run("SetEventFlag 11810000, True")
-            ScriptEnvironment.Run("SetEventFlag 11810900, False")
-
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1810998")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("DisableDamage 10000, 1")
-
-            ScriptEnvironment.Run("Wait 500")
-
-            ScriptEnvironment.Run("Warp 10000, 1812996")
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-            ScriptEnvironment.Run("Wait 1000")
-            ScriptEnvironment.Run("DisableDamage 10000, 0")
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(&H5A70, &H8000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-
-
-    End Sub
-    Public Sub bosstaurusdemon()
-
-        Dim bossDead As Boolean = False
-
-        Do
-            ScriptEnvironment.Run("RequestFullRecover")
-
-            ScriptEnvironment.Run("SetEventFlag 11010901, False")
-
-            ScriptEnvironment.Run("PlayerHide 1")
-            ScriptEnvironment.Run("ShowHUD False")
-            ScriptEnvironment.Run("FadeOut")
-
-            ScriptEnvironment.Run("WarpNextStage_Bonfire 1010998")
-
-            ScriptEnvironment.Run("Wait 1000")
-
-            ScriptEnvironment.Run("WaitForLoad")
-            ScriptEnvironment.Run("BlackScreen")
-            ScriptEnvironment.Run("PlayerHide 1")
-
-            ScriptEnvironment.Run("Wait 500")
-
-
-            ScriptEnvironment.Run("Warp_Coords 49.81, 16.9, -118.87")
-
-            ScriptEnvironment.Run("Wait 1500")
-            ScriptEnvironment.Run("FadeIn")
-            ScriptEnvironment.Run("ShowHUD 1")
-            ScriptEnvironment.Run("PlayerHide 0")
-
-            If rushMode Then
-                bossDead = ScriptFunction.waitforbossdeath(&HF70, &H4000000)
-                If Not bossDead Then
-                    ScriptEnvironment.Run("AddTrueDeathCount")
-                    ScriptEnvironment.Run("SetTextEffect 16")
-                    ScriptEnvironment.Run("Wait 5000")
-                End If
-            End If
-
-        Loop While rushMode And Not bossDead
-        ScriptEnvironment.Run("Wait 5000")
-    End Sub
-
-    Public Sub scenarioartoriasandciaran()
-
-
-        ScriptEnvironment.Run("SetEventFlag 11210001, False") 'Artorias Disabled
-        ScriptEnvironment.Run("SetEventFlag 11210513, True") 'Ciaran Present
-
-
-        ScriptEnvironment.Run("SetEventFlag 1863, False") 'Ciaran Hostile
-        ScriptEnvironment.Run("SetEventFlag 1864, False") 'Ciaran Dead
-
-        ScriptEnvironment.Run("PlayerHide 1")
-        ScriptEnvironment.Run("ShowHUD False")
-        ScriptEnvironment.Run("FadeOut")
-
-        ScriptEnvironment.Run("SetHp 10000, 1.0")
-
-        ScriptEnvironment.Run("WarpNextStage_Bonfire 1210998")
-
-        ScriptEnvironment.Run("Wait 1000")
-
-        ScriptEnvironment.Run("WaitForLoad")
-        ScriptEnvironment.Run("BlackScreen")
-
-
-        ScriptEnvironment.Run("PlayerHide 1")
-        ScriptEnvironment.Run("SetDisableGravity 10000, 1")
-
-        ScriptEnvironment.Run("Wait 500")
-        'facing 75.8 degrees
-        ScriptEnvironment.Run("Warp_Coords 1034.11, -330.0, 810.68")
-
-
-        ScriptEnvironment.Run("Wait 1500")
-        ScriptEnvironment.Run("FadeIn")
-        ScriptEnvironment.Run("ShowHUD 1")
-        ScriptEnvironment.Run("PlayerHide 0")
-        ScriptEnvironment.Run("SetDisableGravity 10000, 0")
-
-        ScriptEnvironment.Run("SetEventFlag 1863, True") 'Ciaran Hostile
-        'funccall_old("SetBossGauge", {6740, 1, 10001, 0, 0})
-        ScriptEnvironment.Run("SetBossGauge 6740, 1, 10001")
-        ScriptFunction.setunknownnpcname("Lord's Blade Ciaran")
-    End Sub
-    Public Sub scenariotriplesanctuaryguardian()
-
-
-
-        ScriptEnvironment.Run("SetEventFlag 11210000, False")
-        ScriptEnvironment.Run("SetEventFlag 11210001, True")
-
-
-        'Non-standard due to co-ords warp
-
-        ScriptEnvironment.Run("PlayerHide 1")
-        ScriptEnvironment.Run("ShowHUD False")
-        ScriptEnvironment.Run("FadeOut")
-        ScriptEnvironment.Run("SetHp 10000, 1.0")
-
-        ScriptEnvironment.Run("WarpNextStage_Bonfire 1210998")
-
-        ScriptEnvironment.Run("Wait 1000")
-
-        ScriptEnvironment.Run("WaitForLoad")
-        ScriptEnvironment.Run("BlackScreen")
-        ScriptEnvironment.Run("PlayerHide 1")
-        ScriptEnvironment.Run("SetDisableGravity 10000, 1")
-
-
-        ScriptEnvironment.Run("Wait 500")
-        'facing = 45 deg
-        ScriptEnvironment.Run("Warp_Coords 931.82, -318.63, 472.45")
-
-
-        ScriptEnvironment.Run("Wait 1500")
-        ScriptEnvironment.Run("FadeIn")
-        ScriptEnvironment.Run("ShowHUD 1")
-        ScriptEnvironment.Run("PlayerHide 0")
-        ScriptEnvironment.Run("SetDisableGravity 10000, 0")
-    End Sub
-    Public Sub scenariopinwheeldefense()
-        ScriptEnvironment.Run("SetEventFlag 6, False")
-        ScriptEnvironment.Run("WarpNextStage_Bonfire 1300999")
-        ScriptEnvironment.Run("wait 1000")
-        ScriptEnvironment.Run("waitforload")
-        ScriptEnvironment.Run("blackscreen")
-        ScriptEnvironment.Run("wait 200")
-        ScriptEnvironment.Run("warp_coords 42.88, -144.56, 236.94")
-        ScriptEnvironment.Run("camreset 10000, 1")
-        ScriptEnvironment.Run("setdisable 6550, 0")
-        ScriptEnvironment.Run("wait 100")
-        ScriptEnvironment.Run("intvar1 = getentityptr 6550")
-        ScriptEnvironment.Run("forceentitydrawgroup intvar1")
-        ScriptEnvironment.Run("warpentity_coords intvar1, 46.0, -165.8, 152.02, 180")
-        ScriptEnvironment.Run("warp_coords 46.0, -165.8, 152.02")
-        ScriptEnvironment.Run("camreset 10000, 1")
-        ScriptEnvironment.Run("enablelogic 6550, 1")
-        ScriptEnvironment.Run("enablelogic 10000, 0")
-        ScriptEnvironment.Run("setdrawenable 10000, 0")
-        ScriptEnvironment.Run("setdrawenable 6550, 1")
-        ScriptEnvironment.Run("intvar1 = getentityptr 1300800")
-        ScriptEnvironment.Run("setdisable 10000, 1")
-        ScriptEnvironment.Run("controlentity intvar1, 1")
-        ScriptEnvironment.Run("camfocusentity intvar1")
-        ScriptEnvironment.Run("wait 1000")
-        ScriptEnvironment.Run("fadein")
-    End Sub
-
-    Public Sub beginbossrush()
-
-
-        Dim msg As String
-
-        ScriptEnvironment.Run("ShowHUD False")
-
-        ScriptFunction.setgendialog(GenDiagResponse, GenDiagVal, "Choose your NG level wisely.\nValues above 6 are ignored.", 3, "Begin", "Wuss Out")
-        If Not GenDiagResponse = 1 Then
-            ScriptFunction.setgendialog(GenDiagResponse, GenDiagVal, "So much shame...", 2, "I know", "I don't care")
-            ScriptEnvironment.Run("ShowHUD 1")
-            WInt32(RInt32(&H13786D0) + &H154, -1)
-            WInt32(RInt32(&H13786D0) + &H158, -1)
-            Return
-        End If
-        If GenDiagVal > 6 Then GenDiagVal = 6
-        ScriptFunction.setclearcount(GenDiagVal)
-
-        msg = "Welcome to the Boss Rush." & Environment.NewLine
-        msg = msg & "Saving has been disabled." & Environment.NewLine
-
-
-        For i = 10 To 1 Step -1
-            ScriptFunction.setbriefingmsg(msg & i)
-            ScriptEnvironment.Run("Wait 1000")
-        Next
-
-
-        ScriptFunction.setbriefingmsg("Begin")
-
-        ScriptEnvironment.Run("CroseBriefingMsg")
-        ScriptEnvironment.Run("Wait 1000")
-
-
-        rushTimer = New Thread(AddressOf BeginRushTimer)
-        rushTimer.IsBackground = True
-
-
-
-
-        rushTimer.Start()
-        rushMode = True
-        rushName = "Normal"
-
-        bossasylum()
-        bosstaurusdemon()
-        bossbellgargoyles()
-        bosscaprademon()
-        bossgapingdragon()
-        bossmoonlightbutterfly()
-        bosssif()
-        bosschaoswitchquelaag()
-        bossstraydemon()
-        bossirongolem()
-        bossoands()
-        bosspinwheel()
-        bossgravelordnito()
-        bosssanctuaryguardian()
-        bossknightartorias()
-        bossmanus()
-        bossceaselessdischarge()
-        bossdemonfiresage()
-        bosscentipededemon()
-        bossblackdragonkalameet()
-        bossseath()
-        bossfourkings()
-        bosscrossbreedpriscilla()
-        bossdarksungwyndolin()
-        bossgwyn()
-
-
-        gamestatsptr = RInt32(&H1378700)
-        Dim rushTime As TimeSpan
-        rushTime = TimeSpan.FromMilliseconds(RInt32(gamestatsptr + &H68))
-        ScriptFunction.setbriefingmsg("Congratulations." & ChrW(&HA) & Strings.Left(rushTime.ToString, 12) & ChrW(&HA) &
-                       "NG: " & RInt32(gamestatsptr + &H3C) & ChrW(&HA) &
-                       "Deaths: " & RInt32(gamestatsptr + &H58))
-        ScriptEnvironment.Run("BlackScreen")
-        ScriptEnvironment.Run("ShowHUD False")
-        ScriptEnvironment.Run("Wait 10000")
-        ScriptEnvironment.Run("FadeIn")
-        ScriptEnvironment.Run("ShowHUD 1")
-        ScriptEnvironment.Run("CroseBriefingMsg")
-
-        rushTimer.Abort()
-    End Sub
-    Public Sub beginreversebossrush()
-        'Reverse Boss Order
-        'Gwyn
-        'Dark Sun Gwyndolin
-        'Crossbreed Priscilla
-        'Four Kings
-        'Seath
-        'Black Dragon Kalameet
-        'Centipede Demon
-        'Demon Firesage
-        'Ceaseless Discharge
-        'Manus
-        'Knight Artorias
-        'Sanctuary Guardian
-        'Gravelord Nito
-        'Pinwheel
-        'Ornstein And Smough
-        'Iron Golem
-        'Stray Demon
-        'Chaos Witch Quelaag
-        'Sif
-        'Moonlight Butterfly
-        'Gaping Dragon
-        'Capra Demon
-        'Bell Gargoyles
-        'Taurus Demon
-        'Asylum Demon
-        Dim msg As String
-
-        ScriptEnvironment.Run("ShowHUD False")
-
-        ScriptFunction.setgendialog(GenDiagResponse, GenDiagVal, "Choose your NG level wisely.\nValues above 6 are ignored.", 3, "Begin", "Wuss Out")
-        If Not GenDiagResponse = 1 Then
-            ScriptFunction.setgendialog(GenDiagResponse, GenDiagVal, "So much shame...", 2, "I know", "I don't care")
-            ScriptEnvironment.Run("ShowHUD 1")
-            WInt32(RInt32(&H13786D0) + &H154, -1)
-            WInt32(RInt32(&H13786D0) + &H158, -1)
-            Return
-        End If
-        If GenDiagVal > 6 Then GenDiagVal = 6
-        ScriptFunction.setclearcount(GenDiagVal)
-
-        msg = "Welcome to the Reverse Boss Rush." & Environment.NewLine
-        msg = msg & "Saving has been disabled." & Environment.NewLine
-
-
-        For i = 10 To 1 Step -1
-            ScriptFunction.setbriefingmsg(msg & i)
-            ScriptEnvironment.Run("Wait 1000")
-        Next
-
-
-        ScriptFunction.setbriefingmsg("Begin")
-
-        ScriptEnvironment.Run("CroseBriefingMsg")
-        ScriptEnvironment.Run("Wait 1000")
-
-
-        rushTimer = New Thread(AddressOf BeginRushTimer)
-        rushTimer.IsBackground = True
-
-
-
-
-        rushTimer.Start()
-        rushMode = True
-        rushName = "Reverse"
-
-
-        bossgwyn()
-        bossdarksungwyndolin()
-        bosscrossbreedpriscilla()
-        bossfourkings()
-        bossseath()
-        bossblackdragonkalameet()
-        bosscentipededemon()
-        bossdemonfiresage()
-        bossceaselessdischarge()
-        bossmanus()
-        bossknightartorias()
-        bosssanctuaryguardian()
-        bossgravelordnito()
-        bosspinwheel()
-        bossoands()
-        bossirongolem()
-        bossstraydemon()
-        bosschaoswitchquelaag()
-        bosssif()
-        bossmoonlightbutterfly()
-        bossgapingdragon()
-        bosscaprademon()
-        bossbellgargoyles()
-        bosstaurusdemon()
-        bossasylum()
-
-        gamestatsptr = RInt32(&H1378700)
-        Dim rushTime As TimeSpan
-        rushTime = TimeSpan.FromMilliseconds(RInt32(gamestatsptr + &H68))
-        ScriptFunction.setbriefingmsg("Congratulations." & ChrW(&HA) & Strings.Left(rushTime.ToString, 12) & ChrW(&HA) &
-                       "NG: " & RInt32(gamestatsptr + &H3C) & ChrW(&HA) &
-                       "Deaths: " & RInt32(gamestatsptr + &H58))
-        ScriptEnvironment.Run("BlackScreen")
-        ScriptEnvironment.Run("ShowHUD False")
-        ScriptEnvironment.Run("Wait 10000")
-        ScriptEnvironment.Run("FadeIn")
-        ScriptEnvironment.Run("ShowHUD 1")
-        ScriptEnvironment.Run("CroseBriefingMsg")
-
-        rushTimer.Abort()
-
-    End Sub
 
 
 
@@ -2037,214 +255,158 @@ Public Class frmForm1
 
 
     Private Sub btnBossAsylumDemon_Click(sender As Object, e As EventArgs) Handles btnBossAsylumDemon.Click, Button1.Click
-        trd = New Thread(AddressOf bossasylum)
+        trd = New Thread(AddressOf Funcs.bossasylum)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossBedOfChaos_Click(sender As Object, e As EventArgs) Handles btnBossBedOfChaos.Click, Button6.Click
-        trd = New Thread(AddressOf bossbedofchaos)
+        trd = New Thread(AddressOf Funcs.bossbedofchaos)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossBellGargoyles_Click(sender As Object, e As EventArgs) Handles btnBossBellGargoyles.Click, Button4.Click
-        trd = New Thread(AddressOf bossbellgargoyles)
+        trd = New Thread(AddressOf Funcs.bossbellgargoyles)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossBlackDragonKalameet_Click(sender As Object, e As EventArgs) Handles btnBossBlackDragonKalameet.Click, Button26.Click
-        trd = New Thread(AddressOf bossblackdragonkalameet)
+        trd = New Thread(AddressOf Funcs.bossblackdragonkalameet)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossCapraDemon_Click(sender As Object, e As EventArgs) Handles btnBossCapraDemon.Click, Button3.Click
-        trd = New Thread(AddressOf bosscaprademon)
+        trd = New Thread(AddressOf Funcs.bosscaprademon)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossCeaselessDischarge_Click(sender As Object, e As EventArgs) Handles btnBossCeaselessDischarge.Click, Button5.Click
-        trd = New Thread(AddressOf bossceaselessdischarge)
+        trd = New Thread(AddressOf Funcs.bossceaselessdischarge)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossCentipedeDemon_Click(sender As Object, e As EventArgs) Handles btnBossCentipedeDemon.Click, Button7.Click
-        trd = New Thread(AddressOf bosscentipededemon)
+        trd = New Thread(AddressOf Funcs.bosscentipededemon)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossChaosWitchQuelaag_Click(sender As Object, e As EventArgs) Handles btnBossChaosWitchQuelaag.Click, Button8.Click
-        trd = New Thread(AddressOf bosschaoswitchquelaag)
+        trd = New Thread(AddressOf Funcs.bosschaoswitchquelaag)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossCrossbreedPriscilla_Click(sender As Object, e As EventArgs) Handles btnBossCrossbreedPriscilla.Click, Button9.Click
-        trd = New Thread(AddressOf bosscrossbreedpriscilla)
+        trd = New Thread(AddressOf Funcs.bosscrossbreedpriscilla)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossDarkSunGwyndolin_Click(sender As Object, e As EventArgs) Handles btnBossDarkSunGwyndolin.Click, Button10.Click
-        trd = New Thread(AddressOf bossdarksungwyndolin)
+        trd = New Thread(AddressOf Funcs.bossdarksungwyndolin)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossDemonFiresage_Click(sender As Object, e As EventArgs) Handles btnBossDemonFiresage.Click, Button11.Click
-        trd = New Thread(AddressOf bossdemonfiresage)
+        trd = New Thread(AddressOf Funcs.bossdemonfiresage)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossFourKings_Click(sender As Object, e As EventArgs) Handles btnBossFourKings.Click, Button13.Click
-        trd = New Thread(AddressOf bossfourkings)
+        trd = New Thread(AddressOf Funcs.bossfourkings)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossGapingDragon_Click(sender As Object, e As EventArgs) Handles btnBossGapingDragon.Click, Button14.Click
-        trd = New Thread(AddressOf bossgapingdragon)
+        trd = New Thread(AddressOf Funcs.bossgapingdragon)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossGravelordNito_Click(sender As Object, e As EventArgs) Handles btnBossGravelordNito.Click, Button15.Click
-        trd = New Thread(AddressOf bossgravelordnito)
+        trd = New Thread(AddressOf Funcs.bossgravelordnito)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossGwyn_Click(sender As Object, e As EventArgs) Handles btnBossGwyn.Click, Button16.Click
-        trd = New Thread(AddressOf bossgwyn)
+        trd = New Thread(AddressOf Funcs.bossgwyn)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossIronGolem_Click(sender As Object, e As EventArgs) Handles btnBossIronGolem.Click, Button17.Click
-        trd = New Thread(AddressOf bossirongolem)
+        trd = New Thread(AddressOf Funcs.bossirongolem)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossKnightArtorias_Click(sender As Object, e As EventArgs) Handles btnBossKnightArtorias.Click, Button18.Click
-        trd = New Thread(AddressOf bossknightartorias)
+        trd = New Thread(AddressOf Funcs.bossknightartorias)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossManus_Click(sender As Object, e As EventArgs) Handles btnBossManus.Click, Button19.Click
-        trd = New Thread(AddressOf bossmanus)
+        trd = New Thread(AddressOf Funcs.bossmanus)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossMoonlightButterfly_Click(sender As Object, e As EventArgs) Handles btnBossMoonlightButterfly.Click, Button20.Click
-        trd = New Thread(AddressOf bossmoonlightbutterfly)
+        trd = New Thread(AddressOf Funcs.bossmoonlightbutterfly)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossOandS_Click(sender As Object, e As EventArgs) Handles btnBossOandS.Click, Button12.Click
-        trd = New Thread(AddressOf bossoands)
+        trd = New Thread(AddressOf Funcs.bossoands)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossPinwheel_Click(sender As Object, e As EventArgs) Handles btnBossPinwheel.Click, Button2.Click
-        trd = New Thread(AddressOf bosspinwheel)
+        trd = New Thread(AddressOf Funcs.bosspinwheel)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossSanctuaryGuardian_Click(sender As Object, e As EventArgs) Handles btnBossSanctuaryGuardian.Click, Button21.Click
-        trd = New Thread(AddressOf bosssanctuaryguardian)
+        trd = New Thread(AddressOf Funcs.bosssanctuaryguardian)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossSeath_Click(sender As Object, e As EventArgs) Handles btnBossSeath.Click, Button22.Click
-        trd = New Thread(AddressOf bossseath)
+        trd = New Thread(AddressOf Funcs.bossseath)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossSif_Click(sender As Object, e As EventArgs) Handles btnBossSif.Click, Button24.Click
-        trd = New Thread(AddressOf bosssif)
+        trd = New Thread(AddressOf Funcs.bosssif)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossStrayDemon_Click(sender As Object, e As EventArgs) Handles btnBossStrayDemon.Click, Button23.Click
-        trd = New Thread(AddressOf bossstraydemon)
+        trd = New Thread(AddressOf Funcs.bossstraydemon)
         trd.IsBackground = True
         trd.Start()
     End Sub
     Private Sub btnBossTaurusDemon_Click(sender As Object, e As EventArgs) Handles btnBossTaurusDemon.Click, Button25.Click
-        trd = New Thread(AddressOf bosstaurusdemon)
+        trd = New Thread(AddressOf Funcs.bosstaurusdemon)
         trd.IsBackground = True
         trd.Start()
     End Sub
 
     Private Sub btnScenarioArtoriasCiaran_Click(sender As Object, e As EventArgs) Handles btnScenarioArtoriasCiaran.Click
-        trd = New Thread(AddressOf scenarioartoriasandciaran)
+        trd = New Thread(AddressOf Funcs.scenarioartoriasandciaran)
         trd.IsBackground = True
         trd.Start()
     End Sub
 
     Private Sub btnScenarioTripleSanctuary_Click(sender As Object, e As EventArgs) Handles btnScenarioTripleSanctuary.Click
-        trd = New Thread(AddressOf scenariotriplesanctuaryguardian)
+        trd = New Thread(AddressOf Funcs.scenariotriplesanctuaryguardian)
         trd.IsBackground = True
         trd.Start()
     End Sub
 
     Private Sub btnBeginBossRush_Click(sender As Object, e As EventArgs) Handles btnBeginBossRush.Click
 
-        If getIsBossRushThreadActive() Then
-
-            ScriptEnvironment.Run("ShowHUD 1")
-            WInt32(RInt32(&H13786D0) + &H154, -1)
-            WInt32(RInt32(&H13786D0) + &H158, -1)
-
-            If rushMode Then rushTimer.Abort()
-            rushMode = False
-            trd.Abort()
-            Console.WriteLine(trd.ThreadState)
+        If (cboxReverseOrder.Checked) Then
+            trd = New Thread(AddressOf Funcs.beginreversebossrush)
         Else
-            If (cboxReverseOrder.Checked) Then
-                trd = New Thread(AddressOf beginreversebossrush)
-            Else
-                trd = New Thread(AddressOf beginbossrush)
-            End If
-            trd.IsBackground = True
-            trd.Start()
+            trd = New Thread(AddressOf Funcs.beginbossrush)
         End If
+        trd.IsBackground = True
+        trd.Start()
 
-    End Sub
-    Private Sub BeginRushTimer()
-
-        gamestatsptr = RInt32(&H1378700)
-        Dim menuptr = RInt32(&H13786D0)
-        Dim lineptr = RInt32(&H1378388)
-        Dim keyptr = RInt32(&H1378640)
-
-        Dim rushTime As TimeSpan
-        Dim msPlayed As Integer
-        Dim clearCount As Integer
-        Dim trueDeathCount As Integer
-        Dim msg As String
-
-        WFloat(lineptr + &H78, 1100)
-        WFloat(lineptr + &H7C, 675)
-
-        WFloat(keyptr + &H78, 600)
-        WFloat(keyptr + &H7C, 605)
-
-        'Clear TrueDeaths
-        WInt32(gamestatsptr + &H58, 0)
-
-        Do
-            WInt32(menuptr + &H154, RInt32(menuptr + &H1C)) 'LineHelp
-            WInt32(menuptr + &H158, RInt32(menuptr + &H1C)) 'KeyGuide
-
-            msPlayed = RInt32(gamestatsptr + &H68)
-            rushTime = TimeSpan.FromMilliseconds(msPlayed)
-            clearCount = RInt32(gamestatsptr + &H3C)
-            trueDeathCount = RInt32(gamestatsptr + &H58)
-
-
-            msg = "NG" & clearCount & " - "
-            msg = msg & Strings.Left(rushTime.ToString, 12) & ChrW(0)
-            WUniStr(&H11A7770, msg)
-
-            msg = "Deaths: " & trueDeathCount & ChrW(0)
-            WUniStr(&H11A7758, msg) 'LineHelp
-
-
-
-            Thread.Sleep(33)
-        Loop
     End Sub
 
     Private Sub btnDonate_Click(sender As Object, e As EventArgs) Handles btnDonate.Click
@@ -2253,16 +415,7 @@ Public Class frmForm1
     End Sub
 
     Private Sub btnReconnect_Click(sender As Object, e As EventArgs) Handles btnReconnect.Click
-        If ScanForProcess("DARK SOULS", True) Then
-            'Check if this process is even Dark Souls
-            checkDarkSoulsVersion()
-            If isHooked Then
-                dropAlloc()
-                ScriptEnvironment.Current.funcAlloc()
-
-                ScriptFunction.setsaveenable(False)
-            End If
-        End If
+        Hook.InitHook()
     End Sub
 
 
@@ -2277,106 +430,64 @@ Public Class frmForm1
     End Sub
 
     Private Sub btnTestDisableAI_Click(sender As Object, e As EventArgs)
-        ScriptFunction.disableai(True)
+        Funcs.disableai(True)
     End Sub
 
     Private Sub btnTestEnableAI_Click(sender As Object, e As EventArgs)
-        ScriptFunction.disableai(False)
+        Funcs.disableai(False)
     End Sub
 
     Private Sub nmbVitality_ValueChanged(sender As Object, e As EventArgs) Handles nmbVitality.ValueChanged
-        WInt32(charptr2 + &H38, sender.Value)
+        Hook.Stats.VIT.ValueInt = sender.Value
     End Sub
 
     Private Sub nmbAttunement_ValueChanged(sender As Object, e As EventArgs) Handles nmbAttunement.ValueChanged
-        WInt32(charptr2 + &H40, sender.Value)
+        Hook.Stats.ATN.ValueInt = sender.Value
     End Sub
 
     Private Sub nmbEnd_ValueChanged(sender As Object, e As EventArgs) Handles nmbEnd.ValueChanged
-        WInt32(charptr2 + &H48, sender.Value)
+        Hook.Stats.ENDurance.ValueInt = sender.Value
     End Sub
 
     Private Sub nmbStr_ValueChanged(sender As Object, e As EventArgs) Handles nmbStr.ValueChanged
-        WInt32(charptr2 + &H50, sender.Value)
+        Hook.Stats.STR.ValueInt = sender.Value
     End Sub
 
     Private Sub nmbDex_ValueChanged(sender As Object, e As EventArgs) Handles nmbDex.ValueChanged
-        WInt32(charptr2 + &H58, sender.Value)
+        Hook.Stats.DEX.ValueInt = sender.Value
     End Sub
 
     Private Sub nmbResistance_ValueChanged(sender As Object, e As EventArgs) Handles nmbResistance.ValueChanged
-        WInt32(charptr2 + &H80, sender.Value)
+        Hook.Stats.RES.ValueInt = sender.Value
     End Sub
 
     Private Sub nmbIntelligence_ValueChanged(sender As Object, e As EventArgs) Handles nmbIntelligence.ValueChanged
-        WInt32(charptr2 + &H60, sender.Value)
+        Hook.Stats.INT.ValueInt = sender.Value
     End Sub
 
     Private Sub nmbFaith_ValueChanged(sender As Object, e As EventArgs) Handles nmbFaith.ValueChanged
-        WInt32(charptr2 + &H68, sender.Value)
+        Hook.Stats.FTH.ValueInt = sender.Value
     End Sub
 
     Private Sub nmbHumanity_ValueChanged(sender As Object, e As EventArgs) Handles nmbHumanity.ValueChanged
-        WInt32(charptr2 + &H7C, sender.Value)
+        Hook.Stats.Humanity.ValueInt = sender.Value
     End Sub
 
     Private Sub nmbGender_ValueChanged(sender As Object, e As EventArgs) Handles nmbGender.ValueChanged
-        Wint16(charptr2 + &HC2, sender.value)
+        Hook.Stats.ExternalGenitals.ValueInt = sender.Value
     End Sub
 
     Private Sub nmbMaxHP_ValueChanged(sender As Object, e As EventArgs) Handles nmbMaxHP.ValueChanged
-        WInt32(charptr2 + &H14, sender.Value)
+        Hook.Stats.MaxHP.ValueInt = sender.Value
     End Sub
 
     Private Sub nmbMaxStam_ValueChanged(sender As Object, e As EventArgs) Handles nmbMaxStam.ValueChanged
-        WInt32(charptr2 + &H30, sender.Value)
-    End Sub
-
-    Private Sub btnX_Click(sender As Object, e As EventArgs)
-
-        ScriptEnvironment.Run("ShowHUD 1")
-        WInt32(RInt32(&H13786D0) + &H154, -1)
-        WInt32(RInt32(&H13786D0) + &H158, -1)
-
-        If rushMode Then rushTimer.Abort()
-        rushMode = False
-        trd.Abort()
-        Console.WriteLine(trd.ThreadState)
+        Hook.Stats.MaxStamina.ValueInt = sender.Value
     End Sub
 
     Private Sub btnConsoleExecute_Click(sender As Object, e As EventArgs) Handles btnConsoleExecute.Click
-
-        ScriptEnvironment.Current.Clear()
-
-        Dim lineNumber As Integer = 0
-        For Each line In rtbConsole.Lines
-
-            lineNumber = lineNumber + 1
-
-            Try
-                Dim result As Integer
-                Dim trimmedLine = line.Trim()
-                If Not trimmedLine.Any(
-                        Function(x As Char) As Boolean
-                            Return Not (x = " "c)
-                        End Function
-                    ) Then
-                    Continue For
-                End If
-
-
-                result = ScriptEnvironment.Run(trimmedLine)
-
-                txtConsoleResult.Text = "Hex: 0x" & Hex(result) & Environment.NewLine &
-                                               "Int: " & result & Environment.NewLine &
-                                               "Float: " & BitConverter.ToSingle(BitConverter.GetBytes(result), 0)
-            Catch ex As Exception
-                If MsgBox("Could not parse line " & lineNumber & " (""" & line & """):" & Environment.NewLine & Environment.NewLine & ex.Message & Environment.NewLine & Environment.NewLine & "Would you like to continue executing the script from the next line?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then
-                    Return
-                End If
-            End Try
-
-        Next
+        consoleScript = New Script(consoleScript.Name, String.Join(Environment.NewLine, rtbConsole.Lines))
+        consoleScriptParams = consoleScript.ExecuteInBackground()
     End Sub
 
 
@@ -2387,7 +498,7 @@ Public Class frmForm1
     End Sub
 
     Private Sub btnScenarioPinwheelDefense_Click(sender As Object, e As EventArgs) Handles btnScenarioPinwheelDefense.Click
-        trd = New Thread(AddressOf scenariopinwheeldefense)
+        trd = New Thread(AddressOf Funcs.scenariopinwheeldefense)
         trd.IsBackground = True
         trd.Start()
     End Sub
@@ -2396,29 +507,62 @@ Public Class frmForm1
         'ScriptEnvironment.Run("SetEventFlag 16, 0)
         'warp_coords_facing(71.72, 60, 300.56, 1.0)
 
-        ScriptEnvironment.Run("intvar1 = GetEntityPtr 1010700")
-        ScriptEnvironment.Run("ControlEntity intvar1, 0")
+        Script.RunOneLine("intvar1 = GetEntityPtr 1010700")
+        Script.RunOneLine("ControlEntity intvar1, 0")
     End Sub
 
     Private Sub tsbtnDisableAI_Click(sender As Object, e As EventArgs) Handles tsbtnDisableAI.Click
-        ScriptFunction.disableai(True)
+        Funcs.disableai(True)
     End Sub
 
     Private Sub tsbtnEnableAI_Click(sender As Object, e As EventArgs) Handles tsbtnEnableAI.Click
-        ScriptFunction.disableai(False)
+        Funcs.disableai(False)
     End Sub
 
     Private Sub tsbtnEnablePlayerExterminate_Click(sender As Object, e As EventArgs) Handles tsbtnEnablePlayerExterminate.Click
-        ScriptFunction.playerexterminate(True)
+        Funcs.playerexterminate(True)
     End Sub
 
     Private Sub tsbtnDisablePlayerExterminate_Click(sender As Object, e As EventArgs) Handles tsbtnDisablePlayerExterminate.Click
-        ScriptFunction.playerexterminate(False)
+        Funcs.playerexterminate(False)
     End Sub
 
     Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
-        ScriptEnvironment.Current.Clear()
-        ScriptEnvironment.Run("New Int Player = 10000")
-        ScriptEnvironment.Run("ChrFadeIn Player, 5.0, 0.0")
+        Script.RunOneLine("New Int Player = 10000")
+        Script.RunOneLine("ChrFadeIn Player, 5.0, 0.0")
+    End Sub
+
+    Private Sub btnScenarioOandSandOandS_Click(sender As Object, e As EventArgs) Handles btnScenarioOandSandOandS.Click
+        trd = New Thread(AddressOf Funcs.scenariooandsandoands)
+        trd.IsBackground = True
+        trd.Start()
+    End Sub
+
+    Private Sub ToolStripButton2_Click(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
+        trd = New Thread(AddressOf Funcs.begintestbossrush)
+        trd.IsBackground = True
+        trd.Start()
+    End Sub
+
+    Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
+        trd = New Thread(AddressOf Funcs.debug_scenariooandsandoands)
+        trd.IsBackground = True
+        trd.Start()
+    End Sub
+
+    Private Sub btnCancelBossRush_Click(sender As Object, e As EventArgs) Handles btnCancelBossRush.Click
+        Script.RunOneLine("ShowHUD 1")
+        WInt32(RInt32(&H13786D0) + &H154, -1)
+        WInt32(RInt32(&H13786D0) + &H158, -1)
+
+        If Hook.rushMode Then Hook.rushTimer.Abort()
+        Hook.rushMode = False
+        trd.Abort()
+        Console.WriteLine(trd.ThreadState)
+    End Sub
+
+    Private Sub btnConsoleCancel_Click(sender As Object, e As EventArgs) Handles btnConsoleCancel.Click
+        consoleScriptParams.ThisThread.Abort()
+        consoleScript.CleanAbortedThreads()
     End Sub
 End Class

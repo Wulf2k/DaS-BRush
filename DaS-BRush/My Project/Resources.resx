@@ -117,26 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Armor" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Armor.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="Bonfires" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Bonfires.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="Bonfires1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Bonfires1.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="FuncLocs" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\FuncLocs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="Goods" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Goods.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="Rings" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Rings.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="Weapons" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Weapons.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
 </root>

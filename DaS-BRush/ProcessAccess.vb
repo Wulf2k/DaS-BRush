@@ -20,8 +20,6 @@
         Public Const PROCESS_VM_WRITE = (&H20)
         Public Const PROCESS_ALL_ACCESS = &H1F0FFF
 
-        Public isHooked As Boolean = False
-
         Public _targetProcess As Process = Nothing 'to keep track of it. not used yet.
         Public _targetProcessHandle As IntPtr = IntPtr.Zero 'Used for ReadProcessMemory
 

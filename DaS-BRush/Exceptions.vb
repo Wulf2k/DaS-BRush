@@ -23,9 +23,9 @@ End Class
 Public MustInherit Class ScriptVarException
     Inherits ExceptionMsg
 
-    Protected ReadOnly svar As ScriptVar
+    Protected ReadOnly svar As ScriptVarBase
 
-    Public Sub New(ByRef svar As ScriptVar)
+    Public Sub New(ByRef svar As ScriptVarBase)
         Me.svar = svar
         msg = "A ScriptVar Exception Ocurred."
     End Sub
@@ -34,7 +34,7 @@ End Class
 Public Class DidNotSetVariableValueException
     Inherits ScriptVarException
 
-    Public Sub New(ByRef svar As ScriptVar)
+    Public Sub New(ByRef svar As ScriptVarBase)
         MyBase.New(svar)
         msg = "Unable to read the value of variable ''" & svar.Name & "'' before its value is set to something."
     End Sub
@@ -43,7 +43,7 @@ End Class
 Public Class InvalidVariableValueTypeException
     Inherits ScriptVarException
 
-    Public Sub New(ByRef svar As ScriptVar)
+    Public Sub New(ByRef svar As ScriptVarBase)
         MyBase.New(svar)
         msg = "The value of variable ''" & svar.Name & "'' (" & svar.ToString() & ") is not a valid " & svar.GetTypeName() & "-type value."
     End Sub
@@ -52,7 +52,7 @@ End Class
 Public Class ScriptVarAlreadyDefinedException
     Inherits ScriptVarException
 
-    Public Sub New(ByRef svar As ScriptVar)
+    Public Sub New(ByRef svar As ScriptVarBase)
         MyBase.New(svar)
         msg = "A ScriptVar with the name ''" & svar.Name & "'' has already been defined."
     End Sub

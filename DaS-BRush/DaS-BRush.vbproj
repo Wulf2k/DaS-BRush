@@ -83,7 +83,9 @@
       <DependentUpon>Form1.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DataHash.vb" />
+    <Compile Include="Data.vb" />
+    <Compile Include="Hook.vb" />
+    <Compile Include="LivePtrVarBase.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -100,9 +102,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ProcessAccess.vb" />
-    <Compile Include="ScriptEnvironment.vb" />
-    <Compile Include="ScriptFunctions.vb" />
-    <Compile Include="ScriptVar.vb" />
+    <Compile Include="Script.vb" />
+    <Compile Include="ExtensionModules.vb" />
+    <Compile Include="Funcs.vb" />
+    <Compile Include="ScriptVarBase.vb" />
+    <Compile Include="TypedVarBase.vb" />
     <Compile Include="UpdateWindow.designer.vb">
       <DependentUpon>UpdateWindow.vb</DependentUpon>
     </Compile>
@@ -116,9 +120,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="UpdateWindow.resx">
       <DependentUpon>UpdateWindow.vb</DependentUpon>
@@ -135,28 +139,33 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
+    <EmbeddedResource Include="Resources\Scenario\scenariooandsandoands.2ks" />
+    <EmbeddedResource Include="Resources\Scenario\scenariotriplesanctuaryguardian.2ks" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Armor.txt" />
+    <EmbeddedResource Include="Resources\CL\CL.Armor.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Bonfires.txt" />
+    <EmbeddedResource Include="Resources\CL\CL.Bonfires.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Bonfires1.txt" />
+    <EmbeddedResource Include="Resources\CL\CL.Bonfires1.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\FuncLocs.txt" />
+    <EmbeddedResource Include="Resources\CL\CL.FuncLocs.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Goods.txt" />
+    <EmbeddedResource Include="Resources\CL\CL.Goods.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Rings.txt" />
+    <EmbeddedResource Include="Resources\CL\CL.Rings.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Weapons.txt" />
+    <EmbeddedResource Include="Resources\CL\CL.Weapons.txt" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Scenario\scenariopinwheeldefense.2ks" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
