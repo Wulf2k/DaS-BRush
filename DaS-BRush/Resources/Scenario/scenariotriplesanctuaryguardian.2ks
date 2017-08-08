@@ -1,0 +1,26 @@
+﻿SetEventFlag 11210000, False
+SetEventFlag 11210001, True
+
+PlayerHide 1
+ShowHUD False
+FadeOut
+SetHp 10000, 1.0
+
+WarpNextStage_Bonfire 1210998
+
+Wait 1000
+
+WaitForLoad
+BlackScreen
+PlayerHide 1
+SetDisableGravity 10000, 1
+
+Wait 500
+
+Warp_Coords 931.82, -318.63, 472.45
+
+Wait 1500
+FadeIn
+ShowHUD 1
+PlayerHide 0
+SetDisableGravity 10000, 0

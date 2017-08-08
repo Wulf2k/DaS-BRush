@@ -25,6 +25,7 @@ Partial Class frmForm1
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmForm1))
         Me.tabs = New System.Windows.Forms.TabControl()
         Me.tabBosses = New System.Windows.Forms.TabPage()
+        Me.btnCancelBossRush = New System.Windows.Forms.Button()
         Me.cboxReverseOrder = New System.Windows.Forms.CheckBox()
         Me.btnBeginBossRush = New System.Windows.Forms.Button()
         Me.gbBosses = New System.Windows.Forms.GroupBox()
@@ -81,6 +82,7 @@ Partial Class frmForm1
         Me.btnBossGravelordNito = New System.Windows.Forms.Button()
         Me.Button13 = New System.Windows.Forms.Button()
         Me.tabScenarios = New System.Windows.Forms.TabPage()
+        Me.btnScenarioOandSandOandS = New System.Windows.Forms.Button()
         Me.btnScenarioPinwheelDefense = New System.Windows.Forms.Button()
         Me.btnScenarioTripleSanctuary = New System.Windows.Forms.Button()
         Me.btnScenarioArtoriasCiaran = New System.Windows.Forms.Button()
@@ -143,6 +145,10 @@ Partial Class frmForm1
         Me.tsbtnEnablePlayerExterminate = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnDisablePlayerExterminate = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
         Me.tabNotes = New System.Windows.Forms.TabPage()
         Me.txtNotes = New System.Windows.Forms.TextBox()
         Me.tabConsole = New System.Windows.Forms.TabPage()
@@ -166,6 +172,7 @@ Partial Class frmForm1
         Me.lblVer = New System.Windows.Forms.Label()
         Me.btnUpdate = New System.Windows.Forms.Button()
         Me.Label18 = New System.Windows.Forms.Label()
+        Me.btnConsoleCancel = New System.Windows.Forms.Button()
         Me.tabs.SuspendLayout()
         Me.tabBosses.SuspendLayout()
         Me.gbBosses.SuspendLayout()
@@ -218,6 +225,7 @@ Partial Class frmForm1
         '
         Me.tabBosses.AutoScroll = True
         Me.tabBosses.AutoScrollMargin = New System.Drawing.Size(8, 8)
+        Me.tabBosses.Controls.Add(Me.btnCancelBossRush)
         Me.tabBosses.Controls.Add(Me.cboxReverseOrder)
         Me.tabBosses.Controls.Add(Me.btnBeginBossRush)
         Me.tabBosses.Controls.Add(Me.gbBosses)
@@ -229,10 +237,19 @@ Partial Class frmForm1
         Me.tabBosses.Text = "Boss Rush"
         Me.tabBosses.UseVisualStyleBackColor = True
         '
+        'btnCancelBossRush
+        '
+        Me.btnCancelBossRush.Location = New System.Drawing.Point(15, 75)
+        Me.btnCancelBossRush.Name = "btnCancelBossRush"
+        Me.btnCancelBossRush.Size = New System.Drawing.Size(171, 23)
+        Me.btnCancelBossRush.TabIndex = 80
+        Me.btnCancelBossRush.Text = "Cancel"
+        Me.btnCancelBossRush.UseVisualStyleBackColor = True
+        '
         'cboxReverseOrder
         '
         Me.cboxReverseOrder.AutoSize = True
-        Me.cboxReverseOrder.Location = New System.Drawing.Point(29, 34)
+        Me.cboxReverseOrder.Location = New System.Drawing.Point(15, 3)
         Me.cboxReverseOrder.Name = "cboxReverseOrder"
         Me.cboxReverseOrder.Size = New System.Drawing.Size(149, 17)
         Me.cboxReverseOrder.TabIndex = 79
@@ -241,11 +258,11 @@ Partial Class frmForm1
         '
         'btnBeginBossRush
         '
-        Me.btnBeginBossRush.Location = New System.Drawing.Point(6, 5)
+        Me.btnBeginBossRush.Location = New System.Drawing.Point(15, 26)
         Me.btnBeginBossRush.Name = "btnBeginBossRush"
-        Me.btnBeginBossRush.Size = New System.Drawing.Size(144, 23)
+        Me.btnBeginBossRush.Size = New System.Drawing.Size(171, 43)
         Me.btnBeginBossRush.TabIndex = 77
-        Me.btnBeginBossRush.Text = "Begin Boss Rush"
+        Me.btnBeginBossRush.Text = "Begin"
         Me.btnBeginBossRush.UseVisualStyleBackColor = False
         '
         'gbBosses
@@ -302,7 +319,7 @@ Partial Class frmForm1
         Me.gbBosses.Controls.Add(Me.btnBossGapingDragon)
         Me.gbBosses.Controls.Add(Me.btnBossGravelordNito)
         Me.gbBosses.Controls.Add(Me.Button13)
-        Me.gbBosses.Location = New System.Drawing.Point(9, 86)
+        Me.gbBosses.Location = New System.Drawing.Point(15, 121)
         Me.gbBosses.Name = "gbBosses"
         Me.gbBosses.Size = New System.Drawing.Size(171, 779)
         Me.gbBosses.TabIndex = 76
@@ -885,6 +902,7 @@ Partial Class frmForm1
         '
         Me.tabScenarios.AutoScroll = True
         Me.tabScenarios.AutoScrollMargin = New System.Drawing.Size(8, 8)
+        Me.tabScenarios.Controls.Add(Me.btnScenarioOandSandOandS)
         Me.tabScenarios.Controls.Add(Me.btnScenarioPinwheelDefense)
         Me.tabScenarios.Controls.Add(Me.btnScenarioTripleSanctuary)
         Me.tabScenarios.Controls.Add(Me.btnScenarioArtoriasCiaran)
@@ -894,6 +912,15 @@ Partial Class frmForm1
         Me.tabScenarios.TabIndex = 9
         Me.tabScenarios.Text = "Scenarios"
         Me.tabScenarios.UseVisualStyleBackColor = True
+        '
+        'btnScenarioOandSandOandS
+        '
+        Me.btnScenarioOandSandOandS.Location = New System.Drawing.Point(3, 94)
+        Me.btnScenarioOandSandOandS.Name = "btnScenarioOandSandOandS"
+        Me.btnScenarioOandSandOandS.Size = New System.Drawing.Size(197, 38)
+        Me.btnScenarioOandSandOandS.TabIndex = 72
+        Me.btnScenarioOandSandOandS.Text = "Onstein, Smough, Giant Ornstein, and Super Smough 4v1"
+        Me.btnScenarioOandSandOandS.UseVisualStyleBackColor = True
         '
         'btnScenarioPinwheelDefense
         '
@@ -1198,7 +1225,7 @@ Partial Class frmForm1
         'nmbMaxHP
         '
         Me.nmbMaxHP.Location = New System.Drawing.Point(108, 7)
-        Me.nmbMaxHP.Maximum = New Decimal(New Integer() {1900, 0, 0, 0})
+        Me.nmbMaxHP.Maximum = New Decimal(New Integer() {65535, 0, 0, 0})
         Me.nmbMaxHP.Name = "nmbMaxHP"
         Me.nmbMaxHP.Size = New System.Drawing.Size(65, 20)
         Me.nmbMaxHP.TabIndex = 26
@@ -1215,7 +1242,7 @@ Partial Class frmForm1
         'nmbMaxStam
         '
         Me.nmbMaxStam.Location = New System.Drawing.Point(108, 30)
-        Me.nmbMaxStam.Maximum = New Decimal(New Integer() {160, 0, 0, 0})
+        Me.nmbMaxStam.Maximum = New Decimal(New Integer() {65535, 0, 0, 0})
         Me.nmbMaxStam.Name = "nmbMaxStam"
         Me.nmbMaxStam.Size = New System.Drawing.Size(65, 20)
         Me.nmbMaxStam.TabIndex = 24
@@ -1409,12 +1436,12 @@ Partial Class frmForm1
         Me.toolstripTest.CanOverflow = False
         Me.toolstripTest.Dock = System.Windows.Forms.DockStyle.None
         Me.toolstripTest.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.toolstripTest.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripDropDownButton1, Me.ToolStripSeparator1, Me.tsbtnDisableAI, Me.tsbtnEnableAI, Me.ToolStripSeparator2, Me.tsbtnEnablePlayerExterminate, Me.tsbtnDisablePlayerExterminate, Me.ToolStripSeparator3})
+        Me.toolstripTest.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripDropDownButton1, Me.ToolStripSeparator1, Me.tsbtnDisableAI, Me.tsbtnEnableAI, Me.ToolStripSeparator2, Me.tsbtnEnablePlayerExterminate, Me.tsbtnDisablePlayerExterminate, Me.ToolStripSeparator3, Me.ToolStripButton1, Me.ToolStripSeparator4, Me.ToolStripButton2, Me.ToolStripButton3})
         Me.toolstripTest.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.VerticalStackWithOverflow
         Me.toolstripTest.Location = New System.Drawing.Point(2, 2)
         Me.toolstripTest.Name = "toolstripTest"
         Me.toolstripTest.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-        Me.toolstripTest.Size = New System.Drawing.Size(150, 131)
+        Me.toolstripTest.Size = New System.Drawing.Size(150, 203)
         Me.toolstripTest.TabIndex = 85
         '
         'ToolStripDropDownButton1
@@ -1483,6 +1510,38 @@ Partial Class frmForm1
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
         Me.ToolStripSeparator3.Size = New System.Drawing.Size(148, 6)
         '
+        'ToolStripButton1
+        '
+        Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.ToolStripButton1.Image = CType(resources.GetObject("ToolStripButton1.Image"), System.Drawing.Image)
+        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton1.Name = "ToolStripButton1"
+        Me.ToolStripButton1.Size = New System.Drawing.Size(148, 19)
+        Me.ToolStripButton1.Text = "UserVarPlayerFadeTest"
+        '
+        'ToolStripSeparator4
+        '
+        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(148, 6)
+        '
+        'ToolStripButton2
+        '
+        Me.ToolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.ToolStripButton2.Image = CType(resources.GetObject("ToolStripButton2.Image"), System.Drawing.Image)
+        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton2.Name = "ToolStripButton2"
+        Me.ToolStripButton2.Size = New System.Drawing.Size(148, 19)
+        Me.ToolStripButton2.Text = "BossRushEndingTest"
+        '
+        'ToolStripButton3
+        '
+        Me.ToolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.ToolStripButton3.Image = CType(resources.GetObject("ToolStripButton3.Image"), System.Drawing.Image)
+        Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton3.Name = "ToolStripButton3"
+        Me.ToolStripButton3.Size = New System.Drawing.Size(148, 19)
+        Me.ToolStripButton3.Text = "OandSandOandS_Debug"
+        '
         'tabNotes
         '
         Me.tabNotes.Controls.Add(Me.txtNotes)
@@ -1508,6 +1567,7 @@ Partial Class frmForm1
         '
         'tabConsole
         '
+        Me.tabConsole.Controls.Add(Me.btnConsoleCancel)
         Me.tabConsole.Controls.Add(Me.rtbConsole)
         Me.tabConsole.Controls.Add(Me.btnConsoleHelp)
         Me.tabConsole.Controls.Add(Me.btnConsoleExecute)
@@ -1525,15 +1585,15 @@ Partial Class frmForm1
         Me.rtbConsole.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.rtbConsole.BackColor = System.Drawing.Color.Black
+        Me.rtbConsole.BackColor = System.Drawing.SystemColors.ControlLightLight
         Me.rtbConsole.Font = New System.Drawing.Font("Courier New", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.rtbConsole.ForeColor = System.Drawing.Color.Lime
+        Me.rtbConsole.ForeColor = System.Drawing.SystemColors.ControlText
         Me.rtbConsole.Location = New System.Drawing.Point(0, 0)
         Me.rtbConsole.Name = "rtbConsole"
         Me.rtbConsole.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical
         Me.rtbConsole.ShowSelectionMargin = True
-        Me.rtbConsole.Size = New System.Drawing.Size(512, 180)
-        Me.rtbConsole.TabIndex = 81
+        Me.rtbConsole.Size = New System.Drawing.Size(512, 147)
+        Me.rtbConsole.TabIndex = 1
         Me.rtbConsole.Text = ""
         '
         'btnConsoleHelp
@@ -1542,17 +1602,17 @@ Partial Class frmForm1
         Me.btnConsoleHelp.Location = New System.Drawing.Point(4, 210)
         Me.btnConsoleHelp.Name = "btnConsoleHelp"
         Me.btnConsoleHelp.Size = New System.Drawing.Size(73, 23)
-        Me.btnConsoleHelp.TabIndex = 80
+        Me.btnConsoleHelp.TabIndex = 0
         Me.btnConsoleHelp.Text = "Help"
         Me.btnConsoleHelp.UseVisualStyleBackColor = True
         '
         'btnConsoleExecute
         '
         Me.btnConsoleExecute.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnConsoleExecute.Location = New System.Drawing.Point(441, 179)
+        Me.btnConsoleExecute.Location = New System.Drawing.Point(443, 149)
         Me.btnConsoleExecute.Name = "btnConsoleExecute"
-        Me.btnConsoleExecute.Size = New System.Drawing.Size(68, 54)
-        Me.btnConsoleExecute.TabIndex = 79
+        Me.btnConsoleExecute.Size = New System.Drawing.Size(65, 50)
+        Me.btnConsoleExecute.TabIndex = 2
         Me.btnConsoleExecute.Text = "Execute"
         Me.btnConsoleExecute.UseVisualStyleBackColor = True
         '
@@ -1560,24 +1620,24 @@ Partial Class frmForm1
         '
         Me.Label17.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(13, 183)
+        Me.Label17.Location = New System.Drawing.Point(13, 150)
         Me.Label17.Margin = New System.Windows.Forms.Padding(0)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(63, 13)
-        Me.Label17.TabIndex = 7
+        Me.Label17.TabIndex = 0
         Me.Label17.Text = "Last Result:"
         '
         'txtConsoleResult
         '
         Me.txtConsoleResult.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtConsoleResult.Location = New System.Drawing.Point(79, 180)
+        Me.txtConsoleResult.Location = New System.Drawing.Point(79, 147)
         Me.txtConsoleResult.Multiline = True
         Me.txtConsoleResult.Name = "txtConsoleResult"
         Me.txtConsoleResult.ReadOnly = True
         Me.txtConsoleResult.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtConsoleResult.Size = New System.Drawing.Size(360, 52)
-        Me.txtConsoleResult.TabIndex = 1
+        Me.txtConsoleResult.Size = New System.Drawing.Size(360, 85)
+        Me.txtConsoleResult.TabIndex = 0
         '
         'tabAbout
         '
@@ -1708,7 +1768,7 @@ Partial Class frmForm1
         Me.btnReconnect.Location = New System.Drawing.Point(431, 5)
         Me.btnReconnect.Name = "btnReconnect"
         Me.btnReconnect.Size = New System.Drawing.Size(81, 23)
-        Me.btnReconnect.TabIndex = 76
+        Me.btnReconnect.TabIndex = 0
         Me.btnReconnect.Text = "Reconnect"
         Me.btnReconnect.UseVisualStyleBackColor = False
         '
@@ -1728,7 +1788,7 @@ Partial Class frmForm1
         Me.btnUpdate.Location = New System.Drawing.Point(2, 296)
         Me.btnUpdate.Name = "btnUpdate"
         Me.btnUpdate.Size = New System.Drawing.Size(205, 23)
-        Me.btnUpdate.TabIndex = 78
+        Me.btnUpdate.TabIndex = 0
         Me.btnUpdate.Text = "Update BRush"
         Me.btnUpdate.UseVisualStyleBackColor = True
         Me.btnUpdate.Visible = False
@@ -1742,6 +1802,16 @@ Partial Class frmForm1
         Me.Label18.Size = New System.Drawing.Size(45, 13)
         Me.Label18.TabIndex = 79
         Me.Label18.Text = "Version:"
+        '
+        'btnConsoleCancel
+        '
+        Me.btnConsoleCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnConsoleCancel.Location = New System.Drawing.Point(443, 202)
+        Me.btnConsoleCancel.Name = "btnConsoleCancel"
+        Me.btnConsoleCancel.Size = New System.Drawing.Size(65, 27)
+        Me.btnConsoleCancel.TabIndex = 3
+        Me.btnConsoleCancel.Text = "Cancel"
+        Me.btnConsoleCancel.UseVisualStyleBackColor = True
         '
         'frmForm1
         '
@@ -1942,4 +2012,11 @@ End Sub
     Friend WithEvents Label23 As Label
     Friend WithEvents Label21 As Label
     Friend WithEvents rtbConsole As RichTextBox
+    Friend WithEvents ToolStripButton1 As ToolStripButton
+    Friend WithEvents btnScenarioOandSandOandS As Button
+    Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
+    Friend WithEvents ToolStripButton2 As ToolStripButton
+    Friend WithEvents ToolStripButton3 As ToolStripButton
+    Friend WithEvents btnCancelBossRush As Button
+    Friend WithEvents btnConsoleCancel As Button
 End Class
