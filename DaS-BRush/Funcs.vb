@@ -1444,16 +1444,12 @@ Public Class Funcs
 
 
         Script.RunOneLine("ShowHUD False")
-        Script.RunOneLine("SetCompletelyNoMove 10000, 1")
-        Script.RunOneLine("FadeOut")
-        Script.RunOneLine("Wait 1000")
         Funcs.setbriefingmsg("Congratulations." & ChrW(&HA) &
                        Strings.Left(TimeSpan.FromMilliseconds(Hook.GameStats.TotalPlayTime.ValueInt).ToString, 12) & ChrW(&HA) &
                        GetNgPlusText(Hook.GameStats.ClearCount.ValueInt) & ChrW(&HA) &
-                       "Deaths: " & Hook.GameStats.TrueDeathCount.ValueInt & ChrW(&HA) &
-                       "Returning to title screen...")
+                       "Deaths: " & Hook.GameStats.TrueDeathCount.ValueInt & ChrW(&HA) & ChrW(&HA) &
+                       "Saving is still disabled." & ChrW(&HA) & "Quit to main menu now to preserve character data.")
         Script.RunOneLine("Wait 10000")
-        Script.RunOneLine("ReturnMapSelect") 'Return to title screen
         Hook.rushTimer.Abort()
     End Sub
 
