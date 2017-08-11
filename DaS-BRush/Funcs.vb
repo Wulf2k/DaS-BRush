@@ -2084,12 +2084,12 @@ Public Class Funcs
         Dim floatParam As Single
         Dim a As New asm
 
-        func = func.ToLower
+        func = func.ToUpper
 
         Dim funcPtr = Hook.funcPtr
 
         a.pos = funcPtr
-        a.AddVar("funcloc", Data.clsFuncLocs(func.ToLower))
+        a.AddVar("funcloc", Data.clsFuncLocs(func.ToUpper))
         a.AddVar("returnedloc", funcPtr + &H200)
 
         a.Asm("push ebp")
@@ -2139,4 +2139,8 @@ Public Class Funcs
 
         Return RInt32(funcPtr + &H200)
     End Function
+
+    Public Shared Sub bossrushplayerspawn()
+        Data.Scripts("bossrushplayerspawn").Execute()
+    End Sub
 End Class

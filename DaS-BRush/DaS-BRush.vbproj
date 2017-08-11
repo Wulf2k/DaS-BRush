@@ -79,6 +79,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="asm.vb" />
+    <Compile Include="ConsoleHandler.vb" />
+    <Compile Include="ConsoleWindow.Designer.vb">
+      <DependentUpon>ConsoleWindow.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ConsoleWindow.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Exceptions.vb" />
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
@@ -109,6 +116,7 @@
     <Compile Include="Script.vb" />
     <Compile Include="ExtensionModules.vb" />
     <Compile Include="Funcs.vb" />
+    <Compile Include="HideFuncAttribute.vb" />
     <Compile Include="ScriptVarBase.vb" />
     <Compile Include="TypedVarBase.vb" />
     <Compile Include="UpdateWindow.designer.vb">
@@ -119,6 +127,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ConsoleWindow.resx">
+      <DependentUpon>ConsoleWindow.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
     </EmbeddedResource>
@@ -145,6 +156,7 @@
     <None Include="App.config" />
     <EmbeddedResource Include="Resources\Scenario\scenariooandsandoands.2ks" />
     <EmbeddedResource Include="Resources\Scenario\scenariotriplesanctuaryguardian.2ks" />
+    <EmbeddedResource Include="Resources\Scripts\bossrushplayerspawn.2ks" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\CL\CL.Armor.txt" />
@@ -167,9 +179,43 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\CL\CL.Weapons.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\startwithoutdebugging_6556.png" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Scenario\scenariopinwheeldefense.2ks" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Undo_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Redo_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_6530.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Saveall_6518.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\refresh_16xMD.png" />
+    <None Include="Resources\refresh_16xLG.png" />
+    <None Include="Resources\arrow_open_16xMD.png" />
+    <None Include="Resources\arrow_open_16xLG.png" />
+    <None Include="Resources\move_to_bottom.png" />
+    <Content Include="Resources\Symbols_Play_16xLG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Symbols_Pause_16xLG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Symbols_Stop_16xLG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\document_16xLG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder_Open_16xLG.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

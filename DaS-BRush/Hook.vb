@@ -40,7 +40,7 @@ Public Class Hook
         End Set
     End Property
 
-    Private Shared _detectedDarkSoulsVersion As String = "None"
+    Private Shared _detectedDarkSoulsVersion As String = "Nothing"
     Public Shared Property DetectedDarkSoulsVersion As String
         Get
             Return _detectedDarkSoulsVersion

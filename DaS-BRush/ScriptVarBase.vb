@@ -17,12 +17,12 @@ Public MustInherit Class ScriptVarBase
 
     Public Sub New(name As String, type As VarType, value As Byte())
         MyBase.New(type, value)
-        Me.Name = name.ToLower()
+        Me.Name = name
     End Sub
 
     Public Sub New(name As String, type As VarType)
         MyBase.New(type)
-        Me.Name = name.ToLower()
+        Me.Name = name
     End Sub
 
     Public Function ReadFromFunctionResult(result As Integer) As ScriptVarBase
