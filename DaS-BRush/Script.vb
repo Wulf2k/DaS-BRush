@@ -58,7 +58,7 @@ Public Class Script
                 result = ExecuteScriptLine(scriptVars, trimmedLine)
 
                 SyncLock outputLock
-                    outStr &= "''" & trimmedLine & "'':" & Environment.NewLine &
+                    outStr &= "Line " & lineNumber & " - ''" & trimmedLine & "'':" & Environment.NewLine &
                            "    Hex: 0x" & Hex(result) & Environment.NewLine &
                            "    Int: " & result & Environment.NewLine &
                            "    Float: " & BitConverter.ToSingle(BitConverter.GetBytes(result), 0) & Environment.NewLine
@@ -105,25 +105,31 @@ Public Class Script
         Return New Script("Untitled", txt).ExecuteScriptLine(New Dictionary(Of String, ScriptVarBase), txt)
     End Function
 
-    Private Function IsScriptVarDefined(ByRef scriptVars As Dictionary(Of String, ScriptVarBase), name As String)
+    Public Shared Function RunOneLine(vars As Dictionary(Of String, ScriptVarBase), txt As String) As Integer
+        Return New Script("Untitled", txt).ExecuteScriptLine(vars, txt)
+    End Function
+
+    Public Shared Function IsScriptVarDefined(ByRef scriptVars As Dictionary(Of String, ScriptVarBase), name As String)
         Return scriptVars.ContainsKey(name.ToLower())
     End Function
 
-    Private Function GetScriptVar(ByRef scriptVars As Dictionary(Of String, ScriptVarBase), name As String) As ScriptVarBase
+    Public Shared Function GetScriptVar(ByRef scriptVars As Dictionary(Of String, ScriptVarBase), name As String) As ScriptVarBase
         Return scriptVars(name.ToLower())
     End Function
 
-    Private Function DefineScriptVar(ByRef scriptVars As Dictionary(Of String, ScriptVarBase), svar As ScriptVarBase) As ScriptVarBase
+    Public Shared Function DefineScriptVar(ByRef scriptVars As Dictionary(Of String, ScriptVarBase), svar As ScriptVarBase, Optional lexingOnly As Boolean = False) As ScriptVarBase
         If IsScriptVarDefined(scriptVars, svar.Name) Then
-            Throw New ScriptVarAlreadyDefinedException(svar)
+            If Not lexingOnly Then
+                Throw New ScriptVarAlreadyDefinedException(svar)
+            End If
+        Else
+            scriptVars.Add(svar.Name, svar)
         End If
-
-        scriptVars.Add(svar.Name, svar)
 
         Return scriptVars(svar.Name)
     End Function
 
-    Private Function CheckSpecialActions(ByRef scriptVars As Dictionary(Of String, ScriptVarBase), fullLine As String) As Boolean
+    Public Shared Function CheckSpecialActions(ByRef scriptVars As Dictionary(Of String, ScriptVarBase), fullLine As String, Optional lexingOnly As Boolean = False) As Boolean
 
         Dim params = New List(Of String)
         Dim splitByEq = fullLine.Split("=")
@@ -148,21 +154,21 @@ Public Class Script
             first = False
         Next
 
-        Return CheckSpecialActions(scriptVars, params.ToArray)
+        Return CheckSpecialActions(scriptVars, params.ToArray, lexingOnly)
 
     End Function
 
 
 
-    Private Function CheckSpecialActions(ByRef scriptVars As Dictionary(Of String, ScriptVarBase), params As String()) As Boolean
-        If params(0) = "new" Then
+    Public Shared Function CheckSpecialActions(ByRef scriptVars As Dictionary(Of String, ScriptVarBase), params As String(), Optional lexingOnly As Boolean = False) As Boolean
+        If params.Length > 0 AndAlso params(0) = "new" Then
             If params.Length = 3 Then
-                DefineScriptVar(scriptVars, ScriptVarBase.Parse(params(2), params(1)))
+                DefineScriptVar(scriptVars, ScriptVarBase.Parse(params(2), params(1)), lexingOnly)
                 Return True
-            ElseIf params.Length >= 5 And params(3) = "=" Then
+            ElseIf params.Length >= 5 AndAlso params(3) = "=" Then
 
                 If params.Length = 5 Then
-                    DefineScriptVar(scriptVars, ScriptVarBase.Parse(params(2), params(1), params(4)))
+                    DefineScriptVar(scriptVars, ScriptVarBase.Parse(params(2), params(1), params(4)), lexingOnly)
                     Return True
                 Else
                     Dim valueStr = ""
@@ -170,8 +176,8 @@ Public Class Script
                         valueStr = valueStr & params(i) & " "
                     Next
 
-                    Dim intResult = Script.RunOneLine(valueStr)
-                    Dim sv = DefineScriptVar(scriptVars, ScriptVarBase.Parse(params(2), params(1)).ReadFromFunctionResult(intResult))
+                    Dim intResult = Script.RunOneLine(scriptVars, valueStr)
+                    Dim sv = If(lexingOnly, New ScriptVarInt(0), DefineScriptVar(scriptVars, ScriptVarBase.Parse(params(2), params(1)).ReadFromFunctionResult(intResult), lexingOnly))
 
                     Return True
 

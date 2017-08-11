@@ -26,6 +26,9 @@ Public Class Data
     Public Shared clsGoods As New Hashtable
     Public Shared clsGoodsIDs As New Hashtable
 
+    Public Shared listBonfireNames As New List(Of String)
+    Public Shared listFuncNames As New List(Of String)
+
     Private Shared _scriptList As New Dictionary(Of String, Script)
     Public Shared Scripts As New ScriptListAccessor()
     Public Class ScriptListAccessor
@@ -39,8 +42,6 @@ Public Class Data
     Private Shared Sub LoadScript(scriptName As String)
         _scriptList.Add(scriptName, New Script(scriptName, GetTextRes(scriptName & "." & ScriptFileExtension)))
     End Sub
-
-    Public Shared listBonfireNames As New List(Of String)
 
     Shared Sub New()
         ThisAssembly = Reflection.Assembly.GetExecutingAssembly()
@@ -73,7 +74,7 @@ Public Class Data
     Public Shared Sub initClls()
         cllItemCats = {clsWeapons, clsArmor, clsRings, clsGoods}
         cllItemCatsIDs = {clsWeaponsIDs, clsArmorIDs, clsRingsIDs, clsGoodsIDs}
-        ParseItems(clsFuncNames, clsFuncLocs, GetTextRes("CL.FuncLocs.txt"))
+        listFuncNames = ParseItems(clsFuncNames, clsFuncLocs, GetTextRes("CL.FuncLocs.txt"))
         '-----------------------Bonfires-----------------------
         listBonfireNames = ParseItems(clsBonfires, clsBonfiresIDs, GetTextRes("CL.Bonfires.txt"))
         '-----------------------Item Categories-----------------------
