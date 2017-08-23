@@ -48,8 +48,8 @@
 14019680|checkeventbody
 14020176|checkpenalty
 14029920|chrdisableupdate
-14026720|chrfadein
-14026608|chrfadeout
+14026720|ChrFadeIn
+14026608|ChrFadeOut
 14026352|chrresetanimation
 14026400|chrresetrequest
 14015872|clearbossgauge

@@ -11,7 +11,7 @@ Module ScriptFormattingExtensions
 
     <Extension()>
     Public Function FormatText(txt As String) As String
-        Return txt.ToLower.Trim.RemoveDuplicates(Environment.NewLine).RemoveDuplicates(" ")
+        Return txt.Trim.RemoveDuplicates(" ")
     End Function
 
 End Module

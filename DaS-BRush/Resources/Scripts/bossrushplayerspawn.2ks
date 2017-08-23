@@ -1,0 +1,13 @@
+﻿setcolienable 10000, 0
+disablemove 10000, 1
+camreset 10000 
+new int fogwallanim = 7410
+new int spawn = getsummonanimid 10000
+forceplayanimation 10000, spawn
+wait 4400
+forceplayanimation 10000, 0
+wait 300
+forceplayanimation 10000, fogwallanim
+wait 3100
+disablemove 10000, 0
+setcolienable 10000, 1

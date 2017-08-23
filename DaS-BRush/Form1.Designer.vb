@@ -136,19 +136,10 @@ Partial Class frmForm1
         Me.nmbHumanity = New System.Windows.Forms.NumericUpDown()
         Me.tabTests = New System.Windows.Forms.TabPage()
         Me.toolstripTest = New System.Windows.Forms.ToolStrip()
-        Me.ToolStripDropDownButton1 = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.tsmiTestSomething = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.tsbtnDisableAI = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnEnableAI = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.tsbtnEnablePlayerExterminate = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnDisablePlayerExterminate = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
         Me.tabNotes = New System.Windows.Forms.TabPage()
         Me.txtNotes = New System.Windows.Forms.TextBox()
         Me.tabConsole = New System.Windows.Forms.TabPage()
@@ -173,6 +164,16 @@ Partial Class frmForm1
         Me.lblVer = New System.Windows.Forms.Label()
         Me.btnUpdate = New System.Windows.Forms.Button()
         Me.Label18 = New System.Windows.Forms.Label()
+        Me.btnNewConsole = New System.Windows.Forms.Button()
+        Me.ToolStripDropDownButton1 = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.tsmiTestSomething = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsbtnDisableAI = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnEnableAI = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnEnablePlayerExterminate = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnDisablePlayerExterminate = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
         Me.tabs.SuspendLayout()
         Me.tabBosses.SuspendLayout()
         Me.gbBosses.SuspendLayout()
@@ -218,7 +219,7 @@ Partial Class frmForm1
         Me.tabs.Location = New System.Drawing.Point(2, 34)
         Me.tabs.Name = "tabs"
         Me.tabs.SelectedIndex = 0
-        Me.tabs.Size = New System.Drawing.Size(520, 262)
+        Me.tabs.Size = New System.Drawing.Size(520, 263)
         Me.tabs.TabIndex = 4
         '
         'tabBosses
@@ -232,7 +233,7 @@ Partial Class frmForm1
         Me.tabBosses.Location = New System.Drawing.Point(4, 22)
         Me.tabBosses.Margin = New System.Windows.Forms.Padding(0)
         Me.tabBosses.Name = "tabBosses"
-        Me.tabBosses.Size = New System.Drawing.Size(512, 236)
+        Me.tabBosses.Size = New System.Drawing.Size(512, 237)
         Me.tabBosses.TabIndex = 5
         Me.tabBosses.Text = "Boss Rush"
         Me.tabBosses.UseVisualStyleBackColor = True
@@ -908,7 +909,7 @@ Partial Class frmForm1
         Me.tabScenarios.Controls.Add(Me.btnScenarioArtoriasCiaran)
         Me.tabScenarios.Location = New System.Drawing.Point(4, 22)
         Me.tabScenarios.Name = "tabScenarios"
-        Me.tabScenarios.Size = New System.Drawing.Size(512, 236)
+        Me.tabScenarios.Size = New System.Drawing.Size(512, 237)
         Me.tabScenarios.TabIndex = 9
         Me.tabScenarios.Text = "Scenarios"
         Me.tabScenarios.UseVisualStyleBackColor = True
@@ -958,7 +959,7 @@ Partial Class frmForm1
         Me.tabMain.Location = New System.Drawing.Point(4, 22)
         Me.tabMain.Name = "tabMain"
         Me.tabMain.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabMain.Size = New System.Drawing.Size(512, 236)
+        Me.tabMain.Size = New System.Drawing.Size(512, 237)
         Me.tabMain.TabIndex = 0
         Me.tabMain.Text = "Player"
         '
@@ -1192,7 +1193,7 @@ Partial Class frmForm1
         Me.tabStats.Controls.Add(Me.nmbHumanity)
         Me.tabStats.Location = New System.Drawing.Point(4, 22)
         Me.tabStats.Name = "tabStats"
-        Me.tabStats.Size = New System.Drawing.Size(512, 236)
+        Me.tabStats.Size = New System.Drawing.Size(512, 237)
         Me.tabStats.TabIndex = 2
         Me.tabStats.Text = "Stats"
         '
@@ -1425,7 +1426,7 @@ Partial Class frmForm1
         Me.tabTests.Controls.Add(Me.toolstripTest)
         Me.tabTests.Location = New System.Drawing.Point(4, 22)
         Me.tabTests.Name = "tabTests"
-        Me.tabTests.Size = New System.Drawing.Size(512, 236)
+        Me.tabTests.Size = New System.Drawing.Size(512, 237)
         Me.tabTests.TabIndex = 7
         Me.tabTests.Text = "Tests"
         '
@@ -1444,110 +1445,32 @@ Partial Class frmForm1
         Me.toolstripTest.Size = New System.Drawing.Size(150, 203)
         Me.toolstripTest.TabIndex = 85
         '
-        'ToolStripDropDownButton1
-        '
-        Me.ToolStripDropDownButton1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiTestSomething})
-        Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
-        Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
-        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(148, 20)
-        Me.ToolStripDropDownButton1.Text = "(Developer Test Stuff)"
-        '
-        'tsmiTestSomething
-        '
-        Me.tsmiTestSomething.Name = "tsmiTestSomething"
-        Me.tsmiTestSomething.Size = New System.Drawing.Size(146, 22)
-        Me.tsmiTestSomething.Text = "Something...?"
-        '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
         Me.ToolStripSeparator1.Size = New System.Drawing.Size(148, 6)
-        '
-        'tsbtnDisableAI
-        '
-        Me.tsbtnDisableAI.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.tsbtnDisableAI.Image = CType(resources.GetObject("tsbtnDisableAI.Image"), System.Drawing.Image)
-        Me.tsbtnDisableAI.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnDisableAI.Name = "tsbtnDisableAI"
-        Me.tsbtnDisableAI.Size = New System.Drawing.Size(148, 19)
-        Me.tsbtnDisableAI.Text = "Disable AI"
-        '
-        'tsbtnEnableAI
-        '
-        Me.tsbtnEnableAI.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.tsbtnEnableAI.Image = CType(resources.GetObject("tsbtnEnableAI.Image"), System.Drawing.Image)
-        Me.tsbtnEnableAI.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnEnableAI.Name = "tsbtnEnableAI"
-        Me.tsbtnEnableAI.Size = New System.Drawing.Size(148, 19)
-        Me.tsbtnEnableAI.Text = "Enable AI"
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
         Me.ToolStripSeparator2.Size = New System.Drawing.Size(148, 6)
         '
-        'tsbtnEnablePlayerExterminate
-        '
-        Me.tsbtnEnablePlayerExterminate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.tsbtnEnablePlayerExterminate.Image = CType(resources.GetObject("tsbtnEnablePlayerExterminate.Image"), System.Drawing.Image)
-        Me.tsbtnEnablePlayerExterminate.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnEnablePlayerExterminate.Name = "tsbtnEnablePlayerExterminate"
-        Me.tsbtnEnablePlayerExterminate.Size = New System.Drawing.Size(148, 19)
-        Me.tsbtnEnablePlayerExterminate.Text = "Enable Player Exterminate"
-        '
-        'tsbtnDisablePlayerExterminate
-        '
-        Me.tsbtnDisablePlayerExterminate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.tsbtnDisablePlayerExterminate.Image = CType(resources.GetObject("tsbtnDisablePlayerExterminate.Image"), System.Drawing.Image)
-        Me.tsbtnDisablePlayerExterminate.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnDisablePlayerExterminate.Name = "tsbtnDisablePlayerExterminate"
-        Me.tsbtnDisablePlayerExterminate.Size = New System.Drawing.Size(148, 19)
-        Me.tsbtnDisablePlayerExterminate.Text = "Disable Player Exterminate"
-        '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
         Me.ToolStripSeparator3.Size = New System.Drawing.Size(148, 6)
-        '
-        'ToolStripButton1
-        '
-        Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.ToolStripButton1.Image = CType(resources.GetObject("ToolStripButton1.Image"), System.Drawing.Image)
-        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(148, 19)
-        Me.ToolStripButton1.Text = "UserVarPlayerFadeTest"
         '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
         Me.ToolStripSeparator4.Size = New System.Drawing.Size(148, 6)
         '
-        'ToolStripButton2
-        '
-        Me.ToolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.ToolStripButton2.Image = CType(resources.GetObject("ToolStripButton2.Image"), System.Drawing.Image)
-        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton2.Name = "ToolStripButton2"
-        Me.ToolStripButton2.Size = New System.Drawing.Size(148, 19)
-        Me.ToolStripButton2.Text = "BossRushEndingTest"
-        '
-        'ToolStripButton3
-        '
-        Me.ToolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.ToolStripButton3.Image = CType(resources.GetObject("ToolStripButton3.Image"), System.Drawing.Image)
-        Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton3.Name = "ToolStripButton3"
-        Me.ToolStripButton3.Size = New System.Drawing.Size(148, 19)
-        Me.ToolStripButton3.Text = "OandSandOandS_Debug"
-        '
         'tabNotes
         '
         Me.tabNotes.Controls.Add(Me.txtNotes)
         Me.tabNotes.Location = New System.Drawing.Point(4, 22)
         Me.tabNotes.Name = "tabNotes"
-        Me.tabNotes.Size = New System.Drawing.Size(512, 236)
+        Me.tabNotes.Size = New System.Drawing.Size(512, 237)
         Me.tabNotes.TabIndex = 8
         Me.tabNotes.Text = "Notes"
         Me.tabNotes.UseVisualStyleBackColor = True
@@ -1562,7 +1485,7 @@ Partial Class frmForm1
         Me.txtNotes.Name = "txtNotes"
         Me.txtNotes.ReadOnly = True
         Me.txtNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtNotes.Size = New System.Drawing.Size(506, 230)
+        Me.txtNotes.Size = New System.Drawing.Size(506, 231)
         Me.txtNotes.TabIndex = 0
         '
         'tabConsole
@@ -1575,7 +1498,7 @@ Partial Class frmForm1
         Me.tabConsole.Controls.Add(Me.txtConsoleResult)
         Me.tabConsole.Location = New System.Drawing.Point(4, 22)
         Me.tabConsole.Name = "tabConsole"
-        Me.tabConsole.Size = New System.Drawing.Size(512, 236)
+        Me.tabConsole.Size = New System.Drawing.Size(512, 237)
         Me.tabConsole.TabIndex = 10
         Me.tabConsole.Text = "Console"
         Me.tabConsole.UseVisualStyleBackColor = True
@@ -1588,13 +1511,15 @@ Partial Class frmForm1
         Me.scConsole.AutoCCancelAtStart = False
         Me.scConsole.AutoCIgnoreCase = True
         Me.scConsole.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.scConsole.FontQuality = ScintillaNET.FontQuality.AntiAliased
+        Me.scConsole.CaretLineBackColor = System.Drawing.Color.FromArgb(CType(CType(227, Byte), Integer), CType(CType(227, Byte), Integer), CType(CType(227, Byte), Integer))
+        Me.scConsole.CaretLineVisible = True
         Me.scConsole.HScrollBar = False
         Me.scConsole.IdleStyling = ScintillaNET.IdleStyling.All
         Me.scConsole.Lexer = ScintillaNET.Lexer.PureBasic
         Me.scConsole.Location = New System.Drawing.Point(4, 4)
         Me.scConsole.Name = "scConsole"
-        Me.scConsole.Size = New System.Drawing.Size(504, 139)
+        Me.scConsole.PhasesDraw = ScintillaNET.Phases.Multiple
+        Me.scConsole.Size = New System.Drawing.Size(504, 140)
         Me.scConsole.TabIndex = 4
         Me.scConsole.TabStop = False
         Me.scConsole.Technology = ScintillaNET.Technology.DirectWrite
@@ -1605,7 +1530,7 @@ Partial Class frmForm1
         'btnConsoleCancel
         '
         Me.btnConsoleCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnConsoleCancel.Location = New System.Drawing.Point(443, 202)
+        Me.btnConsoleCancel.Location = New System.Drawing.Point(443, 203)
         Me.btnConsoleCancel.Name = "btnConsoleCancel"
         Me.btnConsoleCancel.Size = New System.Drawing.Size(65, 27)
         Me.btnConsoleCancel.TabIndex = 3
@@ -1615,7 +1540,7 @@ Partial Class frmForm1
         'btnConsoleHelp
         '
         Me.btnConsoleHelp.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnConsoleHelp.Location = New System.Drawing.Point(4, 210)
+        Me.btnConsoleHelp.Location = New System.Drawing.Point(4, 211)
         Me.btnConsoleHelp.Name = "btnConsoleHelp"
         Me.btnConsoleHelp.Size = New System.Drawing.Size(73, 23)
         Me.btnConsoleHelp.TabIndex = 0
@@ -1625,7 +1550,7 @@ Partial Class frmForm1
         'btnConsoleExecute
         '
         Me.btnConsoleExecute.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnConsoleExecute.Location = New System.Drawing.Point(443, 149)
+        Me.btnConsoleExecute.Location = New System.Drawing.Point(443, 150)
         Me.btnConsoleExecute.Name = "btnConsoleExecute"
         Me.btnConsoleExecute.Size = New System.Drawing.Size(65, 50)
         Me.btnConsoleExecute.TabIndex = 2
@@ -1636,7 +1561,7 @@ Partial Class frmForm1
         '
         Me.Label17.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(13, 150)
+        Me.Label17.Location = New System.Drawing.Point(13, 151)
         Me.Label17.Margin = New System.Windows.Forms.Padding(0)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(63, 13)
@@ -1647,7 +1572,7 @@ Partial Class frmForm1
         '
         Me.txtConsoleResult.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtConsoleResult.Location = New System.Drawing.Point(79, 147)
+        Me.txtConsoleResult.Location = New System.Drawing.Point(79, 148)
         Me.txtConsoleResult.Multiline = True
         Me.txtConsoleResult.Name = "txtConsoleResult"
         Me.txtConsoleResult.ReadOnly = True
@@ -1669,7 +1594,7 @@ Partial Class frmForm1
         Me.tabAbout.Controls.Add(Me.Label19)
         Me.tabAbout.Location = New System.Drawing.Point(4, 22)
         Me.tabAbout.Name = "tabAbout"
-        Me.tabAbout.Size = New System.Drawing.Size(512, 236)
+        Me.tabAbout.Size = New System.Drawing.Size(512, 237)
         Me.tabAbout.TabIndex = 6
         Me.tabAbout.Text = "About"
         Me.tabAbout.UseVisualStyleBackColor = True
@@ -1782,6 +1707,7 @@ Partial Class frmForm1
         'btnReconnect
         '
         Me.btnReconnect.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnReconnect.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.btnReconnect.Location = New System.Drawing.Point(431, 5)
         Me.btnReconnect.Name = "btnReconnect"
         Me.btnReconnect.Size = New System.Drawing.Size(81, 23)
@@ -1792,9 +1718,9 @@ Partial Class frmForm1
         '
         'lblVer
         '
-        Me.lblVer.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblVer.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblVer.AutoSize = True
-        Me.lblVer.Location = New System.Drawing.Point(411, 303)
+        Me.lblVer.Location = New System.Drawing.Point(51, 304)
         Me.lblVer.Name = "lblVer"
         Me.lblVer.Size = New System.Drawing.Size(76, 13)
         Me.lblVer.TabIndex = 77
@@ -1802,31 +1728,132 @@ Partial Class frmForm1
         '
         'btnUpdate
         '
-        Me.btnUpdate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnUpdate.Location = New System.Drawing.Point(2, 296)
+        Me.btnUpdate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnUpdate.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.btnUpdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnUpdate.Image = Global.DaS_BRush.My.Resources.Resources.Download
+        Me.btnUpdate.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnUpdate.Location = New System.Drawing.Point(258, 5)
+        Me.btnUpdate.Margin = New System.Windows.Forms.Padding(0)
         Me.btnUpdate.Name = "btnUpdate"
-        Me.btnUpdate.Size = New System.Drawing.Size(205, 23)
+        Me.btnUpdate.Size = New System.Drawing.Size(167, 23)
         Me.btnUpdate.TabIndex = 0
         Me.btnUpdate.TabStop = False
-        Me.btnUpdate.Text = "Update BRush"
+        Me.btnUpdate.Text = "New BRush Version Available"
+        Me.btnUpdate.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
         Me.btnUpdate.UseVisualStyleBackColor = True
         Me.btnUpdate.Visible = False
         '
         'Label18
         '
-        Me.Label18.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label18.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(360, 302)
+        Me.Label18.Location = New System.Drawing.Point(3, 303)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(45, 13)
         Me.Label18.TabIndex = 79
         Me.Label18.Text = "Version:"
+        '
+        'btnNewConsole
+        '
+        Me.btnNewConsole.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNewConsole.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnNewConsole.Image = CType(resources.GetObject("btnNewConsole.Image"), System.Drawing.Image)
+        Me.btnNewConsole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnNewConsole.Location = New System.Drawing.Point(351, 296)
+        Me.btnNewConsole.Margin = New System.Windows.Forms.Padding(0)
+        Me.btnNewConsole.Name = "btnNewConsole"
+        Me.btnNewConsole.Size = New System.Drawing.Size(140, 24)
+        Me.btnNewConsole.TabIndex = 80
+        Me.btnNewConsole.TabStop = False
+        Me.btnNewConsole.Text = "New Scripting Window"
+        Me.btnNewConsole.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnNewConsole.UseVisualStyleBackColor = True
+        '
+        'ToolStripDropDownButton1
+        '
+        Me.ToolStripDropDownButton1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiTestSomething})
+        Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
+        Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
+        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(148, 20)
+        Me.ToolStripDropDownButton1.Text = "(Developer Test Stuff)"
+        '
+        'tsmiTestSomething
+        '
+        Me.tsmiTestSomething.Name = "tsmiTestSomething"
+        Me.tsmiTestSomething.Size = New System.Drawing.Size(146, 22)
+        Me.tsmiTestSomething.Text = "Something...?"
+        '
+        'tsbtnDisableAI
+        '
+        Me.tsbtnDisableAI.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.tsbtnDisableAI.Image = CType(resources.GetObject("tsbtnDisableAI.Image"), System.Drawing.Image)
+        Me.tsbtnDisableAI.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnDisableAI.Name = "tsbtnDisableAI"
+        Me.tsbtnDisableAI.Size = New System.Drawing.Size(148, 19)
+        Me.tsbtnDisableAI.Text = "Disable AI"
+        '
+        'tsbtnEnableAI
+        '
+        Me.tsbtnEnableAI.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.tsbtnEnableAI.Image = CType(resources.GetObject("tsbtnEnableAI.Image"), System.Drawing.Image)
+        Me.tsbtnEnableAI.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnEnableAI.Name = "tsbtnEnableAI"
+        Me.tsbtnEnableAI.Size = New System.Drawing.Size(148, 19)
+        Me.tsbtnEnableAI.Text = "Enable AI"
+        '
+        'tsbtnEnablePlayerExterminate
+        '
+        Me.tsbtnEnablePlayerExterminate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.tsbtnEnablePlayerExterminate.Image = CType(resources.GetObject("tsbtnEnablePlayerExterminate.Image"), System.Drawing.Image)
+        Me.tsbtnEnablePlayerExterminate.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnEnablePlayerExterminate.Name = "tsbtnEnablePlayerExterminate"
+        Me.tsbtnEnablePlayerExterminate.Size = New System.Drawing.Size(148, 19)
+        Me.tsbtnEnablePlayerExterminate.Text = "Enable Player Exterminate"
+        '
+        'tsbtnDisablePlayerExterminate
+        '
+        Me.tsbtnDisablePlayerExterminate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.tsbtnDisablePlayerExterminate.Image = CType(resources.GetObject("tsbtnDisablePlayerExterminate.Image"), System.Drawing.Image)
+        Me.tsbtnDisablePlayerExterminate.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnDisablePlayerExterminate.Name = "tsbtnDisablePlayerExterminate"
+        Me.tsbtnDisablePlayerExterminate.Size = New System.Drawing.Size(148, 19)
+        Me.tsbtnDisablePlayerExterminate.Text = "Disable Player Exterminate"
+        '
+        'ToolStripButton1
+        '
+        Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.ToolStripButton1.Image = CType(resources.GetObject("ToolStripButton1.Image"), System.Drawing.Image)
+        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton1.Name = "ToolStripButton1"
+        Me.ToolStripButton1.Size = New System.Drawing.Size(148, 19)
+        Me.ToolStripButton1.Text = "UserVarPlayerFadeTest"
+        '
+        'ToolStripButton2
+        '
+        Me.ToolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.ToolStripButton2.Image = CType(resources.GetObject("ToolStripButton2.Image"), System.Drawing.Image)
+        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton2.Name = "ToolStripButton2"
+        Me.ToolStripButton2.Size = New System.Drawing.Size(148, 19)
+        Me.ToolStripButton2.Text = "BossRushEndingTest"
+        '
+        'ToolStripButton3
+        '
+        Me.ToolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.ToolStripButton3.Image = CType(resources.GetObject("ToolStripButton3.Image"), System.Drawing.Image)
+        Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton3.Name = "ToolStripButton3"
+        Me.ToolStripButton3.Size = New System.Drawing.Size(148, 19)
+        Me.ToolStripButton3.Text = "OandSandOandS_Debug"
         '
         'frmForm1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(524, 321)
+        Me.Controls.Add(Me.btnNewConsole)
         Me.Controls.Add(Me.Label18)
         Me.Controls.Add(Me.btnUpdate)
         Me.Controls.Add(Me.lblVer)
@@ -2029,4 +2056,5 @@ End Sub
     Friend WithEvents btnCancelBossRush As Button
     Friend WithEvents btnConsoleCancel As Button
     Friend WithEvents scConsole As ScintillaNET.Scintilla
+    Friend WithEvents btnNewConsole As Button
 End Class

@@ -27,17 +27,7 @@ Public Class frmForm1
     '50001550 = Stop Rite of Kindling dropping?
     'Check ItemLotParam for boss soul EventFlags
 
-    Dim consoleScript As New Script("Untitled", "")
-    Dim consoleScriptParams As ScriptThreadParams = ScriptThreadParams.GetNoThread(consoleScript)
 
-    Shared ConsoleOutputText As String = ""
-    Dim prevConsoleLineNumberWidth As Integer = 0
-
-    Dim _consoleAutoCompleteStr As String = ""
-
-    Dim consoleLastSyntaxHighlightEndPos = 0
-
-    Dim consoleLexScriptVars As New Dictionary(Of String, ScriptVarBase)
 
     Public Const VersionCheckUrl = "http://wulf2k.ca/pc/das/das-brush-ver.txt"
     Public Const NoteCheckUrl = "http://wulf2k.ca/pc/das/das-brush-notes.txt"
@@ -64,7 +54,7 @@ Public Class frmForm1
     Public intvar1 As Integer
     Public intvar2 As Integer
 
-
+    Dim consHandler As ConsoleHandler
 
     Private Async Sub updatecheck()
         Try
@@ -91,61 +81,9 @@ Public Class frmForm1
         End Try
     End Sub
 
-    Private Sub InitConsole()
-        _consoleAutoCompleteStr = String.Join(" ", Data.listFuncNames.ToArray().Concat(GetType(Funcs).GetMembers().Select(Function(x) x.Name.ToLower).ToArray).OrderBy(Function(x) x))
-
-        scConsole.StyleResetDefault()
-
-        scConsole.Styles(ScintillaNET.Style.Default).Font = "Consolas"
-        scConsole.Styles(ScintillaNET.Style.Default).Size = 10
-
-        scConsole.Lexer = ScintillaNET.Lexer.PureBasic
-        scConsole.Styles(ScintillaNET.Style.PureBasic.Comment).ForeColor = Color.Green
-        scConsole.Styles(ScintillaNET.Style.PureBasic.Number).ForeColor = Color.Green
-        scConsole.Styles(ScintillaNET.Style.PureBasic.HexNumber).ForeColor = Color.Green
-        scConsole.Styles(ScintillaNET.Style.PureBasic.BinNumber).ForeColor = Color.Green
-        scConsole.Styles(ScintillaNET.Style.PureBasic.Keyword).Bold = True
-        scConsole.Styles(ScintillaNET.Style.PureBasic.Keyword).ForeColor = Color.Blue
-        scConsole.Styles(ScintillaNET.Style.PureBasic.Keyword).Weight = 7000
-        scConsole.Styles(ScintillaNET.Style.PureBasic.String).ForeColor = Color.Violet
-        scConsole.Styles(ScintillaNET.Style.PureBasic.Preprocessor).Case = ScintillaNET.StyleCase.Camel
-        scConsole.Styles(ScintillaNET.Style.PureBasic.Preprocessor).ForeColor = Color.Blue
-        scConsole.Styles(ScintillaNET.Style.PureBasic.Operator).ForeColor = Color.Red
-        scConsole.Styles(ScintillaNET.Style.PureBasic.Keyword2).ForeColor = Color.BlueViolet
-        scConsole.Styles(ScintillaNET.Style.PureBasic.Keyword3).ForeColor = Color.Red
-        scConsole.Styles(ScintillaNET.Style.PureBasic.Keyword4).ForeColor = Color.Green
-        scConsole.Styles(ScintillaNET.Style.PureBasic.Label).ForeColor = Color.Green
-        scConsole.Styles(ScintillaNET.Style.PureBasic.CommentBlock).Bold = True
-        scConsole.Styles(ScintillaNET.Style.PureBasic.CommentBlock).ForeColor = Color.Orange
-        scConsole.Styles(ScintillaNET.Style.PureBasic.CommentBlock).Italic = True
-        scConsole.Styles(ScintillaNET.Style.PureBasic.CommentBlock).Weight = 700
-        scConsole.SetKeywords(0, _consoleAutoCompleteStr)
-        scConsole.SetKeywords(2, "")
-        scConsole.SetKeywords(3, "new int float true false")
-
-        CheckAllVars()
-
-        scConsole.Update()
-    End Sub
-
-    Private Sub CheckUserVarLexOnLineOrSomething(line As String)
-
-        Script.CheckSpecialActions(consoleLexScriptVars, line, True)
-
-        SyncLock scConsole
-            scConsole.SetKeywords(2, String.Join(" ", consoleLexScriptVars.Keys.ToArray())) 'TODO: OPTIMIZE
-        End SyncLock
-    End Sub
-
-    Private Sub CheckAllVars()
-        Return 'TODO: remove this when implemented lol
-        consoleLexScriptVars.Clear()
-        For Each line In scConsole.Lines
-            CheckUserVarLexOnLineOrSomething(line.Text)
-        Next
-    End Sub
-
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        consHandler = New ConsoleHandler(scConsole, txtConsoleResult, btnConsoleExecute, btnConsoleCancel, btnConsoleHelp, lblRelease)
 
         Dim oldFileArg As String = Nothing
         For Each arg In Environment.GetCommandLineArgs().Skip(1)
@@ -190,8 +128,6 @@ Public Class frmForm1
         refTimer = New System.Windows.Forms.Timer
         refTimer.Interval = delay
         refTimer.Enabled = Hook.IsHooked
-
-        InitConsole()
     End Sub
 
     Private Function getIsBossRushThreadActive() As Boolean
@@ -209,29 +145,9 @@ Public Class frmForm1
 
     End Function
 
-    ReadOnly Property ConsoleExecuting As Boolean
-        Get
-            If consoleScriptParams.ThisThread Is Nothing Then
-                Return False
-            Else
-                If consoleScriptParams.ThisThread.IsAlive And Not consoleScriptParams.IsFinished Then
-                    Return True
-                End If
-            End If
-            Return False
-        End Get
-    End Property
-
     Private Sub RefreshGUI()
 
         Hook.UpdateHook()
-
-        lblRelease.Text = Hook.DetectedDarkSoulsVersion
-
-        SyncLock consoleScript.outputLock
-            txtConsoleResult.Text = consoleScript.outStr
-        End SyncLock
-
 
         Dim isBossRushing = getIsBossRushThreadActive()
 
@@ -248,12 +164,6 @@ Public Class frmForm1
         cboxReverseOrder.Enabled = Not isBossRushing
         btnBeginBossRush.Enabled = Not isBossRushing
         btnCancelBossRush.Enabled = isBossRushing
-
-        Dim isConsoling = ConsoleExecuting()
-
-        btnConsoleExecute.Enabled = Not isConsoling
-        btnConsoleCancel.Enabled = isConsoling
-        scConsole.Enabled = Not isConsoling
 
         Select Case tabs.TabPages(tabs.SelectedIndex).Text
             Case "Player"
@@ -541,18 +451,6 @@ Public Class frmForm1
         Hook.Stats.MaxStamina.ValueInt = sender.Value
     End Sub
 
-    Private Sub btnConsoleExecute_Click(sender As Object, e As EventArgs) Handles btnConsoleExecute.Click
-        consoleScript = New Script(consoleScript.Name, String.Join(Environment.NewLine, scConsole.Lines.Select(Function(x) x.Text)))
-        consoleScriptParams = consoleScript.ExecuteInBackground()
-    End Sub
-
-
-
-    Private Sub btnConsoleHelp_Click(sender As Object, e As EventArgs) Handles btnConsoleHelp.Click
-        Dim webAddress As String = "https://docs.google.com/spreadsheets/d/1Gff9pSGpYCJeNAXzUamqAInqFUwk4BhC6dC9Qk3_cDI/edit#gid=0"
-        Process.Start(webAddress)
-    End Sub
-
     Private Sub btnScenarioPinwheelDefense_Click(sender As Object, e As EventArgs) Handles btnScenarioPinwheelDefense.Click
         trd = New Thread(AddressOf Funcs.scenariopinwheeldefense)
         trd.IsBackground = True
@@ -619,43 +517,8 @@ Public Class frmForm1
         Console.WriteLine(trd.ThreadState)
     End Sub
 
-    Private Sub btnConsoleCancel_Click(sender As Object, e As EventArgs) Handles btnConsoleCancel.Click
-        consoleScriptParams.ThisThread.Abort()
-        consoleScript.CleanAbortedThreads()
-    End Sub
-
-    Private Sub scConsole_TextChanged(sender As Object, e As EventArgs) Handles scConsole.TextChanged
-        Dim newLineNumberWidth = scConsole.Lines.Count.ToString().Length
-
-        If Not (newLineNumberWidth = prevConsoleLineNumberWidth) Then
-            scConsole.Margins(0).Width = scConsole.TextWidth(ScintillaNET.Style.LineNumber, New String("9", newLineNumberWidth + 1)) + 2
-        End If
-
-        prevConsoleLineNumberWidth = newLineNumberWidth
-    End Sub
-
-    Private Sub scConsole_CharAdded(sender As Object, e As ScintillaNET.CharAddedEventArgs) Handles scConsole.CharAdded
-        Dim currentPos = scConsole.CurrentPosition
-        Dim wordStartPos = scConsole.WordStartPosition(currentPos, True)
-        Dim lengthEntered = currentPos - wordStartPos
-
-        If (lengthEntered > 0 And Not scConsole.AutoCActive) Then
-            scConsole.AutoCShow(lengthEntered, _consoleAutoCompleteStr)
-        End If
-
-        If ChrW(e.Char) = " "c Or Environment.NewLine.Contains(ChrW(e.Char)) Then
-            scConsole.Colorize(consoleLastSyntaxHighlightEndPos, currentPos)
-
-            CheckAllVars()
-
-            consoleLastSyntaxHighlightEndPos = currentPos
-
-        End If
-    End Sub
-
-    Private Sub scConsole_Delete(sender As Object, e As ScintillaNET.ModificationEventArgs) Handles scConsole.Delete
-        If Not String.IsNullOrWhiteSpace(e.Text.Trim()) Then
-            CheckAllVars()
-        End If
+    Private Sub btnNewConsole_Click(sender As Object, e As EventArgs) Handles btnNewConsole.Click
+        Dim someNewConsoleWindow = New ConsoleWindow()
+        someNewConsoleWindow.Show()
     End Sub
 End Class

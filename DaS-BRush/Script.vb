@@ -28,7 +28,13 @@ Public Class Script
     Public outStr As String
 
     Public Sub New(name As String, scriptTxt As String)
-        Lines = scriptTxt.FormatText.Split(Environment.NewLine)
+        Lines = scriptTxt.FormatText.Split(vbCrLf)
+        Me.Name = name
+        WorkerThreads = New List(Of Thread)
+    End Sub
+
+    Public Sub New(name As String, scriptLines As String())
+        Lines = scriptLines
         Me.Name = name
         WorkerThreads = New List(Of Thread)
     End Sub
@@ -63,7 +69,7 @@ Public Class Script
                            "    Int: " & result & Environment.NewLine &
                            "    Float: " & BitConverter.ToSingle(BitConverter.GetBytes(result), 0) & Environment.NewLine
                 End SyncLock
-                
+
             Catch tae As ThreadAbortException
                 Return ' Dont show error box every time u click cancel
             Catch ex As Exception
@@ -110,11 +116,11 @@ Public Class Script
     End Function
 
     Public Shared Function IsScriptVarDefined(ByRef scriptVars As Dictionary(Of String, ScriptVarBase), name As String)
-        Return scriptVars.ContainsKey(name.ToLower())
+        Return scriptVars.ContainsKey(name.ToUpper())
     End Function
 
     Public Shared Function GetScriptVar(ByRef scriptVars As Dictionary(Of String, ScriptVarBase), name As String) As ScriptVarBase
-        Return scriptVars(name.ToLower())
+        Return scriptVars(name.ToUpper())
     End Function
 
     Public Shared Function DefineScriptVar(ByRef scriptVars As Dictionary(Of String, ScriptVarBase), svar As ScriptVarBase, Optional lexingOnly As Boolean = False) As ScriptVarBase
@@ -123,10 +129,10 @@ Public Class Script
                 Throw New ScriptVarAlreadyDefinedException(svar)
             End If
         Else
-            scriptVars.Add(svar.Name, svar)
+            scriptVars.Add(svar.Name.ToUpper(), svar)
         End If
 
-        Return scriptVars(svar.Name)
+        Return scriptVars(svar.Name.ToUpper())
     End Function
 
     Public Shared Function CheckSpecialActions(ByRef scriptVars As Dictionary(Of String, ScriptVarBase), fullLine As String, Optional lexingOnly As Boolean = False) As Boolean
@@ -161,7 +167,7 @@ Public Class Script
 
 
     Public Shared Function CheckSpecialActions(ByRef scriptVars As Dictionary(Of String, ScriptVarBase), params As String(), Optional lexingOnly As Boolean = False) As Boolean
-        If params.Length > 0 AndAlso params(0) = "new" Then
+        If params.Length > 0 AndAlso params(0).ToUpper = "NEW" Then
             If params.Length = 3 Then
                 DefineScriptVar(scriptVars, ScriptVarBase.Parse(params(2), params(1)), lexingOnly)
                 Return True
@@ -176,8 +182,8 @@ Public Class Script
                         valueStr = valueStr & params(i) & " "
                     Next
 
-                    Dim intResult = Script.RunOneLine(scriptVars, valueStr)
-                    Dim sv = If(lexingOnly, New ScriptVarInt(0), DefineScriptVar(scriptVars, ScriptVarBase.Parse(params(2), params(1)).ReadFromFunctionResult(intResult), lexingOnly))
+                    Dim intResult = If(lexingOnly, 0, Script.RunOneLine(scriptVars, valueStr))
+                    Dim sv = DefineScriptVar(scriptVars, ScriptVarBase.Parse(params(2), params(1)).ReadFromFunctionResult(intResult), lexingOnly)
 
                     Return True
 
@@ -191,7 +197,7 @@ Public Class Script
 
     Private Function ExecuteScriptLine(ByRef scriptVars As Dictionary(Of String, ScriptVarBase), ByVal inputStr As String) As Integer
 
-        If CheckSpecialActions(scriptVars, inputStr.ToLower.Trim) Then
+        If CheckSpecialActions(scriptVars, inputStr.Trim) Then
             Return 0
         End If
 
@@ -201,7 +207,7 @@ Public Class Script
 
         Dim storedVal As String = ""
 
-        str = str.ToLower
+        str = str.ToUpper()
 
         If str.Contains("=") Then
             storedVal = str.Replace(" ", "").Split("=")(0)
@@ -209,12 +215,12 @@ Public Class Script
         End If
 
 
-        action = str.Split(" ")(0).ToLower
+        action = str.Split(" ")(0).ToUpper
         If Data.clsFuncLocs.Contains(action) Then
-            str = "funccall " & action & ", " & str.ToLower.Replace(action, "")
-            action = "funccall"
+            str = "FUNCCALL " & action & ", " & str.ToUpper.Replace(action, "")
+            action = "FUNCCALL"
         Else
-            str = str.ToLower.Replace(action, "")
+            str = str.ToUpper.Replace(action, "")
         End If
 
         If str.Contains(" ") Then
@@ -225,10 +231,10 @@ Public Class Script
 
 
         For i = 0 To params.Count - 1
-            Dim p = params(i).ToLower
-            If p = "true" Then
+            Dim p = params(i).ToUpper
+            If p = "TRUE" Then
                 params(i) = "1"
-            ElseIf p = "false" Then
+            ElseIf p = "FALSE" Then
                 params(i) = "0"
             ElseIf IsScriptVarDefined(scriptVars, p) Then
                 params(i) = GetScriptVar(scriptVars, p).ToString()
@@ -240,7 +246,7 @@ Public Class Script
         Dim pt As Type
         Dim method As MethodInfo
 
-        method = t.GetMethod(action)
+        method = Data.customFuncMethodInfo(action)
         'Check function validity.
         If ((method Is Nothing) Or (Not (method.IsPublic And method.IsStatic))) Then
             Throw New FunctionNoExistException(action)
@@ -274,7 +280,7 @@ Public Class Script
         result = method.Invoke(Me, typedParams)
 
         If IsScriptVarDefined(scriptVars, storedVal) Then
-            scriptVars(storedVal).ReadFromFunctionResult(result)
+            scriptVars(storedVal.ToUpper()).ReadFromFunctionResult(result)
         End If
 
         Return result
