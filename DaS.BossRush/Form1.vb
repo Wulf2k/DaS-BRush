@@ -4,7 +4,7 @@ Imports System.Threading
 Imports System.Globalization
 Imports System.Reflection
 Imports System.Runtime.CompilerServices
-Imports DaS_Scripting
+Imports DaS.ScriptLib
 
 Public Class frmForm1
 
@@ -59,7 +59,7 @@ Public Class frmForm1
     Public Const VersionCheckUrl = "http://wulf2k.ca/pc/das/das-brush-ver.txt"
     Public Const NoteCheckUrl = "http://wulf2k.ca/pc/das/das-brush-notes.txt"
 
-    Dim consoleWindow As DaS_Scripting_Console.ConsoleWindow
+    Dim consoleWindow As DaS.ScriptEditor.ConsoleWindow
 
     Private WithEvents refTimer As New System.Windows.Forms.Timer()
     Public Declare Function GetAsyncKeyState Lib "user32" (ByVal vKey As Integer) As Short
@@ -167,7 +167,7 @@ Public Class frmForm1
 
         Dim bossRushScript As String = ""
 
-        Using strm = Assembly.GetExecutingAssembly().GetManifestResourceStream("DaS_BRush.BossRush.lua")
+        Using strm = Assembly.GetExecutingAssembly().GetManifestResourceStream("DaS.BossRush.BossRush.lua")
             Using sr As New StreamReader(strm)
                 bossRushScript = sr.ReadToEnd()
             End Using
@@ -535,7 +535,7 @@ Public Class frmForm1
     Private Sub btnNewConsole_Click(sender As Object, e As EventArgs) Handles btnNewConsole.Click
 
         If consoleWindow Is Nothing Then
-            consoleWindow = New DaS_Scripting_Console.ConsoleWindow()
+            consoleWindow = New DaS.ScriptEditor.ConsoleWindow()
             consoleWindow.Show()
         Else
             consoleWindow.BringToFront()

@@ -1,7 +1,7 @@
 ﻿Imports System.IO
 Imports System.Text.RegularExpressions
 Imports ScintillaNET
-Imports DaS_Scripting
+Imports DaS.ScriptLib
 Imports System.ComponentModel
 Imports AutocompleteMenuNS
 

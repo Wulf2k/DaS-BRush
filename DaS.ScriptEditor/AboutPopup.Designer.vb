@@ -22,7 +22,7 @@ Partial Class AboutPopup
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.AboutPage1 = New DaS_Scripting_Console.AboutPage()
+        Me.AboutPage1 = New DaS.ScriptEditor.AboutPage()
         Me.SuspendLayout()
         '
         'AboutPage1

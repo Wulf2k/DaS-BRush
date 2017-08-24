@@ -117,7 +117,7 @@ Partial Class frmForm1
         Me.tabNotes = New System.Windows.Forms.TabPage()
         Me.txtNotes = New System.Windows.Forms.TextBox()
         Me.tabAbout = New System.Windows.Forms.TabPage()
-        Me.AboutPage1 = New DaS_BRush.AboutPage()
+        Me.AboutPage1 = New DaS.BossRush.AboutPage()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.lblRelease = New System.Windows.Forms.Label()
         Me.btnReconnect = New System.Windows.Forms.Button()

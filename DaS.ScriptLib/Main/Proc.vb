@@ -1,4 +1,4 @@
-﻿Namespace Global.DaS_Scripting
+﻿Namespace Global.DaS.ScriptLib
     Public Module Proc
 
         'TODO: MAKE IT MORE OBVIOUS THAT U NEED TO SUBSCRIBE TO THE EVENT

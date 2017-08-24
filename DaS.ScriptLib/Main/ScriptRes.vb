@@ -2,10 +2,8 @@
 
 Public Class ScriptRes
 
-    Private Const NamespaceString As String = "DaS_Scripting"
+    Private Const NamespaceString As String = "DaS.ScriptLib"
     Private Const ResourcePathPrefix As String = NamespaceString & "."
-    Private Const ScriptDir As String = "Script"
-    Public Const ScriptFileExtension = "2ks"
     Private Shared ReadOnly ThisAssembly As Reflection.Assembly
     Private Shared ReadOnly EmbeddedResourceNames As String() ' Useful for debugging lol
 
@@ -38,20 +36,6 @@ Public Class ScriptRes
     Public Shared ReadOnly funcNames_Ingame As List(Of String)
     Public Shared ReadOnly funcNames_Additional As List(Of String)
 
-    'Private Shared _scriptList As New Dictionary(Of String, LegacyScripting)
-    'Public Shared Scripts As New ScriptListAccessor()
-    'Public Class ScriptListAccessor
-    '    Default Public ReadOnly Property Item(ByVal scriptName As String) As LegacyScripting
-    '        Get
-    '            Return _scriptList(scriptName)
-    '        End Get
-    '    End Property
-    'End Class
-
-    'Private Shared Sub LoadScript(scriptName As String)
-    '    _scriptList.Add(scriptName, New LegacyScripting(scriptName, GetTextRes(scriptName & "." & ScriptFileExtension)))
-    'End Sub
-
     Shared Sub New()
         ThisAssembly = Reflection.Assembly.GetExecutingAssembly()
         EmbeddedResourceNames = ThisAssembly.GetManifestResourceNames().Select(Function(x) x.Substring(ResourcePathPrefix.Length)).ToArray() ' Removes "DaS_BRush.Resources." from beginning
@@ -61,7 +45,7 @@ Public Class ScriptRes
         'autocomplete init shit im too lazy to move to its own method:
         Dim typerinos = ThisAssembly.GetExportedTypes().
             Where(Function(x)
-                      Return x.Namespace = "DaS_Scripting" AndAlso
+                      Return x.Namespace = NamespaceString AndAlso
                       Not x.Name.EndsWith("Handler") AndAlso
                       Not x.Name.EndsWith("Attribute") AndAlso
                       Not x.Name.EndsWith("Delegate") AndAlso
@@ -196,13 +180,6 @@ Public Class ScriptRes
         End If
         Return If(Not t.IsGenericType, t.Name, t.Name.Replace("`" & genericArgs.Length.ToString(), "") & "<" & String.Join(", ", genericArgs.Select(Function(x) x.Name)) & ">")
     End Function
-
-    'Private Shared Sub LoadAllScripts()
-    '    Dim scriptNames As String() = EmbeddedResourceNames.Where(Function(x) x.Split(".").Last.ToLower = ScriptFileExtension).ToArray()
-    '    For Each scr In scriptNames
-    '        LoadScript(scr.Substring(0, scr.Length - ScriptFileExtension.Length - 1)) 'remove extension from accessable name
-    '    Next
-    'End Sub
 
     Private Shared Function GetTextRes(relPath As String) As String
         Dim result As String

@@ -1,6 +1,6 @@
 ﻿Imports System.IO
 Imports System.Reflection
-Imports DaS_Scripting
+Imports DaS.ScriptLib
 
 Public Class ConsoleWindow
 
@@ -80,7 +80,7 @@ Public Class ConsoleWindow
         Dim focusedScriptRunning As Boolean = False 'Defaults to false if no tabs are open
 
         If AreAnyTabsOpen Then
-            focusedScriptRunning = (FocusedConsHandler.luaRunner.State = DaS_Scripting.LuaRunnerState.Running)
+            focusedScriptRunning = (FocusedConsHandler.luaRunner.State = LuaRunnerState.Running)
         End If
 
         ToolStrip1.
