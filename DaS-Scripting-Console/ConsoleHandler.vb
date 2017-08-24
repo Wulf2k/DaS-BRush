@@ -21,6 +21,8 @@ Public Class ConsoleHandler
     Public ReadOnly Property AutoCompleteOpenedBufferMax As Integer = 2
     Public ReadOnly Property AutoCompleteOpenedBufferTimer As New Timer() With {.Interval = 33, .Enabled = True}
 
+    Private ReadOnly Property LastDiskHash As Byte() = New Byte() {}
+
     Public ReadOnly Property luaRunner As Lua
 
     Public Property currentDocument As FileInfo
@@ -41,6 +43,9 @@ Public Class ConsoleHandler
         Private Set(value As Boolean)
             _currentDocumentModified = value
             UpdateTabText(True, False)
+            If Not value Then
+                _LastDiskHash = GetMd5OfString(cons.Text)
+            End If
         End Set
     End Property
 
@@ -138,12 +143,19 @@ Public Class ConsoleHandler
         AddHandler cons.DragDrop, AddressOf Console_DragDrop
         AddHandler cons.AutoCSelection, AddressOf Console_AutoCSelect
         AddHandler cons.AutoCCompleted, AddressOf Console_AutoCCompleted
+        AddHandler cons.Enter, AddressOf Console_Enter
         'AddHandler cons.DragEnter, AddressOf ConsoleDragEnter
         AddHandler luaRunner.OnStart, AddressOf LuaRunner_OnStart
         AddHandler luaRunner.OnStop, AddressOf LuaRunner_OnStop
         AddHandler luaRunner.OnFinishAny, AddressOf LuaRunner_OnFinishAny
         AddHandler luaRunner.OnFinishError, AddressOf LuaRunner_OnFinishError
         AddHandler AutoCompleteOpenedBufferTimer.Tick, AddressOf AutoCompleteOpenedBufferTimer_Tick
+
+    End Sub
+
+    Private Sub Console_Enter(sender As Object, e As EventArgs)
+
+        CheckCurDocOnDiskStatus()
 
     End Sub
 
@@ -730,6 +742,96 @@ Public Class ConsoleHandler
         Return If(moduloValueThing = 0, LUA_INDENT_WIDTH, moduloValueThing)
     End Function
 
+    Private Shared Function GetUnicodeStringBytes(str As String) As Byte()
+        Dim byteList As New List(Of Byte)
+        For Each chr As Char In str
+            Dim currentChar = BitConverter.GetBytes(chr)
+            For Each b In currentChar
+                byteList.Add(b)
+            Next
+        Next
+        Return byteList.ToArray()
+    End Function
+
+    Private Shared Function GetMd5OfString(str As String) As Byte()
+        Dim md5 = Security.Cryptography.MD5.Create()
+        Dim strBuffer As Byte() = GetUnicodeStringBytes(str)
+        Return md5.ComputeHash(strBuffer, 0, strBuffer.Length)
+    End Function
+
+    Private Shared Function GetMd5OfFileOnDisk(fileName As String) As Byte()
+        Dim fileContents As String = Nothing
+        Using fs = File.Open(fileName, FileMode.OpenOrCreate, FileAccess.Read)
+            Using sr = New StreamReader(fs)
+                fileContents = sr.ReadToEnd()
+            End Using
+        End Using
+        If String.IsNullOrWhiteSpace(fileContents) Then
+            Return New Byte() {}
+        Else
+            Return GetMd5OfString(fileContents)
+        End If
+    End Function
+
+    Public Sub CheckCurDocOnDiskStatus()
+        If currentDocument Is Nothing Then
+            Return
+        End If
+
+        If _checkCurDocStillExistsOnDisk() Then
+            _checkCurDocChangedOnDisk()
+        End If
+
+        _LastDiskHash = GetMd5OfFileOnDisk(currentDocument.FullName)
+    End Sub
+
+    Private Function _checkCurDocStillExistsOnDisk() As Boolean
+        If currentDocument Is Nothing Then
+            Return False
+        End If
+
+        If Not File.Exists(currentDocument.FullName) Then
+            Dim msgBoxResult = MessageBox.
+                Show($"The file '{currentDocument.FullName}' no longer exists on-disk." & vbCrLf &
+                    "Would you like to keep it open in the editor despite this?",
+                    "Keep Non-Existant File Open?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+            If msgBoxResult = DialogResult.No Then
+                ParentScriptTab.ParentConsoleWindow.cwTabs.TabPages.Remove(ParentScriptTab)
+            End If
+
+            Return False
+        End If
+
+        Return True
+    End Function
+
+    Private Function _checkCurDocChangedOnDisk() As Boolean
+        If currentDocument Is Nothing Then
+            Return False
+        End If
+
+        Dim currentDiskHash = GetMd5OfFileOnDisk(currentDocument.FullName)
+
+        ' The weird LastDiskHash.Where gets each byte that is the same as that byte number on the other md5 hash
+        ' If the number of perfectly matching bytes is the same as the actual array length, obviously all are equal
+        If (Not (LastDiskHash.Length = currentDiskHash.Length)) OrElse
+            (Not (LastDiskHash.Where(Function(x, i) x = currentDiskHash(i)).Count() = LastDiskHash.Length)) Then
+            currentDocumentModified = True
+            Dim msgBoxResult = MessageBox.
+                Show($"The file {currentDocument.FullName} has been modified by another program since last time you saved." & vbCrLf &
+                    "Would you like overwrite what you have in the editor with what is on-disk?",
+                    "File Changed Elsewhere", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+
+            If msgBoxResult = DialogResult.Yes Then
+                _loadImmediatelyWithNoSavePrompt(currentDocument.FullName)
+            End If
+
+            Return True
+        End If
+
+        Return False
+    End Function
+
     Public Function GetOpen() As FileInfo
         Using dlg = New OpenFileDialog With {
         .CheckPathExists = True,
@@ -751,11 +853,23 @@ Public Class ConsoleHandler
         Return Nothing
     End Function
 
+    ''' <summary>
+    ''' -----!WARNING!-----
+    ''' <para/>
+    ''' Please use <see cref="LoadImmediate(String)"/> unless you have a good reason to load a new file 
+    ''' with no "save unsaved changes?" prompt (e.g. using a different prompt, such as the "this file has been modified 
+    ''' outside of the editor. would you like to re-open?" prompt).
+    ''' </summary>
+    ''' <param name="fileName">File to load.</param>
+    Private Sub _loadImmediatelyWithNoSavePrompt(fileName As String)
+        currentDocument = New FileInfo(fileName)
+        cons.Text = File.ReadAllText(currentDocument.FullName)
+        currentDocumentModified = False
+    End Sub
+
     Public Sub LoadImmediate(fileName As String)
         If PromptSaveChanges() Then
-            currentDocument = New FileInfo(fileName)
-            cons.Text = File.ReadAllText(currentDocument.FullName)
-            currentDocumentModified = False
+            _loadImmediatelyWithNoSavePrompt(fileName)
         End If
     End Sub
 
@@ -818,6 +932,7 @@ Public Class ConsoleHandler
             cons.Text = ""
             currentDocument = Nothing
             currentDocumentModified = False
+            _LastDiskHash = New Byte() {}
             Return True
         End If
         Return False

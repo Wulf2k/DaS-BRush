@@ -394,6 +394,11 @@ Public Class ConsoleWindow
         End If
     End Sub
 
+    Private Sub ConsoleWindow_Activated(sender As Object, e As EventArgs) Handles MyBase.Activated
+        For Each taberino In cwTabs.TabPages.OfType(Of ScriptEditorTab)
+            taberino.ConsHandler.CheckCurDocOnDiskStatus()
+        Next
+    End Sub
     'Private Sub ConsoleWindow_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
     '    _turnOffDoubleBufferino()
     'End Sub
