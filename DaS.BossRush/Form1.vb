@@ -536,12 +536,19 @@ Public Class frmForm1
 
         If consoleWindow Is Nothing Then
             consoleWindow = New DaS.ScriptEditor.ConsoleWindow()
+            AddHandler consoleWindow.FormClosed, AddressOf CurrentConsEditor_Closed
             consoleWindow.Show()
         Else
             consoleWindow.BringToFront()
             consoleWindow.Activate()
         End If
 
+    End Sub
+
+    Private Sub CurrentConsEditor_Closed(sender As Object, e As FormClosedEventArgs)
+        RemoveHandler consoleWindow.FormClosed, AddressOf CurrentConsEditor_Closed
+
+        consoleWindow = Nothing
     End Sub
 
     Private Sub btnLoadBossScenario_Click(sender As Object, e As EventArgs) Handles btnLoadBossScenario.Click
