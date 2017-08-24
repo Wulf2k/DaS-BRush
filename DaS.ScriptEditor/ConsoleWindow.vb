@@ -122,7 +122,7 @@ Public Class ConsoleWindow
 
     Public Shared Function LoadEmbeddedImage(relPath As String) As Image
         Dim result As Image
-        Using strm As Stream = ThisAssembly.GetManifestResourceStream("DaS_Scripting_Console." & relPath)
+        Using strm As Stream = ThisAssembly.GetManifestResourceStream("DaS.ScriptEditor." & relPath)
             result = Image.FromStream(strm)
         End Using
         Return result
@@ -144,7 +144,7 @@ Public Class ConsoleWindow
         ' Add any initialization after the InitializeComponent() call.
 
         _ThisAssembly = Assembly.GetExecutingAssembly()
-        EmbeddedResourceNames = ThisAssembly.GetManifestResourceNames().Select(Function(x) x.Substring("DaS_Scripting_Console.".Length)).ToArray()
+        EmbeddedResourceNames = ThisAssembly.GetManifestResourceNames().Select(Function(x) x.Substring("DaS.ScriptEditor.".Length)).ToArray()
         LoadAllImages()
 
         tsbtnNew.Image = EmbeddedImage("NewDoc")
