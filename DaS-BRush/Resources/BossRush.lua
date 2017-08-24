@@ -76,7 +76,7 @@ end
 function FightBoss(bossName, isFirstBoss)
     visibleBossName = bossName
     if ShowBossNames == false then
-        visibleBossName = "The Next Boss™"
+        visibleBossName = "The Next Boss(tm)"
     end
     CountdownString(1, TimeBetweenBosses, "Up next: "..visibleBossName.."!".."\n","Good luck!")
 	
@@ -91,12 +91,22 @@ function FightBoss(bossName, isFirstBoss)
 		
 		bossDead = BossRushHelper.WaitForBossDeathByName(bossName)
 		
-		if not bossDead and not InfiniteLives then
-		    isGoingToContinue = FailBossRush()
-			if isGoingToContinue then
-			    BeginBossRush()
+		if not bossDead then 
+		    AddTrueDeathCount()
+			SetTextEffect(16)
+		    if not InfiniteLives then --you dun goofed, kiddo
+                --Wait for die and respawn
+			    WaitForLoadStart()
+                WaitForLoadEnd()
+                FadeIn()
+				isGoingToContinue = FailBossRush() --asks user if they wanna retry
+				if isGoingToContinue then
+					BeginBossRush()
+				end
+				return false --even if they retry we have to return after calling BeginBossRush recursively
+			else
+                Wait(5000)
 			end
-			return false
 		end
 	until bossDead
 
@@ -145,9 +155,14 @@ function BeginBossRush()
     bossOrder = BossRushHelper.GetBossRushOrder(BossRushOrder, BossRushExcludeBed, BossRushCustomOrder)
     
     for i=0,bossOrder.Length-1 do
-        continueRush = FightBoss(bossOrder[i]) 
-        if not continueRush then return end
-        isFirstBoss = false
+        continueRush = FightBoss(bossOrder[i])
+		isFirstBoss = false
+
+        if not continueRush then 
+		    MsgBoxOK("Better luck next time...")
+			ShowSaveWarning()
+		    return 
+		end
     end
 
     timerStr = StopBossRushTimer()

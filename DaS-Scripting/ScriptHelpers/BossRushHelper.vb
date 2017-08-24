@@ -44,23 +44,40 @@ Public Class BossRushHelper
         Return New String() {}
     End Function
 
+    Public Shared Function CheckWaitPlayerDead(numFrames As Integer, Optional frameLength As Integer = 33) As Boolean
+        Dim numFramesAlive = 0
+        Dim numFramesDead = 0
+        For i = 1 To numFrames
+            If Lua.Expr(Of Boolean)("GetHp(10000) <= 0") Then
+                numFramesDead += 1
+            Else
+                numFramesAlive += 1
+            End If
+
+            Thread.Sleep(frameLength)
+        Next
+
+        Return numFramesDead > numFramesAlive
+    End Function
+
     ' Will assume boss is dead if valid data isn't saved for it in the BossInfo yet.
     Public Shared Function WaitForBossDeathByName(bossName As String) As Boolean
         Dim boss = Data.BossFights(bossName)
         Dim bossIsDead = False
+        Dim playerIsDead = False
         Do
             If (Lua.Expr(Of Integer)($"IsCompleteEvent({boss.EventFlag})") = 1) Then 'boss dead
                 bossIsDead = True
-            ElseIf (Lua.Expr(Of Boolean)("if GetHp(10000) == 0 then return false
-Wait(100)
-return GetHp(10000) == 0")) Then 'Code is weird because i kept having random flickering of the character health where it would show up as 0 for 1 frame idfk
-                bossIsDead = False
-                SpawnPlayerAtBoss(bossName)
-            Else
-                Thread.Sleep(100)
+            ElseIf CheckWaitPlayerDead(30, 33) Then
+                playerIsDead = True
             End If
-        Loop Until bossIsDead
-        Return True
+        Loop Until bossIsDead Or playerIsDead
+
+        If bossIsDead Then
+            Return True
+        Else
+            Return False 'Returns false to lua script and lua script handles permadeath failure message etc and retries
+        End If
     End Function
 
     Public Shared Sub SpawnPlayerAtBoss(bossName As String)

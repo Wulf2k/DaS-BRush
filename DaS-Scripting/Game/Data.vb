@@ -1,60 +1,60 @@
 ﻿Public Class Data
     Public Class Boss
-        Public Shared ReadOnly AsylumDemon = "Asylum Demon"
-        Public Shared ReadOnly TaurusDemon = "Taurus Demon"
-        Public Shared ReadOnly Gargoyles = "Bell Gargoyles"
-        Public Shared ReadOnly CapraDemon = "Capra Demon"
-        Public Shared ReadOnly GapingDragon = "Gaping Dragon"
-        Public Shared ReadOnly MoonlightButterfly = "Moonlight Butterfly"
-        Public Shared ReadOnly Sif = "Great Grey Wolf Sif"
-        Public Shared ReadOnly Quelaag = "Chaos Witch Quelaag"
-        Public Shared ReadOnly StrayDemon = "Stray Demon"
-        Public Shared ReadOnly IronGolem = "Iron Golem"
-        Public Shared ReadOnly OrnsteinAndSmough = "Ornstein & Smough"
-        Public Shared ReadOnly Pinwheel = "Pinwheel"
-        Public Shared ReadOnly Nito = "Gravelord Nito"
-        Public Shared ReadOnly SanctuaryGuardian = "Sanctuary Guardian"
-        Public Shared ReadOnly Artorias = "Knight Artorias"
-        Public Shared ReadOnly Manus = "Manus, Father of the Abyss"
-        Public Shared ReadOnly Ceaseless = "Ceaseless Discharge"
-        Public Shared ReadOnly DemonFiresage = "Demon Firesage"
-        Public Shared ReadOnly CentipedeDemon = "Centipede Demon"
-        Public Shared ReadOnly BedOfChaos = "Bed of Chaos"
-        Public Shared ReadOnly Kalameet = "Black Dragon Kalameet"
-        Public Shared ReadOnly Seath = "Seath the Scaleless"
-        Public Shared ReadOnly FourKings = "Four Kings"
-        Public Shared ReadOnly Priscilla = "Crossbreed Priscilla"
-        Public Shared ReadOnly Gwyndolin = "Dark Sun Gwyndolin"
-        Public Shared ReadOnly Gwyn = "Gwyn, Lord of Cinder"
+        Public Shared ReadOnly AsylumDemon As String = "Asylum Demon"
+        Public Shared ReadOnly TaurusDemon As String = "Taurus Demon"
+        Public Shared ReadOnly Gargoyles As String = "Bell Gargoyles"
+        Public Shared ReadOnly CapraDemon As String = "Capra Demon"
+        Public Shared ReadOnly GapingDragon As String = "Gaping Dragon"
+        Public Shared ReadOnly MoonlightButterfly As String = "Moonlight Butterfly"
+        Public Shared ReadOnly Sif As String = "Great Grey Wolf Sif"
+        Public Shared ReadOnly Quelaag As String = "Chaos Witch Quelaag"
+        Public Shared ReadOnly StrayDemon As String = "Stray Demon"
+        Public Shared ReadOnly IronGolem As String = "Iron Golem"
+        Public Shared ReadOnly OrnsteinAndSmough As String = "Ornstein & Smough"
+        Public Shared ReadOnly Pinwheel As String = "Pinwheel"
+        Public Shared ReadOnly Nito As String = "Gravelord Nito"
+        Public Shared ReadOnly SanctuaryGuardian As String = "Sanctuary Guardian"
+        Public Shared ReadOnly Artorias As String = "Knight Artorias"
+        Public Shared ReadOnly Manus As String = "Manus, Father of the Abyss"
+        Public Shared ReadOnly Ceaseless As String = "Ceaseless Discharge"
+        Public Shared ReadOnly DemonFiresage As String = "Demon Firesage"
+        Public Shared ReadOnly CentipedeDemon As String = "Centipede Demon"
+        Public Shared ReadOnly BedOfChaos As String = "Bed of Chaos"
+        Public Shared ReadOnly Kalameet As String = "Black Dragon Kalameet"
+        Public Shared ReadOnly Seath As String = "Seath the Scaleless"
+        Public Shared ReadOnly FourKings As String = "Four Kings"
+        Public Shared ReadOnly Priscilla As String = "Crossbreed Priscilla"
+        Public Shared ReadOnly Gwyndolin As String = "Dark Sun Gwyndolin"
+        Public Shared ReadOnly Gwyn As String = "Gwyn, Lord of Cinder"
     End Class
 
     Public Class BossEvent
-        Public Shared ReadOnly AsylumDemon = 16
-        Public Shared ReadOnly TaurusDemon = 11010901
-        Public Shared ReadOnly Gargoyles = 3
-        Public Shared ReadOnly CapraDemon = 11010902
-        Public Shared ReadOnly GapingDragon = 2
-        Public Shared ReadOnly MoonlightButterfly = 11200900
-        Public Shared ReadOnly Sif = 5
-        Public Shared ReadOnly Quelaag = 9
-        Public Shared ReadOnly StrayDemon = 1 'TODO: CHECK
-        Public Shared ReadOnly IronGolem = 11
-        Public Shared ReadOnly OrnsteinAndSmough = 12
-        Public Shared ReadOnly Pinwheel = 6
-        Public Shared ReadOnly Nito = 7
-        Public Shared ReadOnly SanctuaryGuardian = 11210000
-        Public Shared ReadOnly Artorias = 11210001
-        Public Shared ReadOnly Manus = 11210002
-        Public Shared ReadOnly Ceaseless = 11410900
-        Public Shared ReadOnly DemonFiresage = 11410410
-        Public Shared ReadOnly CentipedeDemon = 11410901
-        Public Shared ReadOnly BedOfChaos = 10
-        Public Shared ReadOnly Kalameet = 11210004
-        Public Shared ReadOnly Seath = 14
-        Public Shared ReadOnly FourKings = 13
-        Public Shared ReadOnly Priscilla = 4
-        Public Shared ReadOnly Gwyndolin = 11510900
-        Public Shared ReadOnly Gwyn = 15
+        Public Shared ReadOnly AsylumDemon As Integer = 16
+        Public Shared ReadOnly TaurusDemon As Integer = 11010901
+        Public Shared ReadOnly Gargoyles As Integer = 3
+        Public Shared ReadOnly CapraDemon As Integer = 11010902
+        Public Shared ReadOnly GapingDragon As Integer = 2
+        Public Shared ReadOnly MoonlightButterfly As Integer = 11200900
+        Public Shared ReadOnly Sif As Integer = 5
+        Public Shared ReadOnly Quelaag As Integer = 9
+        Public Shared ReadOnly StrayDemon As Integer = 11810900 'TODO: CHECK
+        Public Shared ReadOnly IronGolem As Integer = 11
+        Public Shared ReadOnly OrnsteinAndSmough As Integer = 12
+        Public Shared ReadOnly Pinwheel As Integer = 6
+        Public Shared ReadOnly Nito As Integer = 7
+        Public Shared ReadOnly SanctuaryGuardian As Integer = 11210000
+        Public Shared ReadOnly Artorias As Integer = 11210001
+        Public Shared ReadOnly Manus As Integer = 11210002
+        Public Shared ReadOnly Ceaseless As Integer = 11410900
+        Public Shared ReadOnly DemonFiresage As Integer = 11410410
+        Public Shared ReadOnly CentipedeDemon As Integer = 11410901
+        Public Shared ReadOnly BedOfChaos As Integer = 10
+        Public Shared ReadOnly Kalameet As Integer = 11210004
+        Public Shared ReadOnly Seath As Integer = 14
+        Public Shared ReadOnly FourKings As Integer = 13
+        Public Shared ReadOnly Priscilla As Integer = 4
+        Public Shared ReadOnly Gwyndolin As Integer = 11510900
+        Public Shared ReadOnly Gwyn As Integer = 15
     End Class
 
     Public Shared ReadOnly BossFights As Dictionary(Of String, BossFightInfo)
@@ -67,8 +67,9 @@
                 .BonfireID = 1810998,
                 .PlayerWarp = New EntityLocation(3.157, 198.148, -3.425, 180),
                 .AdditionalFlags = {
-                    -11810000,
-                    11815395
+                    -11810000, 'first time asylum
+                    11815395, 'fatass waiting for you...?
+                    11815395 'lil door closed...?
                 },
                 .EventFlag = BossEvent.AsylumDemon
             },
@@ -83,10 +84,9 @@
                 .BonfireID = 1010998,
                 .PlayerWarp = New EntityLocation(10.8, 48.92, 87.26),
                 .AdditionalFlags = {
-                    -3,
-                    11010000,
-                    -11015390,
-                    -11015393
+                    11010000, 'cutscene watched = true
+                    -11015390, 'entered fog = false
+                    -11015393 'entered boss area = false
                 },
                 .EventFlag = BossEvent.Gargoyles
             },
@@ -130,6 +130,7 @@
                 .BonfireID = 0,
                 .PlayerWarp = New EntityLocation(),
                 .AdditionalFlags = {
+                    11810000 'second time asylum
                 },
                 .EventFlag = BossEvent.StrayDemon
             },
@@ -224,10 +225,10 @@
                 .BonfireID = 1410980,
                 .PlayerWarp = New EntityLocation(453.3, -363.6, 337.29, 45.0),
                 .AdditionalFlags = {
-                    -11410000,
-                    -11410200,
-                    -11410291,
-                    -11410292
+                    -11410000, 'idk please confirm wut dis is
+                    -11410200, 'center platform
+                    -11410291, 'arm
+                    -11410292 'arm
                 },
                 .EventFlag = BossEvent.BedOfChaos
             },
