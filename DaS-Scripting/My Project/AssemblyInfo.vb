@@ -8,17 +8,17 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("DaS-BRush")>
-<Assembly: AssemblyDescription("Dark Souls Boss-Rush Mod")>
+<Assembly: AssemblyTitle("DaS-Scripting")>
+<Assembly: AssemblyDescription("")>
 <Assembly: AssemblyCompany("")>
-<Assembly: AssemblyProduct("DaS-BRush")>
-<Assembly: AssemblyCopyright("Copyright © Wulf2k 2017")>
+<Assembly: AssemblyProduct("DaS-Scripting")>
+<Assembly: AssemblyCopyright("Copyright ©  2017")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("681ce4ab-be1c-451e-92a9-9f5376382217")>
+<Assembly: Guid("2f05679f-6875-4a00-90cb-7cb69980df56")>
 
 ' Version information for an assembly consists of the following four values:
 '

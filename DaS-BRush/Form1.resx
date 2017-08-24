@@ -124,15 +124,6 @@
     <value>132, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="btnNewConsole.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        xAAADsQBlSsOGwAAALRJREFUOE+lkcERhCAMRS1lS7CEHbrgTiGeKIsWthAO3rjGfCYiSNjB3T/zRwz5
-        D6ILEf1ltfjE16JSSmll72yqjPdVWrKGAAjNCHnvyRhDeN4hKoAbNmksp48gHYA3PiEEstbmgOYa0gC4
-        sCGshWp/A+znyc45Aoxr8yPEGMspM2FoClC5CUMNAA2DEd7il+SK7oDuIwIgvaoaAMSB5jdirLwxUAeA
-        cBM25n12g1+tFudNywGNDF/TgW96BAAAAABJRU5ErkJggg==
-</value>
-  </data>
   <data name="ToolStripDropDownButton1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -251,6 +242,49 @@
         mDEo5mNjuweFGvjWg2EBhCbpkW78htSHHwRyNdmgAFzPEee2iFkzayy2OLXzT4gr6UdUnlXrullsxxQ+
         kx0g8BTA3aZlButjSTyjODq/WcQcW/B/Je4OQhLvKQDnzN1mp0nnkvAhR8VuMzNrpm1mpjgkoVwB/v8D
         TgDQASA1MVpwzwAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="btnNewConsole.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        xAAADsQBlSsOGwAAALRJREFUOE+lkcERhCAMRS1lS7CEHbrgTiGeKIsWthAO3rjGfCYiSNjB3T/zRwz5
+        D6ILEf1ltfjE16JSSmll72yqjPdVWrKGAAjNCHnvyRhDeN4hKoAbNmksp48gHYA3PiEEstbmgOYa0gC4
+        sCGshWp/A+znyc45Aoxr8yPEGMspM2FoClC5CUMNAA2DEd7il+SK7oDuIwIgvaoaAMSB5jdirLwxUAeA
+        cBM25n12g1+tFudNywGNDF/TgW96BAAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAFBQAAAEAIAC4BgAAFgAAACgAAAAUAAAAKAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAADTD3y9/w9qsf8pjNv/Y/L//5b///8k1v//A3b//xeQ//8zsf//C4D//xFl2v88z///FV1q+gAA
+        AL0AAABLAAAAAgAAAAAAAAAAAAAAAAAAALgDQ236EoTP/xeM3P880f//R9T//xHR//8Kk///IrH//zPq
+        //8gzf//DYH8/xeE6v875///AAAA4AAAAIcAAAAXAAAAAAAAAAAAAAAAAAAAjgAAAOMPaKH/DnLN/yKY
+        //9Hqv//Dl///xWO//9W////OP///0P///9C////IsX//xqY8/8HQFf6AAAAuwAAAEYAAAAAAAAAAAAA
+        AAAAAABaAAAAxxFmlv0gid7/rvf//wY7//9qvP//cdP//0rU//9I1///EaL//zvy//8hvv//CXzW/xeT
+        1v8AAADaAAAAfQAAABAAAAAAAAAAAAAAAC4AAACrCTdC9Ey19v900f//cLT//6Pa//+l4P///////57/
+        //9X9v//EpD//xGO//8Nec3/Bl+v/wtKWvQAAACoAAAALgAAAAAAAAAAAAAADgAAAIEAAADcHanz/2Xi
+        //+5+f//nOn////////Y////bf///23///8Vj///Bmz//wRqzf8PbKf/Ck57+gAAALYAAABBAAAAAAAA
+        AAAAAAAAAAAAVAAAAMMZWXX8JZrm/1W4/////////////+T///8zvP//L8v//wly//8DUv//Dm7R/wRf
+        qf8CL0r4AAAAsQAAADgAAAAAAAAAAAAAAAAAAAAjAAAAnQoiLO5t7v//n////+D/////////+v///0Pg
+        //8wzP//JtD//xKa//8OctT/C2ix/wAaHuYAAACOAAAAHQAAAAAAAAAAAAAAAAAAAAoAAABkAAAAzDGj
+        xf5q8v//0P//////////////QMn//0Ki//89z///M7n//xJy0/8DOVr8AAAAxwAAAFoAAAAIAAAAAAAA
+        AAAAAAAAAAAAAAAAACwAAACIAAAC4Smq3v8XmPf/zP////////+F////W9b//2XT//9Otf//JK7j/wQk
+        IPoAAADDAAAAVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAADoAAACSAAAA3xd1rv1Aper/l8v//+L/
+        //9u2P//TLT//yxhqf8Oaa//FnvQ/wAAAOAAAACKAAAAKgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA
+        ADgAAACGAAAAxwACAvAdp9r/at///1rb//8XdtH/F3C6/0Ol4P8kgO7/Bk6J/QAAAM0AAABnAAAAEgAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAACgAAABcAAAAvwAAAPBpxf//asj//4z8//9jovX/L5Te/xVq
+        wf8GO5v/ACJH8wAAAKgAAAA3AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAABtAAAA0UCY
+        tv5i0///2v///9H///9O////aP///wBHof8AF1D9AAAA0QAAAHcAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAD8AAAC2PHV7+W7R////////q9v//0+t//8Hlv//CaP//wAaeP8ACyXtAAAAsAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGwAAAJkAAAPqf9T///P/////////fNP//2mx
+        //8otP//AD+i/wAGKPkAAADXAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAdgAA
+        ANZXodT/yf/////////p////x////1nr//8CX7j/ABZI+AAAAMYAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAABFAAAAulZ8jPpXoe7//////1CJ/v8tgf//IWmi/wAACvMAAAC+AAAAiAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABsAAAB6AAAA2YXI+f8zX57/FjN5/gAP
+        JfcAAADaAAAArQAAAGEAAAAlAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAA/wAAAP8AAADqAAAAkAAAAAoAAAAAAAAAAAAAAAAAAAAAAABwAAAAcAAAAHAAAAAwAAAA
+        MAAAADAAgAAwAIAAMACAADAAwABwAMAAMADgABAA8AAQAPwAEAD+ABAA/gAQAP4AEAD/ABAA/wAQAP/g
+        8AA=
 </value>
   </data>
 </root>
