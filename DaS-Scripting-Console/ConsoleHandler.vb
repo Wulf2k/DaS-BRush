@@ -86,7 +86,7 @@ Public Class ConsoleHandler
     Public ReadOnly Property CurrentFuncInfoList As List(Of FuncInfo)
     Public ReadOnly Property CurrentCallTipIndex As Integer
 
-    Public Sub New(ByRef dad As TabPage)
+    Public Sub New(ByRef dad As ScriptEditorTab)
         Me.ParentScriptTab = dad
 
         luaRunner = New Lua()

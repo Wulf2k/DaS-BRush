@@ -77,7 +77,12 @@ Public Class ConsoleWindow
     End Sub
 
     Public Sub UpdateToolStrip()
-        Dim focusedScriptRunning As Boolean = (FocusedConsHandler.luaRunner.State = DaS_Scripting.LuaRunnerState.Running)
+        Dim focusedScriptRunning As Boolean = False 'Defaults to false if no tabs are open
+
+        If AreAnyTabsOpen Then
+            focusedScriptRunning = (FocusedConsHandler.luaRunner.State = DaS_Scripting.LuaRunnerState.Running)
+        End If
+
         ToolStrip1.
             Invoke(
             Sub(isConsoling As Boolean)
@@ -87,9 +92,16 @@ Public Class ConsoleWindow
             End Sub, focusedScriptRunning)
     End Sub
 
+    Public ReadOnly Property AreAnyTabsOpen As Boolean
+        Get
+            Return cwTabs IsNot Nothing AndAlso (cwTabs.TabPages.Count > 0 And cwTabs.SelectedIndex >= 0)
+        End Get
+    End Property
+
     Public ReadOnly Property FocusedConsHandler As ConsoleHandler
         Get
-            Dim fch As Object
+            ' This should not be accessed without checking AreAnyTabsOpen so an exception from null is ok
+            Dim fch = Nothing
             Try
                 fch = cwTabs.Invoke(
                 Function() As ConsoleHandler
@@ -163,6 +175,9 @@ Public Class ConsoleWindow
             If FocusedConsHandler.currentDocumentModified Or FocusedConsHandler.cons.Text.Length > 0 Then
                 AddTab()
             End If
+            If Not AreAnyTabsOpen Then
+                Throw New Exception("YOU HAD ONE JOB, OPEN BUTTON")
+            End If
             FocusedConsHandler.LoadImmediate(openedFile.FullName)
         End If
     End Sub
@@ -173,6 +188,9 @@ Public Class ConsoleWindow
 
     Private Sub tsNew_Click(sender As Object, e As EventArgs) Handles tsNew.Click
         AddTab()
+        If Not AreAnyTabsOpen Then
+            Throw New Exception("WHY")
+        End If
         FocusedConsHandler.NewDoc()
     End Sub
 
@@ -181,6 +199,9 @@ Public Class ConsoleWindow
         If openedFile IsNot Nothing Then
             If FocusedConsHandler.currentDocumentModified Or FocusedConsHandler.cons.Text.Length > 0 Then
                 AddTab()
+            End If
+            If Not AreAnyTabsOpen Then
+                Throw New Exception("")
             End If
             FocusedConsHandler.LoadImmediate(openedFile.FullName)
         End If
@@ -210,7 +231,7 @@ Public Class ConsoleWindow
     End Function
 
     Public Function CloseTab(i As Integer) As Boolean
-        If (cwTabs.TabCount = 0) Then
+        If (Not AreAnyTabsOpen) Then
             Return True
         End If
 
@@ -288,6 +309,8 @@ Public Class ConsoleWindow
     End Sub
 
     Private Sub cwTabs_TabIndexChanged(sender As Object, e As EventArgs) Handles cwTabs.SelectedIndexChanged
+        If Not AreAnyTabsOpen Then Return 'Yeah you'd think this wasnt needed 
+
         If Not cwTabs Is Nothing AndAlso cwTabs.TabCount > 0 AndAlso cwTabs.SelectedIndex >= 0 AndAlso cwTabs.SelectedIndex < cwTabs.TabCount AndAlso Not cwTabs.SelectedTab Is Nothing Then
             FocusedConsHandler.cons.Select()
         End If
