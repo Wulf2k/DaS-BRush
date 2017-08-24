@@ -25,7 +25,7 @@ function CountdownString(padTime, time, str, endStr)
     countdown = time + padTime
     currentFrameClock = os.clock()
     prevFrameClock = os.clock()
-	
+    
     repeat 
         currentFrameClock = os.clock()
         
@@ -45,12 +45,12 @@ bossRushNgLevel = 0
     
 function FailBossRush()
     diagRes = SetGenDialog("No-death boss rush failed. Would you like to retry?", 1, "Yes", "No") 
-	
-	if diagRes.Response == 1 then
-	    return true
+    
+    if diagRes.Response == 1 then
+        return true
     else
-	    return false
-	end
+        return false
+    end
 end
     
 function InitRand()
@@ -79,38 +79,38 @@ function FightBoss(bossName, isFirstBoss)
         visibleBossName = "The Next Boss(tm)"
     end
     CountdownString(1, TimeBetweenBosses, "Up next: "..visibleBossName.."!".."\n","Good luck!")
-	
-	bossDead = false
-	
-	repeat
-	    PrepareForNextBoss(isFirstBoss)
-	    BossRushHelper.SpawnPlayerAtBoss(bossName)
-		if isFirstBoss then
+    
+    bossDead = false
+    
+    repeat
+        PrepareForNextBoss(isFirstBoss)
+        BossRushHelper.SpawnPlayerAtBoss(bossName)
+        if isFirstBoss then
             StartNewBossRushTimer() 
-	    end
-		
-		bossDead = BossRushHelper.WaitForBossDeathByName(bossName)
-		
-		if not bossDead then 
-		    AddTrueDeathCount()
-			SetTextEffect(16)
-		    if not InfiniteLives then --you dun goofed, kiddo
+        end
+        
+        bossDead = BossRushHelper.WaitForBossDeathByName(bossName)
+        
+        if not bossDead then 
+            AddTrueDeathCount()
+            SetTextEffect(16)
+            if not InfiniteLives then --you dun goofed, kiddo
                 --Wait for die and respawn
-			    WaitForLoadStart()
+                WaitForLoadStart()
                 WaitForLoadEnd()
                 FadeIn()
-				isGoingToContinue = FailBossRush() --asks user if they wanna retry
-				if isGoingToContinue then
-					BeginBossRush()
-				end
-				return false --even if they retry we have to return after calling BeginBossRush recursively
-			else
+                isGoingToContinue = FailBossRush() --asks user if they wanna retry
+                if isGoingToContinue then
+                    BeginBossRush()
+                end
+                return false --even if they retry we have to return after calling BeginBossRush recursively
+            else
                 Wait(5000)
-			end
-		end
-	until bossDead
+            end
+        end
+    until bossDead
 
-	return true
+    return true
 end
 
 function ShowSaveWarning()
@@ -125,7 +125,7 @@ function BeginBossRush()
     msg = ""
     diagRes = 0
     
-	CroseBriefingMsg()
+    CroseBriefingMsg()
     ShowHUD(true)
 
     if RandomizeBossNG then
@@ -156,18 +156,18 @@ function BeginBossRush()
     
     for i=0,bossOrder.Length-1 do
         continueRush = FightBoss(bossOrder[i])
-		isFirstBoss = false
+        isFirstBoss = false
 
         if not continueRush then 
-		    MsgBoxOK("Better luck next time...")
-			ShowSaveWarning()
-		    return 
-		end
+            MsgBoxOK("Better luck next time...")
+            ShowSaveWarning()
+            return 
+        end
     end
 
     timerStr = StopBossRushTimer()
 
-	--TODO: Show all the different settings the user chose for the boss rush in this results screen.
+    --TODO: Show all the different settings the user chose for the boss rush in this results screen.
     MsgBoxOK("Congratulations.\nCompleted in "..timerStr..".")
     ShowSaveWarning()
 end
