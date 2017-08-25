@@ -503,12 +503,14 @@ Partial Class frmForm1
         '
         'GroupBox2
         '
+        Me.GroupBox2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GroupBox2.Controls.Add(Me.lblPlaytime)
         Me.GroupBox2.Controls.Add(Me.lblHP)
         Me.GroupBox2.Controls.Add(Me.lblStam)
         Me.GroupBox2.Location = New System.Drawing.Point(7, 10)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(371, 116)
+        Me.GroupBox2.Size = New System.Drawing.Size(486, 87)
         Me.GroupBox2.TabIndex = 48
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Status"
@@ -542,6 +544,9 @@ Partial Class frmForm1
         '
         'GroupBox1
         '
+        Me.GroupBox1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GroupBox1.Controls.Add(Me.lblstableZpos)
         Me.GroupBox1.Controls.Add(Me.lblstableYpos)
         Me.GroupBox1.Controls.Add(Me.lblstableXpos)
@@ -557,16 +562,16 @@ Partial Class frmForm1
         Me.GroupBox1.Controls.Add(Me.lblZpos)
         Me.GroupBox1.Controls.Add(Me.lblYpos)
         Me.GroupBox1.Controls.Add(Me.lblXpos)
-        Me.GroupBox1.Location = New System.Drawing.Point(7, 132)
+        Me.GroupBox1.Location = New System.Drawing.Point(7, 102)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(402, 306)
+        Me.GroupBox1.Size = New System.Drawing.Size(486, 188)
         Me.GroupBox1.TabIndex = 47
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Location"
         '
         'lblstableZpos
         '
-        Me.lblstableZpos.Location = New System.Drawing.Point(230, 126)
+        Me.lblstableZpos.Location = New System.Drawing.Point(230, 116)
         Me.lblstableZpos.Name = "lblstableZpos"
         Me.lblstableZpos.Size = New System.Drawing.Size(60, 23)
         Me.lblstableZpos.TabIndex = 51
@@ -575,7 +580,7 @@ Partial Class frmForm1
         '
         'lblstableYpos
         '
-        Me.lblstableYpos.Location = New System.Drawing.Point(230, 101)
+        Me.lblstableYpos.Location = New System.Drawing.Point(230, 92)
         Me.lblstableYpos.Name = "lblstableYpos"
         Me.lblstableYpos.Size = New System.Drawing.Size(60, 23)
         Me.lblstableYpos.TabIndex = 50
@@ -584,7 +589,7 @@ Partial Class frmForm1
         '
         'lblstableXpos
         '
-        Me.lblstableXpos.Location = New System.Drawing.Point(230, 76)
+        Me.lblstableXpos.Location = New System.Drawing.Point(230, 68)
         Me.lblstableXpos.Name = "lblstableXpos"
         Me.lblstableXpos.Size = New System.Drawing.Size(60, 23)
         Me.lblstableXpos.TabIndex = 49
@@ -594,7 +599,7 @@ Partial Class frmForm1
         'Label32
         '
         Me.Label32.AutoSize = True
-        Me.Label32.Location = New System.Drawing.Point(230, 44)
+        Me.Label32.Location = New System.Drawing.Point(230, 37)
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(60, 13)
         Me.Label32.TabIndex = 48
@@ -603,7 +608,7 @@ Partial Class frmForm1
         'Label31
         '
         Me.Label31.AutoSize = True
-        Me.Label31.Location = New System.Drawing.Point(236, 57)
+        Me.Label31.Location = New System.Drawing.Point(236, 50)
         Me.Label31.Name = "Label31"
         Me.Label31.Size = New System.Drawing.Size(47, 13)
         Me.Label31.TabIndex = 47
@@ -612,7 +617,7 @@ Partial Class frmForm1
         'Label27
         '
         Me.Label27.AutoSize = True
-        Me.Label27.Location = New System.Drawing.Point(19, 55)
+        Me.Label27.Location = New System.Drawing.Point(19, 48)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(47, 13)
         Me.Label27.TabIndex = 44
@@ -622,7 +627,7 @@ Partial Class frmForm1
         '
         Me.cmbBonfire.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbBonfire.FormattingEnabled = True
-        Me.cmbBonfire.Location = New System.Drawing.Point(43, 260)
+        Me.cmbBonfire.Location = New System.Drawing.Point(43, 160)
         Me.cmbBonfire.Name = "cmbBonfire"
         Me.cmbBonfire.Size = New System.Drawing.Size(322, 21)
         Me.cmbBonfire.TabIndex = 43
@@ -630,7 +635,7 @@ Partial Class frmForm1
         'lblBonfire
         '
         Me.lblBonfire.AutoSize = True
-        Me.lblBonfire.Location = New System.Drawing.Point(19, 244)
+        Me.lblBonfire.Location = New System.Drawing.Point(19, 144)
         Me.lblBonfire.Name = "lblBonfire"
         Me.lblBonfire.Size = New System.Drawing.Size(66, 13)
         Me.lblBonfire.TabIndex = 44
@@ -639,7 +644,7 @@ Partial Class frmForm1
         'Label24
         '
         Me.Label24.AutoSize = True
-        Me.Label24.Location = New System.Drawing.Point(23, 131)
+        Me.Label24.Location = New System.Drawing.Point(23, 121)
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(20, 13)
         Me.Label24.TabIndex = 43
@@ -648,7 +653,7 @@ Partial Class frmForm1
         'Label25
         '
         Me.Label25.AutoSize = True
-        Me.Label25.Location = New System.Drawing.Point(23, 106)
+        Me.Label25.Location = New System.Drawing.Point(23, 97)
         Me.Label25.Name = "Label25"
         Me.Label25.Size = New System.Drawing.Size(20, 13)
         Me.Label25.TabIndex = 42
@@ -657,7 +662,7 @@ Partial Class frmForm1
         'Label26
         '
         Me.Label26.AutoSize = True
-        Me.Label26.Location = New System.Drawing.Point(23, 81)
+        Me.Label26.Location = New System.Drawing.Point(23, 73)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(20, 13)
         Me.Label26.TabIndex = 41
@@ -666,7 +671,7 @@ Partial Class frmForm1
         'lblFacing
         '
         Me.lblFacing.AutoSize = True
-        Me.lblFacing.Location = New System.Drawing.Point(19, 28)
+        Me.lblFacing.Location = New System.Drawing.Point(19, 22)
         Me.lblFacing.Name = "lblFacing"
         Me.lblFacing.Size = New System.Drawing.Size(45, 13)
         Me.lblFacing.TabIndex = 40
@@ -674,7 +679,7 @@ Partial Class frmForm1
         '
         'lblZpos
         '
-        Me.lblZpos.Location = New System.Drawing.Point(97, 126)
+        Me.lblZpos.Location = New System.Drawing.Point(97, 116)
         Me.lblZpos.Name = "lblZpos"
         Me.lblZpos.Size = New System.Drawing.Size(60, 23)
         Me.lblZpos.TabIndex = 39
@@ -683,7 +688,7 @@ Partial Class frmForm1
         '
         'lblYpos
         '
-        Me.lblYpos.Location = New System.Drawing.Point(97, 101)
+        Me.lblYpos.Location = New System.Drawing.Point(97, 92)
         Me.lblYpos.Name = "lblYpos"
         Me.lblYpos.Size = New System.Drawing.Size(60, 23)
         Me.lblYpos.TabIndex = 38
@@ -692,7 +697,7 @@ Partial Class frmForm1
         '
         'lblXpos
         '
-        Me.lblXpos.Location = New System.Drawing.Point(97, 76)
+        Me.lblXpos.Location = New System.Drawing.Point(97, 68)
         Me.lblXpos.Name = "lblXpos"
         Me.lblXpos.Size = New System.Drawing.Size(60, 23)
         Me.lblXpos.TabIndex = 37
@@ -738,7 +743,7 @@ Partial Class frmForm1
         'Label16
         '
         Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(40, 294)
+        Me.Label16.Location = New System.Drawing.Point(233, 242)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(52, 13)
         Me.Label16.TabIndex = 29
@@ -746,7 +751,7 @@ Partial Class frmForm1
         '
         'nmbClearCount
         '
-        Me.nmbClearCount.Location = New System.Drawing.Point(108, 292)
+        Me.nmbClearCount.Location = New System.Drawing.Point(301, 240)
         Me.nmbClearCount.Maximum = New Decimal(New Integer() {1900, 0, 0, 0})
         Me.nmbClearCount.Name = "nmbClearCount"
         Me.nmbClearCount.Size = New System.Drawing.Size(65, 20)
@@ -789,7 +794,7 @@ Partial Class frmForm1
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(6, 268)
+        Me.Label2.Location = New System.Drawing.Point(199, 219)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(86, 13)
         Me.Label2.TabIndex = 23
@@ -797,7 +802,7 @@ Partial Class frmForm1
         '
         'nmbGender
         '
-        Me.nmbGender.Location = New System.Drawing.Point(108, 266)
+        Me.nmbGender.Location = New System.Drawing.Point(301, 217)
         Me.nmbGender.Maximum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nmbGender.Name = "nmbGender"
         Me.nmbGender.Size = New System.Drawing.Size(65, 20)
@@ -980,7 +985,7 @@ Partial Class frmForm1
         Me.toolstripTest.Location = New System.Drawing.Point(2, 2)
         Me.toolstripTest.Name = "toolstripTest"
         Me.toolstripTest.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-        Me.toolstripTest.Size = New System.Drawing.Size(150, 221)
+        Me.toolstripTest.Size = New System.Drawing.Size(151, 221)
         Me.toolstripTest.TabIndex = 85
         '
         'ToolStripDropDownButton1
@@ -990,7 +995,7 @@ Partial Class frmForm1
         Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
         Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
-        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(148, 20)
+        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(149, 20)
         Me.ToolStripDropDownButton1.Text = "(Developer Test Stuff)"
         '
         'tsmiTestSomething
@@ -1003,7 +1008,7 @@ Partial Class frmForm1
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(148, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(149, 6)
         '
         'tsbtnDisableAI
         '
@@ -1012,7 +1017,7 @@ Partial Class frmForm1
         Me.tsbtnDisableAI.Image = CType(resources.GetObject("tsbtnDisableAI.Image"), System.Drawing.Image)
         Me.tsbtnDisableAI.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnDisableAI.Name = "tsbtnDisableAI"
-        Me.tsbtnDisableAI.Size = New System.Drawing.Size(148, 19)
+        Me.tsbtnDisableAI.Size = New System.Drawing.Size(149, 19)
         Me.tsbtnDisableAI.Text = "Disable AI"
         '
         'tsbtnEnableAI
@@ -1022,13 +1027,13 @@ Partial Class frmForm1
         Me.tsbtnEnableAI.Image = CType(resources.GetObject("tsbtnEnableAI.Image"), System.Drawing.Image)
         Me.tsbtnEnableAI.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnEnableAI.Name = "tsbtnEnableAI"
-        Me.tsbtnEnableAI.Size = New System.Drawing.Size(148, 19)
+        Me.tsbtnEnableAI.Size = New System.Drawing.Size(149, 19)
         Me.tsbtnEnableAI.Text = "Enable AI"
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(148, 6)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(149, 6)
         '
         'tsbtnEnablePlayerExterminate
         '
@@ -1037,7 +1042,7 @@ Partial Class frmForm1
         Me.tsbtnEnablePlayerExterminate.Image = CType(resources.GetObject("tsbtnEnablePlayerExterminate.Image"), System.Drawing.Image)
         Me.tsbtnEnablePlayerExterminate.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnEnablePlayerExterminate.Name = "tsbtnEnablePlayerExterminate"
-        Me.tsbtnEnablePlayerExterminate.Size = New System.Drawing.Size(148, 19)
+        Me.tsbtnEnablePlayerExterminate.Size = New System.Drawing.Size(149, 19)
         Me.tsbtnEnablePlayerExterminate.Text = "Enable Player Exterminate"
         '
         'tsbtnDisablePlayerExterminate
@@ -1047,13 +1052,13 @@ Partial Class frmForm1
         Me.tsbtnDisablePlayerExterminate.Image = CType(resources.GetObject("tsbtnDisablePlayerExterminate.Image"), System.Drawing.Image)
         Me.tsbtnDisablePlayerExterminate.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnDisablePlayerExterminate.Name = "tsbtnDisablePlayerExterminate"
-        Me.tsbtnDisablePlayerExterminate.Size = New System.Drawing.Size(148, 19)
+        Me.tsbtnDisablePlayerExterminate.Size = New System.Drawing.Size(149, 19)
         Me.tsbtnDisablePlayerExterminate.Text = "Disable Player Exterminate"
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(148, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(149, 6)
         '
         'ToolStripButton1
         '
@@ -1062,13 +1067,13 @@ Partial Class frmForm1
         Me.ToolStripButton1.Image = CType(resources.GetObject("ToolStripButton1.Image"), System.Drawing.Image)
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(148, 19)
+        Me.ToolStripButton1.Size = New System.Drawing.Size(149, 19)
         Me.ToolStripButton1.Text = "UserVarPlayerFadeTest"
         '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(148, 6)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(149, 6)
         '
         'ToolStripButton2
         '
@@ -1077,7 +1082,7 @@ Partial Class frmForm1
         Me.ToolStripButton2.Image = CType(resources.GetObject("ToolStripButton2.Image"), System.Drawing.Image)
         Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton2.Name = "ToolStripButton2"
-        Me.ToolStripButton2.Size = New System.Drawing.Size(148, 19)
+        Me.ToolStripButton2.Size = New System.Drawing.Size(149, 19)
         Me.ToolStripButton2.Text = "BossRushEndingTest"
         '
         'ToolStripButton3
@@ -1087,14 +1092,14 @@ Partial Class frmForm1
         Me.ToolStripButton3.Image = CType(resources.GetObject("ToolStripButton3.Image"), System.Drawing.Image)
         Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton3.Name = "ToolStripButton3"
-        Me.ToolStripButton3.Size = New System.Drawing.Size(148, 19)
+        Me.ToolStripButton3.Size = New System.Drawing.Size(149, 19)
         Me.ToolStripButton3.Text = "OandSandOandS_Debug"
         '
         'ToolStripLabel1
         '
         Me.ToolStripLabel1.Enabled = False
         Me.ToolStripLabel1.Name = "ToolStripLabel1"
-        Me.ToolStripLabel1.Size = New System.Drawing.Size(148, 15)
+        Me.ToolStripLabel1.Size = New System.Drawing.Size(149, 15)
         Me.ToolStripLabel1.Text = "LUA TEST"
         '
         'tabNotes
@@ -1109,7 +1114,9 @@ Partial Class frmForm1
         '
         'txtNotes
         '
-        Me.txtNotes.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.txtNotes.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtNotes.Location = New System.Drawing.Point(0, 0)
         Me.txtNotes.Multiline = True
         Me.txtNotes.Name = "txtNotes"
