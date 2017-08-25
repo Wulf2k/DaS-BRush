@@ -94,7 +94,9 @@ Public Class ConsoleWindow
 
     Public ReadOnly Property AreAnyTabsOpen As Boolean
         Get
-            Return cwTabs IsNot Nothing AndAlso (cwTabs.TabPages.Count > 0 And cwTabs.SelectedIndex >= 0)
+            Dim result As Boolean = False
+            cwTabs.Invoke(Sub() result = cwTabs IsNot Nothing AndAlso (cwTabs.TabPages.Count > 0 And cwTabs.SelectedIndex >= 0))
+            Return result
         End Get
     End Property
 
