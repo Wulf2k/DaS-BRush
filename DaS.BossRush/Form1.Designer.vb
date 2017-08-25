@@ -25,6 +25,8 @@ Partial Class frmForm1
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmForm1))
         Me.tabs = New System.Windows.Forms.TabControl()
         Me.tabBosses = New System.Windows.Forms.TabPage()
+        Me.numBossScenarioNg = New System.Windows.Forms.NumericUpDown()
+        Me.Label17 = New System.Windows.Forms.Label()
         Me.tlpCustomOrder = New System.Windows.Forms.TableLayoutPanel()
         Me.btnFlpCustomRemove = New System.Windows.Forms.Button()
         Me.btnFlpCustomAdd = New System.Windows.Forms.Button()
@@ -125,10 +127,9 @@ Partial Class frmForm1
         Me.Label18 = New System.Windows.Forms.Label()
         Me.btnNewConsole = New System.Windows.Forms.Button()
         Me.btnUpdate = New System.Windows.Forms.Button()
-        Me.Label17 = New System.Windows.Forms.Label()
-        Me.numBossScenarioNg = New System.Windows.Forms.NumericUpDown()
         Me.tabs.SuspendLayout()
         Me.tabBosses.SuspendLayout()
+        CType(Me.numBossScenarioNg, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.numCountdown, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabScenarios.SuspendLayout()
         Me.tabMain.SuspendLayout()
@@ -152,7 +153,6 @@ Partial Class frmForm1
         Me.toolstripTest.SuspendLayout()
         Me.tabNotes.SuspendLayout()
         Me.tabAbout.SuspendLayout()
-        CType(Me.numBossScenarioNg, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'tabs
@@ -207,6 +207,23 @@ Partial Class frmForm1
         Me.tabBosses.TabIndex = 5
         Me.tabBosses.Text = "Boss Rush"
         Me.tabBosses.UseVisualStyleBackColor = True
+        '
+        'numBossScenarioNg
+        '
+        Me.numBossScenarioNg.Location = New System.Drawing.Point(337, 257)
+        Me.numBossScenarioNg.Maximum = New Decimal(New Integer() {6, 0, 0, 0})
+        Me.numBossScenarioNg.Name = "numBossScenarioNg"
+        Me.numBossScenarioNg.Size = New System.Drawing.Size(32, 20)
+        Me.numBossScenarioNg.TabIndex = 97
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(303, 260)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(32, 13)
+        Me.Label17.TabIndex = 96
+        Me.Label17.Text = "NG+:"
         '
         'tlpCustomOrder
         '
@@ -426,7 +443,7 @@ Partial Class frmForm1
         Me.tabScenarios.Controls.Add(Me.btnScenarioArtoriasCiaran)
         Me.tabScenarios.Location = New System.Drawing.Point(4, 22)
         Me.tabScenarios.Name = "tabScenarios"
-        Me.tabScenarios.Size = New System.Drawing.Size(512, 306)
+        Me.tabScenarios.Size = New System.Drawing.Size(512, 299)
         Me.tabScenarios.TabIndex = 9
         Me.tabScenarios.Text = "Scenarios"
         Me.tabScenarios.UseVisualStyleBackColor = True
@@ -480,7 +497,7 @@ Partial Class frmForm1
         Me.tabMain.Location = New System.Drawing.Point(4, 22)
         Me.tabMain.Name = "tabMain"
         Me.tabMain.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabMain.Size = New System.Drawing.Size(512, 306)
+        Me.tabMain.Size = New System.Drawing.Size(512, 299)
         Me.tabMain.TabIndex = 0
         Me.tabMain.Text = "Player"
         '
@@ -947,7 +964,7 @@ Partial Class frmForm1
         Me.tabTests.Controls.Add(Me.toolstripTest)
         Me.tabTests.Location = New System.Drawing.Point(4, 22)
         Me.tabTests.Name = "tabTests"
-        Me.tabTests.Size = New System.Drawing.Size(512, 306)
+        Me.tabTests.Size = New System.Drawing.Size(512, 299)
         Me.tabTests.TabIndex = 7
         Me.tabTests.Text = "Tests"
         '
@@ -1108,7 +1125,7 @@ Partial Class frmForm1
         Me.tabAbout.Controls.Add(Me.AboutPage1)
         Me.tabAbout.Location = New System.Drawing.Point(4, 22)
         Me.tabAbout.Name = "tabAbout"
-        Me.tabAbout.Size = New System.Drawing.Size(512, 306)
+        Me.tabAbout.Size = New System.Drawing.Size(512, 299)
         Me.tabAbout.TabIndex = 6
         Me.tabAbout.Text = "About"
         Me.tabAbout.UseVisualStyleBackColor = True
@@ -1178,7 +1195,6 @@ Partial Class frmForm1
         Me.btnNewConsole.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.btnNewConsole.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnNewConsole.Image = CType(resources.GetObject("btnNewConsole.Image"), System.Drawing.Image)
-        Me.btnNewConsole.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnNewConsole.Location = New System.Drawing.Point(331, 362)
         Me.btnNewConsole.Margin = New System.Windows.Forms.Padding(0)
         Me.btnNewConsole.Name = "btnNewConsole"
@@ -1206,23 +1222,6 @@ Partial Class frmForm1
         Me.btnUpdate.UseVisualStyleBackColor = True
         Me.btnUpdate.Visible = False
         '
-        'Label17
-        '
-        Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(303, 260)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(32, 13)
-        Me.Label17.TabIndex = 96
-        Me.Label17.Text = "NG+:"
-        '
-        'numBossScenarioNg
-        '
-        Me.numBossScenarioNg.Location = New System.Drawing.Point(337, 257)
-        Me.numBossScenarioNg.Maximum = New Decimal(New Integer() {6, 0, 0, 0})
-        Me.numBossScenarioNg.Name = "numBossScenarioNg"
-        Me.numBossScenarioNg.Size = New System.Drawing.Size(32, 20)
-        Me.numBossScenarioNg.TabIndex = 97
-        '
         'frmForm1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1245,6 +1244,7 @@ Partial Class frmForm1
         Me.tabs.ResumeLayout(False)
         Me.tabBosses.ResumeLayout(False)
         Me.tabBosses.PerformLayout()
+        CType(Me.numBossScenarioNg, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.numCountdown, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabScenarios.ResumeLayout(False)
         Me.tabMain.ResumeLayout(False)
@@ -1274,7 +1274,6 @@ Partial Class frmForm1
         Me.tabNotes.ResumeLayout(False)
         Me.tabNotes.PerformLayout()
         Me.tabAbout.ResumeLayout(False)
-        CType(Me.numBossScenarioNg, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout
 

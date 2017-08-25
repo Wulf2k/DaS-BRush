@@ -11,7 +11,7 @@ Public Class ConsoleWindow
     Private Shared ReadOnly Property ThisAssembly As Assembly
     Private ReadOnly EmbeddedResourceNames As String()
 
-    Public Shared EmbeddedImage As New Dictionary(Of String, Image)
+    Public EmbeddedImage As New Dictionary(Of String, Image)
 
     Private currentContextTab As Integer = -1
 
@@ -69,7 +69,7 @@ Public Class ConsoleWindow
         Dim tab = New ScriptEditorTab(Me)
         cwTabs.TabPages.Add(tab)
         cwTabs.SelectedIndex = cwTabs.TabCount - 1
-        FocusedConsHandler.UpdateTabText(True, True)
+        tab.ConsHandler.UpdateTabText(True, False)
     End Sub
 
     Private Sub GuiRefreshTimerTick()
@@ -79,7 +79,7 @@ Public Class ConsoleWindow
     Public Sub UpdateToolStrip()
         Dim focusedScriptRunning As Boolean = False 'Defaults to false if no tabs are open
 
-        If AreAnyTabsOpen Then
+        If AreAnyTabsOpen AndAlso FocusedConsHandler IsNot Nothing Then
             focusedScriptRunning = (FocusedConsHandler.luaRunner.State = LuaRunnerState.Running)
         End If
 
@@ -105,6 +105,10 @@ Public Class ConsoleWindow
             Try
                 fch = cwTabs.Invoke(
                 Function() As ConsoleHandler
+                    If cwTabs.SelectedTab Is Nothing AndAlso cwTabs.TabPages.Count > 0 Then
+                        cwTabs.SelectedIndex = cwTabs.TabPages.Count - 1
+                    End If
+
                     If cwTabs.TabPages.Count = 0 Then
                         AddTab()
                     End If
@@ -122,7 +126,7 @@ Public Class ConsoleWindow
 
     Public Shared Function LoadEmbeddedImage(relPath As String) As Image
         Dim result As Image
-        Using strm As Stream = ThisAssembly.GetManifestResourceStream("DaS_Scripting_Console." & relPath)
+        Using strm As Stream = ThisAssembly.GetManifestResourceStream("DaS.ScriptEditor." & relPath)
             result = Image.FromStream(strm)
         End Using
         Return result
@@ -144,7 +148,7 @@ Public Class ConsoleWindow
         ' Add any initialization after the InitializeComponent() call.
 
         _ThisAssembly = Assembly.GetExecutingAssembly()
-        EmbeddedResourceNames = ThisAssembly.GetManifestResourceNames().Select(Function(x) x.Substring("DaS_Scripting_Console.".Length)).ToArray()
+        EmbeddedResourceNames = ThisAssembly.GetManifestResourceNames().Select(Function(x) x.Substring("DaS.ScriptEditor.".Length)).ToArray()
         LoadAllImages()
 
         tsbtnNew.Image = EmbeddedImage("NewDoc")
@@ -387,10 +391,12 @@ Public Class ConsoleWindow
     End Sub
 
     Private Sub ConsoleWindow_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        guiRefreshTimer.Enabled = False
+
         _EXITING = True
         e.Cancel = Not CloseAllTabs(True)
         If e.Cancel Then
-            _EXITING = False
+            guiRefreshTimer.Start()
         End If
     End Sub
 

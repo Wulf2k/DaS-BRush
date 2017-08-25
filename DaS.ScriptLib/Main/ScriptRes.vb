@@ -38,7 +38,7 @@ Public Class ScriptRes
 
     Shared Sub New()
         ThisAssembly = Reflection.Assembly.GetExecutingAssembly()
-        EmbeddedResourceNames = ThisAssembly.GetManifestResourceNames().Select(Function(x) x.Substring(ResourcePathPrefix.Length)).ToArray() ' Removes "DaS_BRush.Resources." from beginning
+        EmbeddedResourceNames = ThisAssembly.GetManifestResourceNames().Select(Function(x) x.Substring(ResourcePathPrefix.Length)).ToArray() ' Removes "DaS.ScriptLib.Resources." from beginning
         'LoadAllScripts()
         initClls()
 
