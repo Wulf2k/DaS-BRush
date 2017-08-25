@@ -28,7 +28,7 @@ Public Class Lua
     Private Sub InitCLR()
         LuaState.LoadCLRPackage()
         LuaState.DoString("import ('System', 'System') ")
-        LuaState.DoString("import ('DaS.ScriptLib', 'DaS.ScriptLib') ")
+        LuaState.DoString("import ('Dark Souls Scripting Library', 'DaS.ScriptLib') ")
     End Sub
 
     Public Shared Sub Run(text As String)
