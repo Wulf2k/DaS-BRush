@@ -631,7 +631,7 @@ Public Class ConsoleHandler
                     luaRunner.StopExecution()
                 End If
             ElseIf e.KeyCode = Keys.F7 Then
-                Game.InitHook()
+                Game.Hook()
                 ParentScriptTab.ParentConsoleWindow.UpdateToolStrip()
             ElseIf e.KeyCode = Keys.Tab Then
                 If AutoCompleteOpenedBuffer = 0 Then

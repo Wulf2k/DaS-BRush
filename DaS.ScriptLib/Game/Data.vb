@@ -57,6 +57,18 @@
         Public Shared ReadOnly Gwyn As Integer = 15
     End Class
 
+    ''' <summary>
+    ''' TODO: PUT MORE ANIMATIONS IN HERE
+    ''' </summary>
+    Public Class PlayerAnim
+        Public Shared ReadOnly Idle As Integer = 0
+        Public Shared ReadOnly WalkForward As Integer = 200
+        Public Shared ReadOnly RunForward As Integer = 500
+        Public Shared ReadOnly FogWalk As Integer = 7410
+    End Class
+
+    Public Shared ReadOnly PlayerID As Integer = 10000
+
     Public Shared ReadOnly BossFights As Dictionary(Of String, BossFightInfo)
 
     Shared Sub New()

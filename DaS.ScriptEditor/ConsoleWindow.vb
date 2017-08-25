@@ -18,7 +18,7 @@ Public Class ConsoleWindow
     Private boldTab As New List(Of Boolean)()
 
     Private Sub ConsoleWindow_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Game.InitHook()
+        Game.Hook()
         AddTab()
         AddHandler guiRefreshTimer.Tick, AddressOf GuiRefreshTimerTick
 
@@ -281,7 +281,7 @@ Public Class ConsoleWindow
     End Function
 
     Private Sub tsbtnHook_Click(sender As Object, e As EventArgs) Handles tsbtnHook.Click
-        Game.InitHook()
+        Game.Hook()
         ToolStrip1.Invoke(Sub() tsHook.Text = Game.DetectedDarkSoulsVersion)
     End Sub
 
@@ -404,6 +404,13 @@ Public Class ConsoleWindow
         For Each taberino In cwTabs.TabPages.OfType(Of ScriptEditorTab)
             taberino.ConsHandler.CheckCurDocOnDiskStatus()
         Next
+    End Sub
+
+    Private Sub ConsoleWindow_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
+        ' Checks if this is the last form open in this process
+        If Application.OpenForms.Count = 0 Then
+            Game.Unhook()
+        End If
     End Sub
     'Private Sub ConsoleWindow_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
     '    _turnOffDoubleBufferino()

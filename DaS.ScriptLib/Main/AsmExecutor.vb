@@ -1,7 +1,14 @@
-﻿Friend Class AsmExecutor
+﻿Imports System.Globalization
+Imports System.Runtime.InteropServices
+Imports System.Threading
+
+Friend Class AsmExecutor
     'TODO:  Deal with jumps to points not yet defined
     Public bytes() As Byte = {}
     Public pos As Int32
+
+    Public Shared ReadOnly DefaultReturnValue = 1337
+    Public Shared ReadOnly ReturnValueCheckInterval = 16
 
     Private reg8 As Hashtable = New Hashtable
     Private reg16 As Hashtable = New Hashtable
@@ -652,6 +659,92 @@
         Next
 
         Return tmpstr
+    End Function
+
+
+    Private Shared Function GetFuncCallParamValue(paramVal As Object) As String
+        Dim t = paramVal.GetType()
+
+        If t = GetType(Int32) Then
+            Return paramVal.ToString()
+        ElseIf t = GetType(Single) Then
+            Return paramVal.ToString("0.0")
+        Else
+            Return paramVal.ToString
+        End If
+    End Function
+
+    Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "", Optional param4 As Object = "", Optional param5 As Object = "") As Integer
+
+        Dim result As Integer = 0
+
+        Dim paramObj() As Object = {param1, param2, param3, param4, param5}
+        Dim Params() As String = paramObj.Select(Function(x) GetFuncCallParamValue(x)).ToArray()
+        Dim param As IntPtr = Marshal.AllocHGlobal(4)
+        Dim intParam As Integer
+        Dim floatParam As Single
+        Dim a As New AsmExecutor
+
+        func = func.ToUpper
+
+        Using funcPtr = New IngameAllocatedPtr()
+            a.pos = funcPtr.Address
+            a.AddVar("funcloc", CType(ScriptRes.autoCompleteFuncInfoByName(ScriptRes.caselessIngameFuncNames(func.ToUpper)).First(), IngameFuncInfo).Address)
+            a.AddVar("returnedloc", funcPtr.Address + &H200)
+
+            a.Asm("push ebp")
+            a.Asm("mov ebp,esp")
+            a.Asm("push eax")
+
+            'Parse params, add as variables to the ASM
+            For i As Integer = 4 To 0 Step -1
+                If Params(i).ToLower = "false" Then Params(i) = "0"
+                If Params(i).ToLower = "true" Then Params(i) = "1"
+                If Params(i).Length < 1 Then Params(i) = "0"
+
+                If Params(i).Contains(".") Then
+                    floatParam = Convert.ToSingle(Params(i), New CultureInfo("en-us"))
+                    Marshal.StructureToPtr(floatParam, param, False)
+                    a.AddVar("param" & i, Marshal.ReadInt32(param))
+                Else
+                    intParam = Convert.ToInt32(Params(i), New CultureInfo("en-us"))
+                    a.AddVar("param" & i, intParam)
+                End If
+
+                a.Asm("mov eax,param" & i)
+                a.Asm("push eax")
+
+            Next
+            a.Asm("call funcloc")
+            a.Asm("mov ebx,returnedloc")
+            a.Asm("mov [ebx],eax")
+            a.Asm("pop eax")
+            a.Asm("pop eax")
+            a.Asm("pop eax")
+            a.Asm("pop eax")
+            a.Asm("pop eax")
+            a.Asm("pop eax")
+            a.Asm("mov esp,ebp")
+            a.Asm("pop ebp")
+            a.Asm("ret")
+
+            Marshal.FreeHGlobal(param)
+
+            WriteProcessMemory(_targetProcessHandle, funcPtr.Address, a.bytes, 1024, 0)
+
+            'Get handle of thread created
+            Dim threadHandle = CreateRemoteThread(_targetProcessHandle, 0, 0, funcPtr.Address, 0, 0, 0)
+
+            'Wait for thread to exit
+            WaitForSingleObject(threadHandle, &HFFFFFFFF)
+
+            'Close handle we got earlier
+            CloseHandle(threadHandle)
+
+            result = RInt32(funcPtr.Address + &H200)
+        End Using
+
+        Return result
     End Function
 
 End Class

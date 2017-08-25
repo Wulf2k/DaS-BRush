@@ -3,32 +3,631 @@ Imports System.Runtime.InteropServices
 Imports System.Threading
 
 Public Class Funcs
+    Private Shared ReadOnly Property checkIfLoadingScreen_PrevFrameInGameTime
 
-    Private Shared Sub BeginRushTimer()
+    <HideFromScripting>
+    Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "", Optional param4 As Object = "", Optional param5 As Object = "") As Integer
+        Return AsmExecutor.FuncCall(func, param1, param2, param3, param4, param5)
+    End Function
 
-        Dim msg As String
+    Public Shared Function GetNgPlusText(ngLevel As String) As String
+        If ngLevel = 0 Then
+            Return "NG"
+        ElseIf ngLevel = 1 Then
+            Return "NG+"
+        Else
+            Return "NG+" & ngLevel
+        End If
+    End Function
 
-        WFloat(Game.LinePointer + &H78, 1100)
-        WFloat(Game.LinePointer + &H7C, 675)
+    Public Shared Sub MsgBoxOK(text As String)
+        SetGenDialog(text, 1, "OK")
+    End Sub
 
-        WFloat(Game.KeyPointer + &H78, 600)
-        WFloat(Game.KeyPointer + &H7C, 605)
+    Public Shared Sub MsgBoxBtn(text As String, btnText As String)
+        MsgBoxChoice(text, btnText, "")
+    End Sub
 
-        'Clear TrueDeaths
-        Game.GameStats.TrueDeathCount.Value = 0
-        Game.GameStats.TotalPlayTime.Value = 0
+    Public Shared Function MsgBoxChoice(text As String, choice1 As String, choice2 As String) As Integer
+        Return SetGenDialog(text, 2, choice1, choice2).Response
+    End Function
 
-        Do
-            WInt32(Game.MenuPointer + &H154, RInt32(Game.MenuPointer + &H1C)) 'LineHelp
-            WInt32(Game.MenuPointer + &H158, RInt32(Game.MenuPointer + &H1C)) 'KeyGuide
-            msg = GetNgPlusText(Game.GameStats.ClearCount.Value) & " - "
-            msg = msg & Strings.Left(TimeSpan.FromMilliseconds(Game.GameStats.TotalPlayTime.Value).ToString, 12) & ChrW(0)
-            WUnicodeStr(&H11A7770, msg)
-            msg = "Deaths: " & Game.GameStats.TrueDeathCount.Value & ChrW(0)
-            WUnicodeStr(&H11A7758, msg) 'LineHelp
+    Public Shared Sub Warp_Coords(ByVal x As Single, y As Single, z As Single)
+        Warp_Coords(x, y, z, 0)
+    End Sub
+
+    Public Shared Sub Warp_Coords(ByVal x As Single, y As Single, z As Single, rotx As Single)
+        Dim charptr1 = RInt32(&H137DC70)
+        charptr1 = RInt32(charptr1 + &H4)
+        charptr1 = RInt32(charptr1)
+        Dim charmapdataptr = RInt32(charptr1 + &H28)
+
+        WFloat(charmapdataptr + &HD0, x)
+        WFloat(charmapdataptr + &HD4, y)
+        WFloat(charmapdataptr + &HD8, z)
+
+        Dim facing As Single
+        facing = ((rotx / 360) * 2 * Math.PI) - Math.PI
+
+
+        WFloat(charmapdataptr + &HE4, facing)
+        WBytes(charmapdataptr + &HC8, {1})
+    End Sub
+    Public Shared Sub WarpEntity_Coords(entityPtr As Integer, x As Single, y As Single, z As Single, rotx As Single)
+        entityPtr = RInt32(entityPtr + &H28)
+        WFloat(entityPtr + &HD0, x)
+        WFloat(entityPtr + &HD4, y)
+        WFloat(entityPtr + &HD8, z)
+
+        Dim facing As Single
+        facing = ((rotx / 360) * 2 * Math.PI) - Math.PI
+
+
+        WFloat(entityPtr + &HE4, facing)
+        WBytes(entityPtr + &HC8, {1})
+    End Sub
+
+
+    Public Shared Sub BlackScreen()
+        Dim tmpptr As Integer
+        tmpptr = RUInt32(&H1378520)
+        tmpptr = RUInt32(tmpptr + &H10)
+
+        WBytes(tmpptr + &H26D, {1})
+
+        WFloat(tmpptr + &H270, 0)
+        WFloat(tmpptr + &H274, 0)
+        WFloat(tmpptr + &H278, 0)
+    End Sub
+    Public Shared Sub CamFocusEntity(entityptr As Integer)
+        Dim camPtr As Integer = RInt32(&H137D648) + &HEC
+
+        WInt32(camPtr, entityptr)
+    End Sub
+    Public Shared Sub ClearPlayTime()
+        Dim tmpPtr As Integer = RIntPtr(&H1378700)
+        WInt32(tmpPtr + &H68, 0)
+    End Sub
+    Public Shared Sub ControlEntity(entityPtr As Integer, state As Byte)
+        entityPtr = RInt32(entityPtr + &H28)
+
+        Dim ctrlptr As Integer = RInt32(&H137DC70)
+        ctrlptr = RInt32(ctrlptr + 4)
+        ctrlptr = RInt32(ctrlptr)
+        ctrlptr = RInt32(ctrlptr + &H28)
+        ctrlptr = RInt32(ctrlptr + &H54)
+
+        WInt32(entityPtr + &H244, ctrlptr * (state And 1))
+
+    End Sub
+    Public Shared Sub DisableAI(ByVal state As Byte)
+        WBytes(&H13784EE, {state})
+    End Sub
+    Public Shared Sub PlayerExterminate(ByVal state As Byte)
+        WBytes(&H13784D3, {state})
+    End Sub
+    Public Shared Sub FadeIn()
+        Dim tmpptr As Integer
+        tmpptr = RInt32(&H1378520)
+        tmpptr = RInt32(tmpptr + &H10)
+
+        WBytes(tmpptr + &H26D, {1})
+
+        Dim val As Single = 0.0
+
+
+        For i = 0 To 33
+            val = val + 0.03
+            WFloat(tmpptr + &H270, val)
+            WFloat(tmpptr + &H274, val)
+            WFloat(tmpptr + &H278, val)
+            Thread.Sleep(33)
+        Next
+
+        WBytes(tmpptr + &H26D, {0})
+    End Sub
+    Public Shared Sub FadeOut()
+        Dim tmpptr As Integer
+        tmpptr = RInt32(&H1378520)
+        tmpptr = RInt32(tmpptr + &H10)
+
+        WBytes(tmpptr + &H26D, {1})
+
+        Dim val As Single = 1.0
+
+
+
+
+
+        For i = 0 To 33
+            val = val - 0.03
+            val = val - 0.03
+            val = val - 0.03
+            WFloat(tmpptr + &H270, val)
+            WFloat(tmpptr + &H274, val)
+            WFloat(tmpptr + &H278, val)
+            Thread.Sleep(33)
+        Next
+    End Sub
+    Public Shared Sub ForceEntityDrawGroup(entityptr As Integer)
+        WInt32(entityptr + &H264, -1)
+        WInt32(entityptr + &H268, -1)
+        WInt32(entityptr + &H26C, -1)
+        WInt32(entityptr + &H270, -1)
+    End Sub
+
+    Public Shared Sub SetCamPos(ByVal xpos As Single, ypos As Single, zpos As Single, xrot As Single, yrot As Single)
+        Dim tmpPtr As Integer
+
+        tmpPtr = RInt32(&H1378714)
+
+        WFloat(tmpPtr + &HB0, xpos)
+        WFloat(tmpPtr + &HB4, ypos)
+        WFloat(tmpPtr + &HB8, zpos)
+
+
+        tmpPtr = RInt32(&H137D6DC)
+        tmpPtr = RInt32(tmpPtr + &H3C)
+        tmpPtr = RInt32(tmpPtr + &H60)
+
+
+        WFloat(tmpPtr + &H144, xrot)
+        WFloat(tmpPtr + &H150, yrot)
+
+
+
+    End Sub
+    Public Shared Sub SetFreeCam(ByVal state As Byte)
+        If state Then
+            'WBytes(&HEFDBAF, {&H90, &H90, &H90, &H90, &H90})
+            WBytes(&H404E59, {&H90, &H90, &H90, &H90, &H90})
+            WBytes(&H404E63, {&H90, &H90, &H90, &H90, &H90})
+            WBytes(&HF06C46, {&H90, &H90, &H90, &H90, &H90, &H90, &H90, &H90})
+
+
+
+
+        Else
+            'WBytes(&HEFDBAF, {&HE8, &H7c, &H72, &H50, &HFF})
+            WBytes(&H404E59, {&H66, &HF, &HD6, &H46, &H20})
+            WBytes(&H404E63, {&H66, &HF, &HD6, &H46, &H28})
+            WBytes(&HF06C46, {&HF3, &HF, &H11, &H83, &H44, &H1, &H0, &H0})
+
+
+
+
+        End If
+    End Sub
+    Public Shared Sub SetClearCount(ByVal clearCount As Integer)
+        Dim tmpPtr As Integer
+        tmpPtr = RInt32(&H1378700)
+
+        WInt32(tmpPtr + &H3C, clearCount)
+
+    End Sub
+    Private Shared Sub SetCaption(ByVal str As String)
+        Dim tmpptr As Integer
+        Dim alpha As Byte
+
+        Dim state As Boolean
+        state = (str.Length > 0)
+
+        If state Then
+            alpha = 254
+        Else
+            alpha = 0
+        End If
+
+        tmpptr = RInt32(&H13786D0)
+
+        WInt32(tmpptr + &H40, state And 4)
+        WInt32(tmpptr + &HB18, alpha)
+        WInt32(tmpptr + &HB14, 100)
+
+        tmpptr = RInt32(&H13785DC)
+        tmpptr = RInt32(tmpptr + &H10)
+
+        WUnicodeStr(tmpptr + &H12C, str & ChrW(0))
+
+    End Sub
+    Public Shared Sub SetSaveEnable(ByVal state As Boolean)
+        Dim tmpPtr As Integer
+        tmpPtr = RInt32(&H13784A0)
+
+        WBool(tmpPtr + &HB40, state)
+    End Sub
+    Public Shared Sub SetSaveSlot(ByVal slot As Integer)
+        WInt32(RInt32(&H13784A0) + &HA70, slot)
+    End Sub
+    Public Shared Sub SetUnknownNpcName(ByVal name As String)
+        If name.Length > 21 Then name = Strings.Left(name, 21) 'Prevent runover into code
+        WUnicodeStr(&H11A784C, name + ChrW(0))
+    End Sub
+
+    Public Shared Function GetClosestEntityToEntity(entityPtr As Integer) As Integer
+        Dim ptrList = GetEntityPtrList()
+
+        Dim closestDist = Single.PositiveInfinity
+        Dim closestPtr As Integer = -1
+
+        For Each p In ptrList
+            If p = entityPtr Then Continue For
+            Dim dist = GetDistanceBetweenEntities(entityPtr, p)
+            If (dist < closestDist) Then
+                closestPtr = p
+                closestDist = dist
+            End If
+        Next
+
+        Return closestPtr
+    End Function
+
+    Public Shared Function GetEntityPtrList() As Integer()
+
+        Dim structPtr = RInt32(&H137D644)
+        structPtr = RInt32(structPtr + &HE4)
+        Dim entityCount = RInt32(structPtr)
+        structPtr = RInt32(structPtr + 4)
+
+        Dim resultList = New List(Of Integer)
+
+        For i = 0 To entityCount - 1
+            resultList.Add(RInt32(structPtr + i * &H20))
+        Next
+
+        Return resultList.ToArray()
+    End Function
+
+    Public Shared Function GetEntityVec3(entityPtr As Integer) As Vec3
+        Return New Vec3(GetEntityPosX(entityPtr), GetEntityPosY(entityPtr), GetEntityPosZ(entityPtr))
+    End Function
+
+    Public Shared Sub MoveEntityLaterallyTowardEntity(entityFromPtr As Integer, entityToPtr As Integer, speed As Single)
+        MoveEntityLaterally(entityFromPtr, GetAngleBetweenEntities(entityFromPtr, entityToPtr), speed)
+    End Sub
+
+    Public Shared Function GetAngleBetweenEntities(entityPtrA As Integer, entityPtrB As Integer) As Single
+        Dim x1 = GetEntityPosX(entityPtrA)
+        Dim z1 = GetEntityPosZ(entityPtrA)
+
+        Dim x2 = GetEntityPosX(entityPtrB)
+        Dim z2 = GetEntityPosZ(entityPtrB)
+
+        Return Math.Atan2(z2 - z1, x2 - x1) 'TODO: Check my trig cuz I did this at 6:42 AM
+    End Function
+
+    Public Shared Function GetDistanceSqrdBetweenEntities(entityPtrA As Integer, entityPtrB As Integer) As Single
+        Dim x1 = GetEntityPosX(entityPtrA)
+        Dim y1 = GetEntityPosY(entityPtrA)
+        Dim z1 = GetEntityPosZ(entityPtrA)
+
+        Dim x2 = GetEntityPosX(entityPtrB)
+        Dim y2 = GetEntityPosY(entityPtrB)
+        Dim z2 = GetEntityPosZ(entityPtrB)
+
+        Return Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2) + Math.Pow(z1 - z2, 2)
+    End Function
+
+    Public Shared Function GetDistanceBetweenEntities(entityPtrA As Integer, entityPtrB As Integer) As Single
+        Return Math.Sqrt(GetDistanceSqrdBetweenEntities(entityPtrA, entityPtrB))
+    End Function
+
+    Public Shared Sub MoveEntityLaterally(entityPtr As Integer, angle As Single, speed As Single)
+        MoveEntityAtSpeed(entityPtr, Math.Cos(angle) * speed, 0, Math.Sin(angle) * speed, 0)
+    End Sub
+
+    Public Shared Sub MoveEntityAtSpeed(entityPtr As Integer, speedX As Single, speedY As Single, speedZ As Single)
+        MoveEntityAtSpeed(entityPtr, speedX, speedY, speedZ, 0)
+    End Sub
+
+    Public Shared Sub MoveEntityAtSpeed(entityPtr As Integer, speedX As Single, speedY As Single, speedZ As Single, speedRot As Single)
+
+        SetEntityPosX(entityPtr, GetEntityPosX(entityPtr) + speedX)
+        SetEntityPosY(entityPtr, GetEntityPosY(entityPtr) + speedY)
+        SetEntityPosZ(entityPtr, GetEntityPosZ(entityPtr) + speedZ)
+        SetEntityRotation(entityPtr, GetEntityRotation(entityPtr) + speedRot)
+
+    End Sub
+
+    Public Shared Function GetEntityPosX(entityPtr As Integer) As Single
+        Dim entityPosPtr = RInt32(entityPtr + &H28)
+        entityPosPtr = RInt32(entityPosPtr + &H1C)
+        Return RFloat(entityPosPtr + &H10)
+    End Function
+    Public Shared Function GetEntityPosY(entityPtr As Integer) As Single
+        Dim entityPosPtr = RInt32(entityPtr + &H28)
+        entityPosPtr = RInt32(entityPosPtr + &H1C)
+        Return RFloat(entityPosPtr + &H14)
+    End Function
+    Public Shared Function GetEntityPosZ(entityPtr As Integer) As Single
+        Dim entityPosPtr = RInt32(entityPtr + &H28)
+        entityPosPtr = RInt32(entityPosPtr + &H1C)
+        Return RFloat(entityPosPtr + &H18)
+    End Function
+    Public Shared Function GetEntityRotation(entityPtr As Integer) As Single
+        Dim entityPosPtr = RInt32(entityPtr + &H28)
+        entityPosPtr = RInt32(entityPosPtr + &H1C)
+        Return RFloat(entityPosPtr + &H4)
+    End Function
+
+    Public Shared Sub SetEntityPosX(entityPtr As Integer, posX As Single)
+        Dim entityPosPtr = RInt32(entityPtr + &H28)
+        entityPosPtr = RInt32(entityPosPtr + &H1C)
+        WFloat(entityPosPtr + &H10, posX)
+    End Sub
+    Public Shared Sub SetEntityPosY(entityPtr As Integer, posY As Single)
+        Dim entityPosPtr = RInt32(entityPtr + &H28)
+        entityPosPtr = RInt32(entityPosPtr + &H1C)
+        WFloat(entityPosPtr + &H14, posY)
+    End Sub
+    Public Shared Sub SetEntityPosZ(entityPtr As Integer, posZ As Single)
+        Dim entityPosPtr = RInt32(entityPtr + &H28)
+        entityPosPtr = RInt32(entityPosPtr + &H1C)
+        WFloat(entityPosPtr + &H18, posZ)
+    End Sub
+    Public Shared Sub SetEntityRotation(entityPtr As Integer, angle As Single)
+        Dim entityPosPtr = RInt32(entityPtr + &H28)
+        entityPosPtr = RInt32(entityPosPtr + &H1C)
+        WFloat(entityPosPtr + &H4, CType(angle * Math.PI / 180, Single) - CType(Math.PI, Single))
+    End Sub
+
+    Public Shared Sub SetEntityLocation(entityPtr As Integer, posX As Single, posY As Single, posZ As Single, angle As Single)
+        Dim entityPosPtr = RInt32(entityPtr + &H28)
+        entityPosPtr = RInt32(entityPosPtr + &H1C)
+        WFloat(entityPosPtr + &H10, posX)
+        WFloat(entityPosPtr + &H14, posY)
+        WFloat(entityPosPtr + &H18, posZ)
+        WFloat(entityPosPtr + &H4, CType(angle * Math.PI / 180, Single) - CType(Math.PI, Single))
+    End Sub
+
+    Public Shared Function GetInGameTimeInMs() As Integer
+        Return RInt32(RInt32(&H1378700) + &H68)
+    End Function
+
+
+    Public Shared Sub SetEntityLocation(entityPtr As Integer, location As EntityLocation)
+        SetEntityLocation(entityPtr, location.Pos.X, location.Pos.Y, location.Pos.Z, location.Rot)
+    End Sub
+
+    Public Shared Sub PlayerHide(ByVal state As Boolean)
+        WBool(&H13784E7, state)
+    End Sub
+    Public Shared Sub ShowHUD(ByVal state As Boolean)
+        Dim tmpptr As UInteger
+        tmpptr = RUInt32(&H1378700)
+        tmpptr = RUInt32(tmpptr + &H2C)
+
+        WBool(New IntPtr(tmpptr + &HD), state)
+    End Sub
+    Public Shared Sub WaitForLoadEnd() 'TODO: waitforload -> WaitForLoadEnd
+        Dim tmpptr As Integer
+        tmpptr = RInt32(&H1378700)
+
+        Dim msPlayed As Integer
+        Dim loading As Boolean = True
+
+        msPlayed = RInt32(tmpptr + &H68)
+
+        Do While loading
+            loading = (msPlayed = RInt32(tmpptr + &H68))
             Thread.Sleep(33)
         Loop
     End Sub
+    Public Shared Sub WaitForLoadStart() 'TODO: waittillload -> WaitForLoadStart
+        Dim tmpptr As Integer
+        tmpptr = RInt32(&H1378700)
+
+        Dim msPlayed As Integer
+        Dim loading As Boolean = False
+
+        msPlayed = RInt32(tmpptr + &H68)
+
+        Do While Not loading
+            loading = (msPlayed = RInt32(tmpptr + &H68))
+            Thread.Sleep(33)
+        Loop
+    End Sub
+    Public Shared Sub WarpEntity_Player(entityptr As Integer)
+        Dim playerptr As Integer = Lua.Expr(Of Integer)("GetEntityPtr(10000)")
+        WarpEntity_Entity(entityptr, playerptr)
+    End Sub
+    Public Shared Sub WarpPlayer_Entity(entityptr As Integer)
+        Dim playerptr As Integer = Lua.Expr(Of Integer)("GetEntityPtr(10000)")
+        WarpEntity_Entity(playerptr, entityptr)
+    End Sub
+    Public Shared Sub WarpEntity_Entity(entityptrSrc As Integer, entityptrDest As Integer)
+        'TODO: Check validity of entity pointers
+        Dim destEntityPosPtr = RInt32(entityptrDest + &H28)
+        destEntityPosPtr = RInt32(destEntityPosPtr + &H1C)
+        Dim facing = RFloat(destEntityPosPtr + &H4)
+        Dim posX = RFloat(destEntityPosPtr + &H10)
+        Dim posY = RFloat(destEntityPosPtr + &H14)
+        Dim posZ = RFloat(destEntityPosPtr + &H18)
+
+        WarpEntity_Coords(entityptrSrc, posX, posY, posZ, facing)
+    End Sub
+    ''' <summary>
+    ''' TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+    ''' </summary>
+    ''' <param name="entityId">TODO</param>
+    Public Shared Function GetEntityPtr(entityId As Integer) As Integer 'TODO
+        'TODO 
+        Return Lua.Expr(Of Integer)("ChrFadeIn(10000)") 'TODO 
+        'TODO 
+    End Function 'TODO
+
+
+    Public Shared Sub SetBriefingMsg(ByVal str As String)
+        Dim tmpptr As Integer
+        tmpptr = RInt32(&H13785DC)
+        tmpptr = RInt32(tmpptr + &H7C)
+
+        WUnicodeStr(tmpptr + &H3B7A, str + ChrW(0))
+        Lua.Run("RequestOpenBriefingMsg(10010721, 1)")
+    End Sub
+
+    Public Class GenDiagResult
+        Public Response As Integer = 0
+        Public Val As Integer = 0
+        Public Sub New(response, val)
+            Me.Response = response
+            Me.Val = val
+        End Sub
+    End Class
+
+    'TODO: Make less bad
+    Public Shared Function SetGenDialog(ByVal str As String, type As Integer, Optional btn0 As String = "", Optional btn1 As String = "") As GenDiagResult
+        '50002 = Overridden Maintext
+        '65000 = Overridden Button 0
+        '70000 = Overridden Button 1
+
+        Dim tmpptr As Integer
+        tmpptr = RInt32(&H13785DC)
+        tmpptr = RInt32(tmpptr + &H174)
+
+        str = str.Replace("\n", ChrW(&HA))
+
+        'Weird issues if exactly 6 characters
+        If str.Length = 6 Then str = str & "  "
+        WUnicodeStr(tmpptr + &H1A5C, str + ChrW(0))
+
+        'Set Default Ok/Cancel if not overridden
+        WInt32(&H12E33E4, 1)
+        WInt32(&H12E33E8, 2)
+
+        'Clear previous values
+        WInt32(&H12E33F8, -1)
+        WInt32(&H12E33FC, -1)
+
+        WInt32(&H12E33E0, 50002)
+        If btn0.Length > 0 Then
+            WInt32(&H12E33E4, 65000)
+            WUnicodeStr(tmpptr + &H2226, btn0 + ChrW(0))
+        End If
+        If btn1.Length > 0 Then
+            WInt32(&H12E33E8, 70000)
+            WUnicodeStr(tmpptr + &H350C, btn1 + ChrW(0))
+        End If
+
+        tmpptr = RInt32(&H13786D0)
+        WInt32(tmpptr + &H60, type)
+
+
+        'Wait for response
+        Dim genDiagResponse = -1
+        Dim genDiagVal = -1
+
+        tmpptr = &H12E33F8
+
+        While genDiagResponse = -1
+            genDiagResponse = RInt32(tmpptr)
+            genDiagVal = RInt32(tmpptr + &H4)
+            Thread.Sleep(33)
+        End While
+        Thread.Sleep(500)
+        Return New GenDiagResult(genDiagResponse, genDiagVal)
+    End Function
+    Public Shared Sub Wait(val As Integer)
+        Thread.Sleep(val)
+    End Sub
+
+    Public Shared Function WaitForBossDeath(ByVal boost As Integer, match As Integer) As Boolean
+        Dim eventPtr As Integer
+        eventPtr = RInt32(&H137D7D4)
+        eventPtr = RInt32(eventPtr)
+
+        Dim hpPtr As Integer
+        hpPtr = RInt32(&H137DC70)
+        hpPtr = RInt32(hpPtr + 4)
+        hpPtr = RInt32(hpPtr)
+        hpPtr = hpPtr + &H2D4
+
+        Dim bossdead As Boolean = False
+        Dim selfdead As Boolean = False
+
+        While Not (bossdead Or selfdead)
+            bossdead = (RInt32(eventPtr + boost) And match)
+            selfdead = (RInt32(hpPtr) = 0)
+            Console.WriteLine(Hex(eventPtr) & " - " & Hex(RInt32(eventPtr)))
+            Thread.Sleep(33)
+        End While
+
+        If bossdead Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Public Shared Sub DropItem(ByVal cat As String, item As String, num As Integer)
+        Dim TargetBufferSize = 1024
+        Dim Rtn As Integer
+
+        Dim bytes() As Byte
+        Dim bytes2() As Byte
+
+        Dim bytcat As Integer = &H1
+        Dim bytitem As Integer = &H6
+        Dim bytcount As Integer = &H10
+        Dim bytptr1 As Integer = &H15
+        Dim bytptr2 As Integer = &H32
+        Dim bytjmp As Integer = &H38
+
+        bytes = {&HBD, 0, 0, 0, 0, &HBB, &HF0, &H0, &H0, &H0, &HB9, &HFF, &HFF, &HFF, &HFF, &HBA, 0, 0, 0, 0, &HA1, &HD0, &H86, &H37, &H1, &H89, &HA8, &H28, &H8, &H0, &H0, &H89, &H98, &H2C, &H8, &H0, &H0, &H89, &H88, &H30, &H8, &H0, &H0, &H89, &H90, &H34, &H8, &H0, &H0, &HA1, &HBC, &HD6, &H37, &H1, &H50, &HE8, 0, 0, 0, 0, &HC3}
+
+        'cllItemCatsIDs(clsItemCatsIDs("Weapons") / &H10000000)("Target Shield+15"))
+
+        bytes2 = BitConverter.GetBytes(Convert.ToInt32(ScriptRes.clsItemCatsIDs(cat)))
+        Array.Copy(bytes2, 0, bytes, bytcat, bytes2.Length)
+
+        Dim tmpCat As Integer
+        tmpCat = Convert.ToInt32(ScriptRes.clsItemCatsIDs(cat) / &H10000000)
+        If tmpCat = 4 Then tmpCat = 3
+
+        bytes2 = BitConverter.GetBytes(Convert.ToInt32(ScriptRes.cllItemCatsIDs(tmpCat)(item)))
+        Array.Copy(bytes2, 0, bytes, bytitem, bytes2.Length)
+
+        bytes2 = BitConverter.GetBytes(Convert.ToInt32(num))
+        Array.Copy(bytes2, 0, bytes, bytcount, bytes2.Length)
+
+        bytes2 = BitConverter.GetBytes(Convert.ToInt32(&H13786D0))
+        Array.Copy(bytes2, 0, bytes, bytptr1, bytes2.Length)
+
+        bytes2 = BitConverter.GetBytes(Convert.ToInt32(&H137D6BC))
+        Array.Copy(bytes2, 0, bytes, bytptr2, bytes2.Length)
+
+        bytes2 = BitConverter.GetBytes(Convert.ToInt32(0 - ((Game.Injected.ItemDropPtr + &H3C) - (&HDC8C60))))
+        Array.Copy(bytes2, 0, bytes, bytjmp, bytes2.Length)
+
+        Rtn = WriteProcessMemory(_targetProcessHandle, Game.Injected.ItemDropPtr, bytes, TargetBufferSize, 0)
+        'MsgBox(Hex(dropPtr))
+        CreateRemoteThread(_targetProcessHandle, 0, 0, Game.Injected.ItemDropPtr, 0, 0, 0)
+
+        Thread.Sleep(5)
+    End Sub
+
+    <HideFromScripting>
+    Public Shared Function FuncCall(func As String) As Integer
+        Return FuncCall(func, "", "", "", "", "")
+    End Function
+    <HideFromScripting>
+    Public Shared Function FuncCall(func As String, Optional param1 As Object = "") As Integer
+        Return FuncCall(func, param1, "", "", "", "")
+    End Function
+    <HideFromScripting>
+    Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "") As Integer
+        Return FuncCall(func, param1, param2, "", "", "")
+    End Function
+    <HideFromScripting>
+    Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "") As Integer
+        Return FuncCall(func, param1, param2, param3, "", "")
+    End Function
+    <HideFromScripting>
+    Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "", Optional param4 As Object = "") As Integer
+        Return FuncCall(func, param1, param2, param3, param4, "")
+    End Function
+
+#Region "Old Boss Rush Functions"
 
     'Public Shared Sub BossAsylumDemon()
 
@@ -1435,20 +2034,6 @@ Public Class Funcs
     '    'Hook.rushTimer.Abort()
     'End Sub
 
-    Public Shared Function GetNgPlusText(ngLevel As String) As String
-        If ngLevel = 0 Then
-            Return "NG"
-        ElseIf ngLevel = 1 Then
-            Return "NG+"
-        Else
-            Return "NG+" & ngLevel
-        End If
-    End Function
-
-    Public Shared Sub MsgBoxOK(text As String)
-        SetGenDialog(text, 1, "OK")
-    End Sub
-
     'Public Shared Sub BeginBossRush()
 
     '    'Hook.UpdateHook()
@@ -1536,19 +2121,7 @@ Public Class Funcs
     '    'Hook.rushTimer.Abort()
     'End Sub
 
-    Public Shared Sub StartNewBossRushTimer()
-        Game.rushTimer = New Thread(AddressOf BeginRushTimer)
-        Game.rushTimer.IsBackground = True
-        Game.rushTimer.Start()
-    End Sub
 
-    Public Shared Function StopBossRushTimer() As String
-        Game.UpdateHook()
-        If Game.rushTimer IsNot Nothing Then
-            Game.rushTimer.Abort()
-        End If
-        Return Strings.Left(TimeSpan.FromMilliseconds(Game.GameStats.TotalPlayTime.Value).ToString, 12)
-    End Function
 
     ''TODO: Remove BeginReverseBossRush
     'Public Shared Sub BeginReverseBossRush()
@@ -1663,673 +2236,5 @@ Public Class Funcs
 
     'End Sub
 
-    Public Shared Sub Warp_Coords(ByVal x As Single, y As Single, z As Single)
-        Warp_Coords(x, y, z, 0)
-    End Sub
-
-    Public Shared Sub Warp_Coords(ByVal x As Single, y As Single, z As Single, rotx As Single)
-        Dim charptr1 = RInt32(&H137DC70)
-        charptr1 = RInt32(charptr1 + &H4)
-        charptr1 = RInt32(charptr1)
-        Dim charmapdataptr = RInt32(charptr1 + &H28)
-
-        WFloat(charmapdataptr + &HD0, x)
-        WFloat(charmapdataptr + &HD4, y)
-        WFloat(charmapdataptr + &HD8, z)
-
-        Dim facing As Single
-        facing = ((rotx / 360) * 2 * Math.PI) - Math.PI
-
-
-        WFloat(charmapdataptr + &HE4, facing)
-        WBytes(charmapdataptr + &HC8, {1})
-    End Sub
-    Public Shared Sub WarpEntity_Coords(entityPtr As Integer, x As Single, y As Single, z As Single, rotx As Single)
-        entityPtr = RInt32(entityPtr + &H28)
-        WFloat(entityPtr + &HD0, x)
-        WFloat(entityPtr + &HD4, y)
-        WFloat(entityPtr + &HD8, z)
-
-        Dim facing As Single
-        facing = ((rotx / 360) * 2 * Math.PI) - Math.PI
-
-
-        WFloat(entityPtr + &HE4, facing)
-        WBytes(entityPtr + &HC8, {1})
-    End Sub
-
-
-    Public Shared Sub BlackScreen()
-        Dim tmpptr As Integer
-        tmpptr = RUInt32(&H1378520)
-        tmpptr = RUInt32(tmpptr + &H10)
-
-        WBytes(tmpptr + &H26D, {1})
-
-        WFloat(tmpptr + &H270, 0)
-        WFloat(tmpptr + &H274, 0)
-        WFloat(tmpptr + &H278, 0)
-    End Sub
-    Public Shared Sub CamFocusEntity(entityptr As Integer)
-        Dim camPtr As Integer = RInt32(&H137D648) + &HEC
-
-        WInt32(camPtr, entityptr)
-    End Sub
-    Public Shared Sub ClearPlayTime()
-        Dim tmpPtr As Integer = RIntPtr(&H1378700)
-        WInt32(tmpPtr + &H68, 0)
-    End Sub
-    Public Shared Sub ControlEntity(entityPtr As Integer, state As Byte)
-        entityPtr = RInt32(entityPtr + &H28)
-
-        Dim ctrlptr As Integer = RInt32(&H137DC70)
-        ctrlptr = RInt32(ctrlptr + 4)
-        ctrlptr = RInt32(ctrlptr)
-        ctrlptr = RInt32(ctrlptr + &H28)
-        ctrlptr = RInt32(ctrlptr + &H54)
-
-        WInt32(entityPtr + &H244, ctrlptr * (state And 1))
-
-    End Sub
-    Public Shared Sub DisableAI(ByVal state As Byte)
-        WBytes(&H13784EE, {state})
-    End Sub
-    Public Shared Sub PlayerExterminate(ByVal state As Byte)
-        WBytes(&H13784D3, {state})
-    End Sub
-    Public Shared Sub FadeIn()
-        Dim tmpptr As Integer
-        tmpptr = RInt32(&H1378520)
-        tmpptr = RInt32(tmpptr + &H10)
-
-        WBytes(tmpptr + &H26D, {1})
-
-        Dim val As Single = 0.0
-
-
-        For i = 0 To 33
-            val = val + 0.03
-            WFloat(tmpptr + &H270, val)
-            WFloat(tmpptr + &H274, val)
-            WFloat(tmpptr + &H278, val)
-            Thread.Sleep(33)
-        Next
-
-        WBytes(tmpptr + &H26D, {0})
-    End Sub
-    Public Shared Sub FadeOut()
-        Dim tmpptr As Integer
-        tmpptr = RInt32(&H1378520)
-        tmpptr = RInt32(tmpptr + &H10)
-
-        WBytes(tmpptr + &H26D, {1})
-
-        Dim val As Single = 1.0
-
-
-
-
-
-        For i = 0 To 33
-            val = val - 0.03
-            val = val - 0.03
-            val = val - 0.03
-            WFloat(tmpptr + &H270, val)
-            WFloat(tmpptr + &H274, val)
-            WFloat(tmpptr + &H278, val)
-            Thread.Sleep(33)
-        Next
-    End Sub
-    Public Shared Sub ForceEntityDrawGroup(entityptr As Integer)
-        WInt32(entityptr + &H264, -1)
-        WInt32(entityptr + &H268, -1)
-        WInt32(entityptr + &H26C, -1)
-        WInt32(entityptr + &H270, -1)
-    End Sub
-
-    Public Shared Sub SetCamPos(ByVal xpos As Single, ypos As Single, zpos As Single, xrot As Single, yrot As Single)
-        Dim tmpPtr As Integer
-
-        tmpPtr = RInt32(&H1378714)
-
-        WFloat(tmpPtr + &HB0, xpos)
-        WFloat(tmpPtr + &HB4, ypos)
-        WFloat(tmpPtr + &HB8, zpos)
-
-
-        tmpPtr = RInt32(&H137D6DC)
-        tmpPtr = RInt32(tmpPtr + &H3C)
-        tmpPtr = RInt32(tmpPtr + &H60)
-
-
-        WFloat(tmpPtr + &H144, xrot)
-        WFloat(tmpPtr + &H150, yrot)
-
-
-
-    End Sub
-    Public Shared Sub SetFreeCam(ByVal state As Byte)
-        If state Then
-            'WBytes(&HEFDBAF, {&H90, &H90, &H90, &H90, &H90})
-            WBytes(&H404E59, {&H90, &H90, &H90, &H90, &H90})
-            WBytes(&H404E63, {&H90, &H90, &H90, &H90, &H90})
-            WBytes(&HF06C46, {&H90, &H90, &H90, &H90, &H90, &H90, &H90, &H90})
-
-
-
-
-        Else
-            'WBytes(&HEFDBAF, {&HE8, &H7c, &H72, &H50, &HFF})
-            WBytes(&H404E59, {&H66, &HF, &HD6, &H46, &H20})
-            WBytes(&H404E63, {&H66, &HF, &HD6, &H46, &H28})
-            WBytes(&HF06C46, {&HF3, &HF, &H11, &H83, &H44, &H1, &H0, &H0})
-
-
-
-
-        End If
-    End Sub
-    Public Shared Sub SetClearCount(ByVal clearCount As Integer)
-        Dim tmpPtr As Integer
-        tmpPtr = RInt32(&H1378700)
-
-        WInt32(tmpPtr + &H3C, clearCount)
-
-    End Sub
-    Private Shared Sub SetCaption(ByVal str As String)
-        Dim tmpptr As Integer
-        Dim alpha As Byte
-
-        Dim state As Boolean
-        state = (str.Length > 0)
-
-        If state Then
-            alpha = 254
-        Else
-            alpha = 0
-        End If
-
-        tmpptr = RInt32(&H13786D0)
-
-        WInt32(tmpptr + &H40, state And 4)
-        WInt32(tmpptr + &HB18, alpha)
-        WInt32(tmpptr + &HB14, 100)
-
-        tmpptr = RInt32(&H13785DC)
-        tmpptr = RInt32(tmpptr + &H10)
-
-        WUnicodeStr(tmpptr + &H12C, str & ChrW(0))
-
-    End Sub
-    Public Shared Sub SetSaveEnable(ByVal state As Boolean)
-        Dim tmpPtr As Integer
-        tmpPtr = RInt32(&H13784A0)
-
-        WBool(tmpPtr + &HB40, state)
-    End Sub
-    Public Shared Sub SetSaveSlot(ByVal slot As Integer)
-        WInt32(RInt32(&H13784A0) + &HA70, slot)
-    End Sub
-    Public Shared Sub SetUnknownNpcName(ByVal name As String)
-        If name.Length > 21 Then name = Strings.Left(name, 21) 'Prevent runover into code
-        WUnicodeStr(&H11A784C, name + ChrW(0))
-    End Sub
-
-    Public Shared Function GetClosestEntityToEntity(entityPtr As Integer) As Integer
-        Dim ptrList = GetEntityPtrList()
-
-        Dim closestDist = Single.PositiveInfinity
-        Dim closestPtr As Integer = -1
-
-        For Each p In ptrList
-            If p = entityPtr Then Continue For
-            Dim dist = GetDistanceBetweenEntities(entityPtr, p)
-            If (dist < closestDist) Then
-                closestPtr = p
-                closestDist = dist
-            End If
-        Next
-
-        Return closestPtr
-    End Function
-
-    Public Shared Function GetEntityPtrList() As Integer()
-
-        Dim structPtr = RInt32(&H137D644)
-        structPtr = RInt32(structPtr + &HE4)
-        Dim entityCount = RInt32(structPtr)
-        structPtr = RInt32(structPtr + 4)
-
-        Dim resultList = New List(Of Integer)
-
-        For i = 0 To entityCount - 1
-            resultList.Add(RInt32(structPtr + i * &H20))
-        Next
-
-        Return resultList.ToArray()
-    End Function
-
-    Public Shared Function GetEntityVec3(entityPtr As Integer) As Vec3
-        Return New Vec3(GetEntityPosX(entityPtr), GetEntityPosY(entityPtr), GetEntityPosZ(entityPtr))
-    End Function
-
-    Public Shared Sub MoveEntityLaterallyTowardEntity(entityFromPtr As Integer, entityToPtr As Integer, speed As Single)
-        MoveEntityLaterally(entityFromPtr, GetAngleBetweenEntities(entityFromPtr, entityToPtr), speed)
-    End Sub
-
-    Public Shared Function GetAngleBetweenEntities(entityPtrA As Integer, entityPtrB As Integer) As Single
-        Dim x1 = GetEntityPosX(entityPtrA)
-        Dim z1 = GetEntityPosZ(entityPtrA)
-
-        Dim x2 = GetEntityPosX(entityPtrB)
-        Dim z2 = GetEntityPosZ(entityPtrB)
-
-        Return Math.Atan2(z2 - z1, x2 - x1) 'TODO: Check my trig cuz I did this at 6:42 AM
-    End Function
-
-    Public Shared Function GetDistanceSqrdBetweenEntities(entityPtrA As Integer, entityPtrB As Integer) As Single
-        Dim x1 = GetEntityPosX(entityPtrA)
-        Dim y1 = GetEntityPosY(entityPtrA)
-        Dim z1 = GetEntityPosZ(entityPtrA)
-
-        Dim x2 = GetEntityPosX(entityPtrB)
-        Dim y2 = GetEntityPosY(entityPtrB)
-        Dim z2 = GetEntityPosZ(entityPtrB)
-
-        Return Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2) + Math.Pow(z1 - z2, 2)
-    End Function
-
-    Public Shared Function GetDistanceBetweenEntities(entityPtrA As Integer, entityPtrB As Integer) As Single
-        Return Math.Sqrt(GetDistanceSqrdBetweenEntities(entityPtrA, entityPtrB))
-    End Function
-
-    Public Shared Sub MoveEntityLaterally(entityPtr As Integer, angle As Single, speed As Single)
-        MoveEntityAtSpeed(entityPtr, Math.Cos(angle) * speed, 0, Math.Sin(angle) * speed, 0)
-    End Sub
-
-    Public Shared Sub MoveEntityAtSpeed(entityPtr As Integer, speedX As Single, speedY As Single, speedZ As Single)
-        MoveEntityAtSpeed(entityPtr, speedX, speedY, speedZ, 0)
-    End Sub
-
-    Public Shared Sub MoveEntityAtSpeed(entityPtr As Integer, speedX As Single, speedY As Single, speedZ As Single, speedRot As Single)
-
-        SetEntityPosX(entityPtr, GetEntityPosX(entityPtr) + speedX)
-        SetEntityPosY(entityPtr, GetEntityPosY(entityPtr) + speedY)
-        SetEntityPosZ(entityPtr, GetEntityPosZ(entityPtr) + speedZ)
-        SetEntityRotation(entityPtr, GetEntityRotation(entityPtr) + speedRot)
-
-    End Sub
-
-    Public Shared Function GetEntityPosX(entityPtr As Integer) As Single
-        Dim entityPosPtr = RInt32(entityPtr + &H28)
-        entityPosPtr = RInt32(entityPosPtr + &H1C)
-        Return RFloat(entityPosPtr + &H10)
-    End Function
-    Public Shared Function GetEntityPosY(entityPtr As Integer) As Single
-        Dim entityPosPtr = RInt32(entityPtr + &H28)
-        entityPosPtr = RInt32(entityPosPtr + &H1C)
-        Return RFloat(entityPosPtr + &H14)
-    End Function
-    Public Shared Function GetEntityPosZ(entityPtr As Integer) As Single
-        Dim entityPosPtr = RInt32(entityPtr + &H28)
-        entityPosPtr = RInt32(entityPosPtr + &H1C)
-        Return RFloat(entityPosPtr + &H18)
-    End Function
-    Public Shared Function GetEntityRotation(entityPtr As Integer) As Single
-        Dim entityPosPtr = RInt32(entityPtr + &H28)
-        entityPosPtr = RInt32(entityPosPtr + &H1C)
-        Return RFloat(entityPosPtr + &H4)
-    End Function
-
-    Public Shared Sub SetEntityPosX(entityPtr As Integer, posX As Single)
-        Dim entityPosPtr = RInt32(entityPtr + &H28)
-        entityPosPtr = RInt32(entityPosPtr + &H1C)
-        WFloat(entityPosPtr + &H10, posX)
-    End Sub
-    Public Shared Sub SetEntityPosY(entityPtr As Integer, posY As Single)
-        Dim entityPosPtr = RInt32(entityPtr + &H28)
-        entityPosPtr = RInt32(entityPosPtr + &H1C)
-        WFloat(entityPosPtr + &H14, posY)
-    End Sub
-    Public Shared Sub SetEntityPosZ(entityPtr As Integer, posZ As Single)
-        Dim entityPosPtr = RInt32(entityPtr + &H28)
-        entityPosPtr = RInt32(entityPosPtr + &H1C)
-        WFloat(entityPosPtr + &H18, posZ)
-    End Sub
-    Public Shared Sub SetEntityRotation(entityPtr As Integer, angle As Single)
-        Dim entityPosPtr = RInt32(entityPtr + &H28)
-        entityPosPtr = RInt32(entityPosPtr + &H1C)
-        WFloat(entityPosPtr + &H4, CType(angle * Math.PI / 180, Single) - CType(Math.PI, Single))
-    End Sub
-
-    Public Shared Sub SetEntityLocation(entityPtr As Integer, posX As Single, posY As Single, posZ As Single, angle As Single)
-        Dim entityPosPtr = RInt32(entityPtr + &H28)
-        entityPosPtr = RInt32(entityPosPtr + &H1C)
-        WFloat(entityPosPtr + &H10, posX)
-        WFloat(entityPosPtr + &H14, posY)
-        WFloat(entityPosPtr + &H18, posZ)
-        WFloat(entityPosPtr + &H4, CType(angle * Math.PI / 180, Single) - CType(Math.PI, Single))
-    End Sub
-
-    Public Shared Sub SetEntityLocation(entityPtr As Integer, location As EntityLocation)
-        SetEntityLocation(entityPtr, location.Pos.X, location.Pos.Y, location.Pos.Z, location.Rot)
-    End Sub
-
-    Public Shared Sub PlayerHide(ByVal state As Boolean)
-        WBool(&H13784E7, state)
-    End Sub
-    Public Shared Sub ShowHUD(ByVal state As Boolean)
-        Dim tmpptr As UInteger
-        tmpptr = RUInt32(&H1378700)
-        tmpptr = RUInt32(tmpptr + &H2C)
-
-        WBool(New IntPtr(tmpptr + &HD), state)
-    End Sub
-    Public Shared Sub WaitForLoadEnd() 'TODO: waitforload -> WaitForLoadEnd
-        Dim tmpptr As Integer
-        tmpptr = RInt32(&H1378700)
-
-        Dim msPlayed As Integer
-        Dim loading As Boolean = True
-
-        msPlayed = RInt32(tmpptr + &H68)
-
-        Do While loading
-            loading = (msPlayed = RInt32(tmpptr + &H68))
-            Thread.Sleep(33)
-        Loop
-    End Sub
-    Public Shared Sub WaitForLoadStart() 'TODO: waittillload -> WaitForLoadStart
-        Dim tmpptr As Integer
-        tmpptr = RInt32(&H1378700)
-
-        Dim msPlayed As Integer
-        Dim loading As Boolean = False
-
-        msPlayed = RInt32(tmpptr + &H68)
-
-        Do While Not loading
-            loading = (msPlayed = RInt32(tmpptr + &H68))
-            Thread.Sleep(33)
-        Loop
-    End Sub
-    Public Shared Sub WarpEntity_Player(entityptr As Integer)
-        Dim playerptr As Integer = Lua.Expr(Of Integer)("GetEntityPtr(10000)")
-        WarpEntity_Entity(entityptr, playerptr)
-    End Sub
-    Public Shared Sub WarpPlayer_Entity(entityptr As Integer)
-        Dim playerptr As Integer = Lua.Expr(Of Integer)("GetEntityPtr(10000)")
-        WarpEntity_Entity(playerptr, entityptr)
-    End Sub
-    Public Shared Sub WarpEntity_Entity(entityptrSrc As Integer, entityptrDest As Integer)
-        'TODO: Check validity of entity pointers
-        Dim destEntityPosPtr = RInt32(entityptrDest + &H28)
-        destEntityPosPtr = RInt32(destEntityPosPtr + &H1C)
-        Dim facing = RFloat(destEntityPosPtr + &H4)
-        Dim posX = RFloat(destEntityPosPtr + &H10)
-        Dim posY = RFloat(destEntityPosPtr + &H14)
-        Dim posZ = RFloat(destEntityPosPtr + &H18)
-
-        WarpEntity_Coords(entityptrSrc, posX, posY, posZ, facing)
-    End Sub
-    ''' <summary>
-    ''' TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-    ''' </summary>
-    ''' <param name="entityId">TODO</param>
-    Public Shared Function GetEntityPtr(entityId As Integer) As Integer 'TODO
-        'TODO 
-        Return Lua.Expr(Of Integer)("ChrFadeIn(10000)") 'TODO 
-        'TODO 
-    End Function 'TODO
-
-
-    Public Shared Sub SetBriefingMsg(ByVal str As String)
-        Dim tmpptr As Integer
-        tmpptr = RInt32(&H13785DC)
-        tmpptr = RInt32(tmpptr + &H7C)
-
-        WUnicodeStr(tmpptr + &H3B7A, str + ChrW(0))
-        Lua.Run("RequestOpenBriefingMsg(10010721, 1)")
-    End Sub
-
-    Public Class GenDiagResult
-        Public Response As Integer = 0
-        Public Val As Integer = 0
-        Public Sub New(response, val)
-            Me.Response = response
-            Me.Val = val
-        End Sub
-    End Class
-
-    'TODO: Make less bad
-    Public Shared Function SetGenDialog(ByVal str As String, type As Integer, Optional btn0 As String = "", Optional btn1 As String = "") As GenDiagResult
-        '50002 = Overridden Maintext
-        '65000 = Overridden Button 0
-        '70000 = Overridden Button 1
-
-        Dim tmpptr As Integer
-        tmpptr = RInt32(&H13785DC)
-        tmpptr = RInt32(tmpptr + &H174)
-
-        str = str.Replace("\n", ChrW(&HA))
-
-        'Weird issues if exactly 6 characters
-        If str.Length = 6 Then str = str & "  "
-        WUnicodeStr(tmpptr + &H1A5C, str + ChrW(0))
-
-        'Set Default Ok/Cancel if not overridden
-        WInt32(&H12E33E4, 1)
-        WInt32(&H12E33E8, 2)
-
-        'Clear previous values
-        WInt32(&H12E33F8, -1)
-        WInt32(&H12E33FC, -1)
-
-        WInt32(&H12E33E0, 50002)
-        If btn0.Length > 0 Then
-            WInt32(&H12E33E4, 65000)
-            WUnicodeStr(tmpptr + &H2226, btn0 + ChrW(0))
-        End If
-        If btn1.Length > 0 Then
-            WInt32(&H12E33E8, 70000)
-            WUnicodeStr(tmpptr + &H350C, btn1 + ChrW(0))
-        End If
-
-        tmpptr = RInt32(&H13786D0)
-        WInt32(tmpptr + &H60, type)
-
-
-        'Wait for response
-        Dim genDiagResponse = -1
-        Dim genDiagVal = -1
-
-        tmpptr = &H12E33F8
-
-        While genDiagResponse = -1
-            genDiagResponse = RInt32(tmpptr)
-            genDiagVal = RInt32(tmpptr + &H4)
-            Thread.Sleep(33)
-        End While
-        Thread.Sleep(500)
-        Return New GenDiagResult(genDiagResponse, genDiagVal)
-    End Function
-    Public Shared Sub Wait(val As Integer)
-        Thread.Sleep(val)
-    End Sub
-
-    Public Shared Function WaitForBossDeath(ByVal boost As Integer, match As Integer) As Boolean
-        Dim eventPtr As Integer
-        eventPtr = RInt32(&H137D7D4)
-        eventPtr = RInt32(eventPtr)
-
-        Dim hpPtr As Integer
-        hpPtr = RInt32(&H137DC70)
-        hpPtr = RInt32(hpPtr + 4)
-        hpPtr = RInt32(hpPtr)
-        hpPtr = hpPtr + &H2D4
-
-        Dim bossdead As Boolean = False
-        Dim selfdead As Boolean = False
-
-        While Not (bossdead Or selfdead)
-            bossdead = (RInt32(eventPtr + boost) And match)
-            selfdead = (RInt32(hpPtr) = 0)
-            Console.WriteLine(Hex(eventPtr) & " - " & Hex(RInt32(eventPtr)))
-            Thread.Sleep(33)
-        End While
-
-        If bossdead Then
-            Return True
-        Else
-            Return False
-        End If
-    End Function
-
-    Public Shared Sub DropItem(ByVal cat As String, item As String, num As Integer)
-        Dim TargetBufferSize = 1024
-        Dim Rtn As Integer
-
-        Dim bytes() As Byte
-        Dim bytes2() As Byte
-
-        Dim bytcat As Integer = &H1
-        Dim bytitem As Integer = &H6
-        Dim bytcount As Integer = &H10
-        Dim bytptr1 As Integer = &H15
-        Dim bytptr2 As Integer = &H32
-        Dim bytjmp As Integer = &H38
-
-        bytes = {&HBD, 0, 0, 0, 0, &HBB, &HF0, &H0, &H0, &H0, &HB9, &HFF, &HFF, &HFF, &HFF, &HBA, 0, 0, 0, 0, &HA1, &HD0, &H86, &H37, &H1, &H89, &HA8, &H28, &H8, &H0, &H0, &H89, &H98, &H2C, &H8, &H0, &H0, &H89, &H88, &H30, &H8, &H0, &H0, &H89, &H90, &H34, &H8, &H0, &H0, &HA1, &HBC, &HD6, &H37, &H1, &H50, &HE8, 0, 0, 0, 0, &HC3}
-
-        'cllItemCatsIDs(clsItemCatsIDs("Weapons") / &H10000000)("Target Shield+15"))
-
-        bytes2 = BitConverter.GetBytes(Convert.ToInt32(ScriptRes.clsItemCatsIDs(cat)))
-        Array.Copy(bytes2, 0, bytes, bytcat, bytes2.Length)
-
-        Dim tmpCat As Integer
-        tmpCat = Convert.ToInt32(ScriptRes.clsItemCatsIDs(cat) / &H10000000)
-        If tmpCat = 4 Then tmpCat = 3
-
-        bytes2 = BitConverter.GetBytes(Convert.ToInt32(ScriptRes.cllItemCatsIDs(tmpCat)(item)))
-        Array.Copy(bytes2, 0, bytes, bytitem, bytes2.Length)
-
-        bytes2 = BitConverter.GetBytes(Convert.ToInt32(num))
-        Array.Copy(bytes2, 0, bytes, bytcount, bytes2.Length)
-
-        bytes2 = BitConverter.GetBytes(Convert.ToInt32(&H13786D0))
-        Array.Copy(bytes2, 0, bytes, bytptr1, bytes2.Length)
-
-        bytes2 = BitConverter.GetBytes(Convert.ToInt32(&H137D6BC))
-        Array.Copy(bytes2, 0, bytes, bytptr2, bytes2.Length)
-
-        bytes2 = BitConverter.GetBytes(Convert.ToInt32(0 - ((Game.DropPointer + &H3C) - (&HDC8C60))))
-        Array.Copy(bytes2, 0, bytes, bytjmp, bytes2.Length)
-
-        Rtn = WriteProcessMemory(_targetProcessHandle, Game.DropPointer, bytes, TargetBufferSize, 0)
-        'MsgBox(Hex(dropPtr))
-        CreateRemoteThread(_targetProcessHandle, 0, 0, Game.DropPointer, 0, 0, 0)
-
-        Thread.Sleep(5)
-    End Sub
-
-    Private Shared Function GetFuncCallParamValue(paramVal As Object) As String
-        Dim t = paramVal.GetType()
-
-        If t = GetType(Int32) Then
-            Return paramVal.ToString()
-        ElseIf t = GetType(Single) Then
-            Return paramVal.ToString("0.0")
-            'TODO:
-            'ElseIf t = GetType(String) Then
-            '    write to game memory and return a pointer or some shit 
-        Else
-            Return paramVal.ToString
-        End If
-    End Function
-
-    <HideFromScripting>
-    Public Shared Function FuncCall(func As String) As Integer
-        Return FuncCall(func, "", "", "", "", "")
-    End Function
-    <HideFromScripting>
-    Public Shared Function FuncCall(func As String, Optional param1 As Object = "") As Integer
-        Return FuncCall(func, param1, "", "", "", "")
-    End Function
-    <HideFromScripting>
-    Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "") As Integer
-        Return FuncCall(func, param1, param2, "", "", "")
-    End Function
-    <HideFromScripting>
-    Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "") As Integer
-        Return FuncCall(func, param1, param2, param3, "", "")
-    End Function
-    <HideFromScripting>
-    Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "", Optional param4 As Object = "") As Integer
-        Return FuncCall(func, param1, param2, param3, param4, "")
-    End Function
-    <HideFromScripting>
-    Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "", Optional param4 As Object = "", Optional param5 As Object = "") As Integer
-
-        Dim paramObj() As Object = {param1, param2, param3, param4, param5}
-        Dim Params() As String = paramObj.Select(Function(x) GetFuncCallParamValue(x)).ToArray()
-        Dim param As IntPtr = Marshal.AllocHGlobal(4)
-        Dim intParam As Integer
-        Dim floatParam As Single
-        Dim a As New AsmExecutor
-
-        func = func.ToUpper
-
-        Dim funcPtr = Game.LuaFunctionPointer
-
-        a.pos = funcPtr
-        a.AddVar("funcloc", CType(ScriptRes.autoCompleteFuncInfoByName(ScriptRes.caselessIngameFuncNames(func.ToUpper)).First(), IngameFuncInfo).Address)
-        a.AddVar("returnedloc", funcPtr + &H200)
-
-        a.Asm("push ebp")
-        a.Asm("mov ebp,esp")
-        a.Asm("push eax")
-
-        'Parse params, add as variables to the ASM
-        For i As Integer = 4 To 0 Step -1
-            If Params(i).ToLower = "false" Then Params(i) = "0"
-            If Params(i).ToLower = "true" Then Params(i) = "1"
-            If Params(i).Length < 1 Then Params(i) = "0"
-
-            If Params(i).Contains(".") Then
-                floatParam = Convert.ToSingle(Params(i), New CultureInfo("en-us"))
-                Marshal.StructureToPtr(floatParam, param, False)
-                a.AddVar("param" & i, Marshal.ReadInt32(param))
-            Else
-                intParam = Convert.ToInt32(Params(i), New CultureInfo("en-us"))
-                a.AddVar("param" & i, intParam)
-            End If
-
-            a.Asm("mov eax,param" & i)
-            a.Asm("push eax")
-
-        Next
-        a.Asm("call funcloc")
-        a.Asm("mov ebx,returnedloc")
-        a.Asm("mov [ebx],eax")
-        a.Asm("pop eax")
-        a.Asm("pop eax")
-        a.Asm("pop eax")
-        a.Asm("pop eax")
-        a.Asm("pop eax")
-        a.Asm("pop eax")
-        a.Asm("mov esp,ebp")
-        a.Asm("pop ebp")
-        a.Asm("ret")
-
-        Marshal.FreeHGlobal(param)
-
-
-        WriteProcessMemory(_targetProcessHandle, funcPtr, a.bytes, 1024, 0)
-        CreateRemoteThread(_targetProcessHandle, 0, 0, funcPtr, 0, 0, 0)
-        Thread.Sleep(5)
-
-
-
-        Return RInt32(funcPtr + &H200)
-    End Function
+#End Region
 End Class

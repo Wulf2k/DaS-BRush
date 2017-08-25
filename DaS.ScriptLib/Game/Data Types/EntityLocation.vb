@@ -26,6 +26,12 @@
         Rot = 0
     End Sub
 
+    Public ReadOnly Property IsZero As Boolean
+        Get
+            Return Pos.X = 0 AndAlso Pos.Y = 0 AndAlso Pos.Z = 0 AndAlso Rot = 0
+        End Get
+    End Property
+
     Public Function AngleTo(other As EntityLocation)
         Return Pos.GetLateralAngleTo(other.Pos)
     End Function

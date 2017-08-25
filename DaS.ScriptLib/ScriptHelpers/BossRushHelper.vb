@@ -8,6 +8,49 @@ Public Class BossRushType
 End Class
 
 Public Class BossRushHelper
+    Public Shared ReadOnly BossRushTimerInterval As Integer = 33
+
+    Private Shared Sub BeginRushTimer()
+
+        Dim msg As String
+
+        WFloat(Game.LinePtr.Value + &H78, 1100)
+        WFloat(Game.LinePtr.Value + &H7C, 675)
+
+        WFloat(Game.KeyPtr.Value + &H78, 600)
+        WFloat(Game.KeyPtr.Value + &H7C, 605)
+
+        'Clear TrueDeaths
+        Game.GameStats.TrueDeathCount.Value = 0
+        Game.GameStats.TotalPlayTime.Value = 0
+
+        Do
+            WInt32(Game.MenuPtr.Value + &H154, RInt32(Game.MenuPtr.Value + &H1C)) 'LineHelp
+            WInt32(Game.MenuPtr.Value + &H158, RInt32(Game.MenuPtr.Value + &H1C)) 'KeyGuide
+            msg = Funcs.GetNgPlusText(Game.GameStats.ClearCount.Value) & " - "
+            msg = msg & Strings.Left(TimeSpan.FromMilliseconds(Game.GameStats.TotalPlayTime.Value).ToString, 12) & ChrW(0)
+            WUnicodeStr(&H11A7770, msg)
+            msg = "Deaths: " & Game.GameStats.TrueDeathCount.Value & ChrW(0)
+            WUnicodeStr(&H11A7758, msg) 'LineHelp
+            Thread.Sleep(33)
+        Loop
+    End Sub
+
+    Private Shared rushTimer As Thread
+
+    Public Shared Sub StartNewBossRushTimer()
+        rushTimer = New Thread(AddressOf BeginRushTimer)
+        rushTimer.IsBackground = True
+        rushTimer.Start()
+    End Sub
+
+    Public Shared Function StopBossRushTimer() As String
+        If rushTimer IsNot Nothing Then
+            rushTimer.Abort()
+        End If
+        Return Strings.Left(TimeSpan.FromMilliseconds(Game.GameStats.TotalPlayTime.Value).ToString, 12)
+    End Function
+
     Public Shared Function GetBossRushOrder(rushType As String, excludeBedOfChaos As Boolean, customOrder As String) As String()
 
         Dim bossPool = Data.BossFights.Keys.ToList()
@@ -118,7 +161,6 @@ Public Class BossRushHelper
         If Not String.IsNullOrWhiteSpace(boss.EntranceLua) Then
             Lua.Run(boss.EntranceLua)
         End If
-
         'Still not 100% sure how the multiline strings work in VB lol
         Lua.RunBlock(
             "--Spawn with default co-op summon anim 
@@ -136,7 +178,6 @@ Public Class BossRushHelper
             DisableMove(10000, false)
             SetDisableGravity(10000, false)
             PlayerHide(false)
-            Wait(2100)
             ")
 
     End Sub
