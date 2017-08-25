@@ -278,7 +278,6 @@ Partial Class frmForm1
         Me.numCountdown.DecimalPlaces = 3
         Me.numCountdown.Location = New System.Drawing.Point(310, 93)
         Me.numCountdown.Maximum = New Decimal(New Integer() {999999999, 0, 0, 0})
-        Me.numCountdown.Minimum = New Decimal(New Integer() {999999999, 0, 0, -2147483648})
         Me.numCountdown.Name = "numCountdown"
         Me.numCountdown.Size = New System.Drawing.Size(142, 20)
         Me.numCountdown.TabIndex = 90
@@ -987,7 +986,7 @@ Partial Class frmForm1
         Me.toolstripTest.Location = New System.Drawing.Point(2, 2)
         Me.toolstripTest.Name = "toolstripTest"
         Me.toolstripTest.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-        Me.toolstripTest.Size = New System.Drawing.Size(151, 221)
+        Me.toolstripTest.Size = New System.Drawing.Size(150, 221)
         Me.toolstripTest.TabIndex = 85
         '
         'ToolStripDropDownButton1
@@ -997,7 +996,7 @@ Partial Class frmForm1
         Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
         Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
-        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(149, 20)
+        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(148, 20)
         Me.ToolStripDropDownButton1.Text = "(Developer Test Stuff)"
         '
         'tsmiTestSomething
@@ -1010,7 +1009,7 @@ Partial Class frmForm1
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(149, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(148, 6)
         '
         'tsbtnDisableAI
         '
@@ -1019,7 +1018,7 @@ Partial Class frmForm1
         Me.tsbtnDisableAI.Image = CType(resources.GetObject("tsbtnDisableAI.Image"), System.Drawing.Image)
         Me.tsbtnDisableAI.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnDisableAI.Name = "tsbtnDisableAI"
-        Me.tsbtnDisableAI.Size = New System.Drawing.Size(149, 19)
+        Me.tsbtnDisableAI.Size = New System.Drawing.Size(148, 19)
         Me.tsbtnDisableAI.Text = "Disable AI"
         '
         'tsbtnEnableAI
@@ -1029,13 +1028,13 @@ Partial Class frmForm1
         Me.tsbtnEnableAI.Image = CType(resources.GetObject("tsbtnEnableAI.Image"), System.Drawing.Image)
         Me.tsbtnEnableAI.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnEnableAI.Name = "tsbtnEnableAI"
-        Me.tsbtnEnableAI.Size = New System.Drawing.Size(149, 19)
+        Me.tsbtnEnableAI.Size = New System.Drawing.Size(148, 19)
         Me.tsbtnEnableAI.Text = "Enable AI"
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(149, 6)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(148, 6)
         '
         'tsbtnEnablePlayerExterminate
         '
@@ -1044,7 +1043,7 @@ Partial Class frmForm1
         Me.tsbtnEnablePlayerExterminate.Image = CType(resources.GetObject("tsbtnEnablePlayerExterminate.Image"), System.Drawing.Image)
         Me.tsbtnEnablePlayerExterminate.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnEnablePlayerExterminate.Name = "tsbtnEnablePlayerExterminate"
-        Me.tsbtnEnablePlayerExterminate.Size = New System.Drawing.Size(149, 19)
+        Me.tsbtnEnablePlayerExterminate.Size = New System.Drawing.Size(148, 19)
         Me.tsbtnEnablePlayerExterminate.Text = "Enable Player Exterminate"
         '
         'tsbtnDisablePlayerExterminate
@@ -1054,13 +1053,13 @@ Partial Class frmForm1
         Me.tsbtnDisablePlayerExterminate.Image = CType(resources.GetObject("tsbtnDisablePlayerExterminate.Image"), System.Drawing.Image)
         Me.tsbtnDisablePlayerExterminate.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnDisablePlayerExterminate.Name = "tsbtnDisablePlayerExterminate"
-        Me.tsbtnDisablePlayerExterminate.Size = New System.Drawing.Size(149, 19)
+        Me.tsbtnDisablePlayerExterminate.Size = New System.Drawing.Size(148, 19)
         Me.tsbtnDisablePlayerExterminate.Text = "Disable Player Exterminate"
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(149, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(148, 6)
         '
         'ToolStripButton1
         '
@@ -1069,13 +1068,13 @@ Partial Class frmForm1
         Me.ToolStripButton1.Image = CType(resources.GetObject("ToolStripButton1.Image"), System.Drawing.Image)
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(149, 19)
+        Me.ToolStripButton1.Size = New System.Drawing.Size(148, 19)
         Me.ToolStripButton1.Text = "UserVarPlayerFadeTest"
         '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(149, 6)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(148, 6)
         '
         'ToolStripButton2
         '
@@ -1084,7 +1083,7 @@ Partial Class frmForm1
         Me.ToolStripButton2.Image = CType(resources.GetObject("ToolStripButton2.Image"), System.Drawing.Image)
         Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton2.Name = "ToolStripButton2"
-        Me.ToolStripButton2.Size = New System.Drawing.Size(149, 19)
+        Me.ToolStripButton2.Size = New System.Drawing.Size(148, 19)
         Me.ToolStripButton2.Text = "BossRushEndingTest"
         '
         'ToolStripButton3
@@ -1094,14 +1093,14 @@ Partial Class frmForm1
         Me.ToolStripButton3.Image = CType(resources.GetObject("ToolStripButton3.Image"), System.Drawing.Image)
         Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton3.Name = "ToolStripButton3"
-        Me.ToolStripButton3.Size = New System.Drawing.Size(149, 19)
+        Me.ToolStripButton3.Size = New System.Drawing.Size(148, 19)
         Me.ToolStripButton3.Text = "OandSandOandS_Debug"
         '
         'ToolStripLabel1
         '
         Me.ToolStripLabel1.Enabled = False
         Me.ToolStripLabel1.Name = "ToolStripLabel1"
-        Me.ToolStripLabel1.Size = New System.Drawing.Size(149, 15)
+        Me.ToolStripLabel1.Size = New System.Drawing.Size(148, 15)
         Me.ToolStripLabel1.Text = "LUA TEST"
         '
         'tabNotes
