@@ -109,9 +109,10 @@ Public Class BossRushHelper
         Do
             If (Lua.Expr(Of Integer)($"IsCompleteEvent({boss.EventFlag})") = 1) Then 'boss dead
                 bossIsDead = True
-            ElseIf CheckWaitPlayerDead(30, 33) Then
+            ElseIf Game.Player.HP.Value = 0 Then
                 playerIsDead = True
             End If
+            Thread.Sleep(33)
         Loop Until bossIsDead Or playerIsDead
 
         If bossIsDead Then

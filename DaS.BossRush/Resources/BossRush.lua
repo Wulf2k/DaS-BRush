@@ -44,7 +44,7 @@ function CountdownString(padTime, time, str, endStr)
         
         deltaTime = currentFrameClock - prevFrameClock
 
-        CroseBriefingMsg() --This is the only way to get it back up if player presses circle. Even then, it's pretty difficult :/
+        --CroseBriefingMsg() --This is the only way to get it back up if player presses circle. Even then, it's pretty difficult :/
 
         if countdown > (time + (padTime / 2)) then 
             SetBriefingMsg(str)
@@ -136,9 +136,6 @@ function SpawnPlayerAtBoss(bossName)
     --Begin resetting camera before FadeIn since the camera reset is smoothed out and takes a long time.
     CamReset(Data.PlayerID, 1)
 
-    --Just in case I guess.
-    ShowHUD(true)
-
     --Start playing the walking through fogwall anim before it begins to fade in:
     ForcePlayAnimation(Data.PlayerID, Data.PlayerAnim.FogWalk)
     FadeIn()
@@ -147,10 +144,10 @@ function SpawnPlayerAtBoss(bossName)
     PlayerHide(false)
 
     --Wait for player to finish walking through fog (roughly)
-    Wait(2000)
+    Wait(1800)
 
     --Almost fail-proof check since we do not have all the boss rush data filled in yet.
-    if boss.EntranceLua.Trim().Length > 0 then
+    if string.len(boss.EntranceLua) > 0 then
         --LUACEPTION
         Lua.Run(boss.EntranceLua)
     end
@@ -180,18 +177,13 @@ function FightBoss(bossName, isFirstBoss)
         if not bossDead then 
             AddTrueDeathCount()
             SetTextEffect(16)
+            CountdownString(0.25, 3.0, "Respawning in:\n", "Now!")
             if not InfiniteLives then --you dun goofed, kiddo
-                --Wait for die and respawn
-                WaitForLoadStart()
-                WaitForLoadEnd()
-                FadeIn()
                 isGoingToContinue = FailBossRush() --asks user if they wanna retry
                 if isGoingToContinue then
                     BeginBossRush()
                 end
                 return false --even if they retry we have to return after calling BeginBossRush recursively
-            else
-                Wait(5000)
             end
         end
     until bossDead
@@ -218,7 +210,7 @@ function BeginBossRush()
 
     CroseBriefingMsg()
     Wait(200) --Not sure if needed but FUCK dude BriefingMsg is finnicky...
-    SetBriefingMsg("You are invincible while the boss rush mod asks you questions and between bosses.")
+    MsgBoxOK("You are invincible while the boss rush mod asks you questions and between bosses.")
 
     if BossRushNgMode == "Prompt" then
         diagRes = SetGenDialog("Choose your NG+ level wisely. Values above 6 are ignored.\n(0 = NG, 1 = NG+, 2 = NG++, etc)", 3, "Begin", "Wuss Out") 
@@ -245,7 +237,7 @@ function BeginBossRush()
         ShowHUD(true)
         Proc.WInt32(Proc.RInt32(0x13786D0) + 0x154, -1) 
         Proc.WInt32(Proc.RInt32(0x13786D0) + 0x158, -1) 
-        SetBriefingMsg("! NO LONGER INVINCIBLE !")
+        SetBriefingMsg("You are no longer invincible.\n \n \n ")
         SetPlayerIsVegetable(false)
         return
     else
@@ -260,6 +252,8 @@ function BeginBossRush()
 
     bossOrder = BossRushHelper.GetBossRushOrder(BossRushOrder, BossRushExcludeBed, BossRushCustomOrder)
     
+    isFirstBoss = true
+
     for i=0,bossOrder.Length-1 do
         continueRush = FightBoss(bossOrder[i], isFirstBoss)
         isFirstBoss = false
