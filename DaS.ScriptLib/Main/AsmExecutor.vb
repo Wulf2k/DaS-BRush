@@ -674,7 +674,7 @@ Friend Class AsmExecutor
         End If
     End Function
 
-    Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "", Optional param4 As Object = "", Optional param5 As Object = "") As Integer
+    Friend Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "", Optional param4 As Object = "", Optional param5 As Object = "") As Integer
 
         Dim result As Integer = 0
 

@@ -44,6 +44,8 @@ Public Class BossRushHelper
         If rushTimer IsNot Nothing Then
             rushTimer.Abort()
         End If
+        Funcs.SetKeyGuideTextClear()
+        Funcs.SetLineHelpTextClear()
         Return Strings.Left(TimeSpan.FromMilliseconds(Game.GameStats.TotalPlayTime.Value).ToString, 12)
     End Function
 
@@ -87,7 +89,7 @@ Public Class BossRushHelper
         Dim numFramesAlive = 0
         Dim numFramesDead = 0
         For i = 1 To numFrames
-            If Lua.Expr(Of Boolean)("GetHp(10000) <= 0") Then
+            If Game.Player.HP.Value = 0 Then
                 numFramesDead += 1
             Else
                 numFramesAlive += 1
@@ -118,64 +120,4 @@ Public Class BossRushHelper
             Return False 'Returns false to lua script and lua script handles permadeath failure message etc and retries
         End If
     End Function
-
-    Public Shared Sub SpawnPlayerAtBoss(bossName As String)
-        Dim boss As BossFightInfo = Data.BossFights(bossName)
-        EventFlag.ApplyAll(boss.AdditionalFlags)
-        Funcs.ShowHUD(False)
-
-        If (boss.EventFlag >= 0) Then
-            Lua.Run($"SetEventFlag({boss.EventFlag}, false)")
-        End If
-
-        ' If no bonfire ID is set for boss, just warp to player's last rested at bonfire. Falling in a gray void in the middle of nowhere
-        Lua.Run($"WarpNextStage_Bonfire({If(boss.BonfireID > 0, boss.BonfireID, Game.Player.BonfireID.Value)})")
-        Funcs.Wait(1000)
-        Funcs.WaitForLoadEnd()
-        Funcs.BlackScreen()
-
-        Lua.RunBlock(
-            "SetColiEnable(10000, false)
-            DisableMove(10000, true)
-            SetDisableGravity(10000, true)
-            DisableMapHit(10000, true)
-            PlayerHide(true)
-
-            ForcePlayLoopAnimation(10000, 0)
-            StopLoopAnimation(10000, 0)")
-
-        Dim playerPtr = Funcs.GetEntityPtr(10000)
-
-        If boss.PlayerWarp <> EntityLocation.Zero Then
-            Funcs.SetEntityLocation(playerPtr, boss.PlayerWarp)
-        End If
-
-        Lua.RunBlock(
-            "DisableMapHit(10000, false)
-            CamReset(10000, 1)")
-
-        If Not String.IsNullOrWhiteSpace(boss.EntranceLua) Then
-            Lua.Run(boss.EntranceLua)
-        End If
-        'Still not 100% sure how the multiline strings work in VB lol
-        Lua.RunBlock(
-            "--Spawn with default co-op summon anim 
-            --ForcePlayAnimation(10000, GetSummonAnimId(10000))
-            --Wait(100)
-
-            ShowHUD(true)
-            --Wait(4000) 
-
-            --Play walking through fogwall anim:
-            ForcePlayAnimation(10000, 7410)
-            FadeIn()
-            --Wait(1100)
-            SetColiEnable(10000, true)
-            DisableMove(10000, false)
-            SetDisableGravity(10000, false)
-            PlayerHide(false)
-            ")
-
-    End Sub
-
 End Class

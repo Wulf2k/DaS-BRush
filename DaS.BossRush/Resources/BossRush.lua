@@ -110,7 +110,7 @@ function SpawnPlayerAtBoss(bossName)
     if boss.BonfireID >= 0 and (not boss.PlayerWarp.IsZero) then 
         WarpNextStage_Bonfire(boss.BonfireID)
     else
-        WarpNextStage_Bonfire(Game.Player.BonfireID)
+        WarpNextStage_Bonfire(Game.Player.BonfireID.Value)
     end
 
     Wait(2000)
@@ -169,7 +169,7 @@ function FightBoss(bossName, isFirstBoss)
     
     repeat
         PrepareForNextBoss(isFirstBoss)
-        BossRushHelper.SpawnPlayerAtBoss(bossName)
+        SpawnPlayerAtBoss(bossName)
 
         if isFirstBoss then
             BossRushHelper.StartNewBossRushTimer() 

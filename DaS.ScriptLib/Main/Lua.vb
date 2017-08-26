@@ -67,18 +67,6 @@ Public Class Lua
         Dim txt = " " & String.Join(" ", scriptText)
 
         ' Changes this:
-        '     GetEntityPtr(10000)
-        ' To this:
-        '     Funcs.GetEntityPtr(10000)
-        ' etc
-        For Each f In ScriptRes.funcNames_Custom
-            Dim rx = New Regex("(\W)(" & f & "\()", RegexOptions.IgnoreCase)
-            txt = rx.Replace(txt, "$1Funcs." & f & "(")
-        Next
-
-        txt = " " & txt
-
-        ' Changes this:
         '     ChrFadeIn(10000, 0, 0)
         ' To this:
         '     Funcs.FuncCall('ChrFadeIn', 10000, 0, 0)
@@ -86,6 +74,18 @@ Public Class Lua
         For Each f In ScriptRes.funcNames_Ingame
             Dim rx = New Regex("(\W)(" & f & "\()(\w)", RegexOptions.IgnoreCase)
             txt = rx.Replace(txt, "$1Funcs.FuncCall('" & f & "', $3")
+        Next
+
+        txt = " " & txt
+
+        ' Changes this:
+        '     GetEntityPtr(10000)
+        ' To this:
+        '     Funcs.GetEntityPtr(10000)
+        ' etc
+        For Each f In ScriptRes.funcNames_Custom
+            Dim rx = New Regex("(\W)(" & f & "\()", RegexOptions.IgnoreCase)
+            txt = rx.Replace(txt, "$1Funcs." & f & "(")
         Next
 
         txt = " " & txt

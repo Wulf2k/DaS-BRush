@@ -558,7 +558,7 @@ Public Class frmForm1
     End Sub
 
     Private Sub DoBossScenario(bossName As String)
-        BossRushHelper.SpawnPlayerAtBoss(bossName)
+        lua.LuaState.GetFunction("SpawnPlayerAtBoss").Call(bossName)
     End Sub
 
     Private Sub radioStandard_CheckedChanged(sender As Object, e As EventArgs) Handles radioStandard.CheckedChanged

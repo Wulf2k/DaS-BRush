@@ -159,7 +159,9 @@ Public Class ScriptRes
 
             Dim cfi = New CustomFuncInfo(m, prependTypeName)
             list.Add(cfi)
-            funcNameList.Add(cfi.Name)
+            If Not funcNameList.Contains(cfi.Name) Then
+                funcNameList.Add(cfi.Name)
+            End If
         Next
 
         Dim appendDict = list.GroupBy(Function(x) x.Name).ToDictionary(Function(x) x.Key, Function(y) y.ToList())
