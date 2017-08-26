@@ -88,7 +88,7 @@ Public Class Funcs
         Dim tmpPtr As Integer = RIntPtr(&H1378700)
         WInt32(tmpPtr + &H68, 0)
     End Sub
-    Public Shared Sub ControlEntity(entityPtr As Integer, state As Byte)
+    Public Shared Sub ControlEntity(entityPtr As Integer, state As Boolean)
         entityPtr = RInt32(entityPtr + &H28)
 
         Dim ctrlptr As Integer = RInt32(&H137DC70)
@@ -100,11 +100,11 @@ Public Class Funcs
         WInt32(entityPtr + &H244, ctrlptr * (state And 1))
 
     End Sub
-    Public Shared Sub DisableAI(ByVal state As Byte)
-        WBytes(&H13784EE, {state})
+    Public Shared Sub DisableAI(ByVal state As Boolean)
+        WBool(&H13784EE, state)
     End Sub
-    Public Shared Sub PlayerExterminate(ByVal state As Byte)
-        WBytes(&H13784D3, {state})
+    Public Shared Sub PlayerExterminate(ByVal state As Boolean)
+        WBool(&H13784D3, state)
     End Sub
     Public Shared Sub FadeIn()
         Dim tmpptr As Integer
@@ -177,25 +177,17 @@ Public Class Funcs
 
 
     End Sub
-    Public Shared Sub SetFreeCam(ByVal state As Byte)
+    Public Shared Sub SetFreeCam(ByVal state As Boolean)
         If state Then
             'WBytes(&HEFDBAF, {&H90, &H90, &H90, &H90, &H90})
             WBytes(&H404E59, {&H90, &H90, &H90, &H90, &H90})
             WBytes(&H404E63, {&H90, &H90, &H90, &H90, &H90})
             WBytes(&HF06C46, {&H90, &H90, &H90, &H90, &H90, &H90, &H90, &H90})
-
-
-
-
         Else
             'WBytes(&HEFDBAF, {&HE8, &H7c, &H72, &H50, &HFF})
             WBytes(&H404E59, {&H66, &HF, &HD6, &H46, &H20})
             WBytes(&H404E63, {&H66, &HF, &HD6, &H46, &H28})
             WBytes(&HF06C46, {&HF3, &HF, &H11, &H83, &H44, &H1, &H0, &H0})
-
-
-
-
         End If
     End Sub
     Public Shared Sub SetClearCount(ByVal clearCount As Integer)
@@ -604,6 +596,34 @@ Public Class Funcs
         CreateRemoteThread(_targetProcessHandle, 0, 0, Game.Injected.ItemDropPtr, 0, 0, 0)
 
         Thread.Sleep(5)
+    End Sub
+
+    Public Shared Sub SetKeyGuideText(text As String)
+        WInt32(Game.MenuPtr.Value + &H158, RInt32(Game.MenuPtr.Value + &H1C))
+        WUnicodeStr(&H11A7770, text)
+    End Sub
+
+    Public Shared Sub SetLineHelpText(text As String)
+        WInt32(Game.MenuPtr.Value + &H154, RInt32(Game.MenuPtr.Value + &H1C))
+        WUnicodeStr(&H11A7758, text)
+    End Sub
+
+    Public Shared Sub SetKeyGuideTextPos(x As Single, y As Single)
+        WFloat(Game.KeyPtr.Value + &H78, x)
+        WFloat(Game.KeyPtr.Value + &H7C, y)
+    End Sub
+
+    Public Shared Sub SetLineHelpTextPos(x As Single, y As Single)
+        WFloat(Game.LinePtr.Value + &H78, x)
+        WFloat(Game.LinePtr.Value + &H7C, y)
+    End Sub
+
+    Public Shared Sub SetKeyGuideTextClear()
+        WInt32(Game.MenuPtr.Value + &H158, -1)
+    End Sub
+
+    Public Shared Sub SetLineHelpTextClear()
+        WInt32(Game.MenuPtr.Value + &H154, -1)
     End Sub
 
     <HideFromScripting>

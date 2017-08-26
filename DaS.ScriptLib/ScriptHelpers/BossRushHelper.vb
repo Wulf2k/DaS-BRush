@@ -14,24 +14,20 @@ Public Class BossRushHelper
 
         Dim msg As String
 
-        WFloat(Game.LinePtr.Value + &H78, 1100)
-        WFloat(Game.LinePtr.Value + &H7C, 675)
-
-        WFloat(Game.KeyPtr.Value + &H78, 600)
-        WFloat(Game.KeyPtr.Value + &H7C, 605)
+        Funcs.SetKeyGuideTextPos(600, 605)
+        Funcs.SetLineHelpTextPos(1100, 675)
 
         'Clear TrueDeaths
         Game.GameStats.TrueDeathCount.Value = 0
         Game.GameStats.TotalPlayTime.Value = 0
 
         Do
-            WInt32(Game.MenuPtr.Value + &H154, RInt32(Game.MenuPtr.Value + &H1C)) 'LineHelp
-            WInt32(Game.MenuPtr.Value + &H158, RInt32(Game.MenuPtr.Value + &H1C)) 'KeyGuide
             msg = Funcs.GetNgPlusText(Game.GameStats.ClearCount.Value) & " - "
             msg = msg & Strings.Left(TimeSpan.FromMilliseconds(Game.GameStats.TotalPlayTime.Value).ToString, 12) & ChrW(0)
+            Funcs.SetKeyGuideText(msg)
             WUnicodeStr(&H11A7770, msg)
             msg = "Deaths: " & Game.GameStats.TrueDeathCount.Value & ChrW(0)
-            WUnicodeStr(&H11A7758, msg) 'LineHelp
+            Funcs.SetLineHelpText(msg)
             Thread.Sleep(33)
         Loop
     End Sub

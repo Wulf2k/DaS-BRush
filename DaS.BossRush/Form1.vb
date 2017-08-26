@@ -521,8 +521,8 @@ Public Class frmForm1
 
     Private Sub btnCancelBossRush_Click(sender As Object, e As EventArgs) Handles btnCancelBossRush.Click
         Lua.Run("ShowHUD(true)")
-        WInt32(RInt32(&H13786D0) + &H154, -1)
-        WInt32(RInt32(&H13786D0) + &H158, -1)
+        Funcs.SetKeyGuideTextClear()
+        Funcs.SetLineHelpTextClear()
         If (luaThread IsNot Nothing AndAlso luaThread.IsAlive) Then
             luaThread.Abort()
         End If

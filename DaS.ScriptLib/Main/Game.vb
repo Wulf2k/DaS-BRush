@@ -113,7 +113,6 @@ Public Class Game
 
         Public Shared ClearCount As New LivePtrVarInt(Function() GameStatsPtr.Value + &H3C)
         Public Shared TrueDeathCount As New LivePtrVarInt(Function() GameStatsPtr.Value + &H58)
-        'TODO: rename Hook.GameStats.TimerThing to the actual name...?
         Public Shared TotalPlayTime As New LivePtrVarInt(Function() GameStatsPtr.Value + &H68)
 
     End Class

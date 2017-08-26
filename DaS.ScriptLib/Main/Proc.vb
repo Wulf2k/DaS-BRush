@@ -245,9 +245,9 @@
             If Not CheckWriteAddr(addr) Then Return
             WriteProcessMemory(_targetProcessHandle, addr, System.Text.Encoding.ASCII.GetBytes(str), str.Length, Nothing)
         End Sub
-        Public Sub WUniStr(addr As IntPtr, str As String)
+        Public Sub WUnicodeStr(addr As IntPtr, str As String)
             If Not CheckWriteAddr(addr) Then Return
-            WriteProcessMemory(_targetProcessHandle, addr, System.Text.Encoding.Unicode.GetBytes(str), str.Length * 2, Nothing)
+            WriteProcessMemory(_targetProcessHandle, addr, System.Text.Encoding.Unicode.GetBytes(str).Concat(New Byte() {0, 0}).ToArray(), str.Length * 2 + 2, Nothing)
         End Sub
 
 
@@ -355,7 +355,7 @@
             WAsciiStr(New IntPtr(addr), str)
         End Sub
         Friend Sub WUnicodeStr(addr As Integer, str As String)
-            WUniStr(New IntPtr(addr), str)
+            WUnicodeStr(New IntPtr(addr), str)
         End Sub
         Public Sub WInt16(ByVal addr As Long, val As Int16)
             WInt16(New IntPtr(addr), val)
@@ -376,7 +376,7 @@
             WAsciiStr(New IntPtr(addr), str)
         End Sub
         Friend Sub WUnicodeStr(addr As Long, str As String)
-            WUniStr(New IntPtr(addr), str)
+            WUnicodeStr(New IntPtr(addr), str)
         End Sub
     End Module
 End Namespace
