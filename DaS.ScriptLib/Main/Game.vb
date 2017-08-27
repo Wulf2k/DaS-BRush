@@ -3,8 +3,7 @@
 Public Class Game
 
     Public Class Injected
-        Public Shared LuaFunctionPtr As Integer
-        Public Shared ItemDropPtr As Integer
+        Public Shared ItemDropPtr As New IngameAllocatedPtr()
     End Class
 
     Private Shared hookCheckThread As Thread
@@ -49,7 +48,7 @@ Public Class Game
             _IsHooked = False
         End If
 
-        RaiseEvent OnCheckHook(_isHooked)
+        RaiseEvent OnCheckHook(_IsHooked)
 
         If IsHooked Then
             If hookCheckThread Is Nothing OrElse Not hookCheckThread.IsAlive Then
@@ -87,8 +86,6 @@ Public Class Game
         Thread.Sleep(HookCheckInterval)
     End Sub
 
-
-
     Public Shared PtrToPtrToCharDataPtr1 As New LivePtrVarInt(Function() &H137DC70)
     Public Shared PtrToCharDataPtr1 As New LivePtrVarInt(Function() PtrToPtrToCharDataPtr1.Value + &H4)
     Public Shared CharDataPtr1 As New LivePtrVarInt(Function() PtrToCharDataPtr1.Value)
@@ -97,7 +94,6 @@ Public Class Game
     Public Shared CharDataPtr2 As New LivePtrVarInt(Function() GameStatsPtr.Value + &H8)
 
     Public Shared CharMapDataPtr As New LivePtrVarInt(Function() CharDataPtr1.Value + &H28)
-
 
     Public Shared MenuPtr As New LivePtrVarInt(Function() &H13786D0)
     Public Shared LinePtr As New LivePtrVarInt(Function() &H1378388)
@@ -142,9 +138,11 @@ Public Class Game
         Public Shared TeamType As New LivePtrVarInt(Function() CharDataPtr1.Value + &H74)
         Public Shared TargetLock As New LivePtrVarByte(Function() CharDataPtr1.Value + &H128)
         Public Shared DeathStructPointer As New LivePtrVarInt(Function() CharDataPtr1.Value + &H170)
+
         Public Class DeathStruct
             Public Shared IsDead As New LivePtrVarByte(Function() DeathStructPointer.Value + &H18)
         End Class
+
         Public Shared PoiseCurrent As New LivePtrVarFloat(Function() CharDataPtr1.Value + &H1C0)
         Public Shared PoiseMax As New LivePtrVarFloat(Function() CharDataPtr1.Value + &H1C4)
         Public Shared PoiseRecoverTimer As New LivePtrVarFloat(Function() CharDataPtr1.Value + &H1CC)
@@ -177,9 +175,11 @@ Public Class Game
         Public Shared ResistanceBleedMax As New LivePtrVarInt(Function() CharDataPtr1.Value + &H318)
         Public Shared ResistanceCurseMax As New LivePtrVarInt(Function() CharDataPtr1.Value + &H31C)
         Public Shared Unknown1Ptr As New LivePtrVarInt(Function() CharDataPtr1.Value + &H330)
+
         Public Class Unknown1
             Public Shared NoHit As New LivePtrVarBool(Function() Unknown1Ptr.Value + &H10)
         End Class
+
         Public Shared TalkID As New LivePtrVarInt(Function() CharDataPtr1.Value + &H348)
         Public Shared DebugOptionsBitMask As New LivePtrVarInt(Function() CharDataPtr1.Value + &H3C4) 'TODODODODODODODODODODODO
         Public Shared StatsPtr As New LivePtrVarInt(Function() CharDataPtr1.Value + &H414)

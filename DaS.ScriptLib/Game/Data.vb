@@ -1,4 +1,5 @@
 ﻿Public Class Data
+
     Public Class Boss
         Public Shared ReadOnly AsylumDemon As String = "Asylum Demon"
         Public Shared ReadOnly TaurusDemon As String = "Taurus Demon"
@@ -307,4 +308,5 @@
         'And the reason I wanted it to be dictionary is so it can hash lookup by boss name.
         __bossFights = Nothing
     End Sub
+
 End Class

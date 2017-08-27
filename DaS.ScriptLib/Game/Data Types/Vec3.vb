@@ -65,4 +65,5 @@
     Public Shared Operator =(ByVal left As Vec3, ByVal right As Vec3) As Boolean
         Return (left.X = right.X) AndAlso (left.Y = right.Y) AndAlso (left.Z = right.Z)
     End Operator
+
 End Class

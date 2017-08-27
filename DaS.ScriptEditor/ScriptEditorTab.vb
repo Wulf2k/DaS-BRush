@@ -1,6 +1,4 @@
-﻿Imports ScintillaNET
-
-Public Class ScriptEditorTab
+﻿Public Class ScriptEditorTab
     Inherits TabPage
 
     Public ReadOnly ConsHandler As ConsoleHandler
@@ -10,4 +8,5 @@ Public Class ScriptEditorTab
         ParentConsoleWindow = parent
         ConsHandler = New ConsoleHandler(Me)
     End Sub
+
 End Class

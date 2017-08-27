@@ -45,4 +45,5 @@
     Public Shared Operator =(ByVal left As EntityLocation, ByVal right As EntityLocation) As Boolean
         Return (left.Pos = right.Pos) AndAlso (left.Rot = right.Rot)
     End Operator
+
 End Class

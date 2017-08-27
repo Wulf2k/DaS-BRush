@@ -46,7 +46,6 @@
         MyBase.Finalize()
     End Sub
 
-
     Public Sub Dispose() Implements IDisposable.Dispose
         Dispose(True)
         GC.SuppressFinalize(Me)

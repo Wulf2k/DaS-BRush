@@ -22,10 +22,20 @@ namespace AutocompleteMenuNS
         public int ToolTipDuration { get; set; }
 
         /// <summary>
+        /// Tooltip instance.
+        /// </summary>
+        public ToolTip ToolTipInstance
+        {
+            get
+            {
+                return toolTip;
+            }
+        }
+
+        /// <summary>
         /// Occurs when user selected item for inserting into text
         /// </summary>
         public event EventHandler ItemSelected;
-
 
         /// <summary>
         /// Occurs when current hovered item is changing
@@ -59,13 +69,13 @@ namespace AutocompleteMenuNS
             base.Dispose(disposing);
         }
 
-
         private int itemHeight;
 
         public int ItemHeight
         {
             get { return itemHeight; }
-            set { 
+            set
+            {
                 itemHeight = value;
                 VerticalScroll.SmallChange = value;
                 oldItemCount = -1;
@@ -148,21 +158,20 @@ namespace AutocompleteMenuNS
             if (oldItemCount == VisibleItems.Count)
                 return;
 
-            int needHeight = ItemHeight*VisibleItems.Count + 1;
+            int needHeight = ItemHeight * VisibleItems.Count + 1;
             Height = Math.Min(needHeight, MaximumSize.Height);
             AutoScrollMinSize = new Size(0, needHeight);
             oldItemCount = VisibleItems.Count;
         }
 
-
         private void ScrollToSelected()
         {
-            int y = SelectedItemIndex*ItemHeight - VerticalScroll.Value;
+            int y = SelectedItemIndex * ItemHeight - VerticalScroll.Value;
             if (y < 0)
-                VerticalScroll.Value = SelectedItemIndex*ItemHeight;
+                VerticalScroll.Value = SelectedItemIndex * ItemHeight;
             if (y > ClientSize.Height - ItemHeight)
                 VerticalScroll.Value = Math.Min(VerticalScroll.Maximum,
-                                                SelectedItemIndex*ItemHeight - ClientSize.Height + ItemHeight);
+                                                SelectedItemIndex * ItemHeight - ClientSize.Height + ItemHeight);
             //some magic for update scrolls
             AutoScrollMinSize -= new Size(1, 0);
             AutoScrollMinSize += new Size(1, 0);
@@ -183,15 +192,15 @@ namespace AutocompleteMenuNS
         {
             bool rtl = RightToLeft == RightToLeft.Yes;
             AdjustScroll();
-            int startI = VerticalScroll.Value/ItemHeight - 1;
-            int finishI = (VerticalScroll.Value + ClientSize.Height)/ItemHeight + 1;
+            int startI = VerticalScroll.Value / ItemHeight - 1;
+            int finishI = (VerticalScroll.Value + ClientSize.Height) / ItemHeight + 1;
             startI = Math.Max(startI, 0);
             finishI = Math.Min(finishI, VisibleItems.Count);
             int y = 0;
 
             for (int i = startI; i < finishI; i++)
             {
-                y = i*ItemHeight - VerticalScroll.Value;
+                y = i * ItemHeight - VerticalScroll.Value;
 
                 if (ImageList != null && VisibleItems[i].ImageIndex >= 0)
                     if (rtl)
@@ -208,7 +217,7 @@ namespace AutocompleteMenuNS
                     Brush selectedBrush = new LinearGradientBrush(new Point(0, y - 3), new Point(0, y + ItemHeight),
                                                                   Colors.SelectedBackColor2, Colors.SelectedBackColor);
                     e.Graphics.FillRectangle(selectedBrush, textRect);
-                    using(var pen = new Pen(Colors.SelectedBackColor))
+                    using (var pen = new Pen(Colors.SelectedBackColor))
                         e.Graphics.DrawRectangle(pen, textRect);
                 }
                 if (i == hoveredItemIndex)
@@ -219,14 +228,14 @@ namespace AutocompleteMenuNS
                     sf.FormatFlags = StringFormatFlags.DirectionRightToLeft;
 
                 var args = new PaintItemEventArgs(e.Graphics, e.ClipRectangle)
-                               {
-                                   Font = Font,
-                                   TextRect = new RectangleF(textRect.Location, textRect.Size),
-                                   StringFormat = sf,
-                                   IsSelected = i == SelectedItemIndex,
-                                   IsHovered = i == hoveredItemIndex,
-                                   Colors = Colors
-                               };
+                {
+                    Font = Font,
+                    TextRect = new RectangleF(textRect.Location, textRect.Size),
+                    StringFormat = sf,
+                    IsSelected = i == SelectedItemIndex,
+                    IsHovered = i == hoveredItemIndex,
+                    Colors = Colors
+                };
                 //call drawing
                 VisibleItems[i].OnPaint(args);
             }
@@ -264,7 +273,6 @@ namespace AutocompleteMenuNS
                 ItemSelected(this, EventArgs.Empty);
         }
 
-
         private int PointToItemIndex(Point p)
         {
             return (p.Y + VerticalScroll.Value) / ItemHeight;
@@ -274,7 +282,7 @@ namespace AutocompleteMenuNS
         {
             var host = Parent as AutocompleteMenuHost;
             if (host != null)
-                if (host.Menu.ProcessKey((char) keyData, Keys.None))
+                if (host.Menu.ProcessKey((char)keyData, Keys.None))
                     return true;
 
             return base.ProcessCmdKey(ref msg, keyData);
@@ -294,7 +302,7 @@ namespace AutocompleteMenuNS
             AdjustScroll();
             Invalidate();
         }
-        
+
         public void ShowToolTip(AutocompleteItem autocompleteItem, Control control = null)
         {
             string title = autocompleteItem.ToolTipTitle;
@@ -317,7 +325,7 @@ namespace AutocompleteMenuNS
             {
                 toolTip.ToolTipTitle = null;
 
-                if (control == this) 
+                if (control == this)
                     toolTip.Show(title, control, Width + 3, 0, ToolTipDuration);
                 else
                     toolTip.Show(title, control, TextAreaPoint.X + Width + 9, TextAreaPoint.Y + 19, ToolTipDuration);

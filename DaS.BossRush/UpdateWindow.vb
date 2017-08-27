@@ -1,8 +1,6 @@
-﻿Imports System.Net
-Imports System.IO
+﻿Imports System.IO
 Imports System.IO.Compression
-Imports System.Runtime.InteropServices
-Imports System.Runtime.CompilerServices
+Imports System.Net
 Imports System.Threading
 
 Public Class UpdateWindow
@@ -13,25 +11,31 @@ Public Class UpdateWindow
     Public WasSuccessful As Boolean = False
     Public NewAssembly As String = Nothing
     Public OldAssembly As String = Nothing
+
     Sub New(url)
         InitializeComponent()
         Me.url = url
     End Sub
+
     Private Async Sub OnShow(sender As Object, e As EventArgs) Handles MyBase.Shown
         Await doUpdate(ctSource.Token)
         If WasSuccessful Then
             Me.Close()
         End If
     End Sub
+
     Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         Me.Close()
     End Sub
+
     Private Sub OnClose(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         ctSource.Cancel()
     End Sub
+
     Private Sub setStatus(message As String)
         statusLabel.Text = message
     End Sub
+
     Private Sub setError(message As String, details As String)
         statusLabel.Text = message
         errorDetails.Text = " " & details
@@ -41,9 +45,11 @@ Public Class UpdateWindow
         errorDetails.Visible = True
         progress.Visible = False
     End Sub
+
     Private Sub DownloadProgress(sender As WebClient, e As DownloadProgressChangedEventArgs) Handles client.DownloadProgressChanged
         progress.Value = e.ProgressPercentage
     End Sub
+
     Private Async Function doUpdate(ct As CancellationToken) As Task
         ct.ThrowIfCancellationRequested()
         setStatus("Downloading new version …")
@@ -89,10 +95,11 @@ Public Class UpdateWindow
 
         WasSuccessful = True
     End Function
+
     Private Function extractFile(compressedContents() As Byte) As Byte()
         Dim ignoreExtensions() As String = {".txt", ".doc", ".docx", ".md"}
         Dim extractedContents() As Byte = Nothing
-        Using compressedStream As New MemoryStream(compressedContents), _
+        Using compressedStream As New MemoryStream(compressedContents),
                 archive As New ZipArchive(compressedStream, ZipArchiveMode.Read)
             For Each entry As ZipArchiveEntry In archive.Entries
                 Dim entryExtension = Path.GetExtension(entry.Name).ToLower()
@@ -115,4 +122,5 @@ Public Class UpdateWindow
         End If
         Return extractedContents
     End Function
+
 End Class

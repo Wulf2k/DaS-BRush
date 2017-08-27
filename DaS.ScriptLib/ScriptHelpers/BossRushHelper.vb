@@ -121,4 +121,5 @@ Public Class BossRushHelper
             Return False 'Returns false to lua script and lua script handles permadeath failure message etc and retries
         End If
     End Function
+
 End Class

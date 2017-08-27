@@ -1,6 +1,4 @@
-﻿Imports System.Globalization
-Imports System.Runtime.InteropServices
-Imports System.Threading
+﻿Imports System.Threading
 
 Public Class Funcs
     Private Shared ReadOnly Property checkIfLoadingScreen_PrevFrameInGameTime
@@ -49,10 +47,10 @@ Public Class Funcs
         Dim facing As Single
         facing = ((rotx / 360) * 2 * Math.PI) - Math.PI
 
-
         WFloat(charmapdataptr + &HE4, facing)
         WBytes(charmapdataptr + &HC8, {1})
     End Sub
+
     Public Shared Sub WarpEntity_Coords(entityPtr As Integer, x As Single, y As Single, z As Single, rotx As Single)
         entityPtr = RInt32(entityPtr + &H28)
         WFloat(entityPtr + &HD0, x)
@@ -62,11 +60,9 @@ Public Class Funcs
         Dim facing As Single
         facing = ((rotx / 360) * 2 * Math.PI) - Math.PI
 
-
         WFloat(entityPtr + &HE4, facing)
         WBytes(entityPtr + &HC8, {1})
     End Sub
-
 
     Public Shared Sub BlackScreen()
         Dim tmpptr As Integer
@@ -79,15 +75,18 @@ Public Class Funcs
         WFloat(tmpptr + &H274, 0)
         WFloat(tmpptr + &H278, 0)
     End Sub
+
     Public Shared Sub CamFocusEntity(entityptr As Integer)
         Dim camPtr As Integer = RInt32(&H137D648) + &HEC
 
         WInt32(camPtr, entityptr)
     End Sub
+
     Public Shared Sub ClearPlayTime()
         Dim tmpPtr As Integer = RIntPtr(&H1378700)
         WInt32(tmpPtr + &H68, 0)
     End Sub
+
     Public Shared Sub ControlEntity(entityPtr As Integer, state As Boolean)
         entityPtr = RInt32(entityPtr + &H28)
 
@@ -100,12 +99,15 @@ Public Class Funcs
         WInt32(entityPtr + &H244, ctrlptr * (state And 1))
 
     End Sub
+
     Public Shared Sub DisableAI(ByVal state As Boolean)
         WBool(&H13784EE, state)
     End Sub
+
     Public Shared Sub PlayerExterminate(ByVal state As Boolean)
         WBool(&H13784D3, state)
     End Sub
+
     Public Shared Sub FadeIn()
         Dim tmpptr As Integer
         tmpptr = RInt32(&H1378520)
@@ -114,7 +116,6 @@ Public Class Funcs
         WBytes(tmpptr + &H26D, {1})
 
         Dim val As Single = 0.0
-
 
         For i = 0 To 33
             val = val + 0.03
@@ -126,6 +127,7 @@ Public Class Funcs
 
         WBytes(tmpptr + &H26D, {0})
     End Sub
+
     Public Shared Sub FadeOut()
         Dim tmpptr As Integer
         tmpptr = RInt32(&H1378520)
@@ -134,10 +136,6 @@ Public Class Funcs
         WBytes(tmpptr + &H26D, {1})
 
         Dim val As Single = 1.0
-
-
-
-
 
         For i = 0 To 33
             val = val - 0.03
@@ -149,6 +147,7 @@ Public Class Funcs
             Thread.Sleep(33)
         Next
     End Sub
+
     Public Shared Sub ForceEntityDrawGroup(entityptr As Integer)
         WInt32(entityptr + &H264, -1)
         WInt32(entityptr + &H268, -1)
@@ -165,18 +164,15 @@ Public Class Funcs
         WFloat(tmpPtr + &HB4, ypos)
         WFloat(tmpPtr + &HB8, zpos)
 
-
         tmpPtr = RInt32(&H137D6DC)
         tmpPtr = RInt32(tmpPtr + &H3C)
         tmpPtr = RInt32(tmpPtr + &H60)
 
-
         WFloat(tmpPtr + &H144, xrot)
         WFloat(tmpPtr + &H150, yrot)
 
-
-
     End Sub
+
     Public Shared Sub SetFreeCam(ByVal state As Boolean)
         If state Then
             'WBytes(&HEFDBAF, {&H90, &H90, &H90, &H90, &H90})
@@ -190,6 +186,7 @@ Public Class Funcs
             WBytes(&HF06C46, {&HF3, &HF, &H11, &H83, &H44, &H1, &H0, &H0})
         End If
     End Sub
+
     Public Shared Sub SetClearCount(ByVal clearCount As Integer)
         Dim tmpPtr As Integer
         tmpPtr = RInt32(&H1378700)
@@ -197,6 +194,7 @@ Public Class Funcs
         WInt32(tmpPtr + &H3C, clearCount)
 
     End Sub
+
     Private Shared Sub SetCaption(ByVal str As String)
         Dim tmpptr As Integer
         Dim alpha As Byte
@@ -222,15 +220,18 @@ Public Class Funcs
         WUnicodeStr(tmpptr + &H12C, str & ChrW(0))
 
     End Sub
+
     Public Shared Sub SetSaveEnable(ByVal state As Boolean)
         Dim tmpPtr As Integer
         tmpPtr = RInt32(&H13784A0)
 
         WBool(tmpPtr + &HB40, state)
     End Sub
+
     Public Shared Sub SetSaveSlot(ByVal slot As Integer)
         WInt32(RInt32(&H13784A0) + &HA70, slot)
     End Sub
+
     Public Shared Sub SetUnknownNpcName(ByVal name As String)
         If name.Length > 21 Then name = Strings.Left(name, 21) 'Prevent runover into code
         WUnicodeStr(&H11A784C, name + ChrW(0))
@@ -326,16 +327,19 @@ Public Class Funcs
         entityPosPtr = RInt32(entityPosPtr + &H1C)
         Return RFloat(entityPosPtr + &H10)
     End Function
+
     Public Shared Function GetEntityPosY(entityPtr As Integer) As Single
         Dim entityPosPtr = RInt32(entityPtr + &H28)
         entityPosPtr = RInt32(entityPosPtr + &H1C)
         Return RFloat(entityPosPtr + &H14)
     End Function
+
     Public Shared Function GetEntityPosZ(entityPtr As Integer) As Single
         Dim entityPosPtr = RInt32(entityPtr + &H28)
         entityPosPtr = RInt32(entityPosPtr + &H1C)
         Return RFloat(entityPosPtr + &H18)
     End Function
+
     Public Shared Function GetEntityRotation(entityPtr As Integer) As Single
         Dim entityPosPtr = RInt32(entityPtr + &H28)
         entityPosPtr = RInt32(entityPosPtr + &H1C)
@@ -347,16 +351,19 @@ Public Class Funcs
         entityPosPtr = RInt32(entityPosPtr + &H1C)
         WFloat(entityPosPtr + &H10, posX)
     End Sub
+
     Public Shared Sub SetEntityPosY(entityPtr As Integer, posY As Single)
         Dim entityPosPtr = RInt32(entityPtr + &H28)
         entityPosPtr = RInt32(entityPosPtr + &H1C)
         WFloat(entityPosPtr + &H14, posY)
     End Sub
+
     Public Shared Sub SetEntityPosZ(entityPtr As Integer, posZ As Single)
         Dim entityPosPtr = RInt32(entityPtr + &H28)
         entityPosPtr = RInt32(entityPosPtr + &H1C)
         WFloat(entityPosPtr + &H18, posZ)
     End Sub
+
     Public Shared Sub SetEntityRotation(entityPtr As Integer, angle As Single)
         Dim entityPosPtr = RInt32(entityPtr + &H28)
         entityPosPtr = RInt32(entityPosPtr + &H1C)
@@ -376,7 +383,6 @@ Public Class Funcs
         Return RInt32(RInt32(&H1378700) + &H68)
     End Function
 
-
     Public Shared Sub SetEntityLocation(entityPtr As Integer, location As EntityLocation)
         SetEntityLocation(entityPtr, location.Pos.X, location.Pos.Y, location.Pos.Z, location.Rot)
     End Sub
@@ -384,6 +390,7 @@ Public Class Funcs
     Public Shared Sub PlayerHide(ByVal state As Boolean)
         WBool(&H13784E7, state)
     End Sub
+
     Public Shared Sub ShowHUD(ByVal state As Boolean)
         Dim tmpptr As UInteger
         tmpptr = RUInt32(&H1378700)
@@ -391,6 +398,7 @@ Public Class Funcs
 
         WBool(New IntPtr(tmpptr + &HD), state)
     End Sub
+
     Public Shared Sub WaitForLoadEnd() 'TODO: waitforload -> WaitForLoadEnd
         Dim tmpptr As Integer
         tmpptr = RInt32(&H1378700)
@@ -405,6 +413,7 @@ Public Class Funcs
             Thread.Sleep(33)
         Loop
     End Sub
+
     Public Shared Sub WaitForLoadStart() 'TODO: waittillload -> WaitForLoadStart
         Dim tmpptr As Integer
         tmpptr = RInt32(&H1378700)
@@ -419,14 +428,17 @@ Public Class Funcs
             Thread.Sleep(33)
         Loop
     End Sub
+
     Public Shared Sub WarpEntity_Player(entityptr As Integer)
         Dim playerptr As Integer = Lua.Expr(Of Integer)("GetEntityPtr(10000)")
         WarpEntity_Entity(entityptr, playerptr)
     End Sub
+
     Public Shared Sub WarpPlayer_Entity(entityptr As Integer)
         Dim playerptr As Integer = Lua.Expr(Of Integer)("GetEntityPtr(10000)")
         WarpEntity_Entity(playerptr, entityptr)
     End Sub
+
     Public Shared Sub WarpEntity_Entity(entityptrSrc As Integer, entityptrDest As Integer)
         'TODO: Check validity of entity pointers
         Dim destEntityPosPtr = RInt32(entityptrDest + &H28)
@@ -438,16 +450,16 @@ Public Class Funcs
 
         WarpEntity_Coords(entityptrSrc, posX, posY, posZ, facing)
     End Sub
+
     ''' <summary>
-    ''' TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+    ''' TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
     ''' </summary>
     ''' <param name="entityId">TODO</param>
     Public Shared Function GetEntityPtr(entityId As Integer) As Integer 'TODO
-        'TODO 
-        Return Lua.Expr(Of Integer)("ChrFadeIn(10000)") 'TODO 
-        'TODO 
+        'TODO
+        Return Lua.Expr(Of Integer)("ChrFadeIn(10000)") 'TODO
+        'TODO
     End Function 'TODO
-
 
     Public Shared Sub SetBriefingMsg(ByVal str As String)
         Dim tmpptr As Integer
@@ -461,10 +473,12 @@ Public Class Funcs
     Public Class GenDiagResult
         Public Response As Integer = 0
         Public Val As Integer = 0
+
         Public Sub New(response, val)
             Me.Response = response
             Me.Val = val
         End Sub
+
     End Class
 
     'TODO: Make less bad
@@ -504,7 +518,6 @@ Public Class Funcs
         tmpptr = RInt32(&H13786D0)
         WInt32(tmpptr + &H60, type)
 
-
         'Wait for response
         Dim genDiagResponse = -1
         Dim genDiagVal = -1
@@ -519,6 +532,7 @@ Public Class Funcs
         Thread.Sleep(500)
         Return New GenDiagResult(genDiagResponse, genDiagVal)
     End Function
+
     Public Shared Sub Wait(val As Integer)
         Thread.Sleep(val)
     End Sub
@@ -588,12 +602,12 @@ Public Class Funcs
         bytes2 = BitConverter.GetBytes(Convert.ToInt32(&H137D6BC))
         Array.Copy(bytes2, 0, bytes, bytptr2, bytes2.Length)
 
-        bytes2 = BitConverter.GetBytes(Convert.ToInt32(0 - ((Game.Injected.ItemDropPtr + &H3C) - (&HDC8C60))))
+        bytes2 = BitConverter.GetBytes(Convert.ToInt32(0 - ((Game.Injected.ItemDropPtr.Address + &H3C) - (&HDC8C60))))
         Array.Copy(bytes2, 0, bytes, bytjmp, bytes2.Length)
 
-        Rtn = WriteProcessMemory(_targetProcessHandle, Game.Injected.ItemDropPtr, bytes, TargetBufferSize, 0)
+        Rtn = WriteProcessMemory(_targetProcessHandle, Game.Injected.ItemDropPtr.Address, bytes, TargetBufferSize, 0)
         'MsgBox(Hex(dropPtr))
-        CreateRemoteThread(_targetProcessHandle, 0, 0, Game.Injected.ItemDropPtr, 0, 0, 0)
+        CreateRemoteThread(_targetProcessHandle, 0, 0, Game.Injected.ItemDropPtr.Address, 0, 0, 0)
 
         Thread.Sleep(5)
     End Sub
@@ -630,18 +644,22 @@ Public Class Funcs
     Public Shared Function FuncCall(func As String) As Integer
         Return FuncCall(func, "", "", "", "", "")
     End Function
+
     <HideFromScripting>
     Public Shared Function FuncCall(func As String, Optional param1 As Object = "") As Integer
         Return FuncCall(func, param1, "", "", "", "")
     End Function
+
     <HideFromScripting>
     Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "") As Integer
         Return FuncCall(func, param1, param2, "", "", "")
     End Function
+
     <HideFromScripting>
     Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "") As Integer
         Return FuncCall(func, param1, param2, param3, "", "")
     End Function
+
     <HideFromScripting>
     Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "", Optional param4 As Object = "") As Integer
         Return FuncCall(func, param1, param2, param3, param4, "")
@@ -704,8 +722,7 @@ Public Class Funcs
     'End Sub
     'Public Shared Sub BossBedOfChaos()
 
-
-    '    LegacyScripting.RunOneLine("SetEventFlag 10, False") 'Boss 
+    '    LegacyScripting.RunOneLine("SetEventFlag 10, False") 'Boss
 
     '    LegacyScripting.RunOneLine("SetEventFlag 11410000, False")
     '    LegacyScripting.RunOneLine("SetEventFlag 11410200, False") 'Center Platform flag
@@ -771,7 +788,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("Warp_Coords 10.8, 48.92, 87.26")
     '        LegacyScripting.RunOneLine("CamReset 10000, 1")
 
-
     '        LegacyScripting.RunOneLine("Wait 1250")
     '        LegacyScripting.RunOneLine("FadeIn")
     '        LegacyScripting.RunOneLine("ShowHUD 1")
@@ -795,7 +811,6 @@ Public Class Funcs
     '    Do
     '        LegacyScripting.RunOneLine("RequestFullRecover")
 
-
     '        LegacyScripting.RunOneLine("SetEventFlag 11210004, False")
 
     '        LegacyScripting.RunOneLine("SetEventFlag 121, False")
@@ -807,7 +822,6 @@ Public Class Funcs
 
     '        LegacyScripting.RunOneLine("SetEventFlag 1821, True")
     '        LegacyScripting.RunOneLine("SetEventFlag 11210592, True")
-
 
     '        LegacyScripting.RunOneLine("PlayerHide 1")
     '        LegacyScripting.RunOneLine("ShowHUD False")
@@ -875,7 +889,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("PlayerHide 0")
     '        LegacyScripting.RunOneLine("SetDisableGravity 10000, 0")
 
-
     '        If rushMode Then
     '            bossDead = Funcs.WaitForBossDeath(&HF70, &H2000000)
     '            If Not bossDead Then
@@ -899,7 +912,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("SetEventFlag 11410801, False")
     '        LegacyScripting.RunOneLine("SetEventFlag 11410900, False") 'Boss death flag
     '        LegacyScripting.RunOneLine("SetEventFlag 51410180, True") 'Corpse Loot reset
-
 
     '        LegacyScripting.RunOneLine("SetEventFlag 11415379, False")
     '        LegacyScripting.RunOneLine("SetEventFlag 11415385, True")
@@ -928,9 +940,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("Warp_Coords 402.45, -278.15, 15.5, 30")
     '        LegacyScripting.RunOneLine("CamReset 10000, 1")
 
-
-
-
     '        LegacyScripting.RunOneLine("Wait 1250")
     '        LegacyScripting.RunOneLine("FadeIn")
     '        LegacyScripting.RunOneLine("ShowHUD 1")
@@ -955,7 +964,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("RequestFullRecover")
     '        LegacyScripting.RunOneLine("SetEventFlag 11410002, False") 'Cinematic flag
     '        LegacyScripting.RunOneLine("SetEventFlag 11410901, False")
-
 
     '        LegacyScripting.RunOneLine("PlayerHide 1")
     '        LegacyScripting.RunOneLine("ShowHUD False")
@@ -1016,7 +1024,6 @@ Public Class Funcs
 
     '        LegacyScripting.RunOneLine("Wait 500")
 
-
     '        LegacyScripting.RunOneLine("Warp_Coords 17.2, -236.9, 113.6, 75")
     '        LegacyScripting.RunOneLine("CamReset 10000, 1")
 
@@ -1038,7 +1045,6 @@ Public Class Funcs
     'End Sub
     'Public Shared Sub BossCrossbreedPriscilla()
 
-
     '    Dim bossDead As Boolean = False
 
     '    Do
@@ -1050,9 +1056,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("SetEventFlag 11100531, False") 'Boss Disabled flag
 
     '        LegacyScripting.RunOneLine("SetEventFlag 11100000, False") 'Previous victory flag
-
-
-
 
     '        'StandardTransition(1102961, 1102997)
 
@@ -1069,7 +1072,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("PlayerHide 1")
 
     '        LegacyScripting.RunOneLine("Wait 500")
-
 
     '        LegacyScripting.RunOneLine("Warp_Coords -22.72, 60.55, 711.86")
 
@@ -1114,7 +1116,6 @@ Public Class Funcs
 
     '        LegacyScripting.RunOneLine("Wait 500")
 
-
     '        LegacyScripting.RunOneLine("Warp_Coords 435.1, 60.2, 255.0")
 
     '        LegacyScripting.RunOneLine("Wait 1500")
@@ -1147,7 +1148,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("ShowHUD False")
     '        LegacyScripting.RunOneLine("FadeOut")
 
-
     '        LegacyScripting.RunOneLine("WarpNextStage_Bonfire 1410998")
 
     '        LegacyScripting.RunOneLine("Wait 1000")
@@ -1158,9 +1158,7 @@ Public Class Funcs
 
     '        LegacyScripting.RunOneLine("Wait 500")
 
-
     '        LegacyScripting.RunOneLine("Warp_Coords 148.04, -341.04, 95.57")
-
 
     '        LegacyScripting.RunOneLine("Wait 1500")
     '        LegacyScripting.RunOneLine("FadeIn")
@@ -1201,7 +1199,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("PlayerHide 1")
 
     '        LegacyScripting.RunOneLine("Wait 500")
-
 
     '        'ScriptEnvironment.Run("Warp_Coords 82.24, -163.2, 0.29")
     '        'Facing 185.98
@@ -1256,7 +1253,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("SetEventFlag 11005397, True")
     '        LegacyScripting.RunOneLine("SetEventFlag 11000000, False")
 
-
     '        LegacyScripting.RunOneLine("Warp 10000, 1002997")
 
     '        LegacyScripting.RunOneLine("Wait 1500")
@@ -1284,13 +1280,11 @@ Public Class Funcs
     '    Do
     '        LegacyScripting.RunOneLine("RequestFullRecover")
 
-
     '        LegacyScripting.RunOneLine("SetEventFlag 7, False")
 
     '        LegacyScripting.RunOneLine("PlayerHide 1")
     '        LegacyScripting.RunOneLine("ShowHUD False")
     '        LegacyScripting.RunOneLine("FadeOut")
-
 
     '        LegacyScripting.RunOneLine("WarpNextStage_Bonfire 1310998")
 
@@ -1349,7 +1343,6 @@ Public Class Funcs
 
     '        LegacyScripting.RunOneLine("Wait 500")
 
-
     '        LegacyScripting.RunOneLine("Warp_Coords 418.15, -115.92, 169.58")
 
     '        LegacyScripting.RunOneLine("Wait 1500")
@@ -1398,7 +1391,6 @@ Public Class Funcs
 
     '        LegacyScripting.RunOneLine("Wait 500")
 
-
     '        LegacyScripting.RunOneLine("Warp_Coords 85.5, 82, 255.1")
 
     '        LegacyScripting.RunOneLine("Wait 1500")
@@ -1424,7 +1416,6 @@ Public Class Funcs
     '    Do
     '        LegacyScripting.RunOneLine("RequestFullRecover")
 
-
     '        LegacyScripting.RunOneLine("SetEventFlag 11210001, False")
     '        LegacyScripting.RunOneLine("SetEventFlag 11210513, False") 'Ciaran Present
 
@@ -1433,7 +1424,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("PlayerHide 1")
     '        LegacyScripting.RunOneLine("ShowHUD False")
     '        LegacyScripting.RunOneLine("FadeOut")
-
 
     '        LegacyScripting.RunOneLine("WarpNextStage_Bonfire 1210998")
 
@@ -1447,7 +1437,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("Wait 500")
     '        'facing 75.8 degrees
     '        LegacyScripting.RunOneLine("Warp_Coords 1034.11, -330.0, 810.68")
-
 
     '        LegacyScripting.RunOneLine("Wait 1500")
     '        LegacyScripting.RunOneLine("FadeIn")
@@ -1479,7 +1468,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("ShowHUD False")
     '        LegacyScripting.RunOneLine("FadeOut")
 
-
     '        LegacyScripting.RunOneLine("WarpNextStage_Bonfire 1210982")
 
     '        LegacyScripting.RunOneLine("Wait 1000")
@@ -1489,7 +1477,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("PlayerHide 1")
 
     '        LegacyScripting.RunOneLine("Wait 500")
-
 
     '        LegacyScripting.RunOneLine("Warp_Coords 857.53, -576.69, 873.38")
 
@@ -1534,17 +1521,12 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("PlayerHide 1")
     '        LegacyScripting.RunOneLine("SetDisableGravity 10000, 1")
 
-
-
-
     '        LegacyScripting.RunOneLine("Wait 500")
     '        LegacyScripting.RunOneLine("Warp_Coords 181.39, 7.53, 29.01")
     '        Thread.Sleep(4000)
     '        LegacyScripting.RunOneLine("SetEventFlag 11205383, True")
 
     '        LegacyScripting.RunOneLine("Warp_Coords 178.82, 8.12, 30.77")
-
-
 
     '        Thread.Sleep(2000)
     '        LegacyScripting.RunOneLine("FadeIn")
@@ -1574,8 +1556,6 @@ Public Class Funcs
 
     '        LegacyScripting.RunOneLine("SetEventFlag 12, False")
 
-
-
     '        'Non-standard due to co-ords warp
 
     '        LegacyScripting.RunOneLine("PlayerHide 1")
@@ -1594,7 +1574,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("Wait 500")
     '        'facing 90 degrees
     '        LegacyScripting.RunOneLine("Warp_Coords 539.9, 142.6, 254.79")
-
 
     '        LegacyScripting.RunOneLine("Wait 1500")
     '        LegacyScripting.RunOneLine("FadeIn")
@@ -1626,7 +1605,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("ShowHUD False")
     '        LegacyScripting.RunOneLine("FadeOut")
 
-
     '        LegacyScripting.RunOneLine("WarpNextStage_Bonfire 1300999")
 
     '        LegacyScripting.RunOneLine("Wait 1000")
@@ -1636,7 +1614,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("PlayerHide 1")
 
     '        LegacyScripting.RunOneLine("Wait 500")
-
 
     '        LegacyScripting.RunOneLine("Warp_Coords 46.0, -165.8, 152.02, 180")
     '        LegacyScripting.RunOneLine("CamReset 10000, 1")
@@ -1667,7 +1644,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("SetEventFlag 11210000, False")
     '        LegacyScripting.RunOneLine("SetEventFlag 11210001, False")
 
-
     '        'Non-standard due to co-ords warp
 
     '        LegacyScripting.RunOneLine("PlayerHide 1")
@@ -1684,11 +1660,9 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("PlayerHide 1")
     '        LegacyScripting.RunOneLine("SetDisableGravity 10000, 1")
 
-
     '        LegacyScripting.RunOneLine("Wait 500")
     '        'facing = 45 deg
     '        LegacyScripting.RunOneLine("Warp_Coords 931.82, -318.63, 472.45")
-
 
     '        LegacyScripting.RunOneLine("Wait 1500")
     '        LegacyScripting.RunOneLine("FadeIn")
@@ -1721,7 +1695,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("ShowHUD False")
     '        LegacyScripting.RunOneLine("FadeOut")
 
-
     '        LegacyScripting.RunOneLine("WarpNextStage_Bonfire 1700999")
 
     '        LegacyScripting.RunOneLine("Wait 1000")
@@ -1731,7 +1704,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("PlayerHide 1")
 
     '        LegacyScripting.RunOneLine("Wait 500")
-
 
     '        LegacyScripting.RunOneLine("Warp_Coords 109, 134.05, 856.48")
 
@@ -1765,7 +1737,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("SetEventFlag 11205392, False")
     '        LegacyScripting.RunOneLine("SetEventFlag 11205393, False")
     '        LegacyScripting.RunOneLine("SetEventFlag 11205394, False")
-
 
     '        LegacyScripting.RunOneLine("PlayerHide 1")
     '        LegacyScripting.RunOneLine("ShowHUD False")
@@ -1811,10 +1782,8 @@ Public Class Funcs
     '    Do
     '        LegacyScripting.RunOneLine("RequestFullRecover")
 
-
     '        LegacyScripting.RunOneLine("SetEventFlag 11810000, True")
     '        LegacyScripting.RunOneLine("SetEventFlag 11810900, False")
-
 
     '        LegacyScripting.RunOneLine("PlayerHide 1")
     '        LegacyScripting.RunOneLine("ShowHUD False")
@@ -1851,7 +1820,6 @@ Public Class Funcs
     '    Loop While rushMode And Not bossDead
     '    LegacyScripting.RunOneLine("Wait 5000")
 
-
     'End Sub
     'Public Shared Sub BossTaurusDemon()
 
@@ -1875,7 +1843,6 @@ Public Class Funcs
     '        LegacyScripting.RunOneLine("PlayerHide 1")
 
     '        LegacyScripting.RunOneLine("Wait 500")
-
 
     '        LegacyScripting.RunOneLine("Warp_Coords 49.81, 16.9, -118.87")
 
@@ -1910,10 +1877,8 @@ Public Class Funcs
 
     'Public Shared Sub ScenarioArtoriasAndCiaran()
 
-
     '    'LegacyScripting.RunOneLine("SetEventFlag 11210001, False") 'Artorias Disabled
     '    'LegacyScripting.RunOneLine("SetEventFlag 11210513, True") 'Ciaran Present
-
 
     '    'LegacyScripting.RunOneLine("SetEventFlag 1863, False") 'Ciaran Hostile
     '    'LegacyScripting.RunOneLine("SetEventFlag 1864, False") 'Ciaran Dead
@@ -1931,14 +1896,12 @@ Public Class Funcs
     '    'LegacyScripting.RunOneLine("WaitForLoadEnd")
     '    'LegacyScripting.RunOneLine("BlackScreen")
 
-
     '    'LegacyScripting.RunOneLine("PlayerHide 1")
     '    'LegacyScripting.RunOneLine("SetDisableGravity 10000, 1")
 
     '    'LegacyScripting.RunOneLine("Wait 500")
     '    ''facing 75.8 degrees
     '    'LegacyScripting.RunOneLine("Warp_Coords 1034.11, -330.0, 810.68")
-
 
     '    'LegacyScripting.RunOneLine("Wait 1500")
     '    'LegacyScripting.RunOneLine("FadeIn")
@@ -1986,24 +1949,18 @@ Public Class Funcs
     '    'msg = "Welcome to the Boss Rush." & Environment.NewLine
     '    'msg = msg & "Saving has been disabled." & Environment.NewLine
 
-
     '    'For i = 10 To 1 Step -1
     '    '    Funcs.SetBriefingMsg(msg & i)
     '    '    LegacyScripting.RunOneLine("Wait 1000")
     '    'Next
-
 
     '    'Funcs.SetBriefingMsg("Begin")
 
     '    'LegacyScripting.RunOneLine("CroseBriefingMsg")
     '    'LegacyScripting.RunOneLine("Wait 1000")
 
-
     '    'Hook.rushTimer = New Thread(AddressOf BeginRushTimer)
     '    'Hook.rushTimer.IsBackground = True
-
-
-
 
     '    'Hook.rushTimer.Start()
     '    'Hook.rushMode = True
@@ -2043,7 +2000,6 @@ Public Class Funcs
 
     '    'Hook.UpdateHook()
 
-
     '    'LegacyScripting.RunOneLine("ShowHUD False")
     '    'Funcs.SetBriefingMsg("Congratulations." & ChrW(&HA) &
     '    '               Strings.Left(TimeSpan.FromMilliseconds(Hook.GameStats.TotalPlayTime.ValueInt).ToString, 12) & ChrW(&HA) &
@@ -2076,24 +2032,18 @@ Public Class Funcs
     '    'msg = "Welcome to the Boss Rush." & Environment.NewLine
     '    'msg = msg & "Saving has been disabled." & Environment.NewLine
 
-
     '    'For i = 10 To 1 Step -1
     '    '    Funcs.SetBriefingMsg(msg & i)
     '    '    LegacyScripting.RunOneLine("Wait 1000")
     '    'Next
-
 
     '    'Funcs.SetBriefingMsg("Begin")
 
     '    'LegacyScripting.RunOneLine("CroseBriefingMsg")
     '    'LegacyScripting.RunOneLine("Wait 1000")
 
-
     '    'Hook.rushTimer = New Thread(AddressOf BeginRushTimer)
     '    'Hook.rushTimer.IsBackground = True
-
-
-
 
     '    'Hook.rushTimer.Start()
     '    'Hook.rushMode = True
@@ -2140,8 +2090,6 @@ Public Class Funcs
 
     '    'Hook.rushTimer.Abort()
     'End Sub
-
-
 
     ''TODO: Remove BeginReverseBossRush
     'Public Shared Sub BeginReverseBossRush()
@@ -2189,29 +2137,22 @@ Public Class Funcs
     '    'msg = "Welcome to the Reverse Boss Rush." & Environment.NewLine
     '    'msg = msg & "Saving has been disabled." & Environment.NewLine
 
-
     '    'For i = 10 To 1 Step -1
     '    '    Funcs.SetBriefingMsg(msg & i)
     '    '    LegacyScripting.RunOneLine("Wait 1000")
     '    'Next
-
 
     '    'Funcs.SetBriefingMsg("Begin")
 
     '    'LegacyScripting.RunOneLine("CroseBriefingMsg")
     '    'LegacyScripting.RunOneLine("Wait 1000")
 
-
     '    'Hook.rushTimer = New Thread(AddressOf BeginRushTimer)
     '    'Hook.rushTimer.IsBackground = True
-
-
-
 
     '    'Hook.rushTimer.Start()
     '    'Hook.rushMode = True
     '    'Hook.rushName = "Reverse"
-
 
     '    'BossGwynLordOfCinder()
     '    'BossDarkSunGwyndolin()
@@ -2257,4 +2198,5 @@ Public Class Funcs
     'End Sub
 
 #End Region
+
 End Class

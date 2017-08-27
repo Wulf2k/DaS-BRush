@@ -9,9 +9,13 @@ Public Class Lua
     Private _pauseEvent As New ManualResetEvent(True)
 
     Public Event OnStart(args As LuaRunnerEventArgs)
+
     Public Event OnFinishAny(args As LuaRunnerEventArgs)
+
     Public Event OnFinishSuccess(args As LuaRunnerEventArgs)
+
     Public Event OnFinishError(args As LuaRunnerEventArgs, err As Exception)
+
     Public Event OnStop()
 
     Public ReadOnly Property LuaState As NLua.Lua
@@ -148,6 +152,7 @@ Public Class Lua
             Return LuaState.DoString(regexedScript)
         End If
     End Function
+
 End Class
 
 Public Enum LuaRunnerState
@@ -161,17 +166,21 @@ Public Class LuaRunnerEventArgs
     Public ReadOnly ExecutingThread As Thread
     Public ReadOnly MangledText As String
     Public ReadOnly LuaState As NLua.Lua
+
     Public Sub New(ByRef text As String, ByRef executingThread As Thread, ByRef luaState As NLua.Lua, ByRef mangledText As String)
         Me.Text = text
         Me.ExecutingThread = executingThread
         Me.LuaState = luaState
         Me.MangledText = mangledText
     End Sub
+
 End Class
 
 Public Class LuaRunnerThreadingException
     Inherits Exception
+
     Public Sub New(msg As String)
         MyBase.New(msg)
     End Sub
+
 End Class

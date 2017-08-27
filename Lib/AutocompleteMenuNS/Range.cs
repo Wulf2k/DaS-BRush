@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-
-namespace AutocompleteMenuNS
+﻿namespace AutocompleteMenuNS
 {
     public class Range
     {
@@ -21,7 +16,7 @@ namespace AutocompleteMenuNS
             get
             {
                 var text = TargetWrapper.Text;
-                
+
                 if (string.IsNullOrEmpty(text))
                     return "";
                 if (Start >= text.Length)

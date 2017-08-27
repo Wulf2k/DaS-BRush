@@ -81,7 +81,7 @@
     <Compile Include="Game\Data.vb" />
     <Compile Include="Main\Lua.vb" />
     <Compile Include="ScriptHelpers\BossRushHelper.vb" />
-    <Compile Include="ScriptHelpers\DebugHelper.vb" />
+    <Compile Include="ScriptHelpers\Dbg.vb" />
     <Compile Include="Main\Funcs.vb" />
     <Compile Include="Misc\HideFromScriptingAttribute.vb" />
     <Compile Include="Main\Game.vb" />

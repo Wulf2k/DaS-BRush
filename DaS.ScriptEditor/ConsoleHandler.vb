@@ -1,9 +1,8 @@
-﻿Imports System.IO
-Imports System.Text.RegularExpressions
-Imports ScintillaNET
-Imports DaS.ScriptLib
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
+Imports System.IO
 Imports AutocompleteMenuNS
+Imports DaS.ScriptLib
+Imports ScintillaNET
 
 Public Class ConsoleHandler
 
@@ -36,6 +35,7 @@ Public Class ConsoleHandler
     End Property
 
     Private _currentDocumentModified As Boolean = False
+
     Public Property currentDocumentModified As Boolean
         Get
             Return _currentDocumentModified
@@ -48,7 +48,6 @@ Public Class ConsoleHandler
             End If
         End Set
     End Property
-
 
     Public Sub UpdateTabText(updateMainWindowTitleBar As Boolean, updateMainWindowToolStrip As Boolean)
         ParentScriptTab.Invoke(
@@ -292,18 +291,19 @@ Public Class ConsoleHandler
             auto.AddItem(New AutocompleteMenuNS.AutocompleteItem(ac & addedParenthesis, imageIndex, menuText, toolTipTitle, toolTipText))
         Next
 
+        auto.AddItem(New AutocompleteMenuNS.AutocompleteItem("end", 4, "end", "Lua keyword", "Only in this menu so autocomplete will leave you alone when you type 'end'."))
+
         auto.AllowsTabKey = True
-        auto.AppearInterval = 33
+        auto.AppearInterval = 250
         AddHandler auto.Opening, AddressOf AutoCompleteListOpening
         AddHandler auto.Selected, AddressOf AutoCompleteListSelected
         AddHandler auto.Selecting, AddressOf AutoCompleteListSelecting
         auto.AutoPopup = True
         auto.CaptureFocus = False
         auto.MaximumSize = New Size(512, 512)
-        auto.MinFragmentLength = 1
+        auto.MinFragmentLength = 2
         auto.Font = New Font(New FontFamily("Consolas"), 8, FontStyle.Bold)
         auto.ToolTipDuration = Integer.MaxValue
-        'TODO: ADD METHOD/FIELD IMAGES FROM VISUAL STUDIO 2013 ON THIS BITCH
         'Image 0 = function image, image 1 = field image
         auto.ImageList = New ImageList()
         auto.ImageList.Images.Add(ConsoleWindow.EmbeddedImage("MethodIcon"))
@@ -322,6 +322,7 @@ Public Class ConsoleHandler
 
     Private Sub AutoCompleteListSelected(sender As Object, e As SelectedEventArgs)
         _AutoCompleteOpened = False
+        auto.ToolTipInstance.RemoveAll()
     End Sub
 
     Private Sub AutoCompleteListOpening(sender As Object, e As CancelEventArgs)
@@ -524,11 +525,6 @@ Public Class ConsoleHandler
     '    Return False
     'End Function
 
-
-
-
-
-
     '
     ' Note: when you wanna override a detected keypress and not have it do its original thing,
     '       all you gotta do is not do a Return afterwards, since at the very end of the method,
@@ -578,7 +574,7 @@ Public Class ConsoleHandler
                     End If
                     LoadImmediate(openedFile.FullName)
                 End If
-                'We don't return if the if fails, since that just means the user closed 
+                'We don't return if the if fails, since that just means the user closed
                 'the open file dialog (they still chose to press the open hotkey specifically)
             ElseIf e.KeyCode = Keys.D0 Then
                 cons.Zoom = 0
@@ -856,8 +852,8 @@ Public Class ConsoleHandler
     ''' <summary>
     ''' -----!WARNING!-----
     ''' <para/>
-    ''' Please use <see cref="LoadImmediate(String)"/> unless you have a good reason to load a new file 
-    ''' with no "save unsaved changes?" prompt (e.g. using a different prompt, such as the "this file has been modified 
+    ''' Please use <see cref="LoadImmediate(String)"/> unless you have a good reason to load a new file
+    ''' with no "save unsaved changes?" prompt (e.g. using a different prompt, such as the "this file has been modified
     ''' outside of the editor. would you like to re-open?" prompt).
     ''' </summary>
     ''' <param name="fileName">File to load.</param>
@@ -865,6 +861,8 @@ Public Class ConsoleHandler
         currentDocument = New FileInfo(fileName)
         cons.Text = File.ReadAllText(currentDocument.FullName)
         currentDocumentModified = False
+
+        ParentScriptTab.ParentConsoleWindow.Status("Loaded " & currentDocument.Name & " from disk.")
     End Sub
 
     Public Sub LoadImmediate(fileName As String)
@@ -903,6 +901,7 @@ Public Class ConsoleHandler
         File.WriteAllText(currentDocument.FullName, cons.Text)
         currentDocumentModified = False
         UpdateTabText(True, False)
+        ParentScriptTab.ParentConsoleWindow.Status("Saved " & currentDocument.Name & ".")
         Return True
     End Function
 
@@ -933,6 +932,7 @@ Public Class ConsoleHandler
             currentDocument = Nothing
             currentDocumentModified = False
             _LastDiskHash = New Byte() {}
+            ParentScriptTab.ParentConsoleWindow.Status("Created new document.")
             Return True
         End If
         Return False
@@ -959,10 +959,7 @@ Public Class ConsoleHandler
                             cons.Document = doc
                             cons.ReleaseDocument(doc)
                         End Sub, document)
-
         Catch ex As OperationCanceledException
-
-
         Catch ex As Exception
             MessageBox.Show(Me, "There was an error loading '" & fi.Name & "':" & vbCrLf & vbCrLf & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -973,7 +970,6 @@ Public Class ConsoleHandler
         Try
             Using file = New FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, True)
                 Using reader = New StreamReader(file)
-
 
                     Dim count = 0
 
@@ -993,7 +989,6 @@ Public Class ConsoleHandler
 
                     Return loader.ConvertToDocument()
 
-
                 End Using
             End Using
         Catch
@@ -1001,6 +996,5 @@ Public Class ConsoleHandler
             Throw
         End Try
     End Function
-
 
 End Class

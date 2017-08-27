@@ -33,6 +33,13 @@ Partial Class ConsoleWindow
         Me.tsSaveAs = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsExit = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiShowOutput = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OutputPanelPositionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiOutputPosTop = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiOutputPosBottom = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiOutputPosLeft = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiOutputPosRight = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiHelp = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
@@ -55,15 +62,34 @@ Partial Class ConsoleWindow
         Me.NewTabToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ClloseAllOtherTabsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CloseAllTabsToTheRightToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.splitter = New System.Windows.Forms.SplitContainer()
+        Me.btnHideOutput = New System.Windows.Forms.Button()
+        Me.ToolStrip2 = New System.Windows.Forms.ToolStrip()
+        Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
+        Me.statusStrip = New System.Windows.Forms.ToolStrip()
+        Me.tslblStatus = New System.Windows.Forms.ToolStripLabel()
+        Me.tsbtnOutputClear = New System.Windows.Forms.ToolStripButton()
+        Me.tslblOutputLineCount = New System.Windows.Forms.ToolStripLabel()
+        Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
+        Me.OutputTextToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiOutputWordWrap = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiOutputAutoScroll = New System.Windows.Forms.ToolStripMenuItem()
+        Me.sobOutput = New DaS.ScriptEditor.ScriptOutputBox()
         Me.MenuStrip1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.cwTabs.SuspendLayout()
         Me.contextMenuTab.SuspendLayout()
+        CType(Me.splitter, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.splitter.Panel1.SuspendLayout()
+        Me.splitter.Panel2.SuspendLayout()
+        Me.splitter.SuspendLayout()
+        Me.ToolStrip2.SuspendLayout()
+        Me.statusStrip.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.HelpToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.ViewToolStripMenuItem, Me.HelpToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(862, 24)
@@ -81,44 +107,93 @@ Partial Class ConsoleWindow
         '
         Me.tsNew.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.tsNew.Name = "tsNew"
-        Me.tsNew.Size = New System.Drawing.Size(123, 22)
+        Me.tsNew.Size = New System.Drawing.Size(152, 22)
         Me.tsNew.Text = "New"
         '
         'tsOpen
         '
         Me.tsOpen.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.tsOpen.Name = "tsOpen"
-        Me.tsOpen.Size = New System.Drawing.Size(123, 22)
+        Me.tsOpen.Size = New System.Drawing.Size(152, 22)
         Me.tsOpen.Text = "Open..."
         '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(120, 6)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(149, 6)
         '
         'tsSave
         '
         Me.tsSave.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.tsSave.Name = "tsSave"
-        Me.tsSave.Size = New System.Drawing.Size(123, 22)
+        Me.tsSave.Size = New System.Drawing.Size(152, 22)
         Me.tsSave.Text = "Save"
         '
         'tsSaveAs
         '
         Me.tsSaveAs.Name = "tsSaveAs"
-        Me.tsSaveAs.Size = New System.Drawing.Size(123, 22)
+        Me.tsSaveAs.Size = New System.Drawing.Size(152, 22)
         Me.tsSaveAs.Text = "Save As..."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(120, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(149, 6)
         '
         'tsExit
         '
         Me.tsExit.Name = "tsExit"
-        Me.tsExit.Size = New System.Drawing.Size(123, 22)
+        Me.tsExit.Size = New System.Drawing.Size(152, 22)
         Me.tsExit.Text = "Exit"
+        '
+        'ViewToolStripMenuItem
+        '
+        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiShowOutput, Me.OutputPanelPositionToolStripMenuItem, Me.OutputTextToolStripMenuItem})
+        Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
+        Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+        Me.ViewToolStripMenuItem.Text = "View"
+        '
+        'tsmiShowOutput
+        '
+        Me.tsmiShowOutput.Checked = True
+        Me.tsmiShowOutput.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.tsmiShowOutput.Name = "tsmiShowOutput"
+        Me.tsmiShowOutput.ShortcutKeys = System.Windows.Forms.Keys.F2
+        Me.tsmiShowOutput.Size = New System.Drawing.Size(195, 22)
+        Me.tsmiShowOutput.Text = "Show Output Panel"
+        '
+        'OutputPanelPositionToolStripMenuItem
+        '
+        Me.OutputPanelPositionToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiOutputPosTop, Me.tsmiOutputPosBottom, Me.tsmiOutputPosLeft, Me.tsmiOutputPosRight})
+        Me.OutputPanelPositionToolStripMenuItem.Name = "OutputPanelPositionToolStripMenuItem"
+        Me.OutputPanelPositionToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.OutputPanelPositionToolStripMenuItem.Text = "Output Panel Position"
+        '
+        'tsmiOutputPosTop
+        '
+        Me.tsmiOutputPosTop.Name = "tsmiOutputPosTop"
+        Me.tsmiOutputPosTop.Size = New System.Drawing.Size(152, 22)
+        Me.tsmiOutputPosTop.Text = "Top"
+        '
+        'tsmiOutputPosBottom
+        '
+        Me.tsmiOutputPosBottom.Name = "tsmiOutputPosBottom"
+        Me.tsmiOutputPosBottom.Size = New System.Drawing.Size(152, 22)
+        Me.tsmiOutputPosBottom.Text = "Bottom"
+        '
+        'tsmiOutputPosLeft
+        '
+        Me.tsmiOutputPosLeft.Name = "tsmiOutputPosLeft"
+        Me.tsmiOutputPosLeft.Size = New System.Drawing.Size(152, 22)
+        Me.tsmiOutputPosLeft.Text = "Left"
+        '
+        'tsmiOutputPosRight
+        '
+        Me.tsmiOutputPosRight.Checked = True
+        Me.tsmiOutputPosRight.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.tsmiOutputPosRight.Name = "tsmiOutputPosRight"
+        Me.tsmiOutputPosRight.Size = New System.Drawing.Size(152, 22)
+        Me.tsmiOutputPosRight.Text = "Right"
         '
         'HelpToolStripMenuItem
         '
@@ -150,6 +225,7 @@ Partial Class ConsoleWindow
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNew, Me.tsbtnOpen, Me.tsbtnSave, Me.ToolStripSeparator1, Me.tsbtnRun, Me.tsbtnStop, Me.ToolStripSeparator5, Me.tsbtnHook, Me.tsHook, Me.tsHookedToPreText})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 24)
         Me.ToolStrip1.Name = "ToolStrip1"
+        Me.ToolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
         Me.ToolStrip1.Size = New System.Drawing.Size(862, 25)
         Me.ToolStrip1.TabIndex = 1
         Me.ToolStrip1.Text = "ToolStrip1"
@@ -243,15 +319,13 @@ Partial Class ConsoleWindow
         'cwTabs
         '
         Me.cwTabs.AllowDrop = True
-        Me.cwTabs.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cwTabs.Controls.Add(Me.TabPage1)
+        Me.cwTabs.Dock = System.Windows.Forms.DockStyle.Fill
         Me.cwTabs.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cwTabs.Location = New System.Drawing.Point(1, 49)
+        Me.cwTabs.Location = New System.Drawing.Point(0, 0)
         Me.cwTabs.Name = "cwTabs"
         Me.cwTabs.SelectedIndex = 0
-        Me.cwTabs.Size = New System.Drawing.Size(860, 393)
+        Me.cwTabs.Size = New System.Drawing.Size(600, 339)
         Me.cwTabs.TabIndex = 2
         Me.cwTabs.TabStop = False
         '
@@ -261,7 +335,7 @@ Partial Class ConsoleWindow
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(852, 367)
+        Me.TabPage1.Size = New System.Drawing.Size(592, 313)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "TabPage1"
         Me.TabPage1.UseVisualStyleBackColor = True
@@ -298,27 +372,194 @@ Partial Class ConsoleWindow
         Me.CloseAllTabsToTheRightToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
         Me.CloseAllTabsToTheRightToolStripMenuItem.Text = "Close all tabs to the right"
         '
+        'splitter
+        '
+        Me.splitter.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.splitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel2
+        Me.splitter.Location = New System.Drawing.Point(1, 47)
+        Me.splitter.Name = "splitter"
+        '
+        'splitter.Panel1
+        '
+        Me.splitter.Panel1.Controls.Add(Me.cwTabs)
+        Me.splitter.Panel1MinSize = 256
+        '
+        'splitter.Panel2
+        '
+        Me.splitter.Panel2.Controls.Add(Me.btnHideOutput)
+        Me.splitter.Panel2.Controls.Add(Me.sobOutput)
+        Me.splitter.Panel2.Controls.Add(Me.ToolStrip2)
+        Me.splitter.Panel2MinSize = 256
+        Me.splitter.Size = New System.Drawing.Size(860, 339)
+        Me.splitter.SplitterDistance = 600
+        Me.splitter.TabIndex = 3
+        Me.splitter.TabStop = False
+        '
+        'btnHideOutput
+        '
+        Me.btnHideOutput.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnHideOutput.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.btnHideOutput.Font = New System.Drawing.Font("Consolas", 8.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnHideOutput.Location = New System.Drawing.Point(232, 3)
+        Me.btnHideOutput.Margin = New System.Windows.Forms.Padding(0)
+        Me.btnHideOutput.Name = "btnHideOutput"
+        Me.btnHideOutput.Size = New System.Drawing.Size(18, 18)
+        Me.btnHideOutput.TabIndex = 2
+        Me.btnHideOutput.TabStop = False
+        Me.btnHideOutput.Text = "X"
+        Me.btnHideOutput.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnHideOutput.UseVisualStyleBackColor = True
+        '
+        'ToolStrip2
+        '
+        Me.ToolStrip2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ToolStrip2.AutoSize = False
+        Me.ToolStrip2.CanOverflow = False
+        Me.ToolStrip2.Dock = System.Windows.Forms.DockStyle.None
+        Me.ToolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.ToolStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabel1})
+        Me.ToolStrip2.Location = New System.Drawing.Point(0, 0)
+        Me.ToolStrip2.Name = "ToolStrip2"
+        Me.ToolStrip2.Padding = New System.Windows.Forms.Padding(2)
+        Me.ToolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
+        Me.ToolStrip2.Size = New System.Drawing.Size(257, 27)
+        Me.ToolStrip2.TabIndex = 1
+        Me.ToolStrip2.Text = "ToolStrip2"
+        '
+        'ToolStripLabel1
+        '
+        Me.ToolStripLabel1.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.ToolStripLabel1.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.ToolStripLabel1.Name = "ToolStripLabel1"
+        Me.ToolStripLabel1.Size = New System.Drawing.Size(96, 20)
+        Me.ToolStripLabel1.Text = "Console Output:"
+        Me.ToolStripLabel1.TextAlign = System.Drawing.ContentAlignment.TopCenter
+        '
+        'statusStrip
+        '
+        Me.statusStrip.AllowMerge = False
+        Me.statusStrip.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.statusStrip.AutoSize = False
+        Me.statusStrip.Dock = System.Windows.Forms.DockStyle.None
+        Me.statusStrip.GripMargin = New System.Windows.Forms.Padding(0)
+        Me.statusStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.statusStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tslblStatus, Me.tsbtnOutputClear, Me.tslblOutputLineCount})
+        Me.statusStrip.Location = New System.Drawing.Point(1, 423)
+        Me.statusStrip.Name = "statusStrip"
+        Me.statusStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
+        Me.statusStrip.Size = New System.Drawing.Size(843, 22)
+        Me.statusStrip.TabIndex = 4
+        Me.statusStrip.Text = "ToolStrip3"
+        '
+        'tslblStatus
+        '
+        Me.tslblStatus.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.tslblStatus.Name = "tslblStatus"
+        Me.tslblStatus.Size = New System.Drawing.Size(199, 19)
+        Me.tslblStatus.Text = "Welcome to Dark Souls Script Editor."
+        '
+        'tsbtnOutputClear
+        '
+        Me.tsbtnOutputClear.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.tsbtnOutputClear.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.tsbtnOutputClear.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.tsbtnOutputClear.Image = CType(resources.GetObject("tsbtnOutputClear.Image"), System.Drawing.Image)
+        Me.tsbtnOutputClear.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnOutputClear.Name = "tsbtnOutputClear"
+        Me.tsbtnOutputClear.Size = New System.Drawing.Size(63, 19)
+        Me.tsbtnOutputClear.Text = "(Clear)"
+        Me.tsbtnOutputClear.ToolTipText = "Clear Output Panel Text"
+        '
+        'tslblOutputLineCount
+        '
+        Me.tslblOutputLineCount.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.tslblOutputLineCount.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!)
+        Me.tslblOutputLineCount.Name = "tslblOutputLineCount"
+        Me.tslblOutputLineCount.Size = New System.Drawing.Size(88, 19)
+        Me.tslblOutputLineCount.Text = "Output Lines: 0"
+        '
+        'StatusStrip1
+        '
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 422)
+        Me.StatusStrip1.Name = "StatusStrip1"
+        Me.StatusStrip1.Size = New System.Drawing.Size(862, 22)
+        Me.StatusStrip1.TabIndex = 5
+        Me.StatusStrip1.Text = "StatusStrip1"
+        '
+        'OutputTextToolStripMenuItem
+        '
+        Me.OutputTextToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiOutputWordWrap, Me.tsmiOutputAutoScroll})
+        Me.OutputTextToolStripMenuItem.Name = "OutputTextToolStripMenuItem"
+        Me.OutputTextToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.OutputTextToolStripMenuItem.Text = "Output Panel"
+        '
+        'tsmiOutputWordWrap
+        '
+        Me.tsmiOutputWordWrap.Name = "tsmiOutputWordWrap"
+        Me.tsmiOutputWordWrap.Size = New System.Drawing.Size(152, 22)
+        Me.tsmiOutputWordWrap.Text = "Word Wrap"
+        '
+        'tsmiOutputAutoScroll
+        '
+        Me.tsmiOutputAutoScroll.Checked = True
+        Me.tsmiOutputAutoScroll.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.tsmiOutputAutoScroll.Name = "tsmiOutputAutoScroll"
+        Me.tsmiOutputAutoScroll.Size = New System.Drawing.Size(152, 22)
+        Me.tsmiOutputAutoScroll.Text = "Auto-Scroll"
+        '
+        'sobOutput
+        '
+        Me.sobOutput.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.sobOutput.AutoScroll = True
+        Me.sobOutput.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.sobOutput.Font = New System.Drawing.Font("Consolas", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.sobOutput.Location = New System.Drawing.Point(3, 22)
+        Me.sobOutput.Name = "sobOutput"
+        Me.sobOutput.ReadOnly = True
+        Me.sobOutput.ShortcutsEnabled = False
+        Me.sobOutput.Size = New System.Drawing.Size(248, 313)
+        Me.sobOutput.TabIndex = 0
+        Me.sobOutput.TabStop = False
+        Me.sobOutput.Text = "Sup Wulf. Tell me how the toolstrip that says ""Console Output:"" immediately above" &
+    " looks on your system while the program is running (it has to load the 'X' butto" &
+    "n on launch)"
+        '
         'ConsoleWindow
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.ClientSize = New System.Drawing.Size(862, 444)
-        Me.Controls.Add(Me.cwTabs)
+        Me.Controls.Add(Me.statusStrip)
+        Me.Controls.Add(Me.splitter)
         Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.MenuStrip1)
+        Me.Controls.Add(Me.StatusStrip1)
         Me.DoubleBuffered = True
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.MinimumSize = New System.Drawing.Size(512, 448)
         Me.Name = "ConsoleWindow"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "Untitled.lua - Dark Souls Script Console"
+        Me.Text = "Untitled.lua - Dark Souls Script Editor"
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         Me.cwTabs.ResumeLayout(False)
         Me.contextMenuTab.ResumeLayout(False)
+        Me.splitter.Panel1.ResumeLayout(False)
+        Me.splitter.Panel2.ResumeLayout(False)
+        CType(Me.splitter, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.splitter.ResumeLayout(False)
+        Me.ToolStrip2.ResumeLayout(False)
+        Me.ToolStrip2.PerformLayout()
+        Me.statusStrip.ResumeLayout(False)
+        Me.statusStrip.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -355,4 +596,24 @@ Partial Class ConsoleWindow
     Friend WithEvents NewTabToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ClloseAllOtherTabsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CloseAllTabsToTheRightToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents splitter As SplitContainer
+    Friend WithEvents sobOutput As ScriptOutputBox
+    Friend WithEvents ToolStrip2 As ToolStrip
+    Friend WithEvents ToolStripLabel1 As ToolStripLabel
+    Friend WithEvents btnHideOutput As Button
+    Friend WithEvents ViewToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents tsmiShowOutput As ToolStripMenuItem
+    Friend WithEvents OutputPanelPositionToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents tsmiOutputPosTop As ToolStripMenuItem
+    Friend WithEvents tsmiOutputPosBottom As ToolStripMenuItem
+    Friend WithEvents tsmiOutputPosLeft As ToolStripMenuItem
+    Friend WithEvents tsmiOutputPosRight As ToolStripMenuItem
+    Friend WithEvents statusStrip As ToolStrip
+    Friend WithEvents StatusStrip1 As StatusStrip
+    Friend WithEvents tslblStatus As ToolStripLabel
+    Friend WithEvents tslblOutputLineCount As ToolStripLabel
+    Friend WithEvents tsbtnOutputClear As ToolStripButton
+    Friend WithEvents OutputTextToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents tsmiOutputWordWrap As ToolStripMenuItem
+    Friend WithEvents tsmiOutputAutoScroll As ToolStripMenuItem
 End Class

@@ -26,4 +26,5 @@
     Public Shared Function GetList(ParamArray flags As Integer()) As List(Of EventFlag)
         Return flags.Select(Function(x) New EventFlag(x)).ToList()
     End Function
+
 End Class

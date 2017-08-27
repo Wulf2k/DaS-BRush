@@ -26,7 +26,6 @@ Public Class ScriptRes
 
     Public Shared listBonfireNames As New List(Of String)
 
-
     Public Shared ReadOnly caselessIngameFuncNames As Dictionary(Of String, String) = New Dictionary(Of String, String)
 
     Public Shared ReadOnly autoCompleteAdditionalTypes As Type()
@@ -218,15 +217,12 @@ Public Class ScriptRes
             clsItemCatsIDs.Add(clsItemCats(itemCat), itemCat)
         Next
 
-
         '-----------------------Items-----------------------
         ScriptRes.ParseItems(clsWeapons, clsWeaponsIDs, GetTextRes("CL.Weapons.txt"))
         ScriptRes.ParseItems(clsArmor, clsArmorIDs, GetTextRes("CL.Armor.txt"))
         ScriptRes.ParseItems(clsRings, clsRingsIDs, GetTextRes("CL.Rings.txt"))
         ScriptRes.ParseItems(clsGoods, clsGoodsIDs, GetTextRes("CL.Goods.txt"))
     End Sub
-
-
 
     Public Shared Function ParseItems(ByRef cls As Hashtable, ByRef clsIDs As Hashtable, ByRef txt As String, Optional forceUppercaseKeys As Boolean = False) As List(Of String)
         Dim nameList As New List(Of String)
