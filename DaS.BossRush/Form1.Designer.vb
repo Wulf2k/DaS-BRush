@@ -277,6 +277,7 @@ Partial Class frmForm1
         '
         Me.numCountdown.DecimalPlaces = 3
         Me.numCountdown.Location = New System.Drawing.Point(310, 93)
+        Me.numCountdown.Maximum = New Decimal(New Integer() {999999999, 0, 0, 0})
         Me.numCountdown.Name = "numCountdown"
         Me.numCountdown.Size = New System.Drawing.Size(142, 20)
         Me.numCountdown.TabIndex = 90

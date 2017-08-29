@@ -23,12 +23,17 @@ namespace AutocompleteMenuNS
         /// <summary>
         /// List of visible elements
         /// </summary>
-        IList<AutocompleteItem> VisibleItems { get;set;}
+        IList<AutocompleteItem> VisibleItems { get; set; }
 
         /// <summary>
         /// Duration (ms) of tooltip showing
         /// </summary>
         int ToolTipDuration { get; set; }
+
+        /// <summary>
+        /// Tooltip instance.
+        /// </summary>
+        ToolTip ToolTipInstance { get; }
 
         /// <summary>
         /// Occurs when user selected item for inserting into text

@@ -46,11 +46,12 @@
     <Reference Include="NLua">
       <HintPath>..\Lib\NLua\NLua.dll</HintPath>
     </Reference>
-	<Reference Include="KeraLua">
+    <Reference Include="KeraLua">
       <HintPath>..\Lib\NLua\KeraLua.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -69,6 +70,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game\IngameAllocatedPtr.vb" />
     <Compile Include="Main\AsmExecutor.vb" />
     <Compile Include="Main\ScriptRes.vb" />
     <Compile Include="Utility Data Types\FuncInfo.vb" />
@@ -79,7 +81,7 @@
     <Compile Include="Game\Data.vb" />
     <Compile Include="Main\Lua.vb" />
     <Compile Include="ScriptHelpers\BossRushHelper.vb" />
-    <Compile Include="ScriptHelpers\DebugHelper.vb" />
+    <Compile Include="ScriptHelpers\Dbg.vb" />
     <Compile Include="Main\Funcs.vb" />
     <Compile Include="Misc\HideFromScriptingAttribute.vb" />
     <Compile Include="Main\Game.vb" />

@@ -1,5 +1,6 @@
 ﻿Public MustInherit Class FuncInfo
     Private _name As String
+
     Public Property Name As String
         Get
             Return _name
@@ -8,6 +9,7 @@
             _name = value
         End Set
     End Property
+
     Public MustOverride ReadOnly Property UsageString As String
 End Class
 
@@ -36,6 +38,7 @@ Public Class CustomFuncInfo
 
         ReturnType = ScriptRes.GetGenericTypeFormatted(mi.ReturnType)
     End Sub
+
 End Class
 
 Public Class IngameFuncInfo

@@ -1,4 +1,5 @@
 ﻿Public Class Data
+
     Public Class Boss
         Public Shared ReadOnly AsylumDemon As String = "Asylum Demon"
         Public Shared ReadOnly TaurusDemon As String = "Taurus Demon"
@@ -56,6 +57,18 @@
         Public Shared ReadOnly Gwyndolin As Integer = 11510900
         Public Shared ReadOnly Gwyn As Integer = 15
     End Class
+
+    ''' <summary>
+    ''' TODO: PUT MORE ANIMATIONS IN HERE
+    ''' </summary>
+    Public Class PlayerAnim
+        Public Shared ReadOnly Idle As Integer = 0
+        Public Shared ReadOnly WalkForward As Integer = 200
+        Public Shared ReadOnly RunForward As Integer = 500
+        Public Shared ReadOnly FogWalk As Integer = 7410
+    End Class
+
+    Public Shared ReadOnly PlayerID As Integer = 10000
 
     Public Shared ReadOnly BossFights As Dictionary(Of String, BossFightInfo)
 
@@ -295,4 +308,5 @@
         'And the reason I wanted it to be dictionary is so it can hash lookup by boss name.
         __bossFights = Nothing
     End Sub
+
 End Class

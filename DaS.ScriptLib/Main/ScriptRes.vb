@@ -26,7 +26,6 @@ Public Class ScriptRes
 
     Public Shared listBonfireNames As New List(Of String)
 
-
     Public Shared ReadOnly caselessIngameFuncNames As Dictionary(Of String, String) = New Dictionary(Of String, String)
 
     Public Shared ReadOnly autoCompleteAdditionalTypes As Type()
@@ -159,7 +158,9 @@ Public Class ScriptRes
 
             Dim cfi = New CustomFuncInfo(m, prependTypeName)
             list.Add(cfi)
-            funcNameList.Add(cfi.Name)
+            If Not funcNameList.Contains(cfi.Name) Then
+                funcNameList.Add(cfi.Name)
+            End If
         Next
 
         Dim appendDict = list.GroupBy(Function(x) x.Name).ToDictionary(Function(x) x.Key, Function(y) y.ToList())
@@ -216,15 +217,12 @@ Public Class ScriptRes
             clsItemCatsIDs.Add(clsItemCats(itemCat), itemCat)
         Next
 
-
         '-----------------------Items-----------------------
         ScriptRes.ParseItems(clsWeapons, clsWeaponsIDs, GetTextRes("CL.Weapons.txt"))
         ScriptRes.ParseItems(clsArmor, clsArmorIDs, GetTextRes("CL.Armor.txt"))
         ScriptRes.ParseItems(clsRings, clsRingsIDs, GetTextRes("CL.Rings.txt"))
         ScriptRes.ParseItems(clsGoods, clsGoodsIDs, GetTextRes("CL.Goods.txt"))
     End Sub
-
-
 
     Public Shared Function ParseItems(ByRef cls As Hashtable, ByRef clsIDs As Hashtable, ByRef txt As String, Optional forceUppercaseKeys As Boolean = False) As List(Of String)
         Dim nameList As New List(Of String)

@@ -150,7 +150,7 @@ Public Class frmForm1
         Next
         cmbBonfire.SelectedItem = "Nothing [0]"
 
-        Game.InitHook()
+        Game.Hook()
         lblRelease.Text = Game.DetectedDarkSoulsVersion
 
         refTimer = New System.Windows.Forms.Timer
@@ -177,9 +177,6 @@ Public Class frmForm1
     End Sub
 
     Private Sub RefreshGUI()
-
-        Game.UpdateHook()
-
         Dim isBossRushing = lua.LuaState.IsExecuting
 
         btnLoadBossScenario.Enabled = Not isBossRushing
@@ -406,7 +403,7 @@ Public Class frmForm1
     'End Sub
 
     Private Sub btnReconnect_Click(sender As Object, e As EventArgs) Handles btnReconnect.Click
-        Game.InitHook()
+        Game.Hook()
         lblRelease.Text = Game.DetectedDarkSoulsVersion
     End Sub
 
@@ -524,12 +521,12 @@ Public Class frmForm1
 
     Private Sub btnCancelBossRush_Click(sender As Object, e As EventArgs) Handles btnCancelBossRush.Click
         Lua.Run("ShowHUD(true)")
-        WInt32(RInt32(&H13786D0) + &H154, -1)
-        WInt32(RInt32(&H13786D0) + &H158, -1)
+        Funcs.SetKeyGuideTextClear()
+        Funcs.SetLineHelpTextClear()
         If (luaThread IsNot Nothing AndAlso luaThread.IsAlive) Then
             luaThread.Abort()
         End If
-        Funcs.StopBossRushTimer()
+        BossRushHelper.StopBossRushTimer()
     End Sub
 
     Private Sub btnNewConsole_Click(sender As Object, e As EventArgs) Handles btnNewConsole.Click
@@ -561,7 +558,7 @@ Public Class frmForm1
     End Sub
 
     Private Sub DoBossScenario(bossName As String)
-        BossRushHelper.SpawnPlayerAtBoss(bossName)
+        lua.LuaState.GetFunction("SpawnPlayerAtBoss").Call(bossName)
     End Sub
 
     Private Sub radioStandard_CheckedChanged(sender As Object, e As EventArgs) Handles radioStandard.CheckedChanged
@@ -691,6 +688,13 @@ Public Class frmForm1
         selStr = selStr.Substring(selStr.IndexOf("[") + 1)
         selStr = selStr.Substring(0, selStr.Length - 1)
         Game.Player.BonfireID.Value = Integer.Parse(selStr.Trim())
+    End Sub
+
+    Private Sub frmForm1_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
+        ' Checks if this is the last form open in this process
+        If Application.OpenForms.Count = 0 Then
+            Game.Unhook()
+        End If
     End Sub
 
     'Private Sub flpCustomBossOrder_ControlAdded(sender As Object, e As ControlEventArgs)

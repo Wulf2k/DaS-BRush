@@ -1,7 +1,15 @@
-﻿Friend Class AsmExecutor
+﻿Imports System.Globalization
+Imports System.Runtime.InteropServices
+
+Friend Class AsmExecutor
+
     'TODO:  Deal with jumps to points not yet defined
     Public bytes() As Byte = {}
+
     Public pos As Int32
+
+    Public Shared ReadOnly DefaultReturnValue = 1337
+    Public Shared ReadOnly ReturnValueCheckInterval = 16
 
     Private reg8 As Hashtable = New Hashtable
     Private reg16 As Hashtable = New Hashtable
@@ -10,6 +18,8 @@
     Private vars As Hashtable = New Hashtable
 
     Private varrefs As New SortedList(Of Integer, String)
+
+    Const MaxFuncRetries = 1024
 
     Public Sub New()
         pos = 0
@@ -56,15 +66,17 @@
     Public Sub Add(ByVal newbytes() As Byte)
         bytes = bytes.Concat(newbytes).ToArray
     End Sub
+
     Public Sub AddVar(ByVal name As String, hexval As String)
         AddVar(name, Convert.ToInt32(Microsoft.VisualBasic.Right(hexval, hexval.Length - 2), 16))
     End Sub
+
     Public Sub AddVar(ByVal name As String, val As IntPtr)
         AddVar(name, CInt(val))
     End Sub
+
     Public Sub AddVar(ByVal name As String, val As Int32)
         name = name.Replace(":", "")
-
 
         If Not vars.Contains(name) Then
             vars.Add(name, val)
@@ -73,7 +85,6 @@
             For Each entry In varrefs
                 If entry.Value = name Then
                     Dim tmpbyt() As Byte
-
 
                     Select Case bytes(entry.Key)
                         Case &HE8, &HE9
@@ -88,11 +99,9 @@
                 End If
             Next
 
-
-
-
         End If
     End Sub
+
     Public Sub Clear()
         bytes = {}
         vars.Clear()
@@ -112,7 +121,6 @@
         Dim params As String = ""
         Dim param1 As String = ""
         Dim param2 As String = ""
-
 
         'Separate Command from params
         If str.Contains(" ") Then
@@ -193,7 +201,6 @@
         If reg8.Contains(param1) Then reg1 = param1
         If reg8.Contains(param2) Then reg2 = param2
 
-
         'If param is previously defined section
         If vars.Contains(param1) Then
             val1 = vars(param1)
@@ -204,9 +211,8 @@
             varrefs.Add(bytes.Length, param2)
         End If
 
-
-
     End Sub
+
     Public Sub Asm(ByVal str As String)
         Dim cmd As String = ""
 
@@ -230,8 +236,6 @@
 
         Dim newbytes() As Byte = {}
 
-
-
         'Check if command is simple 1-byte command
         If code.Contains(cmd) Then
             newbytes = {0}
@@ -243,9 +247,6 @@
             pos += newbytes.Count
             Return
         End If
-
-
-
 
         Select Case cmd
             Case "add"
@@ -262,8 +263,6 @@
                     End If
                     newbytes(1) = newbytes(1) Or reg32(reg1)
                 End If
-
-
 
                 If reg32.Contains(reg1) And reg32.Contains(reg2) Then
                     newbytes = {1, 0}
@@ -297,8 +296,6 @@
                         newbytes = newbytes.Concat(BitConverter.GetBytes(offset)).ToArray
                     End If
 
-
-
                     If Not ptr1 And Not ptr2 Then
                         newbytes = {1, &HC0}
                         newbytes(1) = newbytes(1) Or reg32(reg2) * 8
@@ -323,8 +320,6 @@
                     End If
                     newbytes(1) = newbytes(1) Or reg32(reg1)
                 End If
-
-
 
                 If reg32.Contains(reg1) And reg32.Contains(reg2) Then
                     newbytes = {&H21, 0}
@@ -357,8 +352,6 @@
                         newbytes(1) = newbytes(1) Or &H80
                         newbytes = newbytes.Concat(BitConverter.GetBytes(offset)).ToArray
                     End If
-
-
 
                     If Not ptr1 And Not ptr2 Then
                         newbytes = {&H21, &HC0}
@@ -403,7 +396,6 @@
                 pos += newbytes.Count
                 Return
 
-
             Case "cmp"
                 If reg32.Contains(reg1) And reg2 = "" Then
                     newbytes = {&H81, &HF8}
@@ -418,8 +410,6 @@
                     End If
                     newbytes(1) = newbytes(1) Or reg32(reg1)
                 End If
-
-
 
                 If reg32.Contains(reg1) And reg32.Contains(reg2) Then
                     newbytes = {&H39, 0}
@@ -452,8 +442,6 @@
                         newbytes(1) = newbytes(1) Or &H80
                         newbytes = newbytes.Concat(BitConverter.GetBytes(offset)).ToArray
                     End If
-
-
 
                     If Not ptr1 And Not ptr2 Then
                         newbytes = {&H39, &HC0}
@@ -506,7 +494,6 @@
                 pos += newbytes.Count
                 Return
 
-
             Case "jne"
                 newbytes = {&HF, &H85}
                 Dim addr = Convert.ToInt32(val1) - pos - 6
@@ -523,7 +510,6 @@
                     newbytes(1) = newbytes(1) Or reg8(reg2) * 8
                     'TODO:  Complete
                 End If
-
 
                 If reg32.Contains(reg1) And reg2 = "" Then
                     newbytes = {&HB8}
@@ -572,7 +558,6 @@
                 Add(newbytes)
                 pos += newbytes.Count
                 Return
-
 
             Case "push"
                 If Not ptr1 Then
@@ -623,7 +608,6 @@
                 pos += newbytes.Count
                 Return
 
-
             Case "shl", "shr"
                 'TODO:  Handle reg1 = ax, al
                 If reg32.Contains(reg1) Then
@@ -641,9 +625,9 @@
                 pos += newbytes.Count
                 Return
 
-
         End Select
     End Sub
+
     Public Overrides Function ToString() As String
         Dim tmpstr As String = ""
 
@@ -652,6 +636,128 @@
         Next
 
         Return tmpstr
+    End Function
+
+    Private Shared Function GetFuncCallParamValue(paramVal As Object) As String
+        Dim t = paramVal.GetType()
+
+        If t = GetType(Int32) Then
+            Return paramVal.ToString()
+        ElseIf t = GetType(Single) Then
+            Return paramVal.ToString("0.0")
+        Else
+            Return paramVal.ToString
+        End If
+    End Function
+
+    Friend Shared Function FuncCall(__func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "", Optional param4 As Object = "", Optional param5 As Object = "") As Integer
+
+        Dim result As Integer = 0
+
+        Dim paramObj() As Object = {param1, param2, param3, param4, param5}
+        Dim Params() As String = paramObj.Select(Function(x) GetFuncCallParamValue(x)).ToArray()
+        Dim param As IntPtr = Marshal.AllocHGlobal(4)
+        Dim intParam As Integer
+        Dim floatParam As Single
+        Dim a As New AsmExecutor
+
+        Dim func = __func.ToUpper
+
+        Using funcPtr = New IngameAllocatedPtr()
+            a.pos = funcPtr.Address
+            a.AddVar("funcloc", CType(ScriptRes.autoCompleteFuncInfoByName(ScriptRes.caselessIngameFuncNames(func.ToUpper)).First(), IngameFuncInfo).Address)
+            a.AddVar("returnedloc", funcPtr.Address + &H200)
+
+            a.Asm("push ebp")
+            a.Asm("mov ebp,esp")
+            a.Asm("push eax")
+
+            'Parse params, add as variables to the ASM
+            For i As Integer = 4 To 0 Step -1
+                If Params(i).ToLower = "false" Then Params(i) = "0"
+                If Params(i).ToLower = "true" Then Params(i) = "1"
+                If Params(i).Length < 1 Then Params(i) = "0"
+
+                If Params(i).Contains(".") Then
+                    floatParam = Convert.ToSingle(Params(i), New CultureInfo("en-us"))
+                    Marshal.StructureToPtr(floatParam, param, False)
+                    a.AddVar("param" & i, Marshal.ReadInt32(param))
+                Else
+                    intParam = Convert.ToInt32(Params(i), New CultureInfo("en-us"))
+                    a.AddVar("param" & i, intParam)
+                End If
+
+                a.Asm("mov eax,param" & i)
+                a.Asm("push eax")
+
+            Next
+            a.Asm("call funcloc")
+            a.Asm("mov ebx,returnedloc")
+            a.Asm("mov [ebx],eax")
+            a.Asm("pop eax")
+            a.Asm("pop eax")
+            a.Asm("pop eax")
+            a.Asm("pop eax")
+            a.Asm("pop eax")
+            a.Asm("pop eax")
+            a.Asm("mov esp,ebp")
+            a.Asm("pop ebp")
+            a.Asm("ret")
+
+            Marshal.FreeHGlobal(param)
+
+            WriteProcessMemory(_targetProcessHandle, funcPtr.Address, a.bytes, 1024, 0)
+
+
+            Dim waitResult As WaitObjResult = WaitObjResult.WAIT_FAILED
+            Dim tryCount As Integer = 0
+
+            Do
+                Dim threadHandle = CreateRemoteThread(_targetProcessHandle, 0, 0, funcPtr.Address, 0, 0, 0)
+
+                If Not (threadHandle = IntPtr.Zero) Then
+                    waitResult = WaitForSingleObject(threadHandle, &HFFFFFFFF)
+                End If
+
+                tryCount += 1
+
+                CloseHandle(threadHandle)
+
+                If tryCount > MaxFuncRetries Then
+                    Dbg.PrintErr($"CallFunc to {__func} reached max retry count of {MaxFuncRetries}.")
+                    Return 0
+                End If
+            Loop Until Not (waitResult = WaitObjResult.WAIT_FAILED)
+
+
+
+            'Try
+
+
+            '    'Wait for thread to exit
+
+
+            '    If Not waitResult = WaitObjResult.WAIT_OBJECT_0 Then
+            '        Throw New Exception($"WaitForSingleObject returned {waitResult.ToString()}")
+            '    End If
+            'Catch ex As Exception
+            '    Dim throwResult = Dbg.Popup($"kernel32.dll WaitForSingleObject error{vbCrLf}Would you like to crash DaS.ScriptLib (hint: click 'no'){vbCrLf}{vbCrLf}{ex.Message}", "Error",
+            '                           System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Warning)
+
+            '    If throwResult = System.Windows.Forms.DialogResult.Yes Then
+            '        Throw ex
+            '    End If
+            'Finally
+            '    'Close handle we got earlier
+
+            'End Try
+
+            result = RInt32(funcPtr.Address + &H200)
+
+            Dbg.PrintInfo($"FuncCall to '{Func}' returned {result} in {tryCount} tries.")
+        End Using
+
+        Return result
     End Function
 
 End Class

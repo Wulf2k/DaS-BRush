@@ -17,12 +17,27 @@ Public Class ConsoleWindow
 
     Private boldTab As New List(Of Boolean)()
 
+    Private __outputLinesSinceLastClose As Integer = 0
+    Private __outputLinesTotal As Integer = 0
+
+    Private ReadOnly Property SplitterIsSwapped As Boolean = False
+
     Private Sub ConsoleWindow_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Game.InitHook()
+        Game.Hook()
         AddTab()
         AddHandler guiRefreshTimer.Tick, AddressOf GuiRefreshTimerTick
 
+        sobOutput.InitEvents()
+        sobOutput.WordWrap = False
         'GetType(TabControl).InvokeMember("DoubleBuffered", BindingFlags.SetProperty Or BindingFlags.Instance Or BindingFlags.NonPublic, Nothing, cwTabs, New Object() {True})
+    End Sub
+
+    Private Sub sobOutput_OnAddLine(line As String) Handles sobOutput.OnAddLine
+        IncreaseTsbtnOutputCounter()
+    End Sub
+
+    Private Sub sobOutput_OnClearAllLines() Handles sobOutput.OnClearAllLines
+        ResetTsbtnOutputCounter()
     End Sub
 
     ' This cool override here forces EVERY CONTROL IN THE FORM to be double buffered NO MATTER WHAT.
@@ -35,7 +50,7 @@ Public Class ConsoleWindow
     ' Anyways, THE REASON I DISABLED IT: Literally the only problem is that the scintilla control takes so goddamn long to initialize
     ' that you're forced to look at all of the controls being pitch black squares for like 2 seconds and it looks ugly.
     ' (on normal programs that start instantly you usually don't notice the black controls for like 1 frame)
-    ' 
+    '
     '
     '
     'Dim _originalExStyle = -1
@@ -57,7 +72,7 @@ Public Class ConsoleWindow
     '        Return handleParam
     '    End Get
     'End Property
-    ' 
+    '
     ' This method must be called in the form's "Shown" event:
     '
     'Private Sub _turnOffDoubleBufferino()
@@ -95,7 +110,9 @@ Public Class ConsoleWindow
     Public ReadOnly Property AreAnyTabsOpen As Boolean
         Get
             Dim result As Boolean = False
-            cwTabs.Invoke(Sub() result = cwTabs IsNot Nothing AndAlso (cwTabs.TabPages.Count > 0 And cwTabs.SelectedIndex >= 0))
+            If Application.OpenForms(Name) IsNot Nothing Then
+                cwTabs.Invoke(Sub() result = cwTabs IsNot Nothing AndAlso (cwTabs.TabPages.Count > 0 And cwTabs.SelectedIndex >= 0))
+            End If
             Return result
         End Get
     End Property
@@ -142,6 +159,57 @@ Public Class ConsoleWindow
         Next
     End Sub
 
+    'Increases counter on same thread as it will be accessed later, preventing the need to sync ;)
+    Private Sub IncreaseTsbtnOutputCounter()
+        Invoke(
+        Sub()
+            If splitter.Panel2Collapsed Then
+                __outputLinesSinceLastClose += 1
+            End If
+
+            __outputLinesTotal += 1
+        End Sub)
+        UpdateOutputTsbtnText()
+    End Sub
+
+    Private Sub ResetTsbtnOutputCounter()
+        Invoke(
+        Sub()
+            __outputLinesSinceLastClose = 0
+        End Sub)
+        UpdateOutputTsbtnText()
+    End Sub
+
+    Private Sub UpdateOutputTsbtnText()
+        Invoke(
+        Sub()
+            tslblOutputLineCount.Text = "Output Lines: " & __outputLinesTotal
+
+            If __outputLinesSinceLastClose > 0 Then
+                tslblOutputLineCount.Text &= " (" & __outputLinesSinceLastClose & " New)"
+                tslblOutputLineCount.IsLink = True
+            Else
+                tslblOutputLineCount.IsLink = False
+            End If
+        End Sub
+        )
+    End Sub
+
+    Private Sub SplitterToggleOutputPanel(Optional showOutput As Boolean? = Nothing)
+
+        If SplitterIsSwapped Then
+            splitter.Panel1Collapsed = Not (If(showOutput, splitter.Panel1Collapsed))
+        Else
+            splitter.Panel2Collapsed = Not (If(showOutput, splitter.Panel2Collapsed))
+        End If
+    End Sub
+
+    Private Sub tslblOutputLineCount_OnClick(sender As Object, args As EventArgs) Handles tslblOutputLineCount.Click
+        SplitterToggleOutputPanel()
+        ResetTsbtnOutputCounter()
+        UpdateOutputTsbtnText()
+    End Sub
+
     Public Sub New()
 
         ' This call is required by the designer.
@@ -168,6 +236,17 @@ Public Class ConsoleWindow
         tsbtnHook.DisplayStyle = ToolStripItemDisplayStyle.Image
 
         cwTabs.TabPages.Clear()
+
+        sobOutput.Text = ""
+
+        tsmiShowOutput.Image = EmbeddedImage("OutputIcon")
+
+        tsbtnOutputClear.Image = EmbeddedImage("ClearIcon")
+
+        btnHideOutput.BackgroundImage = EmbeddedImage("CloseIcon")
+        btnHideOutput.BackgroundImageLayout = ImageLayout.Center
+        btnHideOutput.Text = ""
+        btnHideOutput.TextImageRelation = TextImageRelation.ImageBeforeText
     End Sub
 
     Private Sub tsbtnNew_Click(sender As Object, e As EventArgs) Handles tsbtnNew.Click
@@ -250,6 +329,8 @@ Public Class ConsoleWindow
             Return False
         End If
 
+        Dim closeTabName = If(tab.ConsHandler.currentDocument.Name, "Untitled.lua")
+
         If tab.ConsHandler.PromptSaveChanges() Then
 
             'we're about to close the last page
@@ -265,6 +346,8 @@ Public Class ConsoleWindow
                 cwTabs.SelectTab(Math.Min(oldSelIndex, cwTabs.TabCount - 1))
                 FocusedConsHandler.cons.Select()
             End If
+
+            Status("Closed tab of " & closeTabName & ".")
 
             Return True
         Else
@@ -283,7 +366,7 @@ Public Class ConsoleWindow
     End Function
 
     Private Sub tsbtnHook_Click(sender As Object, e As EventArgs) Handles tsbtnHook.Click
-        Game.InitHook()
+        Game.Hook()
         ToolStrip1.Invoke(Sub() tsHook.Text = Game.DetectedDarkSoulsVersion)
     End Sub
 
@@ -315,7 +398,7 @@ Public Class ConsoleWindow
     End Sub
 
     Private Sub cwTabs_TabIndexChanged(sender As Object, e As EventArgs) Handles cwTabs.SelectedIndexChanged
-        If Not AreAnyTabsOpen Then Return 'Yeah you'd think this wasnt needed 
+        If Not AreAnyTabsOpen Then Return 'Yeah you'd think this wasnt needed
 
         If Not cwTabs Is Nothing AndAlso cwTabs.TabCount > 0 AndAlso cwTabs.SelectedIndex >= 0 AndAlso cwTabs.SelectedIndex < cwTabs.TabCount AndAlso Not cwTabs.SelectedTab Is Nothing Then
             FocusedConsHandler.cons.Select()
@@ -372,6 +455,8 @@ Public Class ConsoleWindow
     Private Sub CloseAllOtherTabsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ClloseAllOtherTabsToolStripMenuItem.Click
         Dim disTab = cwTabs.TabPages(currentContextTab)
         DoRecursiveTabClose(disTab)
+
+        Status("Closed all tabs other than " & FocusedConsHandler.currentDocument.Name & "'s tab.")
     End Sub
 
     Function DoRecursiveTabClose(ByRef disTab As TabPage, Optional startIndex As Integer = 0) As Boolean
@@ -390,6 +475,8 @@ Public Class ConsoleWindow
     Private Sub CloseAllTabsToTheRightToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CloseAllTabsToTheRightToolStripMenuItem.Click
         Dim disTab = cwTabs.TabPages(currentContextTab)
         DoRecursiveTabClose(disTab, currentContextTab + 1)
+
+        Status("Closed all tabs to the right of " & FocusedConsHandler.currentDocument.Name & "'s tab.")
     End Sub
 
     Private Sub ConsoleWindow_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
@@ -406,8 +493,131 @@ Public Class ConsoleWindow
         For Each taberino In cwTabs.TabPages.OfType(Of ScriptEditorTab)
             taberino.ConsHandler.CheckCurDocOnDiskStatus()
         Next
+
+        Status("Checked opened documents' on-disk statuses.")
     End Sub
+
+    Private Sub ConsoleWindow_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
+        ' Checks if this is the last form open in this process
+        If Application.OpenForms.Count = 0 Then
+            Game.Unhook()
+        End If
+    End Sub
+
+    Private Sub splitter_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles splitter.SplitterMoved
+        If AreAnyTabsOpen Then
+            FocusedConsHandler.cons.Select()
+        End If
+    End Sub
+
+    Private Sub btnHideOutput_Click(sender As Object, e As EventArgs) Handles btnHideOutput.Click
+        SplitterToggleOutputPanel()
+        ResetTsbtnOutputCounter()
+
+        Status("Output panel hidden.")
+    End Sub
+
+    Private Sub SplitterSwapPanels()
+        ' Store Panel1.Controls to panelOneControlBackup
+        Dim panelOneControlBackup As New List(Of Control)()
+        For Each c In splitter.Panel1.Controls
+            panelOneControlBackup.Add(c)
+        Next
+
+        ' Clear Panel1.Controls
+        splitter.Panel1.Controls.Clear()
+
+        ' Copy items from Panel2.Controls to Panel1.Controls
+        For Each c In splitter.Panel2.Controls
+            splitter.Panel1.Controls.Add(c)
+        Next
+
+        ' Clear Panel2.Controls
+        splitter.Panel2.Controls.Clear()
+
+        ' Copy items from panelOneControlBackup to Panel2.Controls
+        splitter.Panel2.Controls.AddRange(panelOneControlBackup.ToArray())
+
+        ' Clear panelOneControlBackup to reduce memory use slightly
+        panelOneControlBackup.Clear()
+    End Sub
+
+    Private Sub SplitterSetOutputPanelPos(orient As Orientation, swapped As Boolean)
+        tsmiOutputPosTop.Checked = (orient = Orientation.Vertical AndAlso swapped)
+        tsmiOutputPosBottom.Checked = (orient = Orientation.Vertical AndAlso Not swapped)
+        tsmiOutputPosLeft.Checked = (orient = Orientation.Horizontal AndAlso swapped)
+        tsmiOutputPosRight.Checked = (orient = Orientation.Horizontal AndAlso Not swapped)
+
+        If Not (SplitterIsSwapped = swapped) Then
+            SplitterSwapPanels()
+        End If
+
+        splitter.Orientation = orient
+
+        _SplitterIsSwapped = swapped
+    End Sub
+
+    Private Sub tsmiOutputPosTop_Click(sender As Object, e As EventArgs) Handles tsmiOutputPosTop.Click
+        SplitterSetOutputPanelPos(Orientation.Vertical, True)
+
+        Status("Output panel moved to top of window.")
+    End Sub
+
+    Private Sub tsmiOutputPosBottom_Click(sender As Object, e As EventArgs) Handles tsmiOutputPosBottom.Click
+        SplitterSetOutputPanelPos(Orientation.Vertical, False)
+
+        Status("Output panel moved to bottom of window.")
+    End Sub
+
+    Private Sub tsmiOutputPosLeft_Click(sender As Object, e As EventArgs) Handles tsmiOutputPosLeft.Click
+        SplitterSetOutputPanelPos(Orientation.Horizontal, True)
+
+        Status("Output panel moved to left of window.")
+    End Sub
+
+    Private Sub tsmiOutputPosRight_Click(sender As Object, e As EventArgs) Handles tsmiOutputPosRight.Click
+        SplitterSetOutputPanelPos(Orientation.Horizontal, False)
+
+        Status("Output panel moved to right of window.")
+    End Sub
+
+    Private Sub tsmiShowOutput_CheckedChanged(sender As Object, e As EventArgs) Handles tsmiShowOutput.Click
+        SplitterToggleOutputPanel()
+        tsmiShowOutput.Checked = Not tsmiShowOutput.Checked
+
+        Status(If(tsmiShowOutput.Checked, "Output panel shown.", "Output panel hidden."))
+    End Sub
+
+    Private Sub tsbtnOutputClear_Click(sender As Object, e As EventArgs) Handles tsbtnOutputClear.Click
+        sobOutput.ResetText()
+        ResetTsbtnOutputCounter()
+
+        Status("Output cleared.")
+    End Sub
+
+    Private Sub tsmiOutputWordWrap_Click(sender As Object, e As EventArgs) Handles tsmiOutputWordWrap.Click
+        sobOutput.WordWrap = Not sobOutput.WordWrap
+        tsmiOutputWordWrap.Checked = sobOutput.WordWrap
+
+        Status(If(sobOutput.WordWrap, "Output Word-Wrap enabled.", "Output Word-Wrap disabled."))
+    End Sub
+
+    Private Sub tsmiOutputAutoScroll_Click(sender As Object, e As EventArgs) Handles tsmiOutputAutoScroll.Click
+        sobOutput.AutoScroll = Not sobOutput.AutoScroll
+        tsmiOutputAutoScroll.Checked = sobOutput.AutoScroll
+
+        Status(If(sobOutput.AutoScroll, "Output Auto-Scroll enabled.", "Output Auto-Scroll disabled."))
+    End Sub
+
     'Private Sub ConsoleWindow_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
     '    _turnOffDoubleBufferino()
     'End Sub
+
+    Public Sub Status(text As String)
+        Invoke(
+        Sub()
+            tslblStatus.Text = text
+        End Sub
+        )
+    End Sub
 End Class

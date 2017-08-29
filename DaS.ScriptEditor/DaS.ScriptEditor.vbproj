@@ -118,6 +118,9 @@
     <Compile Include="ScriptEditorTab.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ScriptOutputBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AboutPage.resx">
@@ -183,7 +186,10 @@
     <EmbeddedResource Include="Resources\EstusIcon.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\ClearIcon.png" />
+    <EmbeddedResource Include="Resources\OutputIcon.png" />
     <Content Include="Resources\AshenEstus.ico" />
+    <EmbeddedResource Include="Resources\CloseIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

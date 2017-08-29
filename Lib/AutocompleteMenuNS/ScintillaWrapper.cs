@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
+﻿using ScintillaNET;
+using System;
 using System.Drawing;
-using ScintillaNET;
+using System.Windows.Forms;
 
 namespace AutocompleteMenuNS
 {
@@ -63,7 +61,7 @@ namespace AutocompleteMenuNS
         public virtual event EventHandler LostFocus
         {
             add { target.LostFocus += value; }
-            remove { target.LostFocus -= value; } 
+            remove { target.LostFocus -= value; }
         }
 
         public virtual event KeyEventHandler KeyDown
@@ -78,17 +76,16 @@ namespace AutocompleteMenuNS
             remove { }
         }
 
-        public virtual event MouseEventHandler MouseDown 
+        public virtual event MouseEventHandler MouseDown
         {
             add { target.MouseDown += value; }
-            remove { target.MouseDown -= value; } 
+            remove { target.MouseDown -= value; }
         }
 
         public virtual Control TargetControl
         {
             get { return target; }
         }
-
 
         public bool Readonly
         {

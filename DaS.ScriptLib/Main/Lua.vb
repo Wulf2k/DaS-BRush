@@ -1,6 +1,7 @@
 ﻿Imports System.Text.RegularExpressions
 Imports System.Threading
 
+<HideFromScripting>
 Public Class Lua
     Public ReadOnly Property State As LuaRunnerState = LuaRunnerState.Stopped
 
@@ -8,10 +9,16 @@ Public Class Lua
     Private _shutdownEvent As New ManualResetEvent(False)
     Private _pauseEvent As New ManualResetEvent(True)
 
+    Public Shared ReadOnly LuaDummyAutoComplete As Dictionary(Of String, String)
+
     Public Event OnStart(args As LuaRunnerEventArgs)
+
     Public Event OnFinishAny(args As LuaRunnerEventArgs)
+
     Public Event OnFinishSuccess(args As LuaRunnerEventArgs)
+
     Public Event OnFinishError(args As LuaRunnerEventArgs, err As Exception)
+
     Public Event OnStop()
 
     Public ReadOnly Property LuaState As NLua.Lua
@@ -20,8 +27,17 @@ Public Class Lua
 
     Public Shared ReadOnly QuickExprVarName = "DaS_Scripting__QUICK_EXPRESSION_VAR"
 
+    Shared Sub New()
+        LuaDummyAutoComplete = New Dictionary(Of String, String)
+        LuaDummyAutoComplete.Add("luaState.Import", "Void luaState.Import(String file)")
+    End Sub
+
     Public Sub New()
         LuaState = New NLua.Lua()
+
+        LuaState.DoString("local luaState = 0")
+        LuaState.Item("luaState") = Me
+
         InitCLR()
     End Sub
 
@@ -30,6 +46,7 @@ Public Class Lua
         LuaState.DoString("import ('System', 'System') ")
         LuaState.DoString("import ('Dark Souls Scripting Library', 'DaS.ScriptLib') ")
     End Sub
+
 
     Public Shared Sub Run(text As String)
         QuickRunner._doExecuteScript(text)
@@ -46,6 +63,19 @@ Public Class Lua
 
         Return QuickRunner.LuaState
     End Function
+
+    Public Sub Import(file As String)
+        Dbg.PrintInfo($"Importing lua script '{file}'...")
+        Try
+            LuaState.DoString(GetRegexedLuaScript(System.IO.File.ReadAllText(file)))
+        Catch ex As Exception
+            Dbg.PrintErr($"Import FAILED: {ex.Message}")
+            Dbg.PopupErr()
+            Throw New Exception($"Failed to import '{file}'.{vbCrLf}{vbCrLf}{ex.Message}", ex)
+            Return
+        End Try
+        Dbg.PrintInfo($"Import Successful...")
+    End Sub
 
     Public Shared Function Expr(ByVal expression As String)
         Return QuickRunner.LuaState.DoString(GetRegexedLuaScript("return " & expression))(0)
@@ -67,18 +97,6 @@ Public Class Lua
         Dim txt = " " & String.Join(" ", scriptText)
 
         ' Changes this:
-        '     GetEntityPtr(10000)
-        ' To this:
-        '     Funcs.GetEntityPtr(10000)
-        ' etc
-        For Each f In ScriptRes.funcNames_Custom
-            Dim rx = New Regex("(\W)(" & f & "\()", RegexOptions.IgnoreCase)
-            txt = rx.Replace(txt, "$1Funcs." & f & "(")
-        Next
-
-        txt = " " & txt
-
-        ' Changes this:
         '     ChrFadeIn(10000, 0, 0)
         ' To this:
         '     Funcs.FuncCall('ChrFadeIn', 10000, 0, 0)
@@ -86,6 +104,18 @@ Public Class Lua
         For Each f In ScriptRes.funcNames_Ingame
             Dim rx = New Regex("(\W)(" & f & "\()(\w)", RegexOptions.IgnoreCase)
             txt = rx.Replace(txt, "$1Funcs.FuncCall('" & f & "', $3")
+        Next
+
+        txt = " " & txt
+
+        ' Changes this:
+        '     GetEntityPtr(10000)
+        ' To this:
+        '     Funcs.GetEntityPtr(10000)
+        ' etc
+        For Each f In ScriptRes.funcNames_Custom
+            Dim rx = New Regex("(\W)(" & f & "\()", RegexOptions.IgnoreCase)
+            txt = rx.Replace(txt, "$1Funcs." & f & "(")
         Next
 
         txt = " " & txt
@@ -121,6 +151,7 @@ Public Class Lua
     End Sub
 
     Private Sub _doExecuteScript(ByVal script As String)
+
         Dim mangledScript = GetRegexedLuaScript(script)
 
         _State = LuaRunnerState.Running
@@ -148,6 +179,7 @@ Public Class Lua
             Return LuaState.DoString(regexedScript)
         End If
     End Function
+
 End Class
 
 Public Enum LuaRunnerState
@@ -161,17 +193,21 @@ Public Class LuaRunnerEventArgs
     Public ReadOnly ExecutingThread As Thread
     Public ReadOnly MangledText As String
     Public ReadOnly LuaState As NLua.Lua
+
     Public Sub New(ByRef text As String, ByRef executingThread As Thread, ByRef luaState As NLua.Lua, ByRef mangledText As String)
         Me.Text = text
         Me.ExecutingThread = executingThread
         Me.LuaState = luaState
         Me.MangledText = mangledText
     End Sub
+
 End Class
 
 Public Class LuaRunnerThreadingException
     Inherits Exception
+
     Public Sub New(msg As String)
         MyBase.New(msg)
     End Sub
+
 End Class

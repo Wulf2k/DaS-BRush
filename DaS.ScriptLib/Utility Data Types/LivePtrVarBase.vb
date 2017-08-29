@@ -7,6 +7,7 @@
     Public ReadOnly AddressFunc As Func(Of Integer)
 
     Private _offset As Integer
+
     Public Property Offset
         Get
             Return _offset
@@ -76,6 +77,7 @@ Public Class LivePtrVarInt
     Public Shared Widening Operator CType(ByVal live As LivePtrVarInt) As Integer
         Return live.Value
     End Operator
+
 End Class
 
 Public Class LivePtrVarFloat
@@ -116,6 +118,7 @@ Public Class LivePtrVarFloat
     Public Shared Widening Operator CType(ByVal live As LivePtrVarFloat) As Single
         Return live.Value
     End Operator
+
 End Class
 
 Public Class LivePtrVarByte
@@ -156,6 +159,7 @@ Public Class LivePtrVarByte
     Public Shared Widening Operator CType(ByVal live As LivePtrVarByte) As Byte
         Return live.Value
     End Operator
+
 End Class
 
 Public Class LivePtrVarBool
@@ -196,6 +200,7 @@ Public Class LivePtrVarBool
     Public Shared Widening Operator CType(ByVal live As LivePtrVarBool) As Boolean
         Return live.Value
     End Operator
+
 End Class
 
 Public Class LivePtrVarLong
@@ -236,6 +241,7 @@ Public Class LivePtrVarLong
     Public Shared Widening Operator CType(ByVal live As LivePtrVarLong) As Long
         Return live.Value
     End Operator
+
 End Class
 
 Public Class LivePtrVarAsciiStr
@@ -267,8 +273,8 @@ Public Class LivePtrVarAsciiStr
     Public Shared Widening Operator CType(ByVal live As LivePtrVarAsciiStr) As String
         Return live.Value
     End Operator
-End Class
 
+End Class
 
 Public Class LivePtrVarUnicodeStr
     Inherits LivePtrVarBase
@@ -303,6 +309,7 @@ Public Class LivePtrVarUnicodeStr
     Public Shared Widening Operator CType(ByVal live As LivePtrVarUnicodeStr) As String
         Return live.Value
     End Operator
+
 End Class
 
 Public Class LivePtrVarShort
@@ -343,4 +350,5 @@ Public Class LivePtrVarShort
     Public Shared Widening Operator CType(ByVal live As LivePtrVarShort) As Short
         Return live.Value
     End Operator
+
 End Class
