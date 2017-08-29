@@ -73,6 +73,10 @@ Public Class Dbg
         Return Popup(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
     End Function
 
+    Public Shared Function PopupErrQue(msg As String) As DialogResult
+        Return Popup(msg, "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error)
+    End Function
+
     Public Shared Function PopupOk(msg As String) As DialogResult
         Return Popup(msg, "(Untitled)")
     End Function

@@ -71,7 +71,7 @@ Public Class ScriptOutputBox
     End Sub
 
     Private Sub SelAddTextWithSpecificRtf(ByVal text As String, ByVal col As Color, ByVal fnt As Font)
-        If TextLength + text.Length > MaxLength Then
+        If (TextLength + text.Length) > MaxLength Then
             SelDeleteRange(0, (TextLength + text.Length) - MaxLength)
             SelDeleteRange(0, text.IndexOf(vbCrLf) + vbCrLf.Length)
         End If
@@ -115,11 +115,7 @@ Public Class ScriptOutputBox
             )
 
             If AutoScroll Then
-                'Move caret all the way to left side so text doesn't scroll left/right while
-                'Autoscrolling without word-wrap
-                If Not WordWrap Then
-                    DoActionAndReturnToSelection(Sub(o) o.Select(Text.LastIndexOf(vbCrLf) + vbCrLf.Length, 0))
-                End If
+                SelectionStart = TextLength - 1
                 ScrollToCaret()
             End If
 

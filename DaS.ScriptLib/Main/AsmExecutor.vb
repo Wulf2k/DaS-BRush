@@ -19,6 +19,8 @@ Friend Class AsmExecutor
 
     Private varrefs As New SortedList(Of Integer, String)
 
+    Const MaxFuncRetries = 1024
+
     Public Sub New()
         pos = 0
         init()
@@ -648,7 +650,7 @@ Friend Class AsmExecutor
         End If
     End Function
 
-    Friend Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "", Optional param4 As Object = "", Optional param5 As Object = "") As Integer
+    Friend Shared Function FuncCall(__func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "", Optional param4 As Object = "", Optional param5 As Object = "") As Integer
 
         Dim result As Integer = 0
 
@@ -659,7 +661,7 @@ Friend Class AsmExecutor
         Dim floatParam As Single
         Dim a As New AsmExecutor
 
-        func = func.ToUpper
+        Dim func = __func.ToUpper
 
         Using funcPtr = New IngameAllocatedPtr()
             a.pos = funcPtr.Address
@@ -706,25 +708,53 @@ Friend Class AsmExecutor
 
             WriteProcessMemory(_targetProcessHandle, funcPtr.Address, a.bytes, 1024, 0)
 
-            'Get handle of thread created
-            Dim threadHandle = CreateRemoteThread(_targetProcessHandle, 0, 0, funcPtr.Address, 0, 0, 0)
 
-            Try
-                'Wait for thread to exit
-                Dim waitResult As WaitObjResult = WaitForSingleObject(threadHandle, &HFFFFFFFF)
+            Dim waitResult As WaitObjResult = WaitObjResult.WAIT_FAILED
+            Dim tryCount As Integer = 0
 
-                If Not waitResult = WaitObjResult.WAIT_OBJECT_0 Then
-                    Dbg.PopupErr($"WaitForSingleObject returned {waitResult.ToString()}")
+            Do
+                Dim threadHandle = CreateRemoteThread(_targetProcessHandle, 0, 0, funcPtr.Address, 0, 0, 0)
+
+                If Not (threadHandle = IntPtr.Zero) Then
+                    waitResult = WaitForSingleObject(threadHandle, &HFFFFFFFF)
                 End If
-            Catch ex As Exception
-                Dim throwResult = Dbg.Popup($"kernel32.dll WaitForSingleObject error{vbCrLf}Would you like to crash DaS.ScriptLib (hint: click 'no')", "Error",
-                                       System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Warning)
-            Finally
-                'Close handle we got earlier
+
+                tryCount += 1
+
                 CloseHandle(threadHandle)
-            End Try
+
+                If tryCount > MaxFuncRetries Then
+                    Dbg.PrintErr($"CallFunc to {__func} reached max retry count of {MaxFuncRetries}.")
+                    Return 0
+                End If
+            Loop Until Not (waitResult = WaitObjResult.WAIT_FAILED)
+
+
+
+            'Try
+
+
+            '    'Wait for thread to exit
+
+
+            '    If Not waitResult = WaitObjResult.WAIT_OBJECT_0 Then
+            '        Throw New Exception($"WaitForSingleObject returned {waitResult.ToString()}")
+            '    End If
+            'Catch ex As Exception
+            '    Dim throwResult = Dbg.Popup($"kernel32.dll WaitForSingleObject error{vbCrLf}Would you like to crash DaS.ScriptLib (hint: click 'no'){vbCrLf}{vbCrLf}{ex.Message}", "Error",
+            '                           System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Warning)
+
+            '    If throwResult = System.Windows.Forms.DialogResult.Yes Then
+            '        Throw ex
+            '    End If
+            'Finally
+            '    'Close handle we got earlier
+
+            'End Try
 
             result = RInt32(funcPtr.Address + &H200)
+
+            Dbg.PrintInfo($"FuncCall to '{Func}' returned {result} in {tryCount} tries.")
         End Using
 
         Return result

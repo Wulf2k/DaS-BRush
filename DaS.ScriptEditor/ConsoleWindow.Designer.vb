@@ -40,6 +40,9 @@ Partial Class ConsoleWindow
         Me.tsmiOutputPosBottom = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiOutputPosLeft = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiOutputPosRight = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OutputTextToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiOutputWordWrap = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiOutputAutoScroll = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiHelp = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
@@ -64,6 +67,7 @@ Partial Class ConsoleWindow
         Me.CloseAllTabsToTheRightToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.splitter = New System.Windows.Forms.SplitContainer()
         Me.btnHideOutput = New System.Windows.Forms.Button()
+        Me.sobOutput = New DaS.ScriptEditor.ScriptOutputBox()
         Me.ToolStrip2 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
         Me.statusStrip = New System.Windows.Forms.ToolStrip()
@@ -71,10 +75,6 @@ Partial Class ConsoleWindow
         Me.tsbtnOutputClear = New System.Windows.Forms.ToolStripButton()
         Me.tslblOutputLineCount = New System.Windows.Forms.ToolStripLabel()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
-        Me.OutputTextToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiOutputWordWrap = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiOutputAutoScroll = New System.Windows.Forms.ToolStripMenuItem()
-        Me.sobOutput = New DaS.ScriptEditor.ScriptOutputBox()
         Me.MenuStrip1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.cwTabs.SuspendLayout()
@@ -107,43 +107,43 @@ Partial Class ConsoleWindow
         '
         Me.tsNew.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.tsNew.Name = "tsNew"
-        Me.tsNew.Size = New System.Drawing.Size(152, 22)
+        Me.tsNew.Size = New System.Drawing.Size(123, 22)
         Me.tsNew.Text = "New"
         '
         'tsOpen
         '
         Me.tsOpen.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.tsOpen.Name = "tsOpen"
-        Me.tsOpen.Size = New System.Drawing.Size(152, 22)
+        Me.tsOpen.Size = New System.Drawing.Size(123, 22)
         Me.tsOpen.Text = "Open..."
         '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(149, 6)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(120, 6)
         '
         'tsSave
         '
         Me.tsSave.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.tsSave.Name = "tsSave"
-        Me.tsSave.Size = New System.Drawing.Size(152, 22)
+        Me.tsSave.Size = New System.Drawing.Size(123, 22)
         Me.tsSave.Text = "Save"
         '
         'tsSaveAs
         '
         Me.tsSaveAs.Name = "tsSaveAs"
-        Me.tsSaveAs.Size = New System.Drawing.Size(152, 22)
+        Me.tsSaveAs.Size = New System.Drawing.Size(123, 22)
         Me.tsSaveAs.Text = "Save As..."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(149, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(120, 6)
         '
         'tsExit
         '
         Me.tsExit.Name = "tsExit"
-        Me.tsExit.Size = New System.Drawing.Size(152, 22)
+        Me.tsExit.Size = New System.Drawing.Size(123, 22)
         Me.tsExit.Text = "Exit"
         '
         'ViewToolStripMenuItem
@@ -172,19 +172,19 @@ Partial Class ConsoleWindow
         'tsmiOutputPosTop
         '
         Me.tsmiOutputPosTop.Name = "tsmiOutputPosTop"
-        Me.tsmiOutputPosTop.Size = New System.Drawing.Size(152, 22)
+        Me.tsmiOutputPosTop.Size = New System.Drawing.Size(114, 22)
         Me.tsmiOutputPosTop.Text = "Top"
         '
         'tsmiOutputPosBottom
         '
         Me.tsmiOutputPosBottom.Name = "tsmiOutputPosBottom"
-        Me.tsmiOutputPosBottom.Size = New System.Drawing.Size(152, 22)
+        Me.tsmiOutputPosBottom.Size = New System.Drawing.Size(114, 22)
         Me.tsmiOutputPosBottom.Text = "Bottom"
         '
         'tsmiOutputPosLeft
         '
         Me.tsmiOutputPosLeft.Name = "tsmiOutputPosLeft"
-        Me.tsmiOutputPosLeft.Size = New System.Drawing.Size(152, 22)
+        Me.tsmiOutputPosLeft.Size = New System.Drawing.Size(114, 22)
         Me.tsmiOutputPosLeft.Text = "Left"
         '
         'tsmiOutputPosRight
@@ -192,8 +192,29 @@ Partial Class ConsoleWindow
         Me.tsmiOutputPosRight.Checked = True
         Me.tsmiOutputPosRight.CheckState = System.Windows.Forms.CheckState.Checked
         Me.tsmiOutputPosRight.Name = "tsmiOutputPosRight"
-        Me.tsmiOutputPosRight.Size = New System.Drawing.Size(152, 22)
+        Me.tsmiOutputPosRight.Size = New System.Drawing.Size(114, 22)
         Me.tsmiOutputPosRight.Text = "Right"
+        '
+        'OutputTextToolStripMenuItem
+        '
+        Me.OutputTextToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiOutputWordWrap, Me.tsmiOutputAutoScroll})
+        Me.OutputTextToolStripMenuItem.Name = "OutputTextToolStripMenuItem"
+        Me.OutputTextToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.OutputTextToolStripMenuItem.Text = "Output Panel"
+        '
+        'tsmiOutputWordWrap
+        '
+        Me.tsmiOutputWordWrap.Name = "tsmiOutputWordWrap"
+        Me.tsmiOutputWordWrap.Size = New System.Drawing.Size(134, 22)
+        Me.tsmiOutputWordWrap.Text = "Word Wrap"
+        '
+        'tsmiOutputAutoScroll
+        '
+        Me.tsmiOutputAutoScroll.Checked = True
+        Me.tsmiOutputAutoScroll.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.tsmiOutputAutoScroll.Name = "tsmiOutputAutoScroll"
+        Me.tsmiOutputAutoScroll.Size = New System.Drawing.Size(134, 22)
+        Me.tsmiOutputAutoScroll.Text = "Auto-Scroll"
         '
         'HelpToolStripMenuItem
         '
@@ -325,7 +346,7 @@ Partial Class ConsoleWindow
         Me.cwTabs.Location = New System.Drawing.Point(0, 0)
         Me.cwTabs.Name = "cwTabs"
         Me.cwTabs.SelectedIndex = 0
-        Me.cwTabs.Size = New System.Drawing.Size(600, 339)
+        Me.cwTabs.Size = New System.Drawing.Size(511, 377)
         Me.cwTabs.TabIndex = 2
         Me.cwTabs.TabStop = False
         '
@@ -335,7 +356,7 @@ Partial Class ConsoleWindow
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(592, 313)
+        Me.TabPage1.Size = New System.Drawing.Size(503, 351)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "TabPage1"
         Me.TabPage1.UseVisualStyleBackColor = True
@@ -392,8 +413,8 @@ Partial Class ConsoleWindow
         Me.splitter.Panel2.Controls.Add(Me.sobOutput)
         Me.splitter.Panel2.Controls.Add(Me.ToolStrip2)
         Me.splitter.Panel2MinSize = 256
-        Me.splitter.Size = New System.Drawing.Size(860, 339)
-        Me.splitter.SplitterDistance = 600
+        Me.splitter.Size = New System.Drawing.Size(860, 377)
+        Me.splitter.SplitterDistance = 511
         Me.splitter.TabIndex = 3
         Me.splitter.TabStop = False
         '
@@ -402,7 +423,7 @@ Partial Class ConsoleWindow
         Me.btnHideOutput.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnHideOutput.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.btnHideOutput.Font = New System.Drawing.Font("Consolas", 8.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnHideOutput.Location = New System.Drawing.Point(232, 3)
+        Me.btnHideOutput.Location = New System.Drawing.Point(321, 3)
         Me.btnHideOutput.Margin = New System.Windows.Forms.Padding(0)
         Me.btnHideOutput.Name = "btnHideOutput"
         Me.btnHideOutput.Size = New System.Drawing.Size(18, 18)
@@ -411,6 +432,25 @@ Partial Class ConsoleWindow
         Me.btnHideOutput.Text = "X"
         Me.btnHideOutput.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnHideOutput.UseVisualStyleBackColor = True
+        '
+        'sobOutput
+        '
+        Me.sobOutput.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.sobOutput.AutoScroll = True
+        Me.sobOutput.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.sobOutput.Font = New System.Drawing.Font("Consolas", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.sobOutput.Location = New System.Drawing.Point(3, 22)
+        Me.sobOutput.Name = "sobOutput"
+        Me.sobOutput.ReadOnly = True
+        Me.sobOutput.ShortcutsEnabled = False
+        Me.sobOutput.Size = New System.Drawing.Size(337, 351)
+        Me.sobOutput.TabIndex = 0
+        Me.sobOutput.TabStop = False
+        Me.sobOutput.Text = "Sup Wulf. Tell me how the toolstrip that says ""Console Output:"" immediately above" &
+    " looks on your system while the program is running (it has to load the 'X' butto" &
+    "n on launch)"
         '
         'ToolStrip2
         '
@@ -425,7 +465,7 @@ Partial Class ConsoleWindow
         Me.ToolStrip2.Name = "ToolStrip2"
         Me.ToolStrip2.Padding = New System.Windows.Forms.Padding(2)
         Me.ToolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-        Me.ToolStrip2.Size = New System.Drawing.Size(257, 27)
+        Me.ToolStrip2.Size = New System.Drawing.Size(346, 27)
         Me.ToolStrip2.TabIndex = 1
         Me.ToolStrip2.Text = "ToolStrip2"
         '
@@ -489,46 +529,6 @@ Partial Class ConsoleWindow
         Me.StatusStrip1.Size = New System.Drawing.Size(862, 22)
         Me.StatusStrip1.TabIndex = 5
         Me.StatusStrip1.Text = "StatusStrip1"
-        '
-        'OutputTextToolStripMenuItem
-        '
-        Me.OutputTextToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiOutputWordWrap, Me.tsmiOutputAutoScroll})
-        Me.OutputTextToolStripMenuItem.Name = "OutputTextToolStripMenuItem"
-        Me.OutputTextToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
-        Me.OutputTextToolStripMenuItem.Text = "Output Panel"
-        '
-        'tsmiOutputWordWrap
-        '
-        Me.tsmiOutputWordWrap.Name = "tsmiOutputWordWrap"
-        Me.tsmiOutputWordWrap.Size = New System.Drawing.Size(152, 22)
-        Me.tsmiOutputWordWrap.Text = "Word Wrap"
-        '
-        'tsmiOutputAutoScroll
-        '
-        Me.tsmiOutputAutoScroll.Checked = True
-        Me.tsmiOutputAutoScroll.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.tsmiOutputAutoScroll.Name = "tsmiOutputAutoScroll"
-        Me.tsmiOutputAutoScroll.Size = New System.Drawing.Size(152, 22)
-        Me.tsmiOutputAutoScroll.Text = "Auto-Scroll"
-        '
-        'sobOutput
-        '
-        Me.sobOutput.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.sobOutput.AutoScroll = True
-        Me.sobOutput.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.sobOutput.Font = New System.Drawing.Font("Consolas", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.sobOutput.Location = New System.Drawing.Point(3, 22)
-        Me.sobOutput.Name = "sobOutput"
-        Me.sobOutput.ReadOnly = True
-        Me.sobOutput.ShortcutsEnabled = False
-        Me.sobOutput.Size = New System.Drawing.Size(248, 313)
-        Me.sobOutput.TabIndex = 0
-        Me.sobOutput.TabStop = False
-        Me.sobOutput.Text = "Sup Wulf. Tell me how the toolstrip that says ""Console Output:"" immediately above" &
-    " looks on your system while the program is running (it has to load the 'X' butto" &
-    "n on launch)"
         '
         'ConsoleWindow
         '

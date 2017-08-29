@@ -1,12 +1,15 @@
 ﻿Imports System.Text.RegularExpressions
 Imports System.Threading
 
+<HideFromScripting>
 Public Class Lua
     Public ReadOnly Property State As LuaRunnerState = LuaRunnerState.Stopped
 
     Private _thread As Thread
     Private _shutdownEvent As New ManualResetEvent(False)
     Private _pauseEvent As New ManualResetEvent(True)
+
+    Public Shared ReadOnly LuaDummyAutoComplete As Dictionary(Of String, String)
 
     Public Event OnStart(args As LuaRunnerEventArgs)
 
@@ -24,8 +27,17 @@ Public Class Lua
 
     Public Shared ReadOnly QuickExprVarName = "DaS_Scripting__QUICK_EXPRESSION_VAR"
 
+    Shared Sub New()
+        LuaDummyAutoComplete = New Dictionary(Of String, String)
+        LuaDummyAutoComplete.Add("luaState.Import", "Void luaState.Import(String file)")
+    End Sub
+
     Public Sub New()
         LuaState = New NLua.Lua()
+
+        LuaState.DoString("local luaState = 0")
+        LuaState.Item("luaState") = Me
+
         InitCLR()
     End Sub
 
@@ -34,6 +46,7 @@ Public Class Lua
         LuaState.DoString("import ('System', 'System') ")
         LuaState.DoString("import ('Dark Souls Scripting Library', 'DaS.ScriptLib') ")
     End Sub
+
 
     Public Shared Sub Run(text As String)
         QuickRunner._doExecuteScript(text)
@@ -50,6 +63,19 @@ Public Class Lua
 
         Return QuickRunner.LuaState
     End Function
+
+    Public Sub Import(file As String)
+        Dbg.PrintInfo($"Importing lua script '{file}'...")
+        Try
+            LuaState.DoString(GetRegexedLuaScript(System.IO.File.ReadAllText(file)))
+        Catch ex As Exception
+            Dbg.PrintErr($"Import FAILED: {ex.Message}")
+            Dbg.PopupErr()
+            Throw New Exception($"Failed to import '{file}'.{vbCrLf}{vbCrLf}{ex.Message}", ex)
+            Return
+        End Try
+        Dbg.PrintInfo($"Import Successful...")
+    End Sub
 
     Public Shared Function Expr(ByVal expression As String)
         Return QuickRunner.LuaState.DoString(GetRegexedLuaScript("return " & expression))(0)
@@ -125,6 +151,7 @@ Public Class Lua
     End Sub
 
     Private Sub _doExecuteScript(ByVal script As String)
+
         Dim mangledScript = GetRegexedLuaScript(script)
 
         _State = LuaRunnerState.Running

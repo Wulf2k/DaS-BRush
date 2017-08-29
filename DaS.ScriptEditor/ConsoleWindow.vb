@@ -329,7 +329,7 @@ Public Class ConsoleWindow
             Return False
         End If
 
-        Dim closeTabName = tab.ConsHandler.currentDocument.Name
+        Dim closeTabName = If(tab.ConsHandler.currentDocument.Name, "Untitled.lua")
 
         If tab.ConsHandler.PromptSaveChanges() Then
 

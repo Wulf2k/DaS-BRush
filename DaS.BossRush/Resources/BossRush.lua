@@ -154,6 +154,8 @@ function SpawnPlayerAtBoss(bossName)
 end
 
 function FightBoss(bossName, isFirstBoss)
+    Dbg.PrintInfo("Fighting boss: "..bossName)
+    
     visibleBossName = bossName
     if ShowBossNames == false then
         visibleBossName = "another boss fight"
@@ -173,6 +175,11 @@ function FightBoss(bossName, isFirstBoss)
         end
 
         bossDead = BossRushHelper.WaitForBossDeathByName(bossName)
+        if bossDead then
+            Dbg.PrintInfo("Boss "..bossName.." dead")
+        else 
+            Dbg.PrintInfo("Player dead")
+        end
         
         if not bossDead then 
             AddTrueDeathCount()

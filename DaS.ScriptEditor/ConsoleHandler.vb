@@ -249,49 +249,8 @@ Public Class ConsoleHandler
 
     Private Sub InitAutocomplete()
         auto.TargetControlWrapper = AutocompleteMenuNS.ScintillaWrapper.Create(cons)
-        Dim fullAutoCompleteList = AutoCompleteListBase.Concat(autoCompleteListUser).OrderBy(Function(x) x)
 
-        For Each ac In fullAutoCompleteList
-            Dim imageIndex = -1
-            Dim menuText = ac
-            Dim toolTipTitle = ""
-            Dim toolTipText = ""
-            Dim addedParenthesis = ""
-            If ScriptRes.autoCompleteFuncInfoByName.ContainsKey(ac) Then
-                menuText = ScriptRes.autoCompleteFuncInfoByName(ac).First().UsageString
-
-                If TryCast(ScriptRes.autoCompleteFuncInfoByName(ac).First(), IngameFuncInfo) IsNot Nothing Then
-                    toolTipTitle = "Vanilla Dark Souls Lua Function"
-                    imageIndex = 1
-                ElseIf TryCast(ScriptRes.autoCompleteFuncInfoByName(ac).First(), CustomFuncInfo) IsNot Nothing Then
-                    toolTipTitle = "DaS-Scripting Library Function"
-                    imageIndex = 0
-                End If
-
-                addedParenthesis = "("
-                toolTipText = "Can be called as:    " & String.Join(", ", ScriptRes.autoCompleteFuncInfoByName(ac).Select(Function(x) x.UsageString))
-
-            ElseIf ScriptRes.propTypes.ContainsKey(ac) Then
-                imageIndex = 2
-                menuText = ScriptRes.propTypes(ac)
-                toolTipTitle = "DaS-Scripting Library Field"
-                toolTipText = "Don't mess with stuff in the scripting library unless you know what you're doing.™"
-
-            ElseIf ScriptRes.autoCompleteAdditionalTypes.Any(Function(x) x.Name = ac) Then
-                imageIndex = 3
-                menuText = "typedef " & ac
-                toolTipTitle = "DaS-Scripting Library Type"
-                toolTipText = "Don't mess with stuff in the scripting library unless you know what you're doing.™"
-            Else
-                imageIndex = 4
-                toolTipTitle = "Lua Default Element"
-                toolTipText = "You can find the documentation on the internet somewhere.™"
-            End If
-
-            auto.AddItem(New AutocompleteMenuNS.AutocompleteItem(ac & addedParenthesis, imageIndex, menuText, toolTipTitle, toolTipText))
-        Next
-
-        auto.AddItem(New AutocompleteMenuNS.AutocompleteItem("end", 4, "end", "Lua keyword", "Only in this menu so autocomplete will leave you alone when you type 'end'."))
+        RebuildAutoComplete()
 
         auto.AllowsTabKey = True
         auto.AppearInterval = 250
@@ -329,7 +288,54 @@ Public Class ConsoleHandler
         _AutoCompleteOpened = True
     End Sub
 
-    Private Sub RebuildAutoCompleteStr()
+    Private Sub RebuildAutoComplete()
+        Dim fullAutoCompleteList = AutoCompleteListBase.Concat(autoCompleteListUser).OrderBy(Function(x) x)
+
+        auto.Items = New String() {}
+
+        For Each ac In fullAutoCompleteList
+            Dim imageIndex = -1
+            Dim menuText = ac
+            Dim toolTipTitle = ""
+            Dim toolTipText = ""
+            If Lua.LuaDummyAutoComplete.ContainsKey(ac) Then
+                menuText = Lua.LuaDummyAutoComplete(ac)
+                toolTipTitle = "Lua State Function"
+                toolTipText = "Member of the lua state class that runs this lua script."
+                imageIndex = 4
+            ElseIf ScriptRes.autoCompleteFuncInfoByName.ContainsKey(ac) Then
+                menuText = ScriptRes.autoCompleteFuncInfoByName(ac).First().UsageString
+
+                If TryCast(ScriptRes.autoCompleteFuncInfoByName(ac).First(), IngameFuncInfo) IsNot Nothing Then
+                    toolTipTitle = "Vanilla Dark Souls Lua Function"
+                    imageIndex = 1
+                ElseIf TryCast(ScriptRes.autoCompleteFuncInfoByName(ac).First(), CustomFuncInfo) IsNot Nothing Then
+                    toolTipTitle = "DaS-Scripting Library Function"
+                    imageIndex = 0
+                End If
+
+                toolTipText = "Can be called as:    " & String.Join(", ", ScriptRes.autoCompleteFuncInfoByName(ac).Select(Function(x) x.UsageString))
+
+            ElseIf ScriptRes.propTypes.ContainsKey(ac) Then
+                imageIndex = 2
+                menuText = ScriptRes.propTypes(ac)
+                toolTipTitle = "DaS-Scripting Library Field"
+                toolTipText = "Don't mess with stuff in the scripting library unless you know what you're doing.™"
+
+            ElseIf ScriptRes.autoCompleteAdditionalTypes.Any(Function(x) x.Name = ac) Then
+                imageIndex = 3
+                menuText = "typedef " & ac
+                toolTipTitle = "DaS-Scripting Library Type"
+                toolTipText = "Don't mess with stuff in the scripting library unless you know what you're doing.™"
+            Else
+                imageIndex = 4
+                toolTipTitle = "Lua Default Element"
+                toolTipText = "You can find the documentation on the internet somewhere.™"
+            End If
+
+            auto.AddItem(New AutocompleteMenuNS.AutocompleteItem(ac, imageIndex, menuText, toolTipTitle, toolTipText))
+        Next
+
         _AutoCompleteString = String.Join(" ", AutoCompleteListBase.Concat(autoCompleteListUser).OrderBy(Function(x) x).ToArray())
         cons.SetKeywords(2, AutoCompleteString)
     End Sub
@@ -341,6 +347,9 @@ Public Class ConsoleHandler
         aclist.AddRange(ScriptRes.autoCompleteFuncInfoByName.Keys)
         aclist.AddRange(ScriptRes.propTypes.Keys)
         aclist.AddRange(ScriptRes.autoCompleteAdditionalTypes.Select(Function(x) x.Name))
+        aclist.AddRange(Lua.LuaDummyAutoComplete.Keys)
+        aclist.AddRange("and break do else elseif end false for function goto if in local nil not or repeat return then true until while".Split(" "))
+
         _AutoCompleteListBase = aclist.OrderBy(Function(x) x).ToList()
     End Sub
 
