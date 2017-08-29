@@ -21,6 +21,7 @@
 14015440|NotNetMessage_end
 14015456|NotNetMessage_begin
 14015472|SetFlagInitState
+14015568|GetHeroPoint
 14015600|SetReturnPointEntityId
 14015696|SetClearItem
 14015808|RequestFullRecover
@@ -44,7 +45,9 @@
 14016752|GetRandom
 14016912|SetTalkMsg
 14016960|ReturnMapSelect
+14017072|GetReturnState
 14017088|GetItem
+14017120|GetHostPlayerNum
 14017168|OnBallista
 14017232|IsOnline
 14017504|ReqularLeavePlayer
@@ -56,6 +59,8 @@
 14017728|SetClearSesiionCount
 14017792|CloseGenDialog
 14017888|SetClearState
+14017920|GetClearState
+14017952|GetClearCount
 14017984|SetValidTalk
 14018064|CloseTalk
 14018112|TalkNextPage
