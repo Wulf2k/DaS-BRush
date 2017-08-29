@@ -70,7 +70,6 @@ Public Class Lua
             LuaState.DoString(GetRegexedLuaScript(System.IO.File.ReadAllText(file)))
         Catch ex As Exception
             Dbg.PrintErr($"Import FAILED: {ex.Message}")
-            Dbg.PopupErr()
             Throw New Exception($"Failed to import '{file}'.{vbCrLf}{vbCrLf}{ex.Message}", ex)
             Return
         End Try
