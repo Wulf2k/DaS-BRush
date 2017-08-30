@@ -107,70 +107,70 @@
             End If
             Return True
         End Function
-
+        <HideFromScripting>
         Public Function RInt8(ByVal addr As IntPtr) As SByte
             CheckReadAddr(addr)
             Dim _rtnBytes(0) As Byte
             ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 1, vbNull)
             Return _rtnBytes(0)
         End Function
-
+        <HideFromScripting>
         Public Function RInt16(ByVal addr As IntPtr) As Int16
             CheckReadAddr(addr)
             Dim _rtnBytes(1) As Byte
             ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 2, vbNull)
             Return BitConverter.ToInt16(_rtnBytes, 0)
         End Function
-
+        <HideFromScripting>
         Public Function RInt32(ByVal addr As IntPtr) As Int32
             CheckReadAddr(addr)
             Dim _rtnBytes(3) As Byte
             ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 4, vbNull)
             Return BitConverter.ToInt32(_rtnBytes, 0)
         End Function
-
+        <HideFromScripting>
         Public Function RInt64(ByVal addr As IntPtr) As Int64
             CheckReadAddr(addr)
             Dim _rtnBytes(7) As Byte
             ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 8, vbNull)
             Return BitConverter.ToInt64(_rtnBytes, 0)
         End Function
-
+        <HideFromScripting>
         Public Function RUInt16(ByVal addr As IntPtr) As UInt16
             CheckReadAddr(addr)
             Dim _rtnBytes(1) As Byte
             ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 2, vbNull)
             Return BitConverter.ToUInt16(_rtnBytes, 0)
         End Function
-
+        <HideFromScripting>
         Public Function RUInt32(ByVal addr As IntPtr) As UInt32
             CheckReadAddr(addr)
             Dim _rtnBytes(3) As Byte
             ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 4, vbNull)
             Return BitConverter.ToUInt32(_rtnBytes, 0)
         End Function
-
+        <HideFromScripting>
         Public Function RUInt64(ByVal addr As IntPtr) As UInt64
             CheckReadAddr(addr)
             Dim _rtnBytes(7) As Byte
             ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 8, vbNull)
             Return BitConverter.ToUInt64(_rtnBytes, 0)
         End Function
-
+        <HideFromScripting>
         Public Function RFloat(ByVal addr As IntPtr) As Single
             CheckReadAddr(addr)
             Dim _rtnBytes(3) As Byte
             ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 4, vbNull)
             Return BitConverter.ToSingle(_rtnBytes, 0)
         End Function
-
+        <HideFromScripting>
         Public Function RDouble(ByVal addr As IntPtr) As Double
             CheckReadAddr(addr)
             Dim _rtnBytes(7) As Byte
             ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, 8, vbNull)
             Return BitConverter.ToDouble(_rtnBytes, 0)
         End Function
-
+        <HideFromScripting>
         Public Function RIntPtr(ByVal addr As IntPtr) As IntPtr
             CheckReadAddr(addr)
             Dim _rtnBytes(IntPtr.Size - 1) As Byte
@@ -181,14 +181,14 @@
                 Return New IntPtr(BitConverter.ToInt64(_rtnBytes, 0))
             End If
         End Function
-
+        <HideFromScripting>
         Public Function RBytes(ByVal addr As IntPtr, ByVal size As Int32) As Byte()
             CheckReadAddr(addr)
             Dim _rtnBytes(size - 1) As Byte
             ReadProcessMemory(_targetProcessHandle, addr, _rtnBytes, size, vbNull)
             Return _rtnBytes
         End Function
-
+        <HideFromScripting>
         Public Function RAsciiStr(ByVal addr As UInteger) As String
             CheckReadAddr(addr)
             Dim Str As String = ""
@@ -212,7 +212,7 @@
 
             Return Str
         End Function
-
+        <HideFromScripting>
         Public Function RUnicodeStr(ByVal addr As UInteger) As String
             Dim Str As String = ""
             Dim cont As Boolean = True
@@ -235,95 +235,95 @@
 
             Return Str
         End Function
-
+        <HideFromScripting>
         Public Sub WBool(ByVal addr As IntPtr, val As Boolean)
             If Not CheckWriteAddr(addr) Then Return
             WriteProcessMemory(_targetProcessHandle, addr, BitConverter.GetBytes(val), 1, Nothing)
         End Sub
-
+        <HideFromScripting>
         Public Sub WInt16(ByVal addr As IntPtr, val As Int16)
             If Not CheckWriteAddr(addr) Then Return
             WriteProcessMemory(_targetProcessHandle, addr, BitConverter.GetBytes(val), 2, Nothing)
         End Sub
-
+        <HideFromScripting>
         Public Sub WInt32(ByVal addr As IntPtr, val As Int32)
             If Not CheckWriteAddr(addr) Then Return
             WriteProcessMemory(_targetProcessHandle, addr, BitConverter.GetBytes(val), 4, Nothing)
         End Sub
-
+        <HideFromScripting>
         Public Sub WUInt32(ByVal addr As IntPtr, val As UInt32)
             If Not CheckWriteAddr(addr) Then Return
             WriteProcessMemory(_targetProcessHandle, addr, BitConverter.GetBytes(val), 4, Nothing)
         End Sub
-
+        <HideFromScripting>
         Public Sub WFloat(ByVal addr As IntPtr, val As Single)
             If Not CheckWriteAddr(addr) Then Return
             WriteProcessMemory(_targetProcessHandle, addr, BitConverter.GetBytes(val), 4, Nothing)
         End Sub
-
+        <HideFromScripting>
         Public Sub WBytes(ByVal addr As IntPtr, val As Byte())
             If Not CheckWriteAddr(addr) Then Return
             WriteProcessMemory(_targetProcessHandle, addr, val, val.Length, Nothing)
         End Sub
-
+        <HideFromScripting>
         Public Sub WAsciiStr(addr As IntPtr, str As String)
             If Not CheckWriteAddr(addr) Then Return
             WriteProcessMemory(_targetProcessHandle, addr, System.Text.Encoding.ASCII.GetBytes(str).Concat(New Byte() {0}).ToArray(), str.Length + 1, Nothing)
         End Sub
-
+        <HideFromScripting>
         Public Sub WUnicodeStr(addr As IntPtr, str As String)
             If Not CheckWriteAddr(addr) Then Return
             WriteProcessMemory(_targetProcessHandle, addr, System.Text.Encoding.Unicode.GetBytes(str).Concat(New Byte() {0, 0}).ToArray(), str.Length * 2 + 2, Nothing)
         End Sub
-
+        <HideFromScripting>
         Public Function RInt8(ByVal addr As Integer) As SByte
             Return RInt8(New IntPtr(addr))
         End Function
-
+        <HideFromScripting>
         Public Function RInt16(ByVal addr As Integer) As Int16
             Return RInt16(New IntPtr(addr))
         End Function
-
+        <HideFromScripting>
         Public Function RInt32(ByVal addr As Integer) As Int32
             Return RInt32(New IntPtr(addr))
         End Function
-
+        <HideFromScripting>
         Public Function RInt64(ByVal addr As Integer) As Int64
             Return RInt64(New IntPtr(addr))
         End Function
-
+        <HideFromScripting>
         Public Function RUInt16(ByVal addr As Integer) As UInt16
             Return RUInt16(New IntPtr(addr))
         End Function
-
+        <HideFromScripting>
         Public Function RUInt32(ByVal addr As Integer) As UInt32
             Return RUInt32(New IntPtr(addr))
         End Function
-
+        <HideFromScripting>
         Public Function RUInt64(ByVal addr As Integer) As UInt64
             Return RUInt64(New IntPtr(addr))
         End Function
-
+        <HideFromScripting>
         Public Function RFloat(ByVal addr As Integer) As Single
             Return RFloat(New IntPtr(addr))
         End Function
-
+        <HideFromScripting>
         Public Function RDouble(ByVal addr As Integer) As Double
             Return RDouble(New IntPtr(addr))
         End Function
-
+        <HideFromScripting>
         Public Function RIntPtr(ByVal addr As Integer) As IntPtr
             Return RIntPtr(New IntPtr(addr))
         End Function
-
+        <HideFromScripting>
         Public Function RBytes(ByVal addr As Integer, ByVal size As Int32) As Byte()
             Return RBytes(New IntPtr(addr), size)
         End Function
-
+        <HideFromScripting>
         Public Function RAsciiStr(ByVal addr As Integer) As String
             Return RAsciiStr(CType(addr, UInteger))
         End Function
-
+        <HideFromScripting>
         Public Function RUnicodeStr(ByVal addr As Integer) As String
             Return RUnicodeStr(CType(addr, UInteger))
         End Function
@@ -379,35 +379,35 @@
         Public Function RUnicodeStr(ByVal addr As Long) As String
             Return RUnicodeStr(CType(addr, UInteger))
         End Function
-
+        <HideFromScripting>
         Public Sub WBool(ByVal addr As Integer, val As Boolean)
             WBool(New IntPtr(addr), val)
         End Sub
-
+        <HideFromScripting>
         Public Sub WInt16(ByVal addr As Integer, val As Int16)
             WInt16(New IntPtr(addr), val)
         End Sub
-
+        <HideFromScripting>
         Public Sub WInt32(ByVal addr As Integer, val As Int32)
             WInt32(New IntPtr(addr), val)
         End Sub
-
+        <HideFromScripting>
         Public Sub WUInt32(ByVal addr As Integer, val As UInt32)
             WUInt32(New IntPtr(addr), val)
         End Sub
-
+        <HideFromScripting>
         Public Sub WFloat(ByVal addr As Integer, val As Single)
             WFloat(New IntPtr(addr), val)
         End Sub
-
+        <HideFromScripting>
         Public Sub WBytes(ByVal addr As Integer, val As Byte())
             WBytes(New IntPtr(addr), val)
         End Sub
-
+        <HideFromScripting>
         Public Sub WAsciiStr(addr As Integer, str As String)
             WAsciiStr(New IntPtr(addr), str)
         End Sub
-
+        <HideFromScripting>
         Public Sub WUnicodeStr(addr As Integer, str As String)
             WUnicodeStr(New IntPtr(addr), str)
         End Sub

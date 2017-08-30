@@ -173,7 +173,7 @@ Public Class frmForm1
             End Using
         End Using
 
-        lua.DoStringRegexed(bossRushScript)
+        lua.LuaState.DoString(bossRushScript)
     End Sub
 
     Private Sub RefreshGUI()
@@ -533,8 +533,8 @@ Public Class frmForm1
 
         If consoleWindow Is Nothing Then
             consoleWindow = New DaS.ScriptEditor.ConsoleWindow()
-            AddHandler consoleWindow.FormClosed, AddressOf CurrentConsEditor_Closed
             consoleWindow.Show()
+            AddHandler consoleWindow.FormClosed, AddressOf CurrentConsEditor_Closed
         Else
             consoleWindow.BringToFront()
             consoleWindow.Activate()
@@ -544,7 +544,6 @@ Public Class frmForm1
 
     Private Sub CurrentConsEditor_Closed(sender As Object, e As FormClosedEventArgs)
         RemoveHandler consoleWindow.FormClosed, AddressOf CurrentConsEditor_Closed
-
         consoleWindow = Nothing
     End Sub
 

@@ -65,10 +65,6 @@ Public Class Dbg
         End SyncLock
     End Sub
 
-    Public Shared Sub Dump(format As String, args As Object())
-        Dump(String.Format(format, args))
-    End Sub
-
     Public Shared Function PopupErr(msg As String) As DialogResult
         Return Popup(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
     End Function
@@ -77,30 +73,14 @@ Public Class Dbg
         Return Popup(msg, "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error)
     End Function
 
-    Public Shared Function PopupOk(msg As String) As DialogResult
-        Return Popup(msg, "(Untitled)")
-    End Function
-
-    Public Shared Function PopupOk(msg As String, title As String) As DialogResult
+    Public Shared Function PopupOk(msg As String, Optional title As String = "(Untitled)") As DialogResult
         Return Popup(msg, title)
     End Function
 
-    Public Shared Function Popup(msg As String) As DialogResult
-        Return Popup(msg, "(Untitled)", MessageBoxButtons.OK, MessageBoxIcon.None)
-    End Function
-
-    Public Shared Function Popup(msg As String, title As String) As DialogResult
-        Return Popup(msg, title, MessageBoxButtons.OK, MessageBoxIcon.None)
-    End Function
-
-    Public Shared Function Popup(msg As String, title As String, buttons As MessageBoxButtons) As DialogResult
-        Return Popup(msg, title, buttons, MessageBoxIcon.None)
-    End Function
-
     Public Shared Function Popup(msg As String,
-                                 title As String,
-                                 buttons As MessageBoxButtons,
-                                 icon As MessageBoxIcon) As DialogResult
+                                 Optional title As String = "(Untitled)",
+                                 Optional buttons As MessageBoxButtons = MessageBoxButtons.OK,
+                                 Optional icon As MessageBoxIcon = MessageBoxIcon.None) As DialogResult
         Return MessageBox.Show(msg, title, buttons, icon)
     End Function
 

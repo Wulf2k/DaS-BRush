@@ -1,3 +1,6 @@
+# Address|FunctionName|Param1Type Param1, Param2Type Param2, etc|Return value type (int, unicode string, float, etc)|Description of return value e.g. "Entity pointer"
+# Lines beginning with "#" are ignored (obviously)
+
 14014432|InitDeathState
 14014480|Util_RequestRespawn
 14014496|Util_RequestRegene
@@ -150,7 +153,7 @@
 14025008|GetBountyRankPoint
 14025040|IsCompleteEventValue
 14025072|IsCompleteEvent
-14025104|SetEventFlag(int flagId, bool state)
+14025104|SetEventFlag|int flagId, bool state|?|?
 14025488|SetFootIKInterpolateType
 14025536|GetEventFlagValue
 14025568|SetEventFlagValue
@@ -174,8 +177,8 @@
 14026496|SetBossGauge
 14026560|RecoveryHeroin
 14026576|SetAlwaysEnableBackread_forEvent
-14026608|ChrFadeOut(int chrId, float duration, float startOpacity)|ChrData1*
-14026720|ChrFadeIn(int chrId, float duration, float startOpacity)|ChrData1*
+14026608|ChrFadeOut|int chrId, float duration, float startOpacity|int|Entity Pointer
+14026720|ChrFadeIn|int chrId, float duration, float startOpacity|int|Entity Pointer
 14026832|SummonedMapReload
 14026848|CharacterAllAttachSys
 14026896|GetSummonAnimId

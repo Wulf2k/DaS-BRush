@@ -3,10 +3,34 @@
 Public Class Funcs
     Private Shared ReadOnly Property checkIfLoadingScreen_PrevFrameInGameTime
 
-    <HideFromScripting>
-    Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "", Optional param4 As Object = "", Optional param5 As Object = "") As Integer
-        Return AsmExecutor.FuncCall(func, param1, param2, param3, param4, param5)
-    End Function
+    'btw I never mentioned why these overloads are here when we have Optional args.
+    'That's because all optional args are treated as regular args in lua.
+    'Without these, doing "ChrFadeIn(10000)" makes it complain about wrong args
+
+    '<HideFromScripting>
+    'Public Shared Function FuncCall(Of T)(retType As IngameFuncReturnType, func As String) As T
+    '    Return AsmExecutor.FuncCall(Of T)(retType, func, "", "", "", "", "", "", "", "", "", "")
+    'End Function
+
+    '<HideFromScripting>
+    'Public Shared Function FuncCall(Of T)(retType As IngameFuncReturnType, func As String, Optional param1 As Object = "") As T
+    '    Return FuncCall(Of T)(retType, func, param1, "", "", "", "")
+    'End Function
+
+    '<HideFromScripting>
+    'Public Shared Function FuncCall(Of T)(retType As IngameFuncReturnType, func As String, Optional param1 As Object = "", Optional param2 As Object = "") As T
+    '    Return FuncCall(Of T)(retType, func, param1, param2, "", "", "")
+    'End Function
+
+    '<HideFromScripting>
+    'Public Shared Function FuncCall(Of T)(retType As IngameFuncReturnType, func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "") As T
+    '    Return FuncCall(Of T)(retType, func, param1, param2, param3, "", "")
+    'End Function
+
+    '<HideFromScripting>
+    'Public Shared Function FuncCall(Of T)(retType As IngameFuncReturnType, func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "", Optional param4 As Object = "") As T
+    '    Return FuncCall(Of T)(retType, func, param1, param2, param3, param4, "")
+    'End Function
 
     Public Shared Function GetNgPlusText(ngLevel As String) As String
         If ngLevel = 0 Then
@@ -30,11 +54,7 @@ Public Class Funcs
         Return SetGenDialog(text, 2, choice1, choice2).Response
     End Function
 
-    Public Shared Sub Warp_Coords(ByVal x As Single, y As Single, z As Single)
-        Warp_Coords(x, y, z, 0)
-    End Sub
-
-    Public Shared Sub Warp_Coords(ByVal x As Single, y As Single, z As Single, rotx As Single)
+    Public Shared Sub Warp_Coords(ByVal x As Single, y As Single, z As Single, Optional rotx As Single? = Nothing)
         Dim charptr1 = RInt32(&H137DC70)
         charptr1 = RInt32(charptr1 + &H4)
         charptr1 = RInt32(charptr1)
@@ -44,10 +64,16 @@ Public Class Funcs
         WFloat(charmapdataptr + &HD4, y)
         WFloat(charmapdataptr + &HD8, z)
 
-        Dim facing As Single
-        facing = ((rotx / 360) * 2 * Math.PI) - Math.PI
+        If rotx.HasValue Then
+            Dim facing As Single
+            facing = ((rotx / 360) * 2 * Math.PI) - Math.PI
+            WFloat(charmapdataptr + &HE4, facing)
+        Else
+            WFloat(charmapdataptr + &HE4, Game.Player.Heading.Value)
+        End If
 
-        WFloat(charmapdataptr + &HE4, facing)
+
+
         WBytes(charmapdataptr + &HC8, {1})
     End Sub
 
@@ -309,11 +335,7 @@ Public Class Funcs
         MoveEntityAtSpeed(entityPtr, Math.Cos(angle) * speed, 0, Math.Sin(angle) * speed, 0)
     End Sub
 
-    Public Shared Sub MoveEntityAtSpeed(entityPtr As Integer, speedX As Single, speedY As Single, speedZ As Single)
-        MoveEntityAtSpeed(entityPtr, speedX, speedY, speedZ, 0)
-    End Sub
-
-    Public Shared Sub MoveEntityAtSpeed(entityPtr As Integer, speedX As Single, speedY As Single, speedZ As Single, speedRot As Single)
+    Public Shared Sub MoveEntityAtSpeed(entityPtr As Integer, speedX As Single, speedY As Single, speedZ As Single, Optional speedRot As Single = 0)
 
         SetEntityPosX(entityPtr, GetEntityPosX(entityPtr) + speedX)
         SetEntityPosY(entityPtr, GetEntityPosY(entityPtr) + speedY)
@@ -370,7 +392,7 @@ Public Class Funcs
         WFloat(entityPosPtr + &H4, CType(angle * Math.PI / 180, Single) - CType(Math.PI, Single))
     End Sub
 
-    Public Shared Sub SetEntityLocation(entityPtr As Integer, posX As Single, posY As Single, posZ As Single, angle As Single)
+    Public Shared Sub SetEntityXYZR(entityPtr As Integer, posX As Single, posY As Single, posZ As Single, angle As Single)
         Dim entityPosPtr = RInt32(entityPtr + &H28)
         entityPosPtr = RInt32(entityPosPtr + &H1C)
         WFloat(entityPosPtr + &H10, posX)
@@ -384,7 +406,7 @@ Public Class Funcs
     End Function
 
     Public Shared Sub SetEntityLocation(entityPtr As Integer, location As EntityLocation)
-        SetEntityLocation(entityPtr, location.Pos.X, location.Pos.Y, location.Pos.Z, location.Rot)
+        SetEntityXYZR(entityPtr, location.Pos.X, location.Pos.Y, location.Pos.Z, location.Rot)
     End Sub
 
     Public Shared Sub PlayerHide(ByVal state As Boolean)
@@ -537,33 +559,33 @@ Public Class Funcs
         Thread.Sleep(val)
     End Sub
 
-    Public Shared Function WaitForBossDeath(ByVal boost As Integer, match As Integer) As Boolean
-        Dim eventPtr As Integer
-        eventPtr = RInt32(&H137D7D4)
-        eventPtr = RInt32(eventPtr)
+    'Public Shared Function WaitForBossDeath(ByVal boost As Integer, match As Integer) As Boolean
+    '    Dim eventPtr As Integer
+    '    eventPtr = RInt32(&H137D7D4)
+    '    eventPtr = RInt32(eventPtr)
 
-        Dim hpPtr As Integer
-        hpPtr = RInt32(&H137DC70)
-        hpPtr = RInt32(hpPtr + 4)
-        hpPtr = RInt32(hpPtr)
-        hpPtr = hpPtr + &H2D4
+    '    Dim hpPtr As Integer
+    '    hpPtr = RInt32(&H137DC70)
+    '    hpPtr = RInt32(hpPtr + 4)
+    '    hpPtr = RInt32(hpPtr)
+    '    hpPtr = hpPtr + &H2D4
 
-        Dim bossdead As Boolean = False
-        Dim selfdead As Boolean = False
+    '    Dim bossdead As Boolean = False
+    '    Dim selfdead As Boolean = False
 
-        While Not (bossdead Or selfdead)
-            bossdead = (RInt32(eventPtr + boost) And match)
-            selfdead = (RInt32(hpPtr) = 0)
-            Console.WriteLine(Hex(eventPtr) & " - " & Hex(RInt32(eventPtr)))
-            Thread.Sleep(33)
-        End While
+    '    While Not (bossdead Or selfdead)
+    '        bossdead = (RInt32(eventPtr + boost) And match)
+    '        selfdead = (RInt32(hpPtr) = 0)
+    '        Console.WriteLine(Hex(eventPtr) & " - " & Hex(RInt32(eventPtr)))
+    '        Thread.Sleep(33)
+    '    End While
 
-        If bossdead Then
-            Return True
-        Else
-            Return False
-        End If
-    End Function
+    '    If bossdead Then
+    '        Return True
+    '    Else
+    '        Return False
+    '    End If
+    'End Function
 
     Public Shared Sub DropItem(ByVal cat As String, item As String, num As Integer)
         Dim TargetBufferSize = 1024
@@ -639,31 +661,6 @@ Public Class Funcs
     Public Shared Sub SetLineHelpTextClear()
         WInt32(Game.MenuPtr.Value + &H154, -1)
     End Sub
-
-    <HideFromScripting>
-    Public Shared Function FuncCall(func As String) As Integer
-        Return FuncCall(func, "", "", "", "", "")
-    End Function
-
-    <HideFromScripting>
-    Public Shared Function FuncCall(func As String, Optional param1 As Object = "") As Integer
-        Return FuncCall(func, param1, "", "", "", "")
-    End Function
-
-    <HideFromScripting>
-    Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "") As Integer
-        Return FuncCall(func, param1, param2, "", "", "")
-    End Function
-
-    <HideFromScripting>
-    Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "") As Integer
-        Return FuncCall(func, param1, param2, param3, "", "")
-    End Function
-
-    <HideFromScripting>
-    Public Shared Function FuncCall(func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "", Optional param4 As Object = "") As Integer
-        Return FuncCall(func, param1, param2, param3, param4, "")
-    End Function
 
 #Region "Old Boss Rush Functions"
 

@@ -2,12 +2,15 @@
     Implements IDisposable
 
     Public ReadOnly Property Address As IntPtr = IntPtr.Zero
+    Public ReadOnly Property BufferSize As IntPtr
 
-    Friend Sub New(Optional hand As IntPtr? = Nothing)
+    Friend Sub New(bufferSize As Integer)
+        Me.BufferSize = bufferSize
+
         AddHandler OnDetachFromCurrentProcess, AddressOf Proc_OnDetachFromProcess
         AddHandler OnAttachToCurrentProcess, AddressOf Proc_OnAttachToProcess
 
-        TryAlloc(hand)
+        TryAlloc(Nothing)
     End Sub
 
     Private Sub Proc_OnDetachFromProcess(ByVal hand As IntPtr)
@@ -19,14 +22,12 @@
     End Sub
 
     Private Sub TryAlloc(Optional hand As IntPtr? = Nothing)
-        Dim TargetBufferSize = 1024
-        _Address = VirtualAllocEx(If(hand, _targetProcessHandle), 0, TargetBufferSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE)
+        _Address = VirtualAllocEx(If(hand, _targetProcessHandle), 0, BufferSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE)
     End Sub
 
     Private Sub TryDealloc(Optional hand As IntPtr? = Nothing)
         If Not Address = IntPtr.Zero Then
-            Dim TargetBufferSize = 1024
-            VirtualFreeEx(If(hand, _targetProcessHandle), Address, TargetBufferSize, MEM_COMMIT)
+            VirtualFreeEx(If(hand, _targetProcessHandle), Address, BufferSize, MEM_COMMIT)
             _Address = IntPtr.Zero
         End If
     End Sub
