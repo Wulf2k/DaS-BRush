@@ -77,8 +77,10 @@
         'A negative flag ID indicates the flag should be set to false
         Dim __bossFights As BossFightInfo() = {
             New BossFightInfo(Boss.AsylumDemon) With { 'NO ADJUSTMENTS NEEDED
-                .BonfireID = 1810998,
                 .PlayerWarp = New EntityLocation(3.157, 198.148, -3.425, 180),
+                .World = 18,
+                .Area = 1,
+                .WarpID = -1,
                 .AdditionalFlags = {
                     -11810000, 'first time asylum
                     11815395, 'fatass waiting for you...?
@@ -86,16 +88,20 @@
                 },
                 .EventFlag = BossEvent.AsylumDemon
             },
-            New BossFightInfo(Boss.TaurusDemon) With { 'NEEDS BONFIRE AND WARP POS. NO FLAGS NEEDED
-                .BonfireID = 0,
-                .PlayerWarp = New EntityLocation(),
+            New BossFightInfo(Boss.TaurusDemon) With { 'NO ADJUSTMENTS NEEDED
+                .PlayerWarp = New EntityLocation(51.89, 17.21, -118.47, 257),
+                .World = 10,
+                .Area = 1,
+                .WarpID = -1,
                 .AdditionalFlags = {
                 },
                 .EventFlag = BossEvent.TaurusDemon
             },
-            New BossFightInfo(Boss.Gargoyles) With { 'NEEDS WARP POS AND CUTSCENE WATCHED FLAG
-                .BonfireID = 1010998,
-                .PlayerWarp = New EntityLocation(10.8, 48.92, 87.26),
+            New BossFightInfo(Boss.Gargoyles) With { 'NO ADJUSTMENTS NEEDED
+                .PlayerWarp = New EntityLocation(17.37, 47.82, 73, 0),
+                .World = 10,
+                .Area = 1,
+                .WarpID = -1,
                 .AdditionalFlags = {
                     11010000, 'cutscene watched = true
                     -11015390, 'entered fog = false
@@ -103,74 +109,95 @@
                 },
                 .EventFlag = BossEvent.Gargoyles
             },
-            New BossFightInfo(Boss.CapraDemon) With { 'NEEDS WARP POS
-                .BonfireID = 1010998,
-                .PlayerWarp = New EntityLocation(-73.17, -43.56, -15.17, 321),
+            New BossFightInfo(Boss.CapraDemon) With { 'NO ADJUSTMENTS NEEDED
+                .PlayerWarp = New EntityLocation(-72.17, -43.56, -17.17, 321),
+                .World = 10,
+                .Area = 1,
+                .WarpID = -1,
                 .AdditionalFlags = {
                 },
                 .EventFlag = BossEvent.CapraDemon
             },
-            New BossFightInfo(Boss.GapingDragon) With { 'NEEDS BONFIRE, WARP POS, AND CHANNELER FUCK OFF FLAG
-                .BonfireID = 0,
-                .PlayerWarp = New EntityLocation(),
-                .AdditionalFlags = {
+            New BossFightInfo(Boss.GapingDragon) With { 'NO ADJUSTMENTS NEEDED
+                .PlayerWarp = New EntityLocation(-166.61, -100.10, -13.44, 0),
+                .World = 10,
+                .Area = 0,
+                .WarpID = -1,
+                .AdditionalFlags = {11000853
                 },
                 .EventFlag = BossEvent.GapingDragon
             },
-            New BossFightInfo(Boss.MoonlightButterfly) With { 'NEEDS BONFIRE AND WARP POS (NOT SURE IF NEEDS FOG FLAG)
-                .BonfireID = 0,
-                .PlayerWarp = New EntityLocation(),
+            New BossFightInfo(Boss.MoonlightButterfly) With { 'NO ADJUSTMENTS NEEDED, but check if he gets stuck flying down
+                .PlayerWarp = New EntityLocation(180.48, 8, 29.19, 306),
+                .World = 12,
+                .Area = 0,
+                .WarpID = -1,
                 .AdditionalFlags = {
                 },
                 .EventFlag = BossEvent.MoonlightButterfly
             },
             New BossFightInfo(Boss.Sif) With { 'NEEDS BONFIRE, WARP POS, AND CUTSCENE FLAG
-                .BonfireID = 0,
-                .PlayerWarp = New EntityLocation(),
+                .PlayerWarp = New EntityLocation(275, -19, -264.43, 210), '275, -19.82, -264.43, 210
+                .World = 12,
+                .Area = 0,
+                .WarpID = 1202997,
                 .AdditionalFlags = {
                 },
                 .EventFlag = BossEvent.Sif
             },
-            New BossFightInfo(Boss.Quelaag) With { 'NEEDS WARP POS
-                .BonfireID = 1400980,
-                .PlayerWarp = New EntityLocation(17.2, -236.9, 113.6, 75),
+            New BossFightInfo(Boss.Quelaag) With { '
+                .PlayerWarp = New EntityLocation(12.8, -237, 113.6, 75),
+                .World = 14,
+                .Area = 0,
+                .WarpID = -1,
                 .AdditionalFlags = {
                     -11400000 'btw what is this even
                 },
                 .EventFlag = BossEvent.Quelaag
             },
             New BossFightInfo(Boss.StrayDemon) With { 'NEEDS BONFIRE, WARP POS, UNDEAD LATE-SYLUM FLAG. PLACE WARP POS SO THAT PLAYER ENDS FORWARD WALK ANIM ON BREAKABLE FLOOR.
-                .BonfireID = 0,
-                .PlayerWarp = New EntityLocation(),
+                .PlayerWarp = New EntityLocation(), '2.6, 197.5, -18, 180
+                .World = 18,
+                .Area = 1,
+                .WarpID = 1812996,
+                .PlayerAnim = -1,
                 .AdditionalFlags = {
                     11810000 'second time asylum
                 },
                 .EventFlag = BossEvent.StrayDemon
             },
             New BossFightInfo(Boss.IronGolem) With { 'NEEDS BONFIRE, WARP POS, FIREBOMB WHORE FLAG
-                .BonfireID = 0,
-                .PlayerWarp = New EntityLocation(),
+                .PlayerWarp = New EntityLocation(82.28, 82.25, 254.86, 82),
+                .World = 15,
+                .Area = 0,
+                .WarpID = -1,
                 .AdditionalFlags = {
                 },
                .EventFlag = BossEvent.IronGolem
             },
             New BossFightInfo(Boss.OrnsteinAndSmough) With { 'NEEDS BONFIRE, WARP POS, CUTSCENE WATCH FLAG
-                .BonfireID = 0,
-                .PlayerWarp = New EntityLocation(),
+                .PlayerWarp = New EntityLocation(536.1, 142.6, 255.1, 90),
+                .World = 15,
+                .Area = 1,
+                .WarpID = -1,
                 .AdditionalFlags = {
                 },
                 .EventFlag = BossEvent.OrnsteinAndSmough
             },
             New BossFightInfo(Boss.Pinwheel) With { 'NEEDS BONFIRE, WARP POS, CUTSCENE WATCH FLAG
-                .BonfireID = 0,
                 .PlayerWarp = New EntityLocation(),
+                .World = 13,
+                .Area = 0,
+                .WarpID = 1302998,
                 .AdditionalFlags = {
                 },
                 .EventFlag = BossEvent.Pinwheel
             },
             New BossFightInfo(Boss.Nito) With { 'FULLY WORKING. FALL DAMAGE IS INCLUDED, AS IT IS PART OF THE BOSS. PERIOD.
-                .BonfireID = 1310998,
                 .PlayerWarp = New EntityLocation(-111.53, -249.11, -33.67, 295),
+                .World = 13,
+                .Area = 1,
+                .WarpID = -1,
                 .AdditionalFlags = {
                     -7,
                     11315390,
@@ -179,29 +206,37 @@
                 .EventFlag = BossEvent.Nito
             },
             New BossFightInfo(Boss.SanctuaryGuardian) With { 'NEEDS BONFIRE AND WARP POS
-                .BonfireID = 0,
-                .PlayerWarp = New EntityLocation(),
+                .PlayerWarp = New EntityLocation(930.2, -318.6, 470.5, 30),
+                .World = 12,
+                .Area = 1,
+                .WarpID = -1,
                 .AdditionalFlags = {
                 },
                 .EventFlag = BossEvent.SanctuaryGuardian
             },
             New BossFightInfo(Boss.Artorias) With { 'NEEDS BONFIRE, WARP POS, AND CUTSCENE WATCH FLAG
-                .BonfireID = 0,
-                .PlayerWarp = New EntityLocation(),
+                .PlayerWarp = New EntityLocation(1033.5, -330, 810.4, 70),
+                .World = 12,
+                .Area = 1,
+                .WarpID = -1,
                 .AdditionalFlags = {
                 },
                 .EventFlag = BossEvent.Artorias
             },
             New BossFightInfo(Boss.Manus) With { 'NEEDS BONFIRE, WARP POS (DOES IT HAVE A CUTSCENE I FORGOT)
-                .BonfireID = 0,
-                .PlayerWarp = New EntityLocation(),
+                .PlayerWarp = New EntityLocation(862.5, -538.3, 882.3, 220),
+                .World = 12,
+                .Area = 1,
+                .WarpID = -1,
                 .AdditionalFlags = {
                 },
                 .EventFlag = BossEvent.Manus
             },
             New BossFightInfo(Boss.Ceaseless) With { 'NEEDS WARP POS, AGRO/FOG WALL FLAG, PLAYER STARTS AT FOG, MAKES FIGHT SLIGHTLY MORE CHALLENGING.
-                .BonfireID = 1410998,
-                .PlayerWarp = New EntityLocation(402.45, -278.15, 15.5, 30), 'todo
+                .PlayerWarp = New EntityLocation(248.4, -283.1, 70, 40), 'todo
+                .World = 14,
+                .Area = 1,
+                .WarpID = -1,
                 .AdditionalFlags = {
                     -11410800, 'I
                     -11410801, 'DONT
@@ -216,15 +251,19 @@
                 .EventFlag = BossEvent.Ceaseless
             },
             New BossFightInfo(Boss.DemonFiresage) With { 'NEEDS BONFIRE, WARP POS
-                .BonfireID = 0,
-                .PlayerWarp = New EntityLocation(),
+                .PlayerWarp = New EntityLocation(150, -341, 94, 315),
+                .World = 14,
+                .Area = 1,
+                .WarpID = -1,
                 .AdditionalFlags = {
                 },
                 .EventFlag = BossEvent.DemonFiresage
             },
             New BossFightInfo(Boss.CentipedeDemon) With { 'NEEDS BONFIRE, WARP POS, WATCHED CUTSCENE FLAG, MAYBE MAIN BRUSH SCRIPT REMOVES NG OCR/GIVES NG+ OCR?
-                .BonfireID = 1410998,
-                .PlayerWarp = New EntityLocation(), 'todo todo todo
+                .PlayerWarp = New EntityLocation(167, -383.4, 81.2, 135), 'todo todo todo
+                .World = 14,
+                .Area = 1,
+                .WarpID = -1,
                 .AdditionalFlags = {
                     -11410002,
                     -11410901,
@@ -235,8 +274,10 @@
                 .EventFlag = BossEvent.CentipedeDemon
             },
             New BossFightInfo(Boss.BedOfChaos) With { 'FUNCTIONING AT FIRST GLANCE. NEED TO REVIEW FLAGS. MICHAEL BAY EXPLOSION SLIDE DOWN IS INCLUDED.
-                .BonfireID = 1410980,
                 .PlayerWarp = New EntityLocation(453.3, -363.6, 337.29, 45.0),
+                .World = 14,
+                .Area = 1,
+                .WarpID = -1,
                 .AdditionalFlags = {
                     -11410000, 'idk please confirm wut dis is
                     -11410200, 'center platform
@@ -246,8 +287,10 @@
                 .EventFlag = BossEvent.BedOfChaos
             },
             New BossFightInfo(Boss.Kalameet) With { 'NEEDS WARP POS, FLAGS REVIEW
-                .BonfireID = 1210998,
-                .PlayerWarp = New EntityLocation(876.04, -344.73, 749.75, 240), 'todo
+                .PlayerWarp = New EntityLocation(877.4, -344.73, 751.3, 220), 'todo
+                .World = 12,
+                .Area = 1,
+                .WarpID = -1,
                 .AdditionalFlags = {
                     -11210004,
                     -121,
@@ -262,38 +305,47 @@
                 .EventFlag = BossEvent.Kalameet
             },
             New BossFightInfo(Boss.Seath) With { 'NEEDS BONFIRE, WARP POS, CUTSCENE WATCH FLAG, FOG WALL FLAG, START PLAYER AT FOG WALL AND HAVE THEM RUN ACROSS
-                .BonfireID = 0,
-                .PlayerWarp = New EntityLocation(),
+                .PlayerWarp = New EntityLocation(135.5, 136.5, 829.2, 315),
+                .World = 17,
+                .Area = 0,
+                .WarpID = -1,
                 .AdditionalFlags = {
                 },
                 .EventFlag = BossEvent.Seath
             },
             New BossFightInfo(Boss.FourKings) With { 'NEEDS BONFIRE, WARP POS.
-                .BonfireID = 0,
                 .PlayerWarp = New EntityLocation(),
+                .World = 16,
+                .Area = 0,
+                .WarpID = 1602998,
                 .AdditionalFlags = {
                 },
                 .EventFlag = BossEvent.FourKings,
-                .EntranceLua = "DropItem('Rings', 'Covenant of Artorias', 1)
-                MsgBoxOK('There is a Covenant of Artorias at your feet if you need it.')"
+                .EntranceLua = "AddInventoryItem(138, 0x20000000, 1)"    'Removed MsgBox because it wouldn't clear?  Check again later.
             },
             New BossFightInfo(Boss.Priscilla) With { 'NEEDS BONFIRE, WARP POS, AGRO FLAG(S), ALSO CHECK THAT THE FLAGS DONT ALLOW YOU TO JUMP OFF AND EXIT ARENA
-                .BonfireID = 0,
-                .PlayerWarp = New EntityLocation(),
+                .PlayerWarp = New EntityLocation(-22.7, 60.7, 715, 180),
+                .World = 11,
+                .Area = 0,
+                .WarpID = -1,
                 .AdditionalFlags = {
                 },
                 .EventFlag = BossEvent.Priscilla
             },
             New BossFightInfo(Boss.Gwyndolin) With { 'NEEDS BONFIRE, WARP POS, AGRO FLAG(S), DARK ANOR LONDO FOR STYLE
-                .BonfireID = 0,
-                .PlayerWarp = New EntityLocation(),
+                .PlayerWarp = New EntityLocation(432.5, 60.2, 254.9, 90),
+                .World = 15,
+                .Area = 1,
+                .WarpID = -1,
                 .AdditionalFlags = {
                 },
                 .EventFlag = BossEvent.Gwyndolin
             },
             New BossFightInfo(Boss.Gwyn) With { 'NEEDS BONFIRE, WARP POS
-                .BonfireID = 0,
                 .PlayerWarp = New EntityLocation(),
+                .World = 0,
+                .Area = 0,
+                .WarpID = -1,
                 .AdditionalFlags = {
                 },
                 .EventFlag = BossEvent.Gwyn
