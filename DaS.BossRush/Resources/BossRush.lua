@@ -107,11 +107,12 @@ function SpawnPlayerAtBoss(bossName)
     --Almost fail-proof check since we do not have all the boss rush data filled in yet.
     if boss.EventFlag >= 0 then SetEventFlag(boss.EventFlag, false) end
     --Almost fail-proof check since we do not have all the boss rush data filled in yet.
-    if boss.BonfireID >= 0 and (not boss.PlayerWarp.IsZero) then 
-        WarpNextStage_Bonfire(boss.BonfireID)
-    else
-        WarpNextStage_Bonfire(Game.Player.BonfireID.Value)
-    end
+    --if boss.BonfireID >= 0 and (not boss.PlayerWarp.IsZero) then 
+        --WarpNextStage_Bonfire(boss.BonfireID)
+    --else
+        --WarpNextStage_Bonfire(Game.Player.BonfireID.Value)
+    --end
+	WarpNextStage(boss.World, boss.Area, 0, 0, -1)
 
     Wait(2000)
     WaitForLoadEnd()
@@ -126,10 +127,19 @@ function SpawnPlayerAtBoss(bossName)
     CancelOutOfCurPlrAnim()
 
     --Almost fail-proof check since we do not have all the boss rush data filled in yet.
-    if boss.BonfireID >= 0 and (not boss.PlayerWarp.IsZero) then
+    --if boss.BonfireID >= 0 and (not boss.PlayerWarp.IsZero) then
         --Move player directly to warp point instantly without doing a "warp crouch"
-        SetEntityLocation(GetEntityPtr(Data.PlayerID), boss.PlayerWarp)
-    end
+        --SetEntityLocation(GetEntityPtr(Data.PlayerID), boss.PlayerWarp)
+    --end
+
+	if boss.WarpID > -1 then
+		Warp(10000, boss.WarpID)
+	end
+
+	if not boss.PlayerWarp.IsZero then
+		if not (boss.WarpID == -1) then Wait(2000) end
+		SetEntityLocation(GetEntityPtr(Data.PlayerID), boss.PlayerWarp)
+	end
 
     --Activate current location's map load trigger so it can load during FadeIn
     DisableMapHit(Data.PlayerID, false)
@@ -137,14 +147,20 @@ function SpawnPlayerAtBoss(bossName)
     CamReset(Data.PlayerID, 1)
 
     --Start playing the walking through fogwall anim before it begins to fade in:
-    ForcePlayAnimation(Data.PlayerID, Data.PlayerAnim.FogWalk)
+    SetPlayerIsVegetable(false)
+	wait(100)
+	ForcePlayAnimation(Data.PlayerID, boss.PlayerAnim)
     FadeIn()
     --Wait(1100)
-    SetPlayerIsVegetable(false)
+    
     PlayerHide(false)
 
+
+	
     --Wait for player to finish walking through fog (roughly)
-    Wait(1800)
+    DisableDamage(10000, 1)
+	Wait(1800)
+	DisableDamage(10000, 0)
 
     --Almost fail-proof check since we do not have all the boss rush data filled in yet.
     if string.len(boss.EntranceLua) > 0 then
