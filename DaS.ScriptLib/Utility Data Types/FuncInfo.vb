@@ -81,7 +81,7 @@ Public Class IngameFuncInfo
             Else
                 ParamList = New List(Of ParamInfo)
 
-                For i = 1 To 10
+                For i = 1 To 5
                     ParamList.Add(New ParamInfo($"? param{i}"))
                 Next
 

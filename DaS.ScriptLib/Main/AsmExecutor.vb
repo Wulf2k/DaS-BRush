@@ -658,6 +658,10 @@ Friend Class AsmExecutor
     End Function
 
     Friend Shared Function GetFuncCallArgAsInteger(ByRef ptrList As List(Of IngameAllocatedPtr), pInfo As ParamInfo, ByVal obj As Object) As Integer
+        If obj Is Nothing Then
+            Return 0
+        End If
+
         Select Case pInfo.IngameParamType
             Case IngameFuncReturnType.AsciiStringerino
                 Dim text As String = CType(obj, String)
@@ -692,7 +696,6 @@ Friend Class AsmExecutor
         Dim funcInfoParamList = ScriptRes.autoCompleteFuncInfoByName(ScriptRes.caselessIngameFuncNames(func)).ParamList
 
         Dim Params() As Object = luaTable.Values.OfType(Of Object).
-            TakeWhile(Function(x) x IsNot Nothing).
             Select(Function(x, i) GetFuncCallParamValue(funcInfoParamList, i, x)).
             ToArray()
 
