@@ -75,7 +75,7 @@
 14017008|IsInParty
 14017072|GetReturnState
 14017088|GetItem
-14017120|GetHostPlayerNum
+14017120|GetHostPlayerNo
 14017136|GetLocalPlayerId
 14017168|OnBallista
 14017184|IsRevengeRequested
