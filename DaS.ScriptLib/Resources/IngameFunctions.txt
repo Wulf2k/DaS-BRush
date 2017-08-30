@@ -1,4 +1,9 @@
+4209408|GetParam1
 4785440|DivideRest
+7900896|GetParam3
+11592288|GetPlayID
+11652432|GetParam2
+13475824|GetParam
 14014416|IsDeathPenaltySkip
 14014432|InitDeathState
 14014464|GetDeathState
@@ -15,6 +20,7 @@
 14014688|VariableExpand_22_param1
 14014704|VariableOrder_211
 14014736|VariableOrder_22
+14014768|IsLoadWait
 14014784|SetLoadWait
 14014800|CloseRankingDialog
 14014816|ShowRankingDialog
