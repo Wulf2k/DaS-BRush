@@ -119,11 +119,11 @@
                 .EventFlag = BossEvent.CapraDemon
             },
             New BossFightInfo(Boss.GapingDragon) With { 'NO ADJUSTMENTS NEEDED
-                .PlayerWarp = New EntityLocation(-166.61, -100.10, -13.44, 0),
+                .PlayerWarp = New EntityLocation(-166.61, -100.1, -13.44, 0),
                 .World = 10,
                 .Area = 0,
                 .WarpID = -1,
-                .AdditionalFlags = {11000853
+                .AdditionalFlags = {11000853    'Channeler death flag
                 },
                 .EventFlag = BossEvent.GapingDragon
             },
@@ -328,7 +328,7 @@
                 .World = 11,
                 .Area = 0,
                 .WarpID = -1,
-                .AdditionalFlags = {
+                .AdditionalFlags = {-4, 1691, 1692, -11100000, -11100531
                 },
                 .EventFlag = BossEvent.Priscilla
             },
@@ -337,13 +337,13 @@
                 .World = 15,
                 .Area = 1,
                 .WarpID = -1,
-                .AdditionalFlags = {
+                .AdditionalFlags = {-11510523, -11510900
                 },
                 .EventFlag = BossEvent.Gwyndolin
             },
-            New BossFightInfo(Boss.Gwyn) With { 'NEEDS BONFIRE, WARP POS
-                .PlayerWarp = New EntityLocation(),
-                .World = 0,
+            New BossFightInfo(Boss.Gwyn) With {
+                .PlayerWarp = New EntityLocation(420.2, -115.7, 168, 300),
+                .World = 18,
                 .Area = 0,
                 .WarpID = -1,
                 .AdditionalFlags = {
