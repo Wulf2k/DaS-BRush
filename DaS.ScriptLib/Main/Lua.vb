@@ -29,7 +29,7 @@ Public Class Lua
 
     Shared Sub New()
         LuaDummyAutoComplete = New Dictionary(Of String, String)
-        LuaDummyAutoComplete.Add("luaState.Import", "Void luaState.Import(String file)")
+        LuaDummyAutoComplete.Add("luaState:Import", "void luaState:Import(string file)")
     End Sub
 
     Public Sub New()
@@ -39,6 +39,8 @@ Public Class Lua
         LuaState.Item("luaState") = Me
 
         InitCLR()
+
+        LoadDefaultFunctions()
     End Sub
 
     Private Sub InitCLR()
@@ -92,6 +94,93 @@ Public Class Lua
     '    Return ExecuteFormattedLua(QuickRunner.LuaState, "return " & expression)(0)
     'End Function
 
+    'No <HideFromScripting> on this class, as it uses the same function as the other custom functions do and we don't want
+    'it to be skipped. However, GetType(Lua.ScriptHelperFunctions) will be excluded from the type list passed to that function.
+    Public Class Help
+
+        Public Shared Function LuaHelp_GetIngameFuncInfo(name As String) As IngameFuncInfo
+            Return CType(ScriptRes.autoCompleteFuncInfoByName(name), IngameFuncInfo)
+        End Function
+
+        <HideFromScripting>
+        Public Shared Function FuncCall(Of T)(retType As IngameFuncReturnType, func As String, params As NLua.LuaTable) As T
+            Return AsmExecutor.FuncCall(Of T)(retType, func, params)
+        End Function
+
+        Public Shared Function LuaHelp_FuncCall_Int32(retType As IngameFuncReturnType, func As String, params As NLua.LuaTable) As Int32
+            Return FuncCall(Of Int32)(retType, func, params)
+        End Function
+
+        Public Shared Function LuaHelp_FuncCall_Single(retType As IngameFuncReturnType, func As String, params As NLua.LuaTable) As Single
+            Return FuncCall(Of Single)(retType, func, params)
+        End Function
+
+        Public Shared Function LuaHelp_FuncCall_Boolean(retType As IngameFuncReturnType, func As String, params As NLua.LuaTable) As Boolean
+            Return FuncCall(Of Boolean)(retType, func, params)
+        End Function
+
+        Public Shared Function LuaHelp_FuncCall_String(retType As IngameFuncReturnType, func As String, params As NLua.LuaTable) As String
+            Return FuncCall(Of String)(retType, func, params)
+        End Function
+
+    End Class
+
+    Private Sub LoadDefaultFunctions()
+        Dim customFuncs_FuncsClass = ScriptRes.autoCompleteFuncInfoByName_FuncsClass.Values.OfType(Of CustomFuncInfo)
+
+        For Each cfi In customFuncs_FuncsClass
+            Try
+                LuaState.DoString($"{cfi.Name} = function ({String.Join(", ", cfi.ParamList.Select(Function(p) "__" & cfi.Name.Replace(".", "_") & "_" & p.Name))}) return end")
+
+            Catch ex As Exception
+                Throw New Exception($"ahh fuck {If(cfi?.Name, "")} {If(cfi?.MethodDefinition, "")}", ex)
+            End Try
+
+        Next
+
+        Dim luaHelpFuncs = ScriptRes.luaScriptHelperFuncInfoByName.Values.OfType(Of CustomFuncInfo)
+        For Each cfi In luaHelpFuncs
+            LuaState.DoString($"{cfi.Name} = function ({String.Join(", ", cfi.ParamList.Select(Function(p) "__" & cfi.Name.Replace(".", "_") & "_" & p.Name))}) return end")
+        Next
+
+        For Each cfi In customFuncs_FuncsClass
+            LuaState.RegisterFunction(cfi.Name, cfi.MethodDefinition)
+        Next
+
+        For Each cfi In luaHelpFuncs
+            LuaState.DoString($"{cfi.Name} = function ({String.Join(", ", cfi.ParamList.Select(Function(p) "__" & cfi.Name.Replace(".", "_") & "_" & p.Name))}) return end")
+            LuaState.RegisterFunction(cfi.Name, cfi.MethodDefinition)
+        Next
+
+        For Each f In ScriptRes.caselessIngameFuncNames.Values
+            Dim info As IngameFuncInfo = CType(ScriptRes.autoCompleteFuncInfoByName(f), IngameFuncInfo)
+
+            Dim luaChunk = ScriptRes.LuaFuncCallFunctionRegistrationTemplate.
+                              Replace("--[[NAME]]", f).
+                              Replace("--[[RETURN_TYPE]]", ScriptRes.IngameFuncReturnTypeEnumName & "." & info.ReturnType.ToString()).
+                              Replace("--[[PARAMS]]", String.Join(", ", info.ParamList.Select(Function(p) "__" & f.Replace(".", "_") & "_" & p.Name))).
+                              Replace("--[[FUNCCALL_TYPE]]", ScriptRes.types_ByIngameFuncReturnType(info.ReturnType).Name)
+
+            Try
+                LuaState.DoString(luaChunk)
+            Catch ex As Exception
+                Throw New Exception($"ahh fuck{vbCrLf}{luaChunk}", ex)
+            End Try
+
+
+
+        Next
+    End Sub
+
+    Private Shared Function GetFuncCallTypeFormat(funcName As String) As String
+        '  "$1Funcs.FuncCall('"
+        Dim info = TryCast(ScriptRes.autoCompleteFuncInfoByName_FuncsClass(funcName), IngameFuncInfo)
+        Dim retType As IngameFuncReturnType = If(info IsNot Nothing, info.ReturnType, IngameFuncReturnType.Undefinerino)
+        Return "$1Funcs.FuncCall_" & ScriptRes.types_ByIngameFuncReturnType(retType).Name &
+               "(" & ScriptRes.IngameFuncReturnTypeEnumName & "." & retType.ToString() & ", '"
+
+    End Function
+
     Public Shared Function GetRegexedLuaScript(scriptText As String) As String
         Dim txt = " " & String.Join(" ", scriptText)
 
@@ -100,34 +189,34 @@ Public Class Lua
         ' To this:
         '     Funcs.FuncCall('ChrFadeIn', 10000, 0, 0)
         ' etc
-        For Each f In ScriptRes.funcNames_Ingame
-            Dim rx = New Regex("(\W)(" & f & "\()(\w)", RegexOptions.IgnoreCase)
-            txt = rx.Replace(txt, "$1Funcs.FuncCall('" & f & "', $3")
-        Next
+        'For Each f In ScriptRes.funcNames_Ingame
+        '    Dim rx = New Regex("(\W)(" & f & "\()(\w)", RegexOptions.IgnoreCase)
+        '    txt = rx.Replace(txt, GetFuncCallTypeFormat(f) & f & "', $3")
+        'Next
 
-        txt = " " & txt
+        'txt = " " & txt
 
         ' Changes this:
         '     GetEntityPtr(10000)
         ' To this:
         '     Funcs.GetEntityPtr(10000)
         ' etc
-        For Each f In ScriptRes.funcNames_Custom
-            Dim rx = New Regex("(\W)(" & f & "\()", RegexOptions.IgnoreCase)
-            txt = rx.Replace(txt, "$1Funcs." & f & "(")
-        Next
+        'For Each f In ScriptRes.funcNames_Custom
+        '    Dim rx = New Regex("(\W)(" & f & "\()", RegexOptions.IgnoreCase)
+        '    txt = rx.Replace(txt, "$1Funcs." & f & "(")
+        'Next
 
-        txt = " " & txt
+        'txt = " " & txt
 
         ' Changes this:
         '     AddDeathCount()
         ' To this:
         '     Funcs.FuncCall('AddDeathCount')
         ' etc
-        For Each f In ScriptRes.funcNames_Ingame
-            Dim rx = New Regex("(\W)(" & f & "\()(\))", RegexOptions.IgnoreCase)
-            txt = rx.Replace(txt, "$1Funcs.FuncCall('" & f & "'$3")
-        Next
+        'For Each f In ScriptRes.funcNames_Ingame
+        '    Dim rx = New Regex("(\W)(" & f & "\()(\))", RegexOptions.IgnoreCase)
+        '    txt = rx.Replace(txt, GetFuncCallTypeFormat(f) & f & "'$3")
+        'Next
 
         Return txt.Trim()
     End Function
@@ -150,23 +239,20 @@ Public Class Lua
     End Sub
 
     Private Sub _doExecuteScript(ByVal script As String)
-
-        Dim mangledScript = GetRegexedLuaScript(script)
-
         _State = LuaRunnerState.Running
 
-        RaiseEvent OnStart(New LuaRunnerEventArgs(script, Thread.CurrentThread, LuaState, mangledScript))
+        RaiseEvent OnStart(New LuaRunnerEventArgs(script, Thread.CurrentThread, LuaState))
 
         Try
-            LuaState.DoString(mangledScript)
-            RaiseEvent OnFinishSuccess(New LuaRunnerEventArgs(script, Thread.CurrentThread, LuaState, mangledScript))
+            LuaState.DoString(script)
+            RaiseEvent OnFinishSuccess(New LuaRunnerEventArgs(script, Thread.CurrentThread, LuaState))
         Catch ex As System.Threading.ThreadAbortException
             Exit Try
         Catch ex As NLua.Exceptions.LuaException
-            RaiseEvent OnFinishError(New LuaRunnerEventArgs(script, Thread.CurrentThread, LuaState, mangledScript), ex)
+            RaiseEvent OnFinishError(New LuaRunnerEventArgs(script, Thread.CurrentThread, LuaState), ex)
         Finally
             _State = LuaRunnerState.Finished
-            RaiseEvent OnFinishAny(New LuaRunnerEventArgs(script, Thread.CurrentThread, LuaState, mangledScript))
+            RaiseEvent OnFinishAny(New LuaRunnerEventArgs(script, Thread.CurrentThread, LuaState))
         End Try
     End Sub
 
@@ -190,14 +276,12 @@ End Enum
 Public Class LuaRunnerEventArgs
     Public ReadOnly Text As String
     Public ReadOnly ExecutingThread As Thread
-    Public ReadOnly MangledText As String
     Public ReadOnly LuaState As NLua.Lua
 
-    Public Sub New(ByRef text As String, ByRef executingThread As Thread, ByRef luaState As NLua.Lua, ByRef mangledText As String)
+    Public Sub New(ByRef text As String, ByRef executingThread As Thread, ByRef luaState As NLua.Lua)
         Me.Text = text
         Me.ExecutingThread = executingThread
         Me.LuaState = luaState
-        Me.MangledText = mangledText
     End Sub
 
 End Class

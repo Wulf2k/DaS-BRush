@@ -9,7 +9,7 @@ Friend Class AsmExecutor
     Public pos As Int32
 
     Public Shared ReadOnly DefaultReturnValue = 1337
-    Public Shared ReadOnly ReturnValueCheckInterval = 16
+    Public Shared ReadOnly ReturnValueCheckInterval = 5
 
     Private reg8 As Hashtable = New Hashtable
     Private reg16 As Hashtable = New Hashtable
@@ -19,7 +19,7 @@ Friend Class AsmExecutor
 
     Private varrefs As New SortedList(Of Integer, String)
 
-    Const MaxFuncRetries = 1024
+    Const MaxFuncRetries = 8
 
     Public Sub New()
         pos = 0
@@ -638,55 +638,79 @@ Friend Class AsmExecutor
         Return tmpstr
     End Function
 
-    Private Shared Function GetFuncCallParamValue(paramVal As Object) As String
-        Dim t = paramVal.GetType()
-
-        If t = GetType(Int32) Then
-            Return paramVal.ToString()
-        ElseIf t = GetType(Single) Then
-            Return paramVal.ToString("0.0")
-        Else
-            Return paramVal.ToString
-        End If
+    Private Shared Function GetFuncCallParamValue(funcInfoParamList As List(Of ParamInfo), index As Integer, paramVal As Object) As Object
+        Return CTypeDynamic(paramVal, funcInfoParamList(index).ParamType)
     End Function
 
-    Friend Shared Function FuncCall(__func As String, Optional param1 As Object = "", Optional param2 As Object = "", Optional param3 As Object = "", Optional param4 As Object = "", Optional param5 As Object = "") As Integer
+    Friend Shared Function GetFuncCallResult(Of T)(ByVal retType As IngameFuncReturnType, ByVal num As Integer) As T
+        Dim typeT = GetType(T)
 
-        Dim result As Integer = 0
+        Select Case retType
+            Case IngameFuncReturnType.Undefinerino : Return CTypeDynamic(Of T)(num)
+            Case IngameFuncReturnType.Integerino : Return CTypeDynamic(Of T)(num)
+            Case IngameFuncReturnType.Boolerino : Return CTypeDynamic(Of T)(If(num > 0, True, False))
+            Case IngameFuncReturnType.Floatarino : Return CTypeDynamic(Of T)(BitConverter.ToSingle(BitConverter.GetBytes(num), 0))
+            Case IngameFuncReturnType.AsciiStringerino : Return CTypeDynamic(Of T)(RAsciiStr(num))
+            Case IngameFuncReturnType.UnicodeStringerino : Return CTypeDynamic(Of T)(RUnicodeStr(num))
+            Case Else
+                Return Nothing
+        End Select
+    End Function
 
-        Dim paramObj() As Object = {param1, param2, param3, param4, param5}
-        Dim Params() As String = paramObj.Select(Function(x) GetFuncCallParamValue(x)).ToArray()
+    Friend Shared Function GetFuncCallArgAsInteger(ByRef ptrList As List(Of IngameAllocatedPtr), pInfo As ParamInfo, ByVal obj As Object) As Integer
+        Select Case pInfo.IngameParamType
+            Case IngameFuncReturnType.AsciiStringerino
+                Dim text As String = CType(obj, String)
+                Dim strPtr As New IngameAllocatedPtr(text.Length + 1)
+                WAsciiStr(strPtr.Address, text)
+                ptrList.Add(strPtr)
+                Return strPtr.Address
+            Case IngameFuncReturnType.UnicodeStringerino
+                Dim text As String = CType(obj, String)
+                Dim strPtr As New IngameAllocatedPtr((text.Length + 1) * 2)
+                WUnicodeStr(strPtr.Address, text)
+                ptrList.Add(strPtr)
+                Return strPtr.Address
+            Case Else
+                'TODO: Check the endianness when converting <= 4 byte values
+                Dim byt As Byte() = {0, 0, 0, 0}
+                Dim bytConv As Byte() = BitConverter.GetBytes(CTypeDynamic(obj, pInfo.ParamType))
+                bytConv.CopyTo(byt, 0)
+                Return BitConverter.ToInt32(byt, 0)
+        End Select
+    End Function
+
+    Friend Shared Function FuncCall(Of T)(retType As IngameFuncReturnType, __func As String, luaTable As NLua.LuaTable) As T
+
+        Dim result As T
+
         Dim param As IntPtr = Marshal.AllocHGlobal(4)
-        Dim intParam As Integer
-        Dim floatParam As Single
         Dim a As New AsmExecutor
 
         Dim func = __func.ToUpper
 
-        Using funcPtr = New IngameAllocatedPtr()
+        Dim funcInfoParamList = ScriptRes.autoCompleteFuncInfoByName(ScriptRes.caselessIngameFuncNames(func)).ParamList
+
+        Dim Params() As Object = luaTable.Values.OfType(Of Object).
+            TakeWhile(Function(x) x IsNot Nothing).
+            Select(Function(x, i) GetFuncCallParamValue(funcInfoParamList, i, x)).
+            ToArray()
+
+        Using funcPtr = New IngameAllocatedPtr(1024)
             a.pos = funcPtr.Address
-            a.AddVar("funcloc", CType(ScriptRes.autoCompleteFuncInfoByName(ScriptRes.caselessIngameFuncNames(func.ToUpper)).First(), IngameFuncInfo).Address)
+            a.AddVar("funcloc", CType(ScriptRes.autoCompleteFuncInfoByName(ScriptRes.caselessIngameFuncNames(func.ToUpper)), IngameFuncInfo).Address)
             a.AddVar("returnedloc", funcPtr.Address + &H200)
 
             a.Asm("push ebp")
             a.Asm("mov ebp,esp")
             a.Asm("push eax")
 
+            Dim pointerList = New List(Of IngameAllocatedPtr)
+
             'Parse params, add as variables to the ASM
-            For i As Integer = 4 To 0 Step -1
-                If Params(i).ToLower = "false" Then Params(i) = "0"
-                If Params(i).ToLower = "true" Then Params(i) = "1"
-                If Params(i).Length < 1 Then Params(i) = "0"
+            For i As Integer = Params.Length - 1 To 0 Step -1
 
-                If Params(i).Contains(".") Then
-                    floatParam = Convert.ToSingle(Params(i), New CultureInfo("en-us"))
-                    Marshal.StructureToPtr(floatParam, param, False)
-                    a.AddVar("param" & i, Marshal.ReadInt32(param))
-                Else
-                    intParam = Convert.ToInt32(Params(i), New CultureInfo("en-us"))
-                    a.AddVar("param" & i, intParam)
-                End If
-
+                a.AddVar("param" & i, GetFuncCallArgAsInteger(pointerList, funcInfoParamList(i), Params(i)))
                 a.Asm("mov eax,param" & i)
                 a.Asm("push eax")
 
@@ -695,11 +719,11 @@ Friend Class AsmExecutor
             a.Asm("mov ebx,returnedloc")
             a.Asm("mov [ebx],eax")
             a.Asm("pop eax")
-            a.Asm("pop eax")
-            a.Asm("pop eax")
-            a.Asm("pop eax")
-            a.Asm("pop eax")
-            a.Asm("pop eax")
+
+            For Each p In Params
+                a.Asm("pop eax")
+            Next
+
             a.Asm("mov esp,ebp")
             a.Asm("pop ebp")
             a.Asm("ret")
@@ -712,8 +736,16 @@ Friend Class AsmExecutor
             Dim waitResult As WaitObjResult = WaitObjResult.WAIT_FAILED
             Dim tryCount As Integer = 0
 
-            Do
-                Dim threadHandle = CreateRemoteThread(_targetProcessHandle, 0, 0, funcPtr.Address, 0, 0, 0)
+            Dim threadHandle = CreateRemoteThread(_targetProcessHandle, 0, 0, funcPtr.Address, 0, 0, 0)
+
+            If Not (threadHandle = IntPtr.Zero) Then
+                waitResult = WaitForSingleObject(threadHandle, &HFFFFFFFF)
+            End If
+
+            'Waits briefly and retries:
+            While (waitResult = WaitObjResult.WAIT_FAILED)
+
+                Threading.Thread.Sleep(ReturnValueCheckInterval)
 
                 If Not (threadHandle = IntPtr.Zero) Then
                     waitResult = WaitForSingleObject(threadHandle, &HFFFFFFFF)
@@ -721,40 +753,23 @@ Friend Class AsmExecutor
 
                 tryCount += 1
 
-                CloseHandle(threadHandle)
-
                 If tryCount > MaxFuncRetries Then
                     Dbg.PrintErr($"CallFunc to {__func} reached max retry count of {MaxFuncRetries}.")
-                    Return 0
+                    CloseHandle(threadHandle)
+                    Return Nothing ' this might cause an error
                 End If
-            Loop Until Not (waitResult = WaitObjResult.WAIT_FAILED)
 
+            End While
 
+            CloseHandle(threadHandle)
 
-            'Try
+            For Each ptr In pointerList
+                ptr.Dispose() 'Deallocates memory for any params that were allocated in game memory.
+            Next
 
+            result = GetFuncCallResult(Of T)(retType, RInt32(funcPtr.Address + &H200))
 
-            '    'Wait for thread to exit
-
-
-            '    If Not waitResult = WaitObjResult.WAIT_OBJECT_0 Then
-            '        Throw New Exception($"WaitForSingleObject returned {waitResult.ToString()}")
-            '    End If
-            'Catch ex As Exception
-            '    Dim throwResult = Dbg.Popup($"kernel32.dll WaitForSingleObject error{vbCrLf}Would you like to crash DaS.ScriptLib (hint: click 'no'){vbCrLf}{vbCrLf}{ex.Message}", "Error",
-            '                           System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Warning)
-
-            '    If throwResult = System.Windows.Forms.DialogResult.Yes Then
-            '        Throw ex
-            '    End If
-            'Finally
-            '    'Close handle we got earlier
-
-            'End Try
-
-            result = RInt32(funcPtr.Address + &H200)
-
-            Dbg.PrintInfo($"FuncCall to '{Func}' returned {result} in {tryCount} tries.")
+            Dbg.PrintInfo($"FuncCall to '{func}' returned {result} in {tryCount} tries.")
         End Using
 
         Return result

@@ -1,5 +1,8 @@
 ﻿Imports System.IO
 
+'WILL GREATLY HELP YOU NOT WANT TO KILL YOURSELF IN InitIngameFuncTypes()
+Imports IFRTT = System.Tuple(Of DaS.ScriptLib.IngameFuncReturnType, System.Type, String)
+
 Public Class ScriptRes
 
     Private Const NamespaceString As String = "DaS.ScriptLib"
@@ -26,24 +29,64 @@ Public Class ScriptRes
 
     Public Shared listBonfireNames As New List(Of String)
 
+    'TODO: ORGANIZE THESE FUNCTION DICTIONARY/LIST CLUSTERFUCK INTO INDIVIDUAL OBJECTS THAT ENCAPSULATE EVERYTHING YOU NEED TO KNOW ABOUT THAT CATEGORY OF FUNCTIONS IN A SINGLE OBJECT
+
+
     Public Shared ReadOnly caselessIngameFuncNames As Dictionary(Of String, String) = New Dictionary(Of String, String)
 
     Public Shared ReadOnly autoCompleteAdditionalTypes As Type()
     Public Shared ReadOnly propTypes As Dictionary(Of String, String)
-    Public Shared ReadOnly autoCompleteFuncInfoByName As Dictionary(Of String, List(Of FuncInfo))
-    Public Shared ReadOnly funcNames_Custom As List(Of String)
-    Public Shared ReadOnly funcNames_Ingame As List(Of String)
-    Public Shared ReadOnly funcNames_Additional As List(Of String)
+    Public Shared ReadOnly autoCompleteFuncInfoByName As Dictionary(Of String, FuncInfo)
+    Public Shared ReadOnly autoCompleteFuncInfoByName_FuncsClass As Dictionary(Of String, FuncInfo)
+
+    Public Shared ReadOnly Property ingameFuncReturnTypes_ByName As Dictionary(Of String, IngameFuncReturnType)
+    Public Shared ReadOnly Property types_ByIngameFuncReturnType As Dictionary(Of IngameFuncReturnType, Type)
+
+    Public Shared ReadOnly Property IngameFuncReturnTypeEnumName As String
+
+    Public Shared ReadOnly Property luaScriptHelperFuncInfoByName As Dictionary(Of String, FuncInfo)
+
+    Public Shared ReadOnly LuaFuncCallFunctionRegistrationTemplate As String
+
+    ''' <summary>
+    ''' Needs to be called before IngameFuncInfos are created.
+    ''' </summary>
+    Private Shared Sub InitIngameFuncTypes()
+        _IngameFuncReturnTypeEnumName = GetType(IngameFuncReturnType).Name
+
+        _ingameFuncReturnTypes_ByName = New Dictionary(Of String, IngameFuncReturnType)
+        _types_ByIngameFuncReturnType = New Dictionary(Of IngameFuncReturnType, Type)
+
+        'IFRTT comes from the "Imports" statement at the top of the file
+        'IngameFuncReturnType, System.Type, name in file
+        Dim funcTypeTuples As IFRTT() = {
+            New IFRTT(IngameFuncReturnType.Undefinerino, GetType(Integer), "?"),
+            New IFRTT(IngameFuncReturnType.Boolerino, GetType(Boolean), "bool"),
+            New IFRTT(IngameFuncReturnType.Floatarino, GetType(Single), "float"),
+            New IFRTT(IngameFuncReturnType.Integerino, GetType(Integer), "int"),
+            New IFRTT(IngameFuncReturnType.AsciiStringerino, GetType(String), "ascii_string"),
+            New IFRTT(IngameFuncReturnType.UnicodeStringerino, GetType(String), "unicode_string")
+        }
+
+        For Each ifrt In funcTypeTuples
+            ingameFuncReturnTypes_ByName.Add(ifrt.Item3, ifrt.Item1) 'String, IngameFuncReturnType
+            types_ByIngameFuncReturnType.Add(ifrt.Item1, ifrt.Item2) 'IngameFuncReturnType, Type
+        Next
+    End Sub
 
     Shared Sub New()
         ThisAssembly = Reflection.Assembly.GetExecutingAssembly()
         EmbeddedResourceNames = ThisAssembly.GetManifestResourceNames().Select(Function(x) x.Substring(ResourcePathPrefix.Length)).ToArray() ' Removes "DaS.ScriptLib.Resources." from beginning
-        'LoadAllScripts()
+
+        LuaFuncCallFunctionRegistrationTemplate = GetTextRes("Funcs.FuncCall.LuaTemplate.lua")
+
         initClls()
+
+        InitIngameFuncTypes()
 
         'autocomplete init shit im too lazy to move to its own method:
         Dim typerinos = ThisAssembly.GetExportedTypes().
-            Where(Function(x)
+            Where(Function(x) As Boolean
                       Return x.Namespace = NamespaceString AndAlso
                       Not x.Name.EndsWith("Handler") AndAlso
                       Not x.Name.EndsWith("Attribute") AndAlso
@@ -52,24 +95,35 @@ Public Class ScriptRes
                   End Function).ToList()
 
         typerinos.Remove(GetType(Funcs))
+        typerinos.Remove(GetType(Lua.Help))
         autoCompleteAdditionalTypes = typerinos.ToArray()
 
-        autoCompleteFuncInfoByName = New Dictionary(Of String, List(Of FuncInfo))
-        funcNames_Custom = New List(Of String)
-        funcNames_Ingame = New List(Of String)
-        funcNames_Additional = New List(Of String)
+        autoCompleteFuncInfoByName = New Dictionary(Of String, FuncInfo)
+        autoCompleteFuncInfoByName_FuncsClass = New Dictionary(Of String, FuncInfo)
+
         propTypes = New Dictionary(Of String, String)
 
         For Each t In autoCompleteAdditionalTypes
-            EnumerateCustomFuncInfo(autoCompleteFuncInfoByName, funcNames_Additional, t, True)
+            EnumerateCustomFuncInfo(autoCompleteFuncInfoByName, t, True)
             EnumerateCustomFields(t, propTypes)
         Next
 
-        EnumerateCustomFuncInfo(autoCompleteFuncInfoByName, funcNames_Custom, GetType(Funcs), False)
-        EnumerateIngameFuncInfo(autoCompleteFuncInfoByName, funcNames_Ingame, GetTextRes(IngameFunctionsFileName).Split(Environment.NewLine))
+        EnumerateCustomFuncInfo(autoCompleteFuncInfoByName_FuncsClass, GetType(Funcs), False)
+        EnumerateCustomFuncInfo(autoCompleteFuncInfoByName, GetType(Funcs), False)
+        EnumerateIngameFuncInfo(autoCompleteFuncInfoByName, GetTextRes(IngameFunctionsFileName).Split(Environment.NewLine))
+
+
+
+        luaScriptHelperFuncInfoByName = New Dictionary(Of String, FuncInfo)
+
+        EnumerateCustomFuncInfo(luaScriptHelperFuncInfoByName, GetType(Lua.Help), False)
+
     End Sub
 
-    Private Shared Function CheckCustomAttributes(attr As IEnumerable(Of Reflection.CustomAttributeData)) As Boolean
+    Private Shared Function CheckCustomAttributes(attr As IEnumerable(Of Reflection.CustomAttributeData), Optional forceTrueGhetto As Boolean = False) As Boolean
+        If forceTrueGhetto Then
+            Return True
+        End If
         For Each a In attr
             If a.AttributeType = GetType(HideFromScriptingAttribute) Then
                 Return False
@@ -84,25 +138,29 @@ Public Class ScriptRes
         Return If(fn.StartsWith(ns), fn.Substring(ns.Length), fn).Replace("+", ".")
     End Function
 
-    Private Shared Sub EnumerateIngameFuncInfo(ByRef dict As Dictionary(Of String, List(Of FuncInfo)), ByRef funcNameList As List(Of String), textLines As String())
-        Dim list = New List(Of FuncInfo)
-
+    Private Shared Sub EnumerateIngameFuncInfo(ByRef dict As Dictionary(Of String, FuncInfo), textLines As String())
         For i = 0 To textLines.Length - 1
-            Dim fi = New IngameFuncInfo(textLines(i), i + 1)
-            list.Add(fi)
-            caselessIngameFuncNames.Add(fi.Name.ToUpper(), fi.Name)
-        Next
-
-        Dim appendDict = list.GroupBy(Function(x) x.Name).ToDictionary(Function(x) x.Key, Function(y) y.ToList())
-
-        For Each kvp In appendDict
-            funcNameList.Add(kvp.Key)
-
-            If dict.ContainsKey(kvp.Key) Then
-                dict(kvp.Key).AddRange(kvp.Value)
-            Else
-                dict.Add(kvp.Key, kvp.Value)
+            Dim trimmedLine As String = textLines(i).Trim()
+            Dim commentStart = trimmedLine.IndexOf("#")
+            'IndexOf returns -1 if search string isn't found.
+            If commentStart >= 0 Then
+                trimmedLine = trimmedLine.Substring(0, commentStart).Trim()
             End If
+
+            'If either the line is blank or had nothing but a "#" comment.
+            If String.IsNullOrWhiteSpace(trimmedLine) Then
+                Continue For
+            End If
+
+            Dim fi = New IngameFuncInfo(trimmedLine, i + 1)
+
+            If dict.ContainsKey(fi.Name) Then
+                Throw New Exception($"Ingame func name {fi.Name} already exists within dictionary.")
+            Else
+                dict.Add(fi.Name, fi)
+            End If
+
+            caselessIngameFuncNames.Add(fi.Name.ToUpper(), fi.Name)
         Next
     End Sub
 
@@ -130,10 +188,8 @@ Public Class ScriptRes
         Next
     End Sub
 
-    Private Shared Sub EnumerateCustomFuncInfo(ByRef dict As Dictionary(Of String, List(Of FuncInfo)), ByRef funcNameList As List(Of String), typerino As Type, prependTypeName As Boolean)
+    Private Shared Sub EnumerateCustomFuncInfo(ByRef dict As Dictionary(Of String, FuncInfo), typerino As Type, prependTypeName As Boolean, Optional forceIncludeMembersWithHideAttribute As Boolean = False)
         Dim methods = typerino.GetMethods()
-
-        Dim list = New List(Of FuncInfo)
 
         For Each m In methods
             If Not m.IsStatic OrElse
@@ -151,25 +207,17 @@ Public Class ScriptRes
                 m.Name.EndsWith("EventHandler.Invoke") OrElse
                 m.Name.EndsWith("EventHandler.BeginInvoke") OrElse
                 m.Name.EndsWith("EventHandler.EndInvoke") OrElse
-                (Not CheckCustomAttributes(m.CustomAttributes)) _
+                (Not CheckCustomAttributes(m.CustomAttributes, forceIncludeMembersWithHideAttribute)) _
             Then
                 Continue For
             End If
 
-            Dim cfi = New CustomFuncInfo(m, prependTypeName)
-            list.Add(cfi)
-            If Not funcNameList.Contains(cfi.Name) Then
-                funcNameList.Add(cfi.Name)
-            End If
-        Next
+            Dim cfi As New CustomFuncInfo(m, prependTypeName)
 
-        Dim appendDict = list.GroupBy(Function(x) x.Name).ToDictionary(Function(x) x.Key, Function(y) y.ToList())
-
-        For Each kvp In appendDict
-            If dict.ContainsKey(kvp.Key) Then
-                dict(kvp.Key).AddRange(kvp.Value)
+            If dict.ContainsKey(cfi.Name) Then
+                Throw New Exception($"Custom func name {m.Name} already exists within dictionary.")
             Else
-                dict.Add(kvp.Key, kvp.Value)
+                dict.Add(cfi.Name, cfi)
             End If
         Next
     End Sub

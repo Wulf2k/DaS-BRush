@@ -92,7 +92,7 @@ Partial Class ConsoleWindow
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.ViewToolStripMenuItem, Me.HelpToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(862, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(1153, 24)
         Me.MenuStrip1.TabIndex = 0
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -247,7 +247,7 @@ Partial Class ConsoleWindow
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 24)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-        Me.ToolStrip1.Size = New System.Drawing.Size(862, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1153, 25)
         Me.ToolStrip1.TabIndex = 1
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -346,7 +346,7 @@ Partial Class ConsoleWindow
         Me.cwTabs.Location = New System.Drawing.Point(0, 0)
         Me.cwTabs.Name = "cwTabs"
         Me.cwTabs.SelectedIndex = 0
-        Me.cwTabs.Size = New System.Drawing.Size(511, 377)
+        Me.cwTabs.Size = New System.Drawing.Size(568, 534)
         Me.cwTabs.TabIndex = 2
         Me.cwTabs.TabStop = False
         '
@@ -356,7 +356,7 @@ Partial Class ConsoleWindow
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(503, 351)
+        Me.TabPage1.Size = New System.Drawing.Size(560, 508)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "TabPage1"
         Me.TabPage1.UseVisualStyleBackColor = True
@@ -413,8 +413,8 @@ Partial Class ConsoleWindow
         Me.splitter.Panel2.Controls.Add(Me.sobOutput)
         Me.splitter.Panel2.Controls.Add(Me.ToolStrip2)
         Me.splitter.Panel2MinSize = 256
-        Me.splitter.Size = New System.Drawing.Size(860, 377)
-        Me.splitter.SplitterDistance = 511
+        Me.splitter.Size = New System.Drawing.Size(1151, 534)
+        Me.splitter.SplitterDistance = 568
         Me.splitter.TabIndex = 3
         Me.splitter.TabStop = False
         '
@@ -423,7 +423,7 @@ Partial Class ConsoleWindow
         Me.btnHideOutput.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnHideOutput.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.btnHideOutput.Font = New System.Drawing.Font("Consolas", 8.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnHideOutput.Location = New System.Drawing.Point(321, 3)
+        Me.btnHideOutput.Location = New System.Drawing.Point(555, 3)
         Me.btnHideOutput.Margin = New System.Windows.Forms.Padding(0)
         Me.btnHideOutput.Name = "btnHideOutput"
         Me.btnHideOutput.Size = New System.Drawing.Size(18, 18)
@@ -440,12 +440,12 @@ Partial Class ConsoleWindow
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.sobOutput.AutoScroll = True
         Me.sobOutput.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.sobOutput.Font = New System.Drawing.Font("Consolas", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.sobOutput.Font = New System.Drawing.Font("Segoe UI Light", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.sobOutput.Location = New System.Drawing.Point(3, 22)
         Me.sobOutput.Name = "sobOutput"
         Me.sobOutput.ReadOnly = True
         Me.sobOutput.ShortcutsEnabled = False
-        Me.sobOutput.Size = New System.Drawing.Size(337, 351)
+        Me.sobOutput.Size = New System.Drawing.Size(571, 508)
         Me.sobOutput.TabIndex = 0
         Me.sobOutput.TabStop = False
         Me.sobOutput.Text = "Sup Wulf. Tell me how the toolstrip that says ""Console Output:"" immediately above" &
@@ -465,7 +465,7 @@ Partial Class ConsoleWindow
         Me.ToolStrip2.Name = "ToolStrip2"
         Me.ToolStrip2.Padding = New System.Windows.Forms.Padding(2)
         Me.ToolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-        Me.ToolStrip2.Size = New System.Drawing.Size(346, 27)
+        Me.ToolStrip2.Size = New System.Drawing.Size(580, 27)
         Me.ToolStrip2.TabIndex = 1
         Me.ToolStrip2.Text = "ToolStrip2"
         '
@@ -488,10 +488,10 @@ Partial Class ConsoleWindow
         Me.statusStrip.GripMargin = New System.Windows.Forms.Padding(0)
         Me.statusStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
         Me.statusStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tslblStatus, Me.tsbtnOutputClear, Me.tslblOutputLineCount})
-        Me.statusStrip.Location = New System.Drawing.Point(1, 423)
+        Me.statusStrip.Location = New System.Drawing.Point(1, 580)
         Me.statusStrip.Name = "statusStrip"
         Me.statusStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-        Me.statusStrip.Size = New System.Drawing.Size(843, 22)
+        Me.statusStrip.Size = New System.Drawing.Size(1134, 22)
         Me.statusStrip.TabIndex = 4
         Me.statusStrip.Text = "ToolStrip3"
         '
@@ -524,16 +524,16 @@ Partial Class ConsoleWindow
         '
         'StatusStrip1
         '
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 422)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 579)
         Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Size = New System.Drawing.Size(862, 22)
+        Me.StatusStrip1.Size = New System.Drawing.Size(1153, 22)
         Me.StatusStrip1.TabIndex = 5
         Me.StatusStrip1.Text = "StatusStrip1"
         '
         'ConsoleWindow
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
-        Me.ClientSize = New System.Drawing.Size(862, 444)
+        Me.ClientSize = New System.Drawing.Size(1153, 601)
         Me.Controls.Add(Me.statusStrip)
         Me.Controls.Add(Me.splitter)
         Me.Controls.Add(Me.ToolStrip1)

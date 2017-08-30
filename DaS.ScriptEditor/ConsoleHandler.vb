@@ -219,7 +219,7 @@ Public Class ConsoleHandler
             Return
         End If
         If Not cons.CallTipActive Or Not CurrentFuncInfoList?.First()?.Name = txt Then
-            _CurrentFuncInfoList = ScriptRes.autoCompleteFuncInfoByName(txt)
+            _CurrentFuncInfoList = New FuncInfo() {ScriptRes.autoCompleteFuncInfoByName(txt)}.ToList()
             _CurrentCallTipIndex = 0
         End If
         _CurrentCallTipIndex = Math.Max(Math.Min(CurrentFuncInfoList.Count - 1, CurrentCallTipIndex), 0)
@@ -304,17 +304,17 @@ Public Class ConsoleHandler
                 toolTipText = "Member of the lua state class that runs this lua script."
                 imageIndex = 4
             ElseIf ScriptRes.autoCompleteFuncInfoByName.ContainsKey(ac) Then
-                menuText = ScriptRes.autoCompleteFuncInfoByName(ac).First().UsageString
+                menuText = ScriptRes.autoCompleteFuncInfoByName(ac).UsageString
 
-                If TryCast(ScriptRes.autoCompleteFuncInfoByName(ac).First(), IngameFuncInfo) IsNot Nothing Then
+                If TryCast(ScriptRes.autoCompleteFuncInfoByName(ac), IngameFuncInfo) IsNot Nothing Then
                     toolTipTitle = "Vanilla Dark Souls Lua Function"
                     imageIndex = 1
-                ElseIf TryCast(ScriptRes.autoCompleteFuncInfoByName(ac).First(), CustomFuncInfo) IsNot Nothing Then
+                ElseIf TryCast(ScriptRes.autoCompleteFuncInfoByName(ac), CustomFuncInfo) IsNot Nothing Then
                     toolTipTitle = "DaS-Scripting Library Function"
                     imageIndex = 0
                 End If
 
-                toolTipText = "Can be called as:    " & String.Join(", ", ScriptRes.autoCompleteFuncInfoByName(ac).Select(Function(x) x.UsageString))
+                toolTipText = "?PlaceHolderToolTip?"
 
             ElseIf ScriptRes.propTypes.ContainsKey(ac) Then
                 imageIndex = 2

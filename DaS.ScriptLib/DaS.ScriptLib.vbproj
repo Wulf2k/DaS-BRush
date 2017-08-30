@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="Game\IngameAllocatedPtr.vb" />
     <Compile Include="Main\AsmExecutor.vb" />
+    <Compile Include="Main\House of Enumeration.vb" />
     <Compile Include="Main\ScriptRes.vb" />
     <Compile Include="Utility Data Types\FuncInfo.vb" />
     <Compile Include="Game\Data Types\BossFightInfo.vb" />
@@ -102,6 +103,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Main\Proc.vb" />
+    <Compile Include="Utility Data Types\ParamInfo.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -121,6 +123,7 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <EmbeddedResource Include="Resources\Funcs.FuncCall.LuaTemplate.lua" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Lib\NLua\lua52.dll">

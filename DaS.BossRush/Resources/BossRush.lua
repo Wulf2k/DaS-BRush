@@ -112,8 +112,10 @@ function SpawnPlayerAtBoss(bossName)
     --else
         --WarpNextStage_Bonfire(Game.Player.BonfireID.Value)
     --end
+    SetDeadMode(Data.PlayerID, true)
 	WarpNextStage(boss.World, boss.Area, 0, 0, -1)
-
+    CancelOutOfCurPlrAnim()
+    
     Wait(2000)
     WaitForLoadEnd()
     BlackScreen()
@@ -123,9 +125,6 @@ function SpawnPlayerAtBoss(bossName)
     --Bosses won't aggro on player before the screen fades in
     PlayerHide(true)
 
-    --Cancel out of the "I just warped and I'm so tired" animation
-    CancelOutOfCurPlrAnim()
-
     --Almost fail-proof check since we do not have all the boss rush data filled in yet.
     --if boss.BonfireID >= 0 and (not boss.PlayerWarp.IsZero) then
         --Move player directly to warp point instantly without doing a "warp crouch"
@@ -133,34 +132,48 @@ function SpawnPlayerAtBoss(bossName)
     --end
 
 	if boss.WarpID > -1 then
-		Warp(10000, boss.WarpID)
+        Warp(Data.PlayerID, boss.WarpID)
+        CancelOutOfCurPlrAnim()
 	end
-
-	if not boss.PlayerWarp.IsZero then
-		if not (boss.WarpID == -1) then Wait(2000) end
-		SetEntityLocation(GetEntityPtr(Data.PlayerID), boss.PlayerWarp)
-	end
-
+    
     --Activate current location's map load trigger so it can load during FadeIn
     DisableMapHit(Data.PlayerID, false)
+    
+    SetDisable(Data.PlayerID, true)
+    
+    if not boss.PlayerWarp.IsZero then
+        --if not (boss.WarpID == -1) then Wait(2000) end
+        Warp_Coords(boss.PlayerWarp.Pos.X, boss.PlayerWarp.Pos.Y, boss.PlayerWarp.Pos.Z, boss.PlayerWarp.Rot)
+        CancelOutOfCurPlrAnim()
+    end
+    
+    DisableDamage(10000, true)
+    
+
     --Begin resetting camera before FadeIn since the camera reset is smoothed out and takes a long time.
     CamReset(Data.PlayerID, 1)
-
-    --Start playing the walking through fogwall anim before it begins to fade in:
     SetPlayerIsVegetable(false)
-	wait(100)
-	ForcePlayAnimation(Data.PlayerID, boss.PlayerAnim)
-    FadeIn()
-    --Wait(1100)
-    
+    Wait(500)
     PlayerHide(false)
-
-
-	
-    --Wait for player to finish walking through fog (roughly)
-    DisableDamage(10000, 1)
-	Wait(1800)
-	DisableDamage(10000, 0)
+    FadeIn()
+    
+    
+    ForcePlayAnimation(Data.PlayerID, boss.PlayerAnim)
+    
+    Game.Player.Opacity = 0
+    SetDisable(Data.PlayerID, false)
+    ChrFadeIn(Data.PlayerID, 0.5, 0)
+    
+    if not boss.PlayerWarp.IsZero then
+        --if not (boss.WarpID == -1) then Wait(2000) end
+        Warp_Coords(boss.PlayerWarp.Pos.X, boss.PlayerWarp.Pos.Y, boss.PlayerWarp.Pos.Z, boss.PlayerWarp.Rot)
+    end
+    
+    ForcePlayAnimation(Data.PlayerID, boss.PlayerAnim)
+    
+    --ChrFadeIn(Data.PlayerID, 0, 0)
+    DisableDamage(10000, false)
+    SetDeadMode(Data.PlayerID, false)
 
     --Almost fail-proof check since we do not have all the boss rush data filled in yet.
     if string.len(boss.EntranceLua) > 0 then

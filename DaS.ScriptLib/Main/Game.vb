@@ -3,7 +3,7 @@
 Public Class Game
 
     Public Class Injected
-        Public Shared ItemDropPtr As New IngameAllocatedPtr()
+        Public Shared ItemDropPtr As New IngameAllocatedPtr(1024)
     End Class
 
     Private Shared hookCheckThread As Thread
