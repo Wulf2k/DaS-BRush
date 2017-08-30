@@ -64,7 +64,9 @@ Friend Class AsmExecutor
     End Sub
 
     Public Sub Add(ByVal newbytes() As Byte)
-        bytes = bytes.Concat(newbytes).ToArray
+        Dim oldBytesLength = bytes.Length
+        Array.Resize(bytes, oldBytesLength + newbytes.Length)
+        newbytes.CopyTo(bytes, oldBytesLength)
     End Sub
 
     Public Sub AddVar(ByVal name As String, hexval As String)
