@@ -5,6 +5,9 @@ Friend Class AsmExecutor
 
     'TODO:  Deal with jumps to points not yet defined
     Public bytes() As Byte = {}
+    Public ReadOnly Property byteAmount As Integer = 0
+
+    Public ReadOnly BufferSize As Integer = 1024
 
     Public pos As Int32
 
@@ -61,20 +64,19 @@ Friend Class AsmExecutor
         code.Add("pop", &H58)
         code.Add("pushad", &H60)
         code.Add("popad", &H61)
+
+        ReDim bytes(BufferSize)
+        For i = 0 To (BufferSize - 1)
+            bytes(i) = 0
+        Next
     End Sub
 
     Public Sub Add(ByVal newbytes() As Byte)
-        Dim oldBytesLength = bytes.Length
-        Array.Resize(bytes, oldBytesLength + newbytes.Length)
-        newbytes.CopyTo(bytes, oldBytesLength)
-    End Sub
-
-    Public Sub AddVar(ByVal name As String, hexval As String)
-        AddVar(name, Convert.ToInt32(Microsoft.VisualBasic.Right(hexval, hexval.Length - 2), 16))
+        newbytes.CopyTo(bytes, byteAmount)
     End Sub
 
     Public Sub AddVar(ByVal name As String, val As IntPtr)
-        AddVar(name, CInt(val))
+        AddVar(name, val.ToInt32())
     End Sub
 
     Public Sub AddVar(ByVal name As String, val As Int32)
@@ -90,11 +92,11 @@ Friend Class AsmExecutor
 
                     Select Case bytes(entry.Key)
                         Case &HE8, &HE9
-                            tmpbyt = BitConverter.GetBytes(val - (pos - (bytes.Length - entry.Key)) - 5)
+                            tmpbyt = BitConverter.GetBytes(val - (pos - (byteAmount - entry.Key)) - 5)
                             Array.Copy(tmpbyt, 0, bytes, entry.Key + 1, tmpbyt.Length)
 
                         Case &HF
-                            tmpbyt = BitConverter.GetBytes(val - (pos - (bytes.Length - entry.Key)) - 6)
+                            tmpbyt = BitConverter.GetBytes(val - (pos - (byteAmount - entry.Key)) - 6)
                             Array.Copy(tmpbyt, 0, bytes, entry.Key + 2, tmpbyt.Length)
 
                     End Select
@@ -105,7 +107,7 @@ Friend Class AsmExecutor
     End Sub
 
     Public Sub Clear()
-        bytes = {}
+        Array.Clear(bytes, 0, byteAmount)
         vars.Clear()
         varrefs.Clear()
         pos = 0
@@ -160,20 +162,20 @@ Friend Class AsmExecutor
         'Check if there are offsets in params
         If param1.Contains("+") Or param1.Contains("-") Then
             If param1.Contains("0x") Then
-                plus1 = Convert.ToInt32(param1(3) & Microsoft.VisualBasic.Right(param1, param1.Length - 6), 16)
+                plus1 = Convert.ToInt32(param1(3) & param1.Substring(6), 16)
             Else
-                plus1 = Convert.ToInt32(param1(3) & Microsoft.VisualBasic.Right(param1, param1.Length - 4))
+                plus1 = Convert.ToInt32(param1(3) & param1.Substring(4))
             End If
             param1 = param1.Split("+")(0)
             param1 = param1.Split("-")(0)
         End If
         If param2.Contains("+") Or param2.Contains("-") Then
             If param2.Contains("0x") Then
-                'plus2 = Convert.ToInt32(param2(3) & Microsoft.VisualBasic.Right(param2, param2.Length - 6), 16)
-                plus2 = Convert.ToInt32(Microsoft.VisualBasic.Right(param2, param2.Length - 4), 16)
+                'plus2 = Convert.ToInt32(param2(3) & param2.Substring(6), 16)
+                plus2 = Convert.ToInt32(param2.Substring(4), 16)
                 If param2(3) = "-" Then plus2 *= -1
             Else
-                plus2 = Convert.ToInt32(param2(3) & Microsoft.VisualBasic.Right(param2, param2.Length - 4))
+                plus2 = Convert.ToInt32(param2(3) & param2.Substring(4))
             End If
             param2 = param2.Split("+")(0)
             param2 = param2.Split("-")(0)
