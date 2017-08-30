@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 4785440|DivideRest
 14014416|IsDeathPenaltySkip
-=======
-# Address|FunctionName|Param1Type Param1, Param2Type Param2, etc|Return value type (int, unicode string, float, etc)|Description of return value e.g. "Entity pointer"
-# Lines beginning with "#" are ignored (obviously)
-
->>>>>>> origin/master
 14014432|InitDeathState
 14014464|GetDeathState
 14014480|Util_RequestRespawn
