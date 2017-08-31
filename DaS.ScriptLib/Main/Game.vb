@@ -8,6 +8,9 @@ Public Class Game
 
     Private Shared hookCheckThread As Thread
 
+    <HideFromScripting>
+    Public Shared Event OnLoseHook()
+
     ';)
     <HideFromScripting>
     Public Shared Property IsHooked As Boolean
@@ -29,7 +32,13 @@ Public Class Game
             _DetectedDarkSoulsVersion = "Dark Souls (Latest Release Ver.)"
 
             Dim tmpProtect As Integer
-            VirtualProtectEx(_targetProcessHandle, &H10CC000, &H1DE000, 4, tmpProtect)
+            If Not VirtualProtectEx(_targetProcessHandle, &H10CC000, &H1DE000, PAGE_READWRITE, tmpProtect) Then
+                Throw New Exception("VirtualProtectEx Returned False")
+            End If
+
+            If Not FlushInstructionCache(_targetProcessHandle, &H10CC000, &H1DE000) Then
+                Throw New Exception("FlushInstructionCache Returned False")
+            End If
 
             WBytes(&HBE73FE, {&H20})
             WBytes(&HBE719F, {&H20})
@@ -81,6 +90,7 @@ Public Class Game
     Private Shared Sub _updateHook()
         _checkHook()
         If Not IsHooked Then
+            RaiseEvent OnLoseHook()
             hookCheckThread.Abort()
         End If
         Thread.Sleep(HookCheckInterval)

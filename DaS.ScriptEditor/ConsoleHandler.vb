@@ -261,7 +261,7 @@ Public Class ConsoleHandler
         auto.CaptureFocus = False
         auto.MaximumSize = New Size(512, 512)
         auto.MinFragmentLength = 2
-        auto.Font = New Font(New FontFamily("Consolas"), 8, FontStyle.Bold)
+        auto.Font = New Font(New FontFamily("Segoe UI Light"), 8, FontStyle.Regular)
         auto.ToolTipDuration = Integer.MaxValue
         'Image 0 = function image, image 1 = field image
         auto.ImageList = New ImageList()

@@ -41,6 +41,12 @@ Public Class Lua
         InitCLR()
 
         LoadDefaultFunctions()
+
+        AddHandler Game.OnLoseHook, AddressOf Game_OnLoseHook
+    End Sub
+
+    Private Sub Game_OnLoseHook()
+        StopExecution()
     End Sub
 
     Private Sub InitCLR()
@@ -168,6 +174,7 @@ Public Class Lua
             End Try
 
 
+            'LuaState.GetFunction("").ToString()
 
         Next
     End Sub
