@@ -488,6 +488,7 @@
 14049040|CastPointSpell_Horming
 14049120|CastPointSpellPlus
 14049200|CastPointSpell
+14049280|AddEventGoal
 14049392|ReconstructBreak
 14049440|CompleteEvent
 14049744|EnableObjTreasure
