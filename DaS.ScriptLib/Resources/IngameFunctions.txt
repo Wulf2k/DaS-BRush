@@ -316,7 +316,8 @@
 14030672|SetIgnoreHit
 14030736|DisableMapHit
 14030800|DisableMove
-14030848|SetDispMask
+#TODO: Check
+14030848|SetDispMask|int entityId, int bitMask|?|?
 14031248|SetHitInfo
 14031360|SetDrawGroup
 14031488|SetAngleFoward

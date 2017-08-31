@@ -43,6 +43,9 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Managed.X86">
+      <HintPath>..\Lib\Managed.X86\Managed.X86.dll</HintPath>
+    </Reference>
     <Reference Include="NLua">
       <HintPath>..\Lib\NLua\NLua.dll</HintPath>
     </Reference>
@@ -70,7 +73,9 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game\IngameAllocatedPtr.vb" />
+    <Compile Include="Game\AllocatedPtr\AllocatedPtr.vb" />
+    <Compile Include="Game\AllocatedPtr\IngameAllocatedPtr.vb" />
+    <Compile Include="Game\AllocatedPtr\ScriptLibAllocatedPtr.vb" />
     <Compile Include="Main\AsmExecutor.vb" />
     <Compile Include="Main\House of Enumeration.vb" />
     <Compile Include="Main\ScriptRes.vb" />

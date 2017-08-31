@@ -9,16 +9,20 @@
         Friend Declare Function VirtualFreeEx Lib "kernel32.dll" (ByVal hProcess As IntPtr, ByVal lpAddress As IntPtr, ByVal dwSize As IntPtr, ByVal dwFreeType As Integer) As IntPtr
         Friend Declare Function VirtualProtectEx Lib "kernel32.dll" (ByVal hProcess As IntPtr, ByVal lpAddress As IntPtr, ByVal dwSize As IntPtr, ByVal flNewProtect As Integer, ByRef lpflOldProtect As Integer) As Boolean
         Friend Declare Function WaitForSingleObject Lib "kernel32.dll" (ByVal hHandle As IntPtr, dwMilliseconds As Integer) As Integer
+        Friend Declare Function ResumeThread Lib "kernel32.dll" (ByVal hThread As IntPtr) As Integer
+        Friend Declare Function FlushInstructionCache Lib "kernel32.dll" (ByVal hProcess As IntPtr, ByVal lpBaseAddress As IntPtr, ByVal dwSize As Integer) As Boolean
 
-        Friend Const PROCESS_VM_READ = &H10
-        Friend Const TH32CS_SNAPPROCESS = &H2
-        Friend Const MEM_COMMIT = 4096
-        Friend Const PAGE_READWRITE = 4
-        Friend Const PAGE_EXECUTE_READWRITE = &H40
-        Friend Const PROCESS_CREATE_THREAD = (&H2)
-        Friend Const PROCESS_VM_OPERATION = (&H8)
-        Friend Const PROCESS_VM_WRITE = (&H20)
-        Friend Const PROCESS_ALL_ACCESS = &H1F0FFF
+        Friend Const PROCESS_VM_READ As Integer = &H10
+        Friend Const TH32CS_SNAPPROCESS As Integer = &H2
+        Friend Const MEM_COMMIT As Integer = 4096
+        Friend Const PAGE_READWRITE As Integer = 4
+        Friend Const PAGE_EXECUTE_READWRITE As Integer = &H40
+        Friend Const PROCESS_CREATE_THREAD As Integer = (&H2)
+        Friend Const PROCESS_VM_OPERATION As Integer = (&H8)
+        Friend Const PROCESS_VM_WRITE As Integer = (&H20)
+        Friend Const PROCESS_ALL_ACCESS As Integer = &H1F0FFF
+        Friend Const MEM_RELEASE As Integer = &H8000
+        Friend Const CREATE_SUSPENDED As Integer = &H4
 
         Public Enum WaitObjResult
             WAIT_ABANDONED = &H80
