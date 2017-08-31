@@ -174,6 +174,7 @@ Public Class Lua
             End Try
 
 
+            'LuaState.GetFunction("").ToString()
 
         Next
     End Sub

@@ -365,7 +365,7 @@ Public Class Funcs
     Public Shared Function GetEntityRotation(entityPtr As Integer) As Single
         Dim entityPosPtr = RInt32(entityPtr + &H28)
         entityPosPtr = RInt32(entityPosPtr + &H1C)
-        Return RFloat(entityPosPtr + &H4)
+        Return CType(RFloat(entityPosPtr + &H4) / Math.PI * 180, Single) + 180
     End Function
 
     Public Shared Sub SetEntityPosX(entityPtr As Integer, posX As Single)
@@ -660,6 +660,12 @@ Public Class Funcs
 
     Public Shared Sub SetLineHelpTextClear()
         WInt32(Game.MenuPtr.Value + &H154, -1)
+    End Sub
+
+    Public Shared Sub ForcePlayerStableFootPos()
+        Game.Player.StablePosX.Value = Game.Player.PosX.Value
+        Game.Player.StablePosY.Value = Game.Player.PosY.Value
+        Game.Player.StablePosZ.Value = Game.Player.PosZ.Value
     End Sub
 
 #Region "Old Boss Rush Functions"

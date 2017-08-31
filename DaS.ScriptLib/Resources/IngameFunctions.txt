@@ -375,8 +375,8 @@
 14035424|OnPlayerAssessMenu
 14035504|OnTurnCharactorEnd
 14035968|HoverMoveVal
-14036016|CustomLuaCall
-14036064|LuaCall
+14036016|CustomLuaCall|int id1, ascii_string funcName, bool isOnlyOnce|?|?
+14036064|LuaCall|int id1, int id2, ascii_string funcName, bool isOnlyOnce|?|?
 14036128|WarpNextStage_Bonfire
 14036224|WarpNextStage
 14036288|OnNetDistanceIn
