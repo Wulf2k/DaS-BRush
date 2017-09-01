@@ -79,6 +79,7 @@ Public Class Funcs
 
     Public Shared Sub WarpEntity_Coords(entityPtr As Integer, x As Single, y As Single, z As Single, rotx As Single)
         entityPtr = RInt32(entityPtr + &H28)
+        
         WFloat(entityPtr + &HD0, x)
         WFloat(entityPtr + &HD4, y)
         WFloat(entityPtr + &HD8, z)
@@ -473,15 +474,10 @@ Public Class Funcs
         WarpEntity_Coords(entityptrSrc, posX, posY, posZ, facing)
     End Sub
 
-    ''' <summary>
-    ''' TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-    ''' </summary>
-    ''' <param name="entityId">TODO</param>
-    Public Shared Function GetEntityPtr(entityId As Integer) As Integer 'TODO
-        'TODO
-        Return Lua.Expr(Of Integer)("ChrFadeIn(10000)") 'TODO
-        'TODO
-    End Function 'TODO
+
+    Public Shared Function GetEntityPtr(entityId As Integer) As Integer
+        Return Lua.Expr(Of Integer)("ChrFadeIn(" & entityId & ", 1.0, 1.0)")
+    End Function
 
     Public Shared Sub SetBriefingMsg(ByVal str As String)
         Dim tmpptr As Integer
