@@ -479,6 +479,49 @@ Public Class Funcs
         Return Lua.Expr(Of Integer)("ChrFadeIn(" & entityId & ", 1.0, 1.0)")
     End Function
 
+    Public Shared Function GetEntityPtrByName(name As String) As Integer
+        Dim tmpStr As String = ""
+
+        Dim tmpPtr As Integer = 0
+        Dim tmpCnt As Integer = 0
+
+        Dim mapCount As Integer = 0
+        Dim mapPtrs As Integer = 0
+
+        Dim entitiesPtr As Integer = 0
+        Dim entitiesCnt As Integer = 0
+
+        Dim entityPtr As Integer = 0
+
+        tmpPtr = RInt32(&H137D644)
+
+        mapPtrs = tmpPtr + &H74
+        mapCount = RInt32(tmpPtr + &H70)
+
+        For mapNum = 0 To mapCount - 1
+            entitiesPtr = RInt32(mapPtrs + 4 * mapNum)
+            entitiesCnt = RInt32(entitiesPtr + &H3C)
+            entitiesPtr = RInt32(entitiesPtr + &H40)
+
+            For entityNum = 0 To entitiesCnt - 1
+                entityPtr = RInt32(entitiesPtr + entityNum * &H20)
+
+                tmpPtr = RInt32(entityPtr + &H54)
+                tmpCnt = RInt32(entityPtr + &H58) - 1
+
+                tmpPtr = RInt32(tmpPtr + &H28) + &H10
+                tmpPtr = Rint32(RInt32(tmpPtr + 4 * tmpCnt))
+
+                tmpStr = RAsciiStr(tmpPtr)
+                
+                If tmpStr = name Then 
+                    Return tmpPtr
+                End If
+            Next entityNum
+        Next mapnum
+        Return -1
+    End Function
+
     Public Shared Sub SetBriefingMsg(ByVal str As String)
         Dim tmpptr As Integer
         tmpptr = RInt32(&H13785DC)
