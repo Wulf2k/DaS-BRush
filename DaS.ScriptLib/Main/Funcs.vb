@@ -453,12 +453,12 @@ Public Class Funcs
     End Sub
 
     Public Shared Sub WarpEntity_Player(entityptr As Integer)
-        Dim playerptr As Integer = Lua.Expr(Of Integer)("GetEntityPtr(10000)")
+        Dim playerptr As Integer = Lua.E("GetEntityPtr(10000)")
         WarpEntity_Entity(entityptr, playerptr)
     End Sub
 
     Public Shared Sub WarpPlayer_Entity(entityptr As Integer)
-        Dim playerptr As Integer = Lua.Expr(Of Integer)("GetEntityPtr(10000)")
+        Dim playerptr As Integer = Lua.E("GetEntityPtr(10000)")
         WarpEntity_Entity(playerptr, entityptr)
     End Sub
 
@@ -473,11 +473,16 @@ Public Class Funcs
 
         WarpEntity_Coords(entityptrSrc, posX, posY, posZ, facing)
     End Sub
-
-
-    Public Shared Function GetEntityPtr(entityId As Integer) As Integer
-        Return Lua.Expr(Of Integer)("ChrFadeIn(" & entityId & ", 1.0, 1.0)")
-    End Function
+	
+    ''' <summary>
+    ''' TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+    ''' </summary>
+    ''' <param name="entityId">TODO</param>
+    Public Shared Function GetEntityPtr(entityId As Integer) As Integer 'TODO
+        'TODO
+        Return Lua.E("ChrFadeIn(10000)") 'TODO
+        'TODO
+    End Function 'TODO
 
     Public Shared Function GetEntityPtrByName(mapName As String, entName As String) As Integer
         Dim tmpStr As String = ""
@@ -533,7 +538,7 @@ Public Class Funcs
         tmpptr = RInt32(tmpptr + &H7C)
 
         WUnicodeStr(tmpptr + &H3B7A, str + ChrW(0))
-        Lua.Run("RequestOpenBriefingMsg(10010721, 1)")
+        Lua.DoString("RequestOpenBriefingMsg(10010721, 1)")
     End Sub
 
     Public Class GenDiagResult

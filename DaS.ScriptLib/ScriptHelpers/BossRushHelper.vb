@@ -107,7 +107,7 @@ Public Class BossRushHelper
         Dim bossIsDead = False
         Dim playerIsDead = False
         Do
-            If (Lua.Expr(Of Integer)($"IsCompleteEvent({boss.EventFlag})") = 1) Then 'boss dead
+            If (Lua.E($"IsCompleteEvent({boss.EventFlag})") = 1) Then 'boss dead
                 bossIsDead = True
             ElseIf Game.Player.HP.Value = 0 Then
                 playerIsDead = True

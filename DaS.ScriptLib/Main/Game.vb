@@ -88,12 +88,15 @@ Public Class Game
     End Sub
 
     Private Shared Sub _updateHook()
-        _checkHook()
-        If Not IsHooked Then
-            RaiseEvent OnLoseHook()
-            hookCheckThread.Abort()
-        End If
-        Thread.Sleep(HookCheckInterval)
+        While IsHooked
+            _checkHook()
+            If Not IsHooked Then
+                Unhook()
+                RaiseEvent OnLoseHook()
+            Else
+                Thread.Sleep(HookCheckInterval)
+            End If
+        End While
     End Sub
 
     Public Shared PtrToPtrToCharDataPtr1 As New LivePtrVarInt(Function() &H137DC70)

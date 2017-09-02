@@ -12,6 +12,9 @@
         Friend Declare Function ResumeThread Lib "kernel32.dll" (ByVal hThread As IntPtr) As Integer
         Friend Declare Function FlushInstructionCache Lib "kernel32.dll" (ByVal hProcess As IntPtr, ByVal lpBaseAddress As IntPtr, ByVal dwSize As Integer) As Boolean
 
+        'TODO: CHECK IF THIS WORKS
+        Friend Declare Function WriteProcessMemory Lib "kernel32" (ByVal hProcess As IntPtr, ByVal lpBaseAddress As IntPtr, ByVal lpBuffer As IntPtr, ByVal iSize As Integer, ByVal lpNumberOfBytesWritten As Integer) As Boolean
+
         Friend Const PROCESS_VM_READ As Integer = &H10
         Friend Const TH32CS_SNAPPROCESS As Integer = &H2
         Friend Const MEM_COMMIT As Integer = 4096
@@ -77,8 +80,9 @@
         End Function
 
         Friend Sub DetachFromProcess()
-            If Not (_targetProcessHandle = IntPtr.Zero) Then
-                RaiseEvent OnDetachFromCurrentProcess(_targetProcessHandle)
+            RaiseEvent OnDetachFromCurrentProcess(_targetProcessHandle)
+
+            If _targetProcessHandle <> IntPtr.Zero Then
                 _targetProcess = Nothing
                 Try
                     CloseHandle(_targetProcessHandle)

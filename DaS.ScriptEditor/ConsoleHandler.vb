@@ -22,7 +22,13 @@ Public Class ConsoleHandler
 
     Private ReadOnly Property LastDiskHash As Byte() = New Byte() {}
 
-    Public ReadOnly Property luaRunner As Lua
+    Public ReadOnly Property curMod As DarkSoulsMod
+
+    Public Sub ResetMod(script As String)
+
+        'TODO:Meow
+        _curMod = New DarkSoulsMod(curMod.ScriptText)
+    End Sub
 
     Public Property currentDocument As FileInfo
         Get
@@ -62,7 +68,7 @@ Public Class ConsoleHandler
                     ParentScriptTab.Text &= "*"
                 End If
 
-                If luaRunner.State = LuaRunnerState.Running Then
+                If curMod.IsRunning Then
                     ParentScriptTab.Text &= " [Running]"
                 End If
             End Sub)
@@ -93,7 +99,7 @@ Public Class ConsoleHandler
     Public Sub New(ByRef dad As ScriptEditorTab)
         Me.ParentScriptTab = dad
 
-        luaRunner = New Lua()
+        curMod = New DarkSoulsMod()
         cons = New Scintilla()
         auto = New AutocompleteMenuNS.AutocompleteMenu()
 
@@ -144,10 +150,6 @@ Public Class ConsoleHandler
         AddHandler cons.AutoCCompleted, AddressOf Console_AutoCCompleted
         AddHandler cons.Enter, AddressOf Console_Enter
         'AddHandler cons.DragEnter, AddressOf ConsoleDragEnter
-        AddHandler luaRunner.OnStart, AddressOf LuaRunner_OnStart
-        AddHandler luaRunner.OnStop, AddressOf LuaRunner_OnStop
-        AddHandler luaRunner.OnFinishAny, AddressOf LuaRunner_OnFinishAny
-        AddHandler luaRunner.OnFinishError, AddressOf LuaRunner_OnFinishError
         AddHandler AutoCompleteOpenedBufferTimer.Tick, AddressOf AutoCompleteOpenedBufferTimer_Tick
 
     End Sub
@@ -158,25 +160,25 @@ Public Class ConsoleHandler
 
     End Sub
 
-    Private Sub LuaRunner_OnStart(args As LuaRunnerEventArgs)
-        UpdateTabText(True, True)
-    End Sub
+    'Private Sub LuaRunner_OnStart(args As LuaRunnerEventArgs)
+    '    UpdateTabText(True, True)
+    'End Sub
 
-    Private Sub LuaRunner_OnStop()
-        UpdateTabText(True, True)
-    End Sub
+    'Private Sub LuaRunner_OnStop()
+    '    UpdateTabText(True, True)
+    'End Sub
 
-    Private Sub LuaRunner_OnFinishAny(args As LuaRunnerEventArgs)
-        UpdateTabText(True, True)
-    End Sub
+    'Private Sub LuaRunner_OnFinishAny(args As LuaRunnerEventArgs)
+    '    UpdateTabText(True, True)
+    'End Sub
 
-    Private Sub LuaRunner_OnFinishError(args As LuaRunnerEventArgs, err As Exception)
-        If MessageBox.Show("Error running script '" & args.ExecutingThread.Name & "': " & vbCrLf & vbCrLf & err.Message & vbCrLf & vbCrLf &
-                           "Would you like to crash the program now for debugging? (Hint: choose 'No')", "Error",
-                           MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) = DialogResult.Yes Then
-            Throw err
-        End If
-    End Sub
+    'Private Sub LuaRunner_OnFinishError(args As LuaRunnerEventArgs, err As Exception)
+    '    If MessageBox.Show("Error running script '" & args.ExecutingThread.Name & "': " & vbCrLf & vbCrLf & err.Message & vbCrLf & vbCrLf &
+    '                       "Would you like to crash the program now for debugging? (Hint: choose 'No')", "Error",
+    '                       MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) = DialogResult.Yes Then
+    '        Throw err
+    '    End If
+    'End Sub
 
     Private Sub AutoCompleteOpenedBufferTimer_Tick(sender As Object, e As EventArgs)
         If AutoCompleteOpened Then
@@ -298,12 +300,12 @@ Public Class ConsoleHandler
             Dim menuText = ac
             Dim toolTipTitle = ""
             Dim toolTipText = ""
-            If Lua.LuaDummyAutoComplete.ContainsKey(ac) Then
-                menuText = Lua.LuaDummyAutoComplete(ac)
-                toolTipTitle = "Lua State Function"
-                toolTipText = "Member of the lua state class that runs this lua script."
-                imageIndex = 4
-            ElseIf ScriptRes.autoCompleteFuncInfoByName.ContainsKey(ac) Then
+            'If Lua.LuaDummyAutoComplete.ContainsKey(ac) Then
+            '    menuText = Lua.LuaDummyAutoComplete(ac)
+            '    toolTipTitle = "Lua State Function"
+            '    toolTipText = "Member of the lua state class that runs this lua script."
+            '    imageIndex = 4
+            If ScriptRes.autoCompleteFuncInfoByName.ContainsKey(ac) Then
                 menuText = ScriptRes.autoCompleteFuncInfoByName(ac).UsageString
 
                 If TryCast(ScriptRes.autoCompleteFuncInfoByName(ac), IngameFuncInfo) IsNot Nothing Then
@@ -347,7 +349,7 @@ Public Class ConsoleHandler
         aclist.AddRange(ScriptRes.autoCompleteFuncInfoByName.Keys)
         aclist.AddRange(ScriptRes.propTypes.Keys)
         aclist.AddRange(ScriptRes.autoCompleteAdditionalTypes.Select(Function(x) x.Name))
-        aclist.AddRange(Lua.LuaDummyAutoComplete.Keys)
+        'aclist.AddRange(Lua.LuaDummyAutoComplete.Keys)
         aclist.AddRange("and break do else elseif end false for function goto if in local nil not or repeat return then true until while".Split(" "))
 
         _AutoCompleteListBase = aclist.OrderBy(Function(x) x).ToList()
@@ -628,12 +630,10 @@ Public Class ConsoleHandler
                 '        Return
                 '    End If
             ElseIf e.KeyCode = Keys.F5 Then
-                If (luaRunner.State = LuaRunnerState.Stopped Or
-                    luaRunner.State = LuaRunnerState.Finished) Then
-                    luaRunner.StartExecution(cons.Text)
-
-                ElseIf (luaRunner.State = LuaRunnerState.Running) Then
-                    luaRunner.StopExecution()
+                If (Not curMod.IsRunning) Then
+                    _curMod = New DarkSoulsMod(cons.Text)
+                Else
+                    curMod.Stop()
                 End If
             ElseIf e.KeyCode = Keys.F7 Then
                 Game.Hook()

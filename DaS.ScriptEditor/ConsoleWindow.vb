@@ -95,7 +95,7 @@ Public Class ConsoleWindow
         Dim focusedScriptRunning As Boolean = False 'Defaults to false if no tabs are open
 
         If AreAnyTabsOpen AndAlso FocusedConsHandler IsNot Nothing Then
-            focusedScriptRunning = (FocusedConsHandler.luaRunner.State = LuaRunnerState.Running)
+            focusedScriptRunning = FocusedConsHandler.curMod.IsRunning
         End If
 
         ToolStrip1.
@@ -381,9 +381,8 @@ Public Class ConsoleWindow
     End Sub
 
     Private Sub tsbtnRun_Click(sender As Object, e As EventArgs) Handles tsbtnRun.Click
-        If FocusedConsHandler.luaRunner.State = LuaRunnerState.Stopped Or
-            FocusedConsHandler.luaRunner.State = LuaRunnerState.Finished Then
-            FocusedConsHandler.luaRunner.StartExecution(FocusedConsHandler.cons.Text)
+        If Not FocusedConsHandler.curMod.IsRunning Then
+            FocusedConsHandler.ResetMod(FocusedConsHandler.cons.Text)
             'ElseIf FocusedConsHandler.luaRunner.State = LuaRunnerState.Running Then
             '    FocusedConsHandler.luaRunner.PauseExecution()
             'ElseIf FocusedConsHandler.luaRunner.State = LuaRunnerState.Paused Then
@@ -392,8 +391,8 @@ Public Class ConsoleWindow
     End Sub
 
     Private Sub tsbtnStop_Click(sender As Object, e As EventArgs) Handles tsbtnStop.Click
-        If FocusedConsHandler.luaRunner.State = LuaRunnerState.Running Then
-            FocusedConsHandler.luaRunner.StopExecution()
+        If FocusedConsHandler.curMod.IsRunning Then
+            FocusedConsHandler.curMod.Stop()
         End If
     End Sub
 

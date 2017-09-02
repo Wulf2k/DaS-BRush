@@ -173,11 +173,11 @@ Public Class frmForm1
             End Using
         End Using
 
-        lua.LuaState.DoString(bossRushScript)
+        lua.State.DoString(bossRushScript)
     End Sub
 
     Private Sub RefreshGUI()
-        Dim isBossRushing = lua.LuaState.IsExecuting
+        Dim isBossRushing = lua.State.IsExecuting
 
         btnLoadBossScenario.Enabled = Not isBossRushing
 
@@ -520,7 +520,7 @@ Public Class frmForm1
     'End Sub
 
     Private Sub btnCancelBossRush_Click(sender As Object, e As EventArgs) Handles btnCancelBossRush.Click
-        Lua.Run("ShowHUD(true)")
+        Lua.E("ShowHUD(true)")
         Funcs.SetKeyGuideTextClear()
         Funcs.SetLineHelpTextClear()
         If (luaThread IsNot Nothing AndAlso luaThread.IsAlive) Then
@@ -551,13 +551,13 @@ Public Class frmForm1
         If luaThread IsNot Nothing AndAlso luaThread.IsAlive Then
             luaThread.Abort()
         End If
-        Lua.Run($"SetClearCount({numBossScenarioNg.Value})")
+        Lua.E($"SetClearCount({numBossScenarioNg.Value})")
         luaThread = New Thread(AddressOf DoBossScenario) With {.IsBackground = True}
         luaThread.Start(CType(comboBossList.SelectedItem, String))
     End Sub
 
     Private Sub DoBossScenario(bossName As String)
-        lua.LuaState.GetFunction("SpawnPlayerAtBoss").Call(bossName)
+        lua.State.GetFunction("SpawnPlayerAtBoss").Call(bossName)
     End Sub
 
     Private Sub radioStandard_CheckedChanged(sender As Object, e As EventArgs) Handles radioStandard.CheckedChanged
@@ -609,7 +609,7 @@ Public Class frmForm1
     End Sub
 
     Private Sub btnBeginBossRush_Click(sender As Object, e As EventArgs) Handles btnBeginBossRush.Click
-        If Not lua.LuaState.IsExecuting Then
+        If Not lua.State.IsExecuting Then
             If luaThread IsNot Nothing AndAlso luaThread.IsAlive Then
                 luaThread.Abort()
             End If
@@ -619,11 +619,11 @@ Public Class frmForm1
     End Sub
 
     Private Sub BeginBossRushOnNewThread()
-        lua.LuaState.Item("ShowBossNames") = (Not checkHideBossNames.Checked)
-        lua.LuaState.Item("TimeBetweenBosses") = CType(numCountdown.Value, Single)
-        lua.LuaState.Item("RandomizeBossNG") = checkRandomizeNg.Checked
-        lua.LuaState.Item("InfiniteLives") = checkInfiniteLives.Checked
-        lua.LuaState.Item("RefillHpEachFight") = checkHealEachFight.Checked
+        lua.State.Item("ShowBossNames") = (Not checkHideBossNames.Checked)
+        lua.State.Item("TimeBetweenBosses") = CType(numCountdown.Value, Single)
+        lua.State.Item("RandomizeBossNG") = checkRandomizeNg.Checked
+        lua.State.Item("InfiniteLives") = checkInfiniteLives.Checked
+        lua.State.Item("RefillHpEachFight") = checkHealEachFight.Checked
 
         Dim bossRushOrder = ""
         If radioStandard.Checked Then
@@ -636,11 +636,11 @@ Public Class frmForm1
             bossRushOrder = "Custom"
         End If
 
-        lua.LuaState.Item("BossRushOrder") = bossRushOrder
-        lua.LuaState.Item("BossRushCustomOrder") = String.Join(";", GetFlpCustomBossOrderAsArray())
-        lua.LuaState.Item("BossRushExcludeBed") = checkSkipBedOfChaos.Checked
+        lua.State.Item("BossRushOrder") = bossRushOrder
+        lua.State.Item("BossRushCustomOrder") = String.Join(";", GetFlpCustomBossOrderAsArray())
+        lua.State.Item("BossRushExcludeBed") = checkSkipBedOfChaos.Checked
 
-        lua.LuaState.GetFunction("BeginBossRush").Call()
+        lua.State.GetFunction("BeginBossRush").Call()
     End Sub
 
     Private Sub btnFlpCustomRemove_Click(sender As Object, e As EventArgs) Handles btnFlpCustomRemove.Click

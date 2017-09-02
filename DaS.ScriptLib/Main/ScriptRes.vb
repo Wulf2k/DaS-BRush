@@ -46,7 +46,7 @@ Public Class ScriptRes
 
     Public Shared ReadOnly Property luaScriptHelperFuncInfoByName As Dictionary(Of String, FuncInfo)
 
-    Public Shared ReadOnly LuaFuncCallFunctionRegistrationTemplate As String
+
 
     ''' <summary>
     ''' Needs to be called before IngameFuncInfos are created.
@@ -78,8 +78,6 @@ Public Class ScriptRes
         ThisAssembly = Reflection.Assembly.GetExecutingAssembly()
         EmbeddedResourceNames = ThisAssembly.GetManifestResourceNames().Select(Function(x) x.Substring(ResourcePathPrefix.Length)).ToArray() ' Removes "DaS.ScriptLib.Resources." from beginning
 
-        LuaFuncCallFunctionRegistrationTemplate = GetTextRes("Funcs.FuncCall.LuaTemplate.lua")
-
         initClls()
 
         InitIngameFuncTypes()
@@ -95,7 +93,7 @@ Public Class ScriptRes
                   End Function).ToList()
 
         typerinos.Remove(GetType(Funcs))
-        typerinos.Remove(GetType(Lua.Help))
+        'typerinos.Remove(GetType(Lua.Help))
         autoCompleteAdditionalTypes = typerinos.ToArray()
 
         autoCompleteFuncInfoByName = New Dictionary(Of String, FuncInfo)
@@ -116,7 +114,7 @@ Public Class ScriptRes
 
         luaScriptHelperFuncInfoByName = New Dictionary(Of String, FuncInfo)
 
-        EnumerateCustomFuncInfo(luaScriptHelperFuncInfoByName, GetType(Lua.Help), False)
+        'EnumerateCustomFuncInfo(luaScriptHelperFuncInfoByName, GetType(Lua.Help), False)
 
     End Sub
 

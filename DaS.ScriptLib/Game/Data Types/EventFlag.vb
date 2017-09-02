@@ -3,7 +3,7 @@
     Public State As Boolean = False
 
     Public Sub ApplyFlag()
-        Lua.Run($"SetEventFlag({ID}, {If(State, 1, 0)})")
+        Lua.E($"SetEventFlag({ID}, {If(State, 1, 0)})")
     End Sub
 
     Public Shared Sub ApplyAll(flagList As Integer())

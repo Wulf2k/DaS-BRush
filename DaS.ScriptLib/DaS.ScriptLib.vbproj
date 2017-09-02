@@ -43,15 +43,6 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Managed.X86">
-      <HintPath>..\Lib\Managed.X86\Managed.X86.dll</HintPath>
-    </Reference>
-    <Reference Include="NLua">
-      <HintPath>..\Lib\NLua\NLua.dll</HintPath>
-    </Reference>
-    <Reference Include="KeraLua">
-      <HintPath>..\Lib\NLua\KeraLua.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
@@ -76,7 +67,12 @@
     <Compile Include="Game\AllocatedPtr\AllocatedPtr.vb" />
     <Compile Include="Game\AllocatedPtr\IngameAllocatedPtr.vb" />
     <Compile Include="Game\AllocatedPtr\ScriptLibAllocatedPtr.vb" />
-    <Compile Include="Main\AsmExecutor.vb" />
+    <Compile Include="Main\Rewrite C\DarkSoulsMod.vb" />
+    <Compile Include="Main\Rewrite C\LuaFuncAttribute.vb" />
+    <Compile Include="Main\Rewrite C\LuaFunctionCaller.vb" />
+    <Compile Include="Main\Rewrite C\Lua.vb" />
+    <Compile Include="Main\Rewrite C\MoveableAddressOffset.vb" />
+    <Compile Include="Main\Rewrite C\MutatableDword.vb" />
     <Compile Include="Main\House of Enumeration.vb" />
     <Compile Include="Main\ScriptRes.vb" />
     <Compile Include="Utility Data Types\FuncInfo.vb" />
@@ -85,7 +81,6 @@
     <Compile Include="Game\Data Types\EventFlag.vb" />
     <Compile Include="Game\Data Types\Vec3.vb" />
     <Compile Include="Game\Data.vb" />
-    <Compile Include="Main\Lua.vb" />
     <Compile Include="ScriptHelpers\BossRushHelper.vb" />
     <Compile Include="ScriptHelpers\Dbg.vb" />
     <Compile Include="Main\Funcs.vb" />
@@ -128,7 +123,7 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-    <EmbeddedResource Include="Resources\Funcs.FuncCall.LuaTemplate.lua" />
+    <None Include="Resources\DarkSoulsFunctions.lua" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Lib\NLua\lua52.dll">
@@ -142,6 +137,19 @@
     <EmbeddedResource Include="Resources\CL\CL.Bonfires.txt" />
     <EmbeddedResource Include="Resources\CL\CL.Armor.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Lib\Managed.X86\Managed.X86.csproj">
+      <Project>{1aaf4b4d-2986-4f56-bebc-eec6ea0ee435}</Project>
+      <Name>Managed.X86</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib\NLua\Core\KeraLua\KeraLua.Net45.csproj">
+      <Project>{47153754-10F5-44D8-B578-F5A32B69061A}</Project>
+      <Name>KeraLua.Net45</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib\NLua\Core\NLua\NLua.Net45.csproj">
+      <Project>{f55cabbb-4108-4a39-94e1-581fd46dc021}</Project>
+      <Name>NLua.Net45</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
