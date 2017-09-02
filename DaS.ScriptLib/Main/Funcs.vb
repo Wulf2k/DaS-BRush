@@ -479,7 +479,7 @@ Public Class Funcs
         Return Lua.Expr(Of Integer)("ChrFadeIn(" & entityId & ", 1.0, 1.0)")
     End Function
 
-    Public Shared Function GetEntityPtrByName(name As String) As Integer
+    Public Shared Function GetEntityPtrByName(mapName As String, entName As String) As Integer
         Dim tmpStr As String = ""
 
         Dim tmpPtr As Integer = 0
@@ -500,26 +500,31 @@ Public Class Funcs
 
         For mapNum = 0 To mapCount - 1
             entitiesPtr = RInt32(mapPtrs + 4 * mapNum)
-            entitiesCnt = RInt32(entitiesPtr + &H3C)
-            entitiesPtr = RInt32(entitiesPtr + &H40)
 
-            For entityNum = 0 To entitiesCnt - 1
-                entityPtr = RInt32(entitiesPtr + entityNum * &H20)
+            tmpStr = RUnicodeStr(RInt32(RInt32(entitiesPtr + &H60) + 4))
 
-                tmpPtr = RInt32(entityPtr + &H54)
-                tmpCnt = RInt32(entityPtr + &H58) - 1
+            If tmpStr = mapName Then
+                entitiesCnt = RInt32(entitiesPtr + &H3C)
+                entitiesPtr = RInt32(entitiesPtr + &H40)
 
-                tmpPtr = RInt32(tmpPtr + &H28) + &H10
-                tmpPtr = Rint32(RInt32(tmpPtr + 4 * tmpCnt))
+                For entityNum = 0 To entitiesCnt - 1
+                    entityPtr = RInt32(entitiesPtr + entityNum * &H20)
 
-                tmpStr = RAsciiStr(tmpPtr)
-                
-                If tmpStr = name Then 
-                    Return entityPtr
-                End If
-            Next entityNum
-        Next mapnum
-        Return -1
+                    tmpPtr = RInt32(entityPtr + &H54)
+                    tmpCnt = RInt32(entityPtr + &H58) - 1
+
+                    tmpPtr = RInt32(tmpPtr + &H28) + &H10
+                    tmpPtr = RInt32(RInt32(tmpPtr + 4 * tmpCnt))
+
+                    tmpStr = RAsciiStr(tmpPtr)
+
+                    If tmpStr = entName Then
+                        Return entityPtr
+                    End If
+                Next entityNum
+            End If
+        Next mapNum
+        Return 0
     End Function
 
     Public Shared Sub SetBriefingMsg(ByVal str As String)
