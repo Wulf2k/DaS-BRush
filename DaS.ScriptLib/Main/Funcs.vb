@@ -515,7 +515,7 @@ Public Class Funcs
                 tmpStr = RAsciiStr(tmpPtr)
                 
                 If tmpStr = name Then 
-                    Return tmpPtr
+                    Return entityPtr
                 End If
             Next entityNum
         Next mapnum
