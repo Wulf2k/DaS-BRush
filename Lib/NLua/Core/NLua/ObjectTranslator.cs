@@ -254,7 +254,7 @@ namespace NLua
 				}
 			}
 
-			Push (luaState, e);
+            Push(luaState, e);
 			LuaLib.LuaError (luaState);
 		}
 

@@ -1,4 +1,5 @@
 ﻿Imports DaS.ScriptLib
+Imports DaS.ScriptLib.Lua.Dbg
 
 Public Class ScriptOutputBox
     Inherits RichTextBox
@@ -9,8 +10,8 @@ Public Class ScriptOutputBox
     Public Event OnClearAllLines()
 
     Public Sub InitEvents()
-        AddHandler Dbg.OnPrint, AddressOf Dbg_OnPrint
-        AddHandler Dbg.OnPrintClearAll, AddressOf Dbg_OnPrintClearAll
+        AddHandler Lua.Dbg.OnPrint, AddressOf Dbg_OnPrint
+        AddHandler Lua.Dbg.OnPrintClearAll, AddressOf Dbg_OnPrintClearAll
     End Sub
 
     Public Property AutoScroll As Boolean = True

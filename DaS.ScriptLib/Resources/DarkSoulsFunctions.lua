@@ -25,7 +25,7 @@ end
 
 ---[[
 function AddClearCount()
-    return FUNC(VOID, 0x00D5EC20, {});
+    FUNC(VOID, 0x00D5EC20, {});
 end
 ---]]
 
@@ -335,9 +335,9 @@ function ChrDisableUpDate()
 end
 ---]]
 
---[[
-function ChrFadeIn()
-    return FUNC(INT, 0x00D607E0, {});
+---[[
+function ChrFadeIn(chrId, dur, opacity)
+    return FUNC(INT, int(0x00D607E0), {int(chrId), dur, opacity});
 end
 ---]]
 

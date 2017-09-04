@@ -50,6 +50,9 @@
     <ApplicationIcon>Resources\AshenEstus.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.TextEditorEx, Version=1.0.0.6, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
+      <HintPath>..\packages\ICSharpCode.TextEditorEx.1.0.0.6\lib\net40\ICSharpCode.TextEditorEx.dll</HintPath>
+    </Reference>
     <Reference Include="NLua">
       <HintPath>..\Lib\NLua\NLua.dll</HintPath>
     </Reference>
@@ -150,6 +153,7 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lib\AutocompleteMenuNS\AutocompleteMenuNS.csproj">
@@ -159,6 +163,10 @@
     <ProjectReference Include="..\DaS.ScriptLib\DaS.ScriptLib.vbproj">
       <Project>{2a373330-933c-4a80-adfb-39f5e0ecbc35}</Project>
       <Name>DaS.ScriptLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib\DarkUI\DarkUI.csproj">
+      <Project>{f19472f5-8c44-4c51-a8a0-b9de5f555255}</Project>
+      <Name>DarkUI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -77,7 +77,7 @@ Public Class frmForm1
     Dim playerYpos As Single
     Dim playerZpos As Single
 
-    Public lua As New Lua()
+    Public lua As New LuaMan()
 
     Public intvar1 As Integer
     Public intvar2 As Integer
@@ -150,12 +150,12 @@ Public Class frmForm1
         Next
         cmbBonfire.SelectedItem = "Nothing [0]"
 
-        Game.Hook()
-        lblRelease.Text = Game.DetectedDarkSoulsVersion
+        DSHook.Hook()
+        lblRelease.Text = DSHook.DetectedDarkSoulsVersion
 
         refTimer = New System.Windows.Forms.Timer
         refTimer.Interval = delay
-        refTimer.Enabled = Game.IsHooked
+        refTimer.Enabled = DSHook.IsHooked
 
         Dim bossNameList = Data.BossFights.Keys
 
@@ -187,20 +187,20 @@ Public Class frmForm1
         Select Case tabs.TabPages(tabs.SelectedIndex).Text
             Case "Player"
 
-                lblHP.Text = Game.Player.HP.Value & " / " & Game.Player.MaxHP.Value
-                lblStam.Text = Game.Player.Stamina.Value & " / " & Game.Player.MaxStamina.Value
+                lblHP.Text = DSHook.Player.HP.Value & " / " & DSHook.Player.MaxHP.Value
+                lblStam.Text = DSHook.Player.Stamina.Value & " / " & DSHook.Player.MaxStamina.Value
 
-                lblFacing.Text = "Heading: " & ((Game.Player.Heading.Value + Math.PI) / (Math.PI * 2) * 360).ToString("0.00") & "°"
-                lblXpos.Text = Game.Player.PosX.Value.ToString("0.00")
-                lblYpos.Text = Game.Player.PosY.Value.ToString("0.00")
-                lblZpos.Text = Game.Player.PosZ.Value.ToString("0.00")
+                lblFacing.Text = "Heading: " & ((DSHook.Player.Heading.Value + Math.PI) / (Math.PI * 2) * 360).ToString("0.00") & "°"
+                lblXpos.Text = DSHook.Player.PosX.Value.ToString("0.00")
+                lblYpos.Text = DSHook.Player.PosY.Value.ToString("0.00")
+                lblZpos.Text = DSHook.Player.PosZ.Value.ToString("0.00")
 
-                lblstableXpos.Text = Game.Player.StablePosX.Value.ToString("0.00")
-                lblstableYpos.Text = Game.Player.StablePosY.Value.ToString("0.00")
-                lblstableZpos.Text = Game.Player.StablePosZ.Value.ToString("0.00")
+                lblstableXpos.Text = DSHook.Player.StablePosX.Value.ToString("0.00")
+                lblstableYpos.Text = DSHook.Player.StablePosY.Value.ToString("0.00")
+                lblstableZpos.Text = DSHook.Player.StablePosZ.Value.ToString("0.00")
 
                 Dim bonfireID As Integer
-                bonfireID = Game.Player.BonfireID.Value
+                bonfireID = DSHook.Player.BonfireID.Value
                 If Not cmbBonfire.DroppedDown Then
                     If ScriptRes.clsBonfires(bonfireID) = "" Then
                         ScriptRes.clsBonfires.Add(bonfireID, bonfireID.ToString)
@@ -213,19 +213,19 @@ Public Class frmForm1
 
             Case "Stats"
                 Try
-                    nmbMaxHP.FuckOff(Game.Player.Stats.MaxHP.Value)
-                    nmbMaxStam.FuckOff(Game.Player.Stats.MaxStamina.Value)
-                    nmbVitality.FuckOff(Game.Player.Stats.VIT.Value)
-                    nmbAttunement.FuckOff(Game.Player.Stats.ATN.Value)
-                    nmbEnd.FuckOff(Game.Player.Stats.ENDurance.Value)
-                    nmbStr.FuckOff(Game.Player.Stats.STR.Value)
-                    nmbDex.FuckOff(Game.Player.Stats.DEX.Value)
-                    nmbIntelligence.FuckOff(Game.Player.Stats.INT.Value)
-                    nmbFaith.FuckOff(Game.Player.Stats.FTH.Value)
-                    nmbResistance.FuckOff(Game.Player.Stats.RES.Value)
-                    nmbHumanity.FuckOff(Game.Player.Stats.Humanity.Value)
-                    nmbGender.FuckOff(Game.Player.Stats.ExternalGenitals.Value)
-                    nmbClearCount.FuckOff(Game.GameStats.ClearCount.Value)
+                    nmbMaxHP.FuckOff(DSHook.Player.Stats.MaxHP.Value)
+                    nmbMaxStam.FuckOff(DSHook.Player.Stats.MaxStamina.Value)
+                    nmbVitality.FuckOff(DSHook.Player.Stats.VIT.Value)
+                    nmbAttunement.FuckOff(DSHook.Player.Stats.ATN.Value)
+                    nmbEnd.FuckOff(DSHook.Player.Stats.ENDurance.Value)
+                    nmbStr.FuckOff(DSHook.Player.Stats.STR.Value)
+                    nmbDex.FuckOff(DSHook.Player.Stats.DEX.Value)
+                    nmbIntelligence.FuckOff(DSHook.Player.Stats.INT.Value)
+                    nmbFaith.FuckOff(DSHook.Player.Stats.FTH.Value)
+                    nmbResistance.FuckOff(DSHook.Player.Stats.RES.Value)
+                    nmbHumanity.FuckOff(DSHook.Player.Stats.Humanity.Value)
+                    nmbGender.FuckOff(DSHook.Player.Stats.ExternalGenitals.Value)
+                    nmbClearCount.FuckOff(DSHook.GameStats.ClearCount.Value)
                 Catch ex As Exception
                     Console.WriteLine("Error displaying stats.")
                 End Try
@@ -403,8 +403,8 @@ Public Class frmForm1
     'End Sub
 
     Private Sub btnReconnect_Click(sender As Object, e As EventArgs) Handles btnReconnect.Click
-        Game.Hook()
-        lblRelease.Text = Game.DetectedDarkSoulsVersion
+        DSHook.Hook()
+        lblRelease.Text = DSHook.DetectedDarkSoulsVersion
     End Sub
 
     Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
@@ -417,51 +417,51 @@ Public Class frmForm1
     End Sub
 
     Private Sub nmbVitality_ValueChanged(sender As Object, e As EventArgs) Handles nmbVitality.ValueChanged
-        Game.Player.Stats.VIT.Value = sender.Value
+        DSHook.Player.Stats.VIT.Value = sender.Value
     End Sub
 
     Private Sub nmbAttunement_ValueChanged(sender As Object, e As EventArgs) Handles nmbAttunement.ValueChanged
-        Game.Player.Stats.ATN.Value = sender.Value
+        DSHook.Player.Stats.ATN.Value = sender.Value
     End Sub
 
     Private Sub nmbEnd_ValueChanged(sender As Object, e As EventArgs) Handles nmbEnd.ValueChanged
-        Game.Player.Stats.ENDurance.Value = sender.Value
+        DSHook.Player.Stats.ENDurance.Value = sender.Value
     End Sub
 
     Private Sub nmbStr_ValueChanged(sender As Object, e As EventArgs) Handles nmbStr.ValueChanged
-        Game.Player.Stats.STR.Value = sender.Value
+        DSHook.Player.Stats.STR.Value = sender.Value
     End Sub
 
     Private Sub nmbDex_ValueChanged(sender As Object, e As EventArgs) Handles nmbDex.ValueChanged
-        Game.Player.Stats.DEX.Value = sender.Value
+        DSHook.Player.Stats.DEX.Value = sender.Value
     End Sub
 
     Private Sub nmbResistance_ValueChanged(sender As Object, e As EventArgs) Handles nmbResistance.ValueChanged
-        Game.Player.Stats.RES.Value = sender.Value
+        DSHook.Player.Stats.RES.Value = sender.Value
     End Sub
 
     Private Sub nmbIntelligence_ValueChanged(sender As Object, e As EventArgs) Handles nmbIntelligence.ValueChanged
-        Game.Player.Stats.INT.Value = sender.Value
+        DSHook.Player.Stats.INT.Value = sender.Value
     End Sub
 
     Private Sub nmbFaith_ValueChanged(sender As Object, e As EventArgs) Handles nmbFaith.ValueChanged
-        Game.Player.Stats.FTH.Value = sender.Value
+        DSHook.Player.Stats.FTH.Value = sender.Value
     End Sub
 
     Private Sub nmbHumanity_ValueChanged(sender As Object, e As EventArgs) Handles nmbHumanity.ValueChanged
-        Game.Player.Stats.Humanity.Value = sender.Value
+        DSHook.Player.Stats.Humanity.Value = sender.Value
     End Sub
 
     Private Sub nmbGender_ValueChanged(sender As Object, e As EventArgs) Handles nmbGender.ValueChanged
-        Game.Player.Stats.ExternalGenitals.Value = sender.Value
+        DSHook.Player.Stats.ExternalGenitals.Value = sender.Value
     End Sub
 
     Private Sub nmbMaxHP_ValueChanged(sender As Object, e As EventArgs) Handles nmbMaxHP.ValueChanged
-        Game.Player.Stats.MaxHP.Value = sender.Value
+        DSHook.Player.Stats.MaxHP.Value = sender.Value
     End Sub
 
     Private Sub nmbMaxStam_ValueChanged(sender As Object, e As EventArgs) Handles nmbMaxStam.ValueChanged
-        Game.Player.Stats.MaxStamina.Value = sender.Value
+        DSHook.Player.Stats.MaxStamina.Value = sender.Value
     End Sub
 
     'Private Sub btnScenarioPinwheelDefense_Click(sender As Object, e As EventArgs) Handles btnScenarioPinwheelDefense.Click
@@ -520,7 +520,7 @@ Public Class frmForm1
     'End Sub
 
     Private Sub btnCancelBossRush_Click(sender As Object, e As EventArgs) Handles btnCancelBossRush.Click
-        Lua.E("ShowHUD(true)")
+        LuaMan.E("ShowHUD(true)")
         Funcs.SetKeyGuideTextClear()
         Funcs.SetLineHelpTextClear()
         If (luaThread IsNot Nothing AndAlso luaThread.IsAlive) Then
@@ -551,7 +551,7 @@ Public Class frmForm1
         If luaThread IsNot Nothing AndAlso luaThread.IsAlive Then
             luaThread.Abort()
         End If
-        Lua.E($"SetClearCount({numBossScenarioNg.Value})")
+        LuaMan.E($"SetClearCount({numBossScenarioNg.Value})")
         luaThread = New Thread(AddressOf DoBossScenario) With {.IsBackground = True}
         luaThread.Start(CType(comboBossList.SelectedItem, String))
     End Sub
@@ -686,13 +686,13 @@ Public Class frmForm1
         Dim selStr = CType(cmbBonfire.SelectedItem, String)
         selStr = selStr.Substring(selStr.IndexOf("[") + 1)
         selStr = selStr.Substring(0, selStr.Length - 1)
-        Game.Player.BonfireID.Value = Integer.Parse(selStr.Trim())
+        DSHook.Player.BonfireID.Value = Integer.Parse(selStr.Trim())
     End Sub
 
     Private Sub frmForm1_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
         ' Checks if this is the last form open in this process
         If Application.OpenForms.Count = 0 Then
-            Game.Unhook()
+            DSHook.Unhook()
         End If
     End Sub
 

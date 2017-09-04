@@ -67,6 +67,7 @@ Partial Class ConsoleWindow
         Me.CloseAllTabsToTheRightToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.splitter = New System.Windows.Forms.SplitContainer()
         Me.btnHideOutput = New System.Windows.Forms.Button()
+        Me.sobOutput = New DaS.ScriptEditor.ScriptOutputBox()
         Me.ToolStrip2 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
         Me.statusStrip = New System.Windows.Forms.ToolStrip()
@@ -74,7 +75,6 @@ Partial Class ConsoleWindow
         Me.tsbtnOutputClear = New System.Windows.Forms.ToolStripButton()
         Me.tslblOutputLineCount = New System.Windows.Forms.ToolStripLabel()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
-        Me.sobOutput = New DaS.ScriptEditor.ScriptOutputBox()
         Me.MenuStrip1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.cwTabs.SuspendLayout()
@@ -433,6 +433,25 @@ Partial Class ConsoleWindow
         Me.btnHideOutput.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnHideOutput.UseVisualStyleBackColor = True
         '
+        'sobOutput
+        '
+        Me.sobOutput.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.sobOutput.AutoScroll = True
+        Me.sobOutput.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.sobOutput.Font = New System.Drawing.Font("Segoe UI Light", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.sobOutput.Location = New System.Drawing.Point(3, 22)
+        Me.sobOutput.Name = "sobOutput"
+        Me.sobOutput.ReadOnly = True
+        Me.sobOutput.ShortcutsEnabled = False
+        Me.sobOutput.Size = New System.Drawing.Size(571, 508)
+        Me.sobOutput.TabIndex = 0
+        Me.sobOutput.TabStop = False
+        Me.sobOutput.Text = "Sup Wulf. Tell me how the toolstrip that says ""Console Output:"" immediately above" &
+    " looks on your system while the program is running (it has to load the 'X' butto" &
+    "n on launch)"
+        '
         'ToolStrip2
         '
         Me.ToolStrip2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -510,25 +529,6 @@ Partial Class ConsoleWindow
         Me.StatusStrip1.Size = New System.Drawing.Size(1153, 22)
         Me.StatusStrip1.TabIndex = 5
         Me.StatusStrip1.Text = "StatusStrip1"
-        '
-        'sobOutput
-        '
-        Me.sobOutput.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.sobOutput.AutoScroll = True
-        Me.sobOutput.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.sobOutput.Font = New System.Drawing.Font("Segoe UI Light", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.sobOutput.Location = New System.Drawing.Point(3, 22)
-        Me.sobOutput.Name = "sobOutput"
-        Me.sobOutput.ReadOnly = True
-        Me.sobOutput.ShortcutsEnabled = False
-        Me.sobOutput.Size = New System.Drawing.Size(571, 508)
-        Me.sobOutput.TabIndex = 0
-        Me.sobOutput.TabStop = False
-        Me.sobOutput.Text = "Sup Wulf. Tell me how the toolstrip that says ""Console Output:"" immediately above" &
-    " looks on your system while the program is running (it has to load the 'X' butto" &
-    "n on launch)"
         '
         'ConsoleWindow
         '
