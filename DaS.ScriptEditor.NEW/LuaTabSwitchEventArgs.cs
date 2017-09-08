@@ -8,9 +8,9 @@ namespace DaS.ScriptEditor.NEW
 {
     public class LuaTabSwitchEventArgs : EventArgs
     {
-        public readonly LuaScript Script;
+        public readonly LuaScriptTab Script;
 
-        public LuaTabSwitchEventArgs(LuaScript script)
+        public LuaTabSwitchEventArgs(LuaScriptTab script)
         {
             Script = script;
         }

@@ -17,7 +17,7 @@ using ICSharpCode.AvalonEdit.Document;
 
 namespace DaS.ScriptEditor.NEW
 {
-    public class LuaScriptContainer : LayoutDocumentPane
+    public class LuaScriptTabContainer : LayoutDocumentPane
     {
         public TextEditor LuaEditor;
         public LuaAutoComplete AutoComplete;
@@ -27,12 +27,12 @@ namespace DaS.ScriptEditor.NEW
         public event EventHandler<LuaTabSwitchEventArgs> ScriptStart;
         public event EventHandler<LuaTabSwitchEventArgs> ScriptStop;
 
-        private LuaScript __selectedLuaScript;
-        public LuaScript SelectedLuaScript
+        private LuaScriptTab __selectedLuaScript;
+        public LuaScriptTab SelectedLuaScript
         {
             get
             {
-                return SelectedContent as LuaScript;
+                return SelectedContent as LuaScriptTab;
             }
             set
             {
@@ -43,7 +43,7 @@ namespace DaS.ScriptEditor.NEW
             }
         }
 
-        public LuaScriptContainer() : base()
+        public LuaScriptTabContainer() : base()
         {
             AddNewTab();
         }
@@ -82,7 +82,7 @@ namespace DaS.ScriptEditor.NEW
 
         public IHighlightingDefinition LoadHightLightRule()
         {
-            using (Stream s = typeof(LuaScriptContainer).Assembly.GetManifestResourceStream("DaS.ScriptEditor.NEW.EmbeddedResources.Lua.xshd"))
+            using (Stream s = typeof(LuaScriptTabContainer).Assembly.GetManifestResourceStream("DaS.ScriptEditor.NEW.EmbeddedResources.Lua.xshd"))
             {
                 using (XmlTextReader reader = new XmlTextReader(s))
                 {
@@ -91,7 +91,7 @@ namespace DaS.ScriptEditor.NEW
             }
         }
 
-        public LuaScript AddNewTab()
+        public LuaScriptTab AddNewTab()
         {
             if (LuaEditor == null)
             {
@@ -99,11 +99,12 @@ namespace DaS.ScriptEditor.NEW
                 AutoComplete = new LuaAutoComplete(ref LuaEditor);
             }
 
-            var newTab = new LuaScript();
+            var newTab = new LuaScriptTab();
 
             if (ChildrenCount == 0)
             {
                 newTab.Content = LuaEditor;
+                LuaEditor.Document = newTab.EditorDocument;
             }
 
             Children.Add(newTab);
@@ -111,7 +112,7 @@ namespace DaS.ScriptEditor.NEW
             return newTab;
         }
 
-        public void FocusTab(LuaScript tab)
+        public void FocusTab(LuaScriptTab tab)
         {
             if (!Children.Contains(tab))
             {
@@ -125,7 +126,7 @@ namespace DaS.ScriptEditor.NEW
         {
             foreach(var thing in Children)
             {
-                if (!((thing as LuaScript).SeSave()))
+                if (!((thing as LuaScriptTab).SeSave()))
                 {
                     return false;
                 }
@@ -133,11 +134,11 @@ namespace DaS.ScriptEditor.NEW
             return true;
         }
 
-        public LuaScript this[int i]
+        public LuaScriptTab this[int i]
         {
             get
             {
-                return Children[i] as LuaScript;
+                return Children[i] as LuaScriptTab;
             }
         }
 
@@ -179,7 +180,7 @@ namespace DaS.ScriptEditor.NEW
                 DefaultExt = ".lua",
                 FileName = "",
                 Filter = "Lua Scripts|*.lua",
-                InitialDirectory = new FileInfo(typeof(LuaScript).Assembly.Location).Directory.FullName, //TODO: store last user save/load dir and load on startup
+                InitialDirectory = new FileInfo(typeof(LuaScriptTab).Assembly.Location).Directory.FullName, //TODO: store last user save/load dir and load on startup
                 Title = "Open 1 or more Lua Script(s)",
                 CheckPathExists = true,
                 Multiselect = true,

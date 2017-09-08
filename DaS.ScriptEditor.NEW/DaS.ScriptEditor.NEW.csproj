@@ -65,9 +65,9 @@
     <Compile Include="LuaTabSwitchEventArgs.cs" />
     <Compile Include="SeAutoCompleteEntry.cs" />
     <Compile Include="SeDocumentIO.cs" />
-    <Compile Include="LuaScript.cs" />
+    <Compile Include="LuaScriptTab.cs" />
     <Compile Include="SeTabDataContext.cs" />
-    <Compile Include="LuaScriptContainer.cs" />
+    <Compile Include="LuaScriptTabContainer.cs" />
     <Compile Include="SeToolbar.xaml.cs">
       <DependentUpon>SeToolbar.xaml</DependentUpon>
     </Compile>

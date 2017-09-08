@@ -12,7 +12,7 @@ using System.Threading;
 
 namespace DaS.ScriptEditor.NEW
 {
-    public class LuaScript : LayoutDocument
+    public class LuaScriptTab : LayoutDocument
     {
         //Stuff:
 
@@ -50,17 +50,17 @@ namespace DaS.ScriptEditor.NEW
 
         //LuaEditor storage:
 
-        public LuaScriptContainer ParentLuaContainer
+        public LuaScriptTabContainer ParentLuaContainer
         {
             get
             {
-                return Parent as LuaScriptContainer;
+                return Parent as LuaScriptTabContainer;
             }
         }
 
 
 
-        private TextDocument EditorDocument = new TextDocument();
+        public TextDocument EditorDocument { get; private set; } = new TextDocument();
         private double EditorVerticalOffset = 0;
         private int EditorCaretOffset = 0;
 
@@ -68,7 +68,7 @@ namespace DaS.ScriptEditor.NEW
 
         //Constructor:
 
-        public LuaScript(string scriptFileName = null) : base()
+        public LuaScriptTab(string scriptFileName = null) : base()
         {
             CanFloat = false;
 
@@ -317,7 +317,7 @@ namespace DaS.ScriptEditor.NEW
                 DefaultExt = ".lua",
                 FileName = DefaultScriptName,
                 Filter = "Lua Scripts|*.lua",
-                InitialDirectory = new FileInfo(typeof(LuaScript).Assembly.Location).Directory.FullName, //TODO: store last user save/load dir and load on startup
+                InitialDirectory = new FileInfo(typeof(LuaScriptTab).Assembly.Location).Directory.FullName, //TODO: store last user save/load dir and load on startup
                 CreatePrompt = false,
                 OverwritePrompt = true,
                 Title = "Save Lua Script"
@@ -354,7 +354,7 @@ namespace DaS.ScriptEditor.NEW
                 DefaultExt = ".lua",
                 FileName = "",
                 Filter = "Lua Scripts|*.lua",
-                InitialDirectory = new FileInfo(typeof(LuaScript).Assembly.Location).Directory.FullName, //TODO: store last user save/load dir and load on startup
+                InitialDirectory = new FileInfo(typeof(LuaScriptTab).Assembly.Location).Directory.FullName, //TODO: store last user save/load dir and load on startup
                 Title = "Open 1 or more Lua Script(s)",
                 CheckPathExists = true,
                 Multiselect = true,

@@ -16,7 +16,8 @@ namespace DaS.ScriptEditor.NEW
 
         private Thread DbgRowThread;
 
-        public int DbgRowThreadUpdateInterval = 33;
+        private int DbgRowThreadUpdateInterval = 33;
+        private int DbgRowQueueAmountPerCycle = 10;
 
         private object DbgPrintLOCK = new object();
 
@@ -64,7 +65,9 @@ namespace DaS.ScriptEditor.NEW
             {
                 while (true)
                 {
-                    if (DbgRowQueue.Count > 0)
+                    int counter = 0;
+
+                    while (DbgRowQueue.Count > 0 && counter++ < DbgRowQueueAmountPerCycle)
                     {
                         var nextRow = DbgRowQueue.Dequeue();
 

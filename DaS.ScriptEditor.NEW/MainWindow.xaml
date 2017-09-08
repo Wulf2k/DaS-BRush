@@ -41,7 +41,7 @@
             <avalonDock:LayoutRoot>
                 <avalonDock:LayoutPanel x:Name="adMainLayoutPanel" Orientation="Horizontal">
                     <avalonDock:LayoutDocumentPaneGroup>
-                        <local:LuaScriptContainer x:Name="MainLuaContainer"/>
+                        <local:LuaScriptTabContainer x:Name="MainLuaContainer"/>
                     </avalonDock:LayoutDocumentPaneGroup>
                     <avalonDock:LayoutDocumentPaneGroup DockWidth="400">
                         <avalonDock:LayoutDocumentPane>
