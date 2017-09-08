@@ -1,0 +1,72 @@
+﻿<UserControl x:Class="DaS.ScriptEditor.NEW.SeToolbar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DaS.ScriptEditor.NEW"
+             mc:Ignorable="d" 
+             d:DesignHeight="32" d:DesignWidth="960"
+             UseLayoutRounding="True">
+    <UserControl.Resources>
+        <BitmapImage x:Key="NewDocIcon" 
+                     UriSource="Resources/Toolbar/NewDocIcon.png"/>
+        <BitmapImage x:Key="OpenFileIcon" 
+                     UriSource="Resources/Toolbar/OpenFileIcon.png" />
+        <BitmapImage x:Key="RefreshIcon" 
+                     UriSource="Resources/Toolbar/RefreshIcon.png" />
+        <BitmapImage x:Key="SaveAllFilesIcon" 
+                     UriSource="Resources/Toolbar/SaveAllFilesIcon.png" />
+        <BitmapImage x:Key="SaveFileIcon" 
+                     UriSource="Resources/Toolbar/SaveFileIcon.png" />
+        <BitmapImage x:Key="StartIcon" 
+                     UriSource="Resources/Toolbar/StartIcon.png" />
+        <BitmapImage x:Key="StopIcon" 
+                     UriSource="Resources/Toolbar/StopIcon.png" />
+    </UserControl.Resources>
+    <Grid x:Name="grid">
+        <ToolBar >
+            <Button x:Name="ButtonNewDoc" Click="ButtonClick" Padding="2,0,2,0" Height="24" Width="24">
+                <Button.Content>
+                    <Image Source="{StaticResource NewDocIcon}" Stretch="None"/>
+                </Button.Content>
+            </Button>
+            <Button x:Name="ButtonOpenFile" Click="ButtonClick" Padding="2,0,2,0" Height="24" Width="24">
+                <Button.Content>
+                    <Image Source="{StaticResource OpenFileIcon}" Stretch="None" />
+                </Button.Content>
+            </Button>
+            <Button x:Name="ButtonSaveFile" Click="ButtonClick" Padding="2,0,2,0" Height="24" Width="24">
+                <Button.Content>
+                    <Image Source="{StaticResource SaveFileIcon}" Stretch="None" />
+                </Button.Content>
+            </Button>
+            <Button x:Name="ButtonSaveAllFiles" Click="ButtonClick" Padding="2,0,2,0" Height="24" Width="24">
+                <Button.Content>
+                    <Image Source="{StaticResource SaveAllFilesIcon}" Stretch="None" />
+                </Button.Content>
+            </Button>
+            <Separator/>
+            <Button x:Name="ButtonStart" Click="ButtonClick" Padding="2,0,2,0" Height="24" Width="24">
+                <Button.Content>
+                    <Image Source="{StaticResource StartIcon}" Stretch="None" />
+                </Button.Content>
+            </Button>
+            <Button x:Name="ButtonStop" Click="ButtonClick" Padding="2,0,2,0" Height="24" Width="24" IsEnabled="False" Opacity="0.5">
+                <Button.Content>
+                    <Image Source="{StaticResource StopIcon}" Stretch="None" />
+                </Button.Content>
+            </Button>
+            <Separator/>
+            <Button x:Name="ButtonRefresh" Click="ButtonClick" Padding="0,0,0,0" Height="20" Width="20">
+                <Button.Content>
+                    <Image Source="{StaticResource RefreshIcon}" Stretch="None" />
+                </Button.Content>
+            </Button>
+            <Label Content="Detected Dark Souls Version:" 
+                   Padding="2,0,2,0" Height="24" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            <Label x:Name="DarkSoulsVersionLabel" Padding="2,0,2,0" Height="24" 
+                   VerticalAlignment="Center" VerticalContentAlignment="Center" 
+                   FontWeight="Bold" Content="?DarkSoulsVersion?"/>
+        </ToolBar>
+    </Grid>
+</UserControl>
