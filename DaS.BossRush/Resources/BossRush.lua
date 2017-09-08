@@ -11,7 +11,7 @@ RefillHpEachFight = true
 BossRushOrder = "Custom"
 
 --Only applicable if OrderType is set to "Custom"
-BossRushCustomOrder = "Gravelord Nito; Bed of Chaos; Bed of Chaos"
+BossRushCustomOrder = ""
 
 --Has NO EFFECT if OrderType is set to "Custom"
 BossRushExcludeBed = true 
@@ -22,16 +22,15 @@ BossRushExcludeBed = true
 BossRushNgMode = "Prompt"
 BossRushNgLevel = 0
 
-
 ------------------------------------------------------------------------------------------ 
 --                                User settings end here                                --
 ------------------------------------------------------------------------------------------ 
 
 function SetPlayerIsVegetable(prot)
-    DisableMove(Data.PlayerID, prot) --plr no move if prot
-    SetColiEnable(Data.PlayerID, (not prot)) --plr no take dmg if prot
-    SetDisableGravity(Data.PlayerID, prot) --plr no fall if prot
-    DisableMapHit(Data.PlayerID, prot) --prevent activating col triggers if prot
+    DisableMove(10000, prot) --plr no move if prot
+    SetColiEnable(10000, (not prot)) --plr no take dmg if prot
+    SetDisableGravity(10000, prot) --plr no fall if prot
+    DisableMapHit(10000, prot) --prevent activating col triggers if prot
 end
 
 function CountdownString(padTime, time, str, endStr)
@@ -95,24 +94,24 @@ end
 
 function CancelOutOfCurPlrAnim()
     --Force idle anim to start looping
-    ForcePlayLoopAnimation(Data.PlayerID, Data.PlayerAnim.Idle)
+    ForcePlayLoopAnimation(10000, Data.PlayerAnim.Idle)
     --Cancel out of the idle anim loop so that the player can move again
-    StopLoopAnimation(Data.PlayerID, Data.PlayerAnim.Idle)
+    StopLoopAnimation(10000, Data.PlayerAnim.Idle)
 end
 
-function SpawnPlayerAtBoss(bossName)
-    boss = Data.BossFights[bossName]
-    EventFlag.ApplyAll(boss.AdditionalFlags)
+function SpawnPlayerAtBoss(bossFlag)
+    boss = Misc.BossFights[bossFlag]
+    Helpers.EventFlagHelper.ApplyAll(boss.AdditionalFlags)
 
     --Almost fail-proof check since we do not have all the boss rush data filled in yet.
-    if boss.EventFlag >= 0 then SetEventFlag(boss.EventFlag, false) end
+    if bossFlag >= 0 then SetEventFlag(bossFlag, false) end
     --Almost fail-proof check since we do not have all the boss rush data filled in yet.
     --if boss.BonfireID >= 0 and (not boss.PlayerWarp.IsZero) then 
         --WarpNextStage_Bonfire(boss.BonfireID)
     --else
         --WarpNextStage_Bonfire(Game.Player.BonfireID.Value)
     --end
-    SetDeadMode(Data.PlayerID, true)
+    SetDeadMode(10000, true)
 	WarpNextStage(boss.World, boss.Area, 0, 0, -1)
     CancelOutOfCurPlrAnim()
     
@@ -132,14 +131,14 @@ function SpawnPlayerAtBoss(bossName)
     --end
 
 	if boss.WarpID > -1 then
-        Warp(Data.PlayerID, boss.WarpID)
+        Warp(10000, boss.WarpID)
         CancelOutOfCurPlrAnim()
 	end
     
     --Activate current location's map load trigger so it can load during FadeIn
-    DisableMapHit(Data.PlayerID, false)
+    DisableMapHit(10000, false)
     
-    SetDisable(Data.PlayerID, true)
+    SetDisable(10000, true)
     
     if not boss.PlayerWarp.IsZero then
         --if not (boss.WarpID == -1) then Wait(2000) end
@@ -151,29 +150,29 @@ function SpawnPlayerAtBoss(bossName)
     
 
     --Begin resetting camera before FadeIn since the camera reset is smoothed out and takes a long time.
-    CamReset(Data.PlayerID, 1)
+    CamReset(10000, 1)
     SetPlayerIsVegetable(false)
     Wait(500)
     PlayerHide(false)
     FadeIn()
     
     
-    ForcePlayAnimation(Data.PlayerID, boss.PlayerAnim)
+    ForcePlayAnimation(10000, boss.PlayerAnim)
     
     Game.Player.Opacity = 0
-    SetDisable(Data.PlayerID, false)
-    ChrFadeIn(Data.PlayerID, 0.5, 0)
+    SetDisable(10000, false)
+    ChrFadeIn(10000, 0.5, 0)
     
     if not boss.PlayerWarp.IsZero then
         --if not (boss.WarpID == -1) then Wait(2000) end
         Warp_Coords(boss.PlayerWarp.Pos.X, boss.PlayerWarp.Pos.Y, boss.PlayerWarp.Pos.Z, boss.PlayerWarp.Rot)
     end
     
-    ForcePlayAnimation(Data.PlayerID, boss.PlayerAnim)
+    ForcePlayAnimation(10000, boss.PlayerAnim)
     
-    --ChrFadeIn(Data.PlayerID, 0, 0)
+    --ChrFadeIn(10000, 0, 0)
     DisableDamage(10000, false)
-    SetDeadMode(Data.PlayerID, false)
+    SetDeadMode(10000, false)
 
     --Almost fail-proof check since we do not have all the boss rush data filled in yet.
     if string.len(boss.EntranceLua) > 0 then
@@ -182,8 +181,10 @@ function SpawnPlayerAtBoss(bossName)
     end
 end
 
-function FightBoss(bossName, isFirstBoss)
-    Dbg.PrintInfo("Fighting boss: "..bossName)
+function FightBoss(bossFlag, isFirstBoss)
+    bossName = Misc.BossFights[bossFlag].Name
+
+    --Dbg.PrintInfo("Fighting boss: "..bossName)
     
     visibleBossName = bossName
     if ShowBossNames == false then
@@ -197,13 +198,13 @@ function FightBoss(bossName, isFirstBoss)
     
     repeat
         PrepareForNextBoss(isFirstBoss)
-        SpawnPlayerAtBoss(bossName)
+        SpawnPlayerAtBoss(bossFlag)
 
         if isFirstBoss then
-            BossRushHelper.StartNewBossRushTimer() 
+            Helpers.BossRushHelper.StartNewBossRushTimer() 
         end
 
-        bossDead = BossRushHelper.WaitForBossDeathByName(bossName)
+        bossDead = Helpers.BossRushHelper.WaitForBossDeathByEventFlag(int(bossFlag))
         if bossDead then
             Dbg.PrintInfo("Boss "..bossName.." dead")
         else 
@@ -271,8 +272,8 @@ function BeginBossRush()
     
     if wussOutForSure then
         ShowHUD(true)
-        Proc.WInt32(Proc.RInt32(0x13786D0) + 0x154, -1) 
-        Proc.WInt32(Proc.RInt32(0x13786D0) + 0x158, -1) 
+        WInt32(RInt32(0x13786D0) + 0x154, -1) 
+        WInt32(RInt32(0x13786D0) + 0x158, -1) 
         SetBriefingMsg("You are no longer invincible.\n \n \n ")
         SetPlayerIsVegetable(false)
         return
@@ -286,7 +287,7 @@ function BeginBossRush()
     
     MsgBoxOK("Welcome to the Boss Rush.\nSaving has been disabled.")
 
-    bossOrder = BossRushHelper.GetBossRushOrder(BossRushOrder, BossRushExcludeBed, BossRushCustomOrder)
+    bossOrder = Helpers.BossRushHelper.GetBossRushOrder(BossRushOrder, BossRushExcludeBed, BossRushCustomOrder)
     
     isFirstBoss = true
 
@@ -301,7 +302,7 @@ function BeginBossRush()
         end
     end
 
-    timerStr = BossRushHelper.StopBossRushTimer()
+    timerStr = Helpers.BossRushHelper.StopBossRushTimer()
 
     --TODO: Show all the different settings the user chose for the boss rush in this results screen.
     MsgBoxOK("Congratulations.\nCompleted in "..timerStr..".")

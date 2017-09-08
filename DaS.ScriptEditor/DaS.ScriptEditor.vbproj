@@ -56,9 +56,6 @@
     <Reference Include="NLua">
       <HintPath>..\Lib\NLua\NLua.dll</HintPath>
     </Reference>
-    <Reference Include="ScintillaNET">
-      <HintPath>..\Lib\ScintillaNET\ScintillaNET.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -163,10 +160,6 @@
     <ProjectReference Include="..\DaS.ScriptLib\DaS.ScriptLib.vbproj">
       <Project>{2a373330-933c-4a80-adfb-39f5e0ecbc35}</Project>
       <Name>DaS.ScriptLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Lib\DarkUI\DarkUI.csproj">
-      <Project>{f19472f5-8c44-4c51-a8a0-b9de5f555255}</Project>
-      <Name>DarkUI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

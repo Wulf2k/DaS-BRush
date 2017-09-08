@@ -337,7 +337,7 @@ end
 
 ---[[
 function ChrFadeIn(chrId, dur, opacity)
-    return FUNC(INT, int(0x00D607E0), {int(chrId), dur, opacity});
+    return FUNC(INT, 0x00D607E0, {int(chrId), dur, opacity});
 end
 ---]]
 

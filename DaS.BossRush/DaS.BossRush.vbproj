@@ -96,9 +96,6 @@
     <Compile Include="AboutPopup.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BossFightInfo.vb" />
-    <Compile Include="BossFights.vb" />
-    <Compile Include="BossRushHelper.vb" />
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -193,10 +190,6 @@
     <EmbeddedResource Include="Resources\CL\CL.Weapons.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DaS.ScriptEditor\DaS.ScriptEditor.vbproj">
-      <Project>{8d828e39-8259-4216-9d86-ee4700ec66df}</Project>
-      <Name>DaS.ScriptEditor</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DaS.ScriptLib\DaS.ScriptLib.vbproj">
       <Project>{2a373330-933c-4a80-adfb-39f5e0ecbc35}</Project>
       <Name>DaS.ScriptLib</Name>

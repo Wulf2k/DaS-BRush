@@ -265,13 +265,13 @@ Public Class ConsoleHandler
 
     'End Sub
 
-    Private Sub Console_AutoCCompleted(sender As Object, e As AutoCSelectionEventArgs)
-        'TODO:NEWLUA UpdateCallTip(e.Text, e.Position)
-    End Sub
+    'Private Sub Console_AutoCCompleted(sender As Object, e As AutoCSelectionEventArgs)
+    '    'TODO:NEWLUA UpdateCallTip(e.Text, e.Position)
+    'End Sub
 
-    Private Sub Console_AutoCSelect(sender As Object, e As AutoCSelectionEventArgs)
-        'TODO:NEWLUA UpdateCallTip(e.Text, e.Position)
-    End Sub
+    'Private Sub Console_AutoCSelect(sender As Object, e As AutoCSelectionEventArgs)
+    '    'TODO:NEWLUA UpdateCallTip(e.Text, e.Position)
+    'End Sub
 
     'Private Sub ConsoleDragEnter(sender As Object, e As DragEventArgs)
     'End Sub

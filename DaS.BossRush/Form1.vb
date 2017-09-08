@@ -5,6 +5,11 @@ Imports System.Globalization
 Imports System.Reflection
 Imports System.Runtime.CompilerServices
 Imports DaS.ScriptLib
+Imports DaS.ScriptLib.Lua
+Imports DaS.ScriptLib.Game.Data.Helpers
+Imports DaS.ScriptLib.Injection
+Imports DaS.ScriptLib.Game
+Imports DaS.ScriptLib.Game.Data
 
 Public Class frmForm1
 
@@ -59,7 +64,7 @@ Public Class frmForm1
     Public Const VersionCheckUrl = "http://wulf2k.ca/pc/das/das-brush-ver.txt"
     Public Const NoteCheckUrl = "http://wulf2k.ca/pc/das/das-brush-notes.txt"
 
-    Dim consoleWindow As DaS.ScriptEditor.ConsoleWindow
+    'Dim consoleWindow As DaS.ScriptEditor.ConsoleWindow
 
     Private WithEvents refTimer As New System.Windows.Forms.Timer()
     Public Declare Function GetAsyncKeyState Lib "user32" (ByVal vKey As Integer) As Short
@@ -77,7 +82,7 @@ Public Class frmForm1
     Dim playerYpos As Single
     Dim playerZpos As Single
 
-    Public lua As New LuaMan()
+    Public lua As New LuaInterface()
 
     Public intvar1 As Integer
     Public intvar2 As Integer
@@ -144,20 +149,20 @@ Public Class frmForm1
         updatecheck()
 
         '-----------------------Bonfires-----------------------
-        For Each bonfire In ScriptRes.clsBonfires.Keys
+        For Each bonfire In ScriptLibResources.clsBonfires.Keys
             Dim id = CType(bonfire, Integer)
-            cmbBonfire.Items.Add(CType(ScriptRes.clsBonfires(bonfire), String) & " [" & id.ToString() & "]")
+            cmbBonfire.Items.Add(CType(ScriptLibResources.clsBonfires(bonfire), String) & " [" & id.ToString() & "]")
         Next
         cmbBonfire.SelectedItem = "Nothing [0]"
 
-        DSHook.Hook()
-        lblRelease.Text = DSHook.DetectedDarkSoulsVersion
+        DARKSOULS.TryAttachToDarkSouls(True)
+        lblRelease.Text = DARKSOULS.VersionDisplayName
 
         refTimer = New System.Windows.Forms.Timer
         refTimer.Interval = delay
-        refTimer.Enabled = DSHook.IsHooked
+        refTimer.Enabled = DARKSOULS.Attached
 
-        Dim bossNameList = Data.BossFights.Keys
+        Dim bossNameList = Game.Data.Misc.BossFights.Values.Select(Function(x) x.Name)
 
         For Each bossName In bossNameList
             comboBossList.Items.Add(bossName)
@@ -187,45 +192,45 @@ Public Class frmForm1
         Select Case tabs.TabPages(tabs.SelectedIndex).Text
             Case "Player"
 
-                lblHP.Text = DSHook.Player.HP.Value & " / " & DSHook.Player.MaxHP.Value
-                lblStam.Text = DSHook.Player.Stamina.Value & " / " & DSHook.Player.MaxStamina.Value
+                lblHP.Text = Mem.Player.HP.Value & " / " & Mem.Player.MaxHP.Value
+                lblStam.Text = Mem.Player.Stamina.Value & " / " & Mem.Player.MaxStamina.Value
 
-                lblFacing.Text = "Heading: " & ((DSHook.Player.Heading.Value + Math.PI) / (Math.PI * 2) * 360).ToString("0.00") & "°"
-                lblXpos.Text = DSHook.Player.PosX.Value.ToString("0.00")
-                lblYpos.Text = DSHook.Player.PosY.Value.ToString("0.00")
-                lblZpos.Text = DSHook.Player.PosZ.Value.ToString("0.00")
+                lblFacing.Text = "Heading: " & ((Mem.Player.Heading.Value + Math.PI) / (Math.PI * 2) * 360).ToString("0.00") & "°"
+                lblXpos.Text = Mem.Player.PosX.Value.ToString("0.00")
+                lblYpos.Text = Mem.Player.PosY.Value.ToString("0.00")
+                lblZpos.Text = Mem.Player.PosZ.Value.ToString("0.00")
 
-                lblstableXpos.Text = DSHook.Player.StablePosX.Value.ToString("0.00")
-                lblstableYpos.Text = DSHook.Player.StablePosY.Value.ToString("0.00")
-                lblstableZpos.Text = DSHook.Player.StablePosZ.Value.ToString("0.00")
+                lblstableXpos.Text = Mem.Player.StablePosX.Value.ToString("0.00")
+                lblstableYpos.Text = Mem.Player.StablePosY.Value.ToString("0.00")
+                lblstableZpos.Text = Mem.Player.StablePosZ.Value.ToString("0.00")
 
                 Dim bonfireID As Integer
-                bonfireID = DSHook.Player.BonfireID.Value
+                bonfireID = Mem.Player.BonfireID.Value
                 If Not cmbBonfire.DroppedDown Then
-                    If ScriptRes.clsBonfires(bonfireID) = "" Then
-                        ScriptRes.clsBonfires.Add(bonfireID, bonfireID.ToString)
-                        ScriptRes.clsBonfiresIDs.Add(bonfireID.ToString, bonfireID)
+                    If ScriptLibResources.clsBonfires(bonfireID) = "" Then
+                        ScriptLibResources.clsBonfires.Add(bonfireID, bonfireID.ToString)
+                        ScriptLibResources.clsBonfiresIDs.Add(bonfireID.ToString, bonfireID)
                         cmbBonfire.Items.Add("??? [" & bonfireID.ToString & "]")
                     End If
-                    cmbBonfire.SelectedItem = ScriptRes.clsBonfires(bonfireID) & " [" & bonfireID.ToString() & "]"
+                    cmbBonfire.SelectedItem = ScriptLibResources.clsBonfires(bonfireID) & " [" & bonfireID.ToString() & "]"
                 End If
 
 
             Case "Stats"
                 Try
-                    nmbMaxHP.FuckOff(DSHook.Player.Stats.MaxHP.Value)
-                    nmbMaxStam.FuckOff(DSHook.Player.Stats.MaxStamina.Value)
-                    nmbVitality.FuckOff(DSHook.Player.Stats.VIT.Value)
-                    nmbAttunement.FuckOff(DSHook.Player.Stats.ATN.Value)
-                    nmbEnd.FuckOff(DSHook.Player.Stats.ENDurance.Value)
-                    nmbStr.FuckOff(DSHook.Player.Stats.STR.Value)
-                    nmbDex.FuckOff(DSHook.Player.Stats.DEX.Value)
-                    nmbIntelligence.FuckOff(DSHook.Player.Stats.INT.Value)
-                    nmbFaith.FuckOff(DSHook.Player.Stats.FTH.Value)
-                    nmbResistance.FuckOff(DSHook.Player.Stats.RES.Value)
-                    nmbHumanity.FuckOff(DSHook.Player.Stats.Humanity.Value)
-                    nmbGender.FuckOff(DSHook.Player.Stats.ExternalGenitals.Value)
-                    nmbClearCount.FuckOff(DSHook.GameStats.ClearCount.Value)
+                    nmbMaxHP.FuckOff(Mem.Player.Stats.MaxHP.Value)
+                    nmbMaxStam.FuckOff(Mem.Player.Stats.MaxStamina.Value)
+                    nmbVitality.FuckOff(Mem.Player.Stats.VIT.Value)
+                    nmbAttunement.FuckOff(Mem.Player.Stats.ATN.Value)
+                    nmbEnd.FuckOff(Mem.Player.Stats.ENDurance.Value)
+                    nmbStr.FuckOff(Mem.Player.Stats.STR.Value)
+                    nmbDex.FuckOff(Mem.Player.Stats.DEX.Value)
+                    nmbIntelligence.FuckOff(Mem.Player.Stats.INT.Value)
+                    nmbFaith.FuckOff(Mem.Player.Stats.FTH.Value)
+                    nmbResistance.FuckOff(Mem.Player.Stats.RES.Value)
+                    nmbHumanity.FuckOff(Mem.Player.Stats.Humanity.Value)
+                    nmbGender.FuckOff(Mem.Player.Stats.ExternalGenitals.Value)
+                    nmbClearCount.FuckOff(Mem.GameStats.ClearCount.Value)
                 Catch ex As Exception
                     Console.WriteLine("Error displaying stats.")
                 End Try
@@ -403,8 +408,8 @@ Public Class frmForm1
     'End Sub
 
     Private Sub btnReconnect_Click(sender As Object, e As EventArgs) Handles btnReconnect.Click
-        DSHook.Hook()
-        lblRelease.Text = DSHook.DetectedDarkSoulsVersion
+        DARKSOULS.TryAttachToDarkSouls()
+        lblRelease.Text = DARKSOULS.VersionDisplayName
     End Sub
 
     Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
@@ -417,51 +422,51 @@ Public Class frmForm1
     End Sub
 
     Private Sub nmbVitality_ValueChanged(sender As Object, e As EventArgs) Handles nmbVitality.ValueChanged
-        DSHook.Player.Stats.VIT.Value = sender.Value
+        Mem.Player.Stats.VIT.Value = sender.Value
     End Sub
 
     Private Sub nmbAttunement_ValueChanged(sender As Object, e As EventArgs) Handles nmbAttunement.ValueChanged
-        DSHook.Player.Stats.ATN.Value = sender.Value
+        Mem.Player.Stats.ATN.Value = sender.Value
     End Sub
 
     Private Sub nmbEnd_ValueChanged(sender As Object, e As EventArgs) Handles nmbEnd.ValueChanged
-        DSHook.Player.Stats.ENDurance.Value = sender.Value
+        Mem.Player.Stats.ENDurance.Value = sender.Value
     End Sub
 
     Private Sub nmbStr_ValueChanged(sender As Object, e As EventArgs) Handles nmbStr.ValueChanged
-        DSHook.Player.Stats.STR.Value = sender.Value
+        Mem.Player.Stats.STR.Value = sender.Value
     End Sub
 
     Private Sub nmbDex_ValueChanged(sender As Object, e As EventArgs) Handles nmbDex.ValueChanged
-        DSHook.Player.Stats.DEX.Value = sender.Value
+        Mem.Player.Stats.DEX.Value = sender.Value
     End Sub
 
     Private Sub nmbResistance_ValueChanged(sender As Object, e As EventArgs) Handles nmbResistance.ValueChanged
-        DSHook.Player.Stats.RES.Value = sender.Value
+        Mem.Player.Stats.RES.Value = sender.Value
     End Sub
 
     Private Sub nmbIntelligence_ValueChanged(sender As Object, e As EventArgs) Handles nmbIntelligence.ValueChanged
-        DSHook.Player.Stats.INT.Value = sender.Value
+        Mem.Player.Stats.INT.Value = sender.Value
     End Sub
 
     Private Sub nmbFaith_ValueChanged(sender As Object, e As EventArgs) Handles nmbFaith.ValueChanged
-        DSHook.Player.Stats.FTH.Value = sender.Value
+        Mem.Player.Stats.FTH.Value = sender.Value
     End Sub
 
     Private Sub nmbHumanity_ValueChanged(sender As Object, e As EventArgs) Handles nmbHumanity.ValueChanged
-        DSHook.Player.Stats.Humanity.Value = sender.Value
+        Mem.Player.Stats.Humanity.Value = sender.Value
     End Sub
 
     Private Sub nmbGender_ValueChanged(sender As Object, e As EventArgs) Handles nmbGender.ValueChanged
-        DSHook.Player.Stats.ExternalGenitals.Value = sender.Value
+        Mem.Player.Stats.ExternalGenitals.Value = sender.Value
     End Sub
 
     Private Sub nmbMaxHP_ValueChanged(sender As Object, e As EventArgs) Handles nmbMaxHP.ValueChanged
-        DSHook.Player.Stats.MaxHP.Value = sender.Value
+        Mem.Player.Stats.MaxHP.Value = sender.Value
     End Sub
 
     Private Sub nmbMaxStam_ValueChanged(sender As Object, e As EventArgs) Handles nmbMaxStam.ValueChanged
-        DSHook.Player.Stats.MaxStamina.Value = sender.Value
+        Mem.Player.Stats.MaxStamina.Value = sender.Value
     End Sub
 
     'Private Sub btnScenarioPinwheelDefense_Click(sender As Object, e As EventArgs) Handles btnScenarioPinwheelDefense.Click
@@ -520,7 +525,7 @@ Public Class frmForm1
     'End Sub
 
     Private Sub btnCancelBossRush_Click(sender As Object, e As EventArgs) Handles btnCancelBossRush.Click
-        LuaMan.E("ShowHUD(true)")
+        LuaInterface.E("ShowHUD(true)")
         Funcs.SetKeyGuideTextClear()
         Funcs.SetLineHelpTextClear()
         If (luaThread IsNot Nothing AndAlso luaThread.IsAlive) Then
@@ -529,29 +534,29 @@ Public Class frmForm1
         BossRushHelper.StopBossRushTimer()
     End Sub
 
-    Private Sub btnNewConsole_Click(sender As Object, e As EventArgs) Handles btnNewConsole.Click
+    'Private Sub btnNewConsole_Click(sender As Object, e As EventArgs) Handles btnNewConsole.Click
 
-        If consoleWindow Is Nothing Then
-            consoleWindow = New DaS.ScriptEditor.ConsoleWindow()
-            consoleWindow.Show()
-            AddHandler consoleWindow.FormClosed, AddressOf CurrentConsEditor_Closed
-        Else
-            consoleWindow.BringToFront()
-            consoleWindow.Activate()
-        End If
+    '    If consoleWindow Is Nothing Then
+    '        consoleWindow = New DaS.ScriptEditor.ConsoleWindow()
+    '        consoleWindow.Show()
+    '        AddHandler consoleWindow.FormClosed, AddressOf CurrentConsEditor_Closed
+    '    Else
+    '        consoleWindow.BringToFront()
+    '        consoleWindow.Activate()
+    '    End If
 
-    End Sub
+    'End Sub
 
-    Private Sub CurrentConsEditor_Closed(sender As Object, e As FormClosedEventArgs)
-        RemoveHandler consoleWindow.FormClosed, AddressOf CurrentConsEditor_Closed
-        consoleWindow = Nothing
-    End Sub
+    'Private Sub CurrentConsEditor_Closed(sender As Object, e As FormClosedEventArgs)
+    '    RemoveHandler consoleWindow.FormClosed, AddressOf CurrentConsEditor_Closed
+    '    consoleWindow = Nothing
+    'End Sub
 
     Private Sub btnLoadBossScenario_Click(sender As Object, e As EventArgs) Handles btnLoadBossScenario.Click
         If luaThread IsNot Nothing AndAlso luaThread.IsAlive Then
             luaThread.Abort()
         End If
-        LuaMan.E($"SetClearCount({numBossScenarioNg.Value})")
+        LuaInterface.E($"SetClearCount({numBossScenarioNg.Value})")
         luaThread = New Thread(AddressOf DoBossScenario) With {.IsBackground = True}
         luaThread.Start(CType(comboBossList.SelectedItem, String))
     End Sub
@@ -662,7 +667,7 @@ Public Class frmForm1
         If tlpCustomOrder.Controls.Count >= 2 Then
             comboNewEntry.SelectedItem = tlpCustomOrder.Controls.Cast(Of ComboBox).ToArray()(tlpCustomOrder.Controls.Count - 2).SelectedItem
         Else
-            comboNewEntry.SelectedItem = Data.Boss.AsylumDemon
+            comboNewEntry.SelectedItem = Game.Data.Misc.BossFights(EventFlag.Boss.AsylumDemon).Name
         End If
 
         comboNewEntry.SelectionLength = 0
@@ -673,8 +678,18 @@ Public Class frmForm1
     End Sub
 
     Private Function GetFlpCustomBossOrderAsArray() As String()
+        Dim byName = Data.Misc.BossFights.
+            Select(Function(kvp) New KeyValuePair(Of String, Integer)(kvp.Value.Name, CType(kvp.Key, Integer))).
+            ToDictionary(Function(kvp) kvp.Key, Function(kvp) kvp.Value)
+
         Dim arr As String() = New String() {}
-        tlpCustomOrder.Invoke(Sub() arr = tlpCustomOrder.Controls.OfType(Of ComboBox).Select(Function(x) CType(x.SelectedItem, String)).ToArray())
+        tlpCustomOrder.Invoke(
+            Sub()
+                arr = tlpCustomOrder.Controls.
+                OfType(Of ComboBox).
+                Select(Function(x) byName(CType(x.SelectedItem, String)).ToString()).
+                ToArray()
+            End Sub)
         Return arr
     End Function
 
@@ -686,13 +701,13 @@ Public Class frmForm1
         Dim selStr = CType(cmbBonfire.SelectedItem, String)
         selStr = selStr.Substring(selStr.IndexOf("[") + 1)
         selStr = selStr.Substring(0, selStr.Length - 1)
-        DSHook.Player.BonfireID.Value = Integer.Parse(selStr.Trim())
+        Mem.Player.BonfireID.Value = Integer.Parse(selStr.Trim())
     End Sub
 
     Private Sub frmForm1_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
         ' Checks if this is the last form open in this process
         If Application.OpenForms.Count = 0 Then
-            DSHook.Unhook()
+            DARKSOULS.Close()
         End If
     End Sub
 

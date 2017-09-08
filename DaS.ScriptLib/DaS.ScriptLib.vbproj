@@ -64,7 +64,13 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game\Data\[EntityName]\Boss.vb" />
+    <Compile Include="Game\Data\[EntityName]\EntityName.vb" />
+    <Compile Include="Game\Data\Helpers\BossRushHelper.vb" />
+    <Compile Include="Game\Data\Structures\BossFightInfo.vb" />
+    <Compile Include="Game\Data\[Misc]\BossFights.vb" />
     <Compile Include="Game\Data\Structures\Heading.vb" />
+    <Compile Include="Game\Data\[Misc]\Misc.vb" />
     <Compile Include="Game\Mem\GameStats.vb" />
     <Compile Include="Game\Mem\Player.vb" />
     <Compile Include="Game\Mem\Ptr.vb" />
@@ -75,7 +81,7 @@
     <Compile Include="Injection\Structures\SafeMarshalledHandle.vb" />
     <Compile Include="Injection\Structures\SafeRemoteHandle.vb" />
     <Compile Include="Game\Data\AnimationID\Player.vb" />
-    <Compile Include="Game\Data\EventID\Boss.vb" />
+    <Compile Include="Game\Data\EventFlag\Boss.vb" />
     <Compile Include="Lua\Structures\FuncReturnType.vb" />
     <Compile Include="Lua\Structures\LuaBoxedVal.vb" />
     <Compile Include="ModAPI\DSMod.vb" />
@@ -85,7 +91,7 @@
     <Compile Include="Injection\Structures\[MutatableDword]\MutatableDword.vb" />
     <Compile Include="Lua\ScriptLibResources.vb" />
     <Compile Include="Game\Data\Structures\Loc.vb" />
-    <Compile Include="Game\Data\Structures\EventFlag.vb" />
+    <Compile Include="Game\Data\Helpers\EventFlagHelper.vb" />
     <Compile Include="Game\Data\Structures\Vec3.vb" />
     <Compile Include="Lua\Dbg.vb" />
     <Compile Include="Lua\Funcs.vb" />
@@ -157,7 +163,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Game\Data\Helpers\" />
     <Folder Include="Lua\Helpers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
