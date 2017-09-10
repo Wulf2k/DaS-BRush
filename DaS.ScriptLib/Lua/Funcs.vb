@@ -618,6 +618,7 @@ Namespace Lua
         '    End If
         'End Function
 
+        <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
         Public Shared Sub DropItem(ByVal cat As String, item As String, num As Integer)
             Dim TargetBufferSize = 1024
             Dim Rtn As Integer
@@ -665,39 +666,52 @@ Namespace Lua
             Thread.Sleep(5)
         End Sub
 
+        <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
         Public Shared Sub SetKeyGuideText(text As String)
             WInt32(Ptr.MenuPtr.Value + &H158, RInt32(Ptr.MenuPtr.Value + &H1C))
             WUnicodeStr(&H11A7770, text)
         End Sub
 
+        <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
         Public Shared Sub SetLineHelpText(text As String)
             WInt32(Ptr.MenuPtr.Value + &H154, RInt32(Ptr.MenuPtr.Value + &H1C))
             WUnicodeStr(&H11A7758, text)
         End Sub
 
+        <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
         Public Shared Sub SetKeyGuideTextPos(x As Single, y As Single)
             WFloat(Ptr.KeyPtr.Value + &H78, x)
             WFloat(Ptr.KeyPtr.Value + &H7C, y)
         End Sub
 
+        <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
         Public Shared Sub SetLineHelpTextPos(x As Single, y As Single)
             WFloat(Ptr.LinePtr.Value + &H78, x)
             WFloat(Ptr.LinePtr.Value + &H7C, y)
         End Sub
 
+        <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
         Public Shared Sub SetKeyGuideTextClear()
             WInt32(Ptr.MenuPtr.Value + &H158, -1)
         End Sub
 
+        <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
         Public Shared Sub SetLineHelpTextClear()
             WInt32(Ptr.MenuPtr.Value + &H154, -1)
         End Sub
 
+        <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
         Public Shared Sub ForcePlayerStableFootPos()
             Player.StablePosX.Value = Player.PosX.Value
             Player.StablePosY.Value = Player.PosY.Value
             Player.StablePosZ.Value = Player.PosZ.Value
         End Sub
+
+        <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
+        Public Shared Function BitmaskCheck(input As ULong, mask As ULong) As Boolean
+            Return ((input And mask) = mask)
+        End Function
+
 
 #Region "Old Boss Rush Functions"
 

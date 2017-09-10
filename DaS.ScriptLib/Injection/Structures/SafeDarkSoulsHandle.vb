@@ -43,14 +43,21 @@ Namespace Injection.Structures
         End Function
 
         Public Function TryAttachToDarkSouls(Optional suppressMessageBox As Boolean = False) As Boolean
+            Dim selectedProcess As Process = Nothing
             Dim _allProcesses() As Process = Process.GetProcesses
-            For Each pp As Process In _allProcesses
-                If pp.MainWindowTitle.ToUpper().Equals("DARK SOULS") Then
-                    SetHandle(Kernel.OpenProcess(Kernel.PROCESS_ALL_ACCESS, False, pp.Id))
-                    CheckHook()
-                    Exit For
+            For Each proc As Process In _allProcesses
+                If selectedProcess Is Nothing AndAlso proc.MainWindowTitle.ToUpper().Equals("DARK SOULS") Then
+                    selectedProcess = proc
+                Else
+                    proc.Dispose()
                 End If
             Next
+
+            If selectedProcess IsNot Nothing Then
+                SetHandle(Kernel.OpenProcess(Kernel.PROCESS_ALL_ACCESS, False, selectedProcess.Id))
+                CheckHook()
+                selectedProcess.Dispose()
+            End If
 
             If Not Attached Then
                 If Not suppressMessageBox Then 'Showing 2 message boxes as soon as you start the program is too annoying.

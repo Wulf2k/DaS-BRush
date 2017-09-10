@@ -629,21 +629,21 @@ function ForceDead()
 end
 ---]]
 
---[[
-function ForcePlayAnimation()
-    return FUNC(INT, 0x00D61CF0, {});
+---[[
+function ForcePlayAnimation(chrId, animId)
+    return FUNC(INT, 0x00D61CF0, {int(chrId), int(animId)});
 end
 ---]]
 
---[[
-function ForcePlayAnimationStayCancel()
-    return FUNC(INT, 0x00D61CA0, {});
+---[[
+function ForcePlayAnimationStayCancel(chrId, animId)
+    return FUNC(INT, 0x00D61CA0, {int(chrId), int(animId)});
 end
 ---]]
 
---[[
-function ForcePlayLoopAnimation()
-    return FUNC(INT, 0x00D61C50, {});
+---[[
+function ForcePlayLoopAnimation(chrId, animId)
+    return FUNC(INT, 0x00D61C50, {int(chrId), int(animId)});
 end
 ---]]
 
@@ -1955,15 +1955,15 @@ function PauseTutorial()
 end
 ---]]
 
---[[
-function PlayAnimation()
-    return FUNC(INT, 0x00D61D10, {});
+---[[
+function PlayAnimation(chrId, animId)
+    return FUNC(INT, 0x00D61D10, {int(chrId), int(animId)});
 end
 ---]]
 
---[[
-function PlayAnimationStayCancel()
-    return FUNC(INT, 0x00D61CC0, {});
+---[[
+function PlayAnimationStayCancel(chrId, animId)
+    return FUNC(INT, 0x00D61CC0, {int(chrId), int(animId)});
 end
 ---]]
 
@@ -1973,9 +1973,9 @@ function PlayerChrResetAnimation_RemoOnly()
 end
 ---]]
 
---[[
-function PlayLoopAnimation()
-    return FUNC(INT, 0x00D61C70, {});
+---[[
+function PlayLoopAnimation(chrId, animId)
+    return FUNC(INT, 0x00D61C70, {int(chrId), int(animId)});
 end
 ---]]
 

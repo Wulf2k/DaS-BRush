@@ -116,6 +116,8 @@ namespace DaS.ScriptEditor.NEW
             finally
             {
                 ParentLuaContainer.RaiseScriptStop(new LuaTabSwitchEventArgs(this));
+                luai.Dispose();
+                luai = null;
             }
             
         }

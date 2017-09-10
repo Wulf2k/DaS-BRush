@@ -19,7 +19,7 @@ Namespace Lua
             RaiseEvent OnPrint(DateTime.Now, DbgPrintType.Normal, text)
         End Sub
 
-        <NLua.LuaGlobal(Name:="PrintClearll")>
+        <NLua.LuaGlobal(Name:="PrintClearAll")>
         Public Shared Sub PrintClearAll()
             RaiseEvent OnPrint(DateTime.Now, DbgPrintType.ClearAll, "")
         End Sub

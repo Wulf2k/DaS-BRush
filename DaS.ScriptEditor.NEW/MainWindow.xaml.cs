@@ -13,12 +13,8 @@ namespace DaS.ScriptEditor.NEW
     {
 
         private Queue<DbgRow> DbgRowQueue = new Queue<DbgRow>();
-
         private Thread DbgRowThread;
-
-        private int DbgRowThreadUpdateInterval = 33;
-        private int DbgRowQueueAmountPerCycle = 10;
-
+        private int DbgRowThreadUpdateInterval = 20;
         private object DbgPrintLOCK = new object();
 
         public MainWindow()
@@ -65,31 +61,35 @@ namespace DaS.ScriptEditor.NEW
             {
                 while (true)
                 {
-                    int counter = 0;
-
-                    while (DbgRowQueue.Count > 0 && counter++ < DbgRowQueueAmountPerCycle)
+                    try
                     {
-                        var nextRow = DbgRowQueue.Dequeue();
-
-                        //TODO: Add a fancier component for the output
-
-
                         Application.Current.Dispatcher.Invoke(new Action(() =>
                         {
-                            if (nextRow.Item2 == ScriptLib.Lua.Dbg.DbgPrintType.ClearAll)
+                            if (DbgRowQueue.Count > 0)
                             {
-                                ScriptOutputBox.Clear();
+                                var nextRow = DbgRowQueue.Dequeue();
+
+                                if (nextRow.Item2 == ScriptLib.Lua.Dbg.DbgPrintType.ClearAll)
+                                {
+                                    ScriptOutputBox.Clear();
+                                }
+
+                                var longTime = nextRow.Item1.ToLongTimeString();
+                                var a = longTime.Substring(0, longTime.Length - 3);
+                                var b = nextRow.Item1.Millisecond.ToString("D3");
+                                var c = longTime.Substring(longTime.Length - 2, 2);
+
+                                ScriptOutputBox.AppendText($"[{a}.{b} {c}][{nextRow.Item2}] > {nextRow.Item3}\n");
+
+                                ScriptOutputBox.ScrollToEnd(); 
                             }
 
-                            var longTime = nextRow.Item1.ToLongTimeString();
-                            var a = longTime.Substring(0, longTime.Length - 3);
-                            var b = nextRow.Item1.Millisecond.ToString("D3");
-                            var c = longTime.Substring(longTime.Length - 2, 2);
-
-                            ScriptOutputBox.AppendText($"[{a}.{b} {c}][{nextRow.Item2}] > {nextRow.Item3}\n");
-
-                            ScriptOutputBox.ScrollToEnd();
+                            OutputPanel.Title = $"Output ({DbgRowQueue.Count} Print() calls queued)";
                         }));
+                    }
+                    catch
+                    {
+
                     }
 
                     Thread.Sleep(DbgRowThreadUpdateInterval);
@@ -101,31 +101,40 @@ namespace DaS.ScriptEditor.NEW
             }
         }
 
-        private void FinishOutputOnStop()
-        {
-            while (DbgRowQueue.Count > 0)
-            {
-                var nextRow = DbgRowQueue.Dequeue();
+        //private void FinishOutputOnStop()
+        //{
+        //    while (DbgRowQueue.Count > 0)
+        //    {
+        //        var nextRow = DbgRowQueue.Dequeue();
 
-                //TODO: Add a fancier component for the output
+        //        //TODO: Add a fancier component for the output
 
-                var longTime = nextRow.Item1.ToLongTimeString();
-                var a = longTime.Substring(0, longTime.Length - 3);
-                var b = nextRow.Item1.Millisecond.ToString("D3");
-                var c = longTime.Substring(longTime.Length - 2, 2);
+        //        var longTime = nextRow.Item1.ToLongTimeString();
+        //        var a = longTime.Substring(0, longTime.Length - 3);
+        //        var b = nextRow.Item1.Millisecond.ToString("D3");
+        //        var c = longTime.Substring(longTime.Length - 2, 2);
 
-                ScriptOutputBox.AppendText($"[{a}.{b} {c}][{nextRow.Item2}] > {nextRow.Item3}\n\n");
+        //        ScriptOutputBox.AppendText($"[{a}.{b} {c}][{nextRow.Item2}] > {nextRow.Item3}\n\n");
 
-                ScriptOutputBox.ScrollToEnd();
-            }
-        }
+        //        ScriptOutputBox.ScrollToEnd();
+        //    }
+        //}
 
         private void Dbg_OnPrint(DateTime time, ScriptLib.Lua.Dbg.DbgPrintType type, string text)
         {
-            if (DbgRowQueue != null)
+            lock (DbgPrintLOCK)
             {
-                DbgRowQueue.Enqueue(new DbgRow(time, type, text));
+                if (DbgRowQueue != null)
+                {
+                    if (type == ScriptLib.Lua.Dbg.DbgPrintType.ClearAll)
+                    {
+                        DbgRowQueue.Clear();
+                    }
+
+                    DbgRowQueue.Enqueue(new DbgRow(time, type, text));
+                }
             }
+            
 
             //new Thread(new ThreadStart(() =>
             //{
@@ -199,15 +208,15 @@ namespace DaS.ScriptEditor.NEW
                     break;
                 case SeButton.Start:
                     MainLuaContainer.SelectedLuaScript.StartExecution();
+                    if (DbgRowThread != null)
+                    {
+                        DbgRowThread.Abort();
+                    }
                     DbgRowThread = new Thread(new ThreadStart(DbgRowUpdateThread));
                     DbgRowThread.Start();
                     break;
                 case SeButton.Stop:
                     MainLuaContainer.SelectedLuaScript.StopExecution();
-                    if (DbgRowThread != null)
-                    {
-                        DbgRowThread.Abort();
-                    }
                     //FinishOutputOnStop();
                     break;
             }
@@ -258,6 +267,16 @@ namespace DaS.ScriptEditor.NEW
         }
 
         private void ScriptOutputBox_ContextMenuOpening(object sender, System.Windows.Controls.ContextMenuEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void LayoutAnchorable_IsActiveChanged(object sender, EventArgs e)
+        {
+            (sender as Xceed.Wpf.AvalonDock.Layout.LayoutAnchorable).IsActive = false;
+        }
+
+        private void LayoutAnchorable_SubmenuOpened(object sender, RoutedEventArgs e)
         {
             e.Handled = true;
         }

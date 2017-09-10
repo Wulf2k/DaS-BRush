@@ -1,0 +1,2 @@
+The reason the included Lua binary is 5.2.3 specifically is because the Lua library, NLua, which we use for DaS.ScriptLib, is on Lua 5.2.3 as of NLua 1.3.1.
+The latest version of NLua as of this writing (on 9th of September, 2017) is 1.3.2, which still usesLua 5.2.3

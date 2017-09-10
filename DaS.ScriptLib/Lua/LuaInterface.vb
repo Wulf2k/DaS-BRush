@@ -6,11 +6,30 @@ Imports DaS.ScriptLib.Lua.Structures
 
 Namespace Lua
     Public Class LuaInterface
+        Implements IDisposable
 
         Const INGAME_FUNC_ADDR_FILE = "IngameFunctions.txt"
 
         Private Shared ReadOnly Property _ingameFuncAddresses As ReadOnlyDictionary(Of String, Integer)
         Private Shared ReadOnly Property _ingameFuncNames As ReadOnlyDictionary(Of Integer, String)
+
+        Public ReadOnly Property AsmCaller As DSAsmCaller
+        Public ReadOnly Property State As New NLua.Lua
+        Private LoadedDarkSoulsLuaFunctions As New List(Of String)
+
+        Private GC_Counter As Int32 = 0
+        Private Const GC_Interval As Int32 = 1000
+
+        Private Shared ReadOnly Property __thisProcess As Process
+        Public Shared ReadOnly Property ThisProcess As Process
+            Get
+                If __thisProcess Is Nothing Then
+                    ___thisProcess = Process.GetCurrentProcess()
+                End If
+                Return __thisProcess
+            End Get
+        End Property
+
 
         Public Shared ReadOnly Property IngameFuncAddresses As ObjectModel.ReadOnlyDictionary(Of String, Int32)
             Get
@@ -79,9 +98,7 @@ Namespace Lua
 
         'End Sub
 
-        Public ReadOnly Property AsmCaller As DSAsmCaller
-        Public ReadOnly Property State As New NLua.Lua
-        Private LoadedDarkSoulsLuaFunctions As New List(Of String)
+
 
         Public ReadOnly ImportedNamespaces As String() = {
             "DaS.ScriptLib.Game.Data",
@@ -130,6 +147,8 @@ Namespace Lua
 
             NLua.LuaRegistrationHelper.TaggedStaticMethods(State, GetType(Hook))
             NLua.LuaRegistrationHelper.TaggedStaticMethods(State, GetType(Dbg))
+
+            DebugLocalsInit()
 
         End Sub
 
@@ -187,8 +206,54 @@ Namespace Lua
 
         <NLua.LuaGlobal(Name:="FUNC")>
         Public Function CallIngameFunc_FromLua(returnType As Double, funcAddress As Double, args As NLua.LuaTable) As Object
-            Return AsmCaller.CallIngameLua((CType(CType(returnType, Integer), FuncReturnType)), CType(funcAddress, Integer), args)
+            Return AsmCaller.CallIngameLua(Me, (CType(CType(returnType, Integer), FuncReturnType)), CType(funcAddress, Integer), args)
         End Function
+
+        Public Sub DebugRegisterLocal(path As String, val As Object)
+
+        End Sub
+
+        Public Sub DebugLocalsInit()
+            'Register Debug locals table:
+            State.NewTable("LUAI")
+
+            'Constants:
+            State("LUAI.GC_Interval") = GC_Interval
+
+            'Field initialization for autocomplete
+            State("LUAI.ProcessMemoryMB") = 0
+        End Sub
+
+        Public Sub DebugLocalsUpdate()
+            State("LUAI.GC_Counter") = GC_Counter
+            State("LUAI.ProcessMemoryMB") = ThisProcess.PrivateMemorySize64 / 1024 / 1024
+        End Sub
+
+        Public Sub DebugUpdate()
+            DebugLocalsUpdate()
+            If GC_Counter >= GC_Interval Then
+                State.DoString("collectgarbage();")
+                GC.Collect(0, GCCollectionMode.Forced, False)
+                GC_Counter = 0
+                ThisProcess.Refresh()
+            Else
+                GC_Counter += 1
+            End If
+        End Sub
+
+
+
+        Public Sub Dispose() Implements IDisposable.Dispose
+            State.DoString("collectgarbage()")
+            State.Dispose()
+            _State = Nothing
+
+            LoadedDarkSoulsLuaFunctions.Clear()
+            LoadedDarkSoulsLuaFunctions = Nothing
+
+            AsmCaller.Dispose()
+            _AsmCaller = Nothing
+        End Sub
     End Class
 
 End Namespace

@@ -120,8 +120,18 @@ Namespace Injection.Structures
             End Get
         End Property
 
+        Public Function GetValue() As T
+            Return Value
+        End Function
+
+        Public Sub SetValue(newVal As T)
+            Value = newVal
+        End Sub
+
         Public Property Value As T
             Get
+                _offset = AddressFunc.Invoke()
+
                 Dim bytes = RBytes(_offset.Value, ValueSize)
 
                 Dim typ = GetType(T)
@@ -136,6 +146,8 @@ Namespace Injection.Structures
                 End If
             End Get
             Set(value As T)
+                _offset = AddressFunc.Invoke()
+
                 Dim typ = GetType(T)
                 If (typ = GetType(Integer)) Then
                     WInt32(_offset.Value, CTypeDynamic(Of Integer)(value))

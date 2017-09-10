@@ -43,18 +43,19 @@
                     <avalonDock:LayoutDocumentPaneGroup>
                         <local:LuaScriptTabContainer x:Name="MainLuaContainer"/>
                     </avalonDock:LayoutDocumentPaneGroup>
-                    <avalonDock:LayoutDocumentPaneGroup DockWidth="400">
-                        <avalonDock:LayoutDocumentPane>
-                            <avalonDock:LayoutDocument
+                    <avalonDock:LayoutAnchorablePaneGroup DockWidth="400">
+                        <avalonDock:LayoutAnchorablePane>
+                            <avalonDock:LayoutAnchorable x:Name="OutputPanel"
                                 Title="Output" 
                                 CanClose="False" 
-                                CanFloat="False">
+                                CanAutoHide="False"
+                                CanHide="False">
                                     <TextBox x:Name="ScriptOutputBox" Text="" FontSize="8pt" 
                                              IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"
                                              AllowDrop="False" ContextMenuOpening="ScriptOutputBox_ContextMenuOpening" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"/>
-                            </avalonDock:LayoutDocument>
-                        </avalonDock:LayoutDocumentPane>
-                    </avalonDock:LayoutDocumentPaneGroup>
+                            </avalonDock:LayoutAnchorable>
+                        </avalonDock:LayoutAnchorablePane>
+                    </avalonDock:LayoutAnchorablePaneGroup>
                 </avalonDock:LayoutPanel>
             </avalonDock:LayoutRoot>
         </avalonDock:DockingManager>
