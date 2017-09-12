@@ -6,16 +6,160 @@
         xmlns:local="clr-namespace:DaS.ScriptEditor.NEW"
         xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock" 
         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns:customTheme="clr-namespace:Xceed.Wpf.AvalonDock.Themes;assembly=Xceed.Wpf.AvalonDock.Themes.Expression"
+        xmlns:editing="clr-namespace:ICSharpCode.AvalonEdit.Editing;assembly=ICSharpCode.AvalonEdit"
         x:Class="DaS.ScriptEditor.NEW.MainWindow"
         mc:Ignorable="d"
         Title="Dark Souls Script Editor" Width="960" Height="540" AutomationProperties.Name="DaS.ScriptEditor"
-        Closed="Window_Closed">
+        Closed="Window_Closed" Icon="Resources/AshenEstus.ico" Background="#FF444444">
     <Window.Resources>
         <BitmapImage x:Key="AutoCompleteField" UriSource="Resources/AutoComplete/FieldIcon.png"/>
         <BitmapImage x:Key="AutoCompleteLua" UriSource="Resources/AutoComplete/LuaIcon.png"/>
         <BitmapImage x:Key="AutoCompleteMethod" UriSource="Resources/AutoComplete/MethodIcon.png"/>
         <BitmapImage x:Key="AutoCompleteType" UriSource="Resources/AutoComplete/TypeIcon.png"/>
         <BitmapImage x:Key="AutoCompleteEstus" UriSource="Resources/AutoComplete/EstusIcon.png"/>
+        <BitmapImage x:Key="IconScriptRunning" UriSource="Resources/ScriptRunning.png"/>
+        <BitmapImage x:Key="IconScriptNotRunning" UriSource="Resources/ScriptNotRunning.png"/>
+        <customTheme:ExpressionDarkTheme x:Key="MetroLuaTheme"/>
+
+        <Style x:Key="DarkScrollviewerStyle" TargetType="{x:Type ScrollViewer}">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                </Trigger>
+            </Style.Triggers>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <ScrollBar 
+                                x:Name="PART_VerticalScrollBar"
+                                Grid.Column="1"
+                                Minimum="0.0"
+                                Maximum="{TemplateBinding ScrollableHeight}"
+                                ViewportSize="{TemplateBinding ViewportHeight}"
+                                Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=VerticalOffset, Mode=OneWay}"
+                                Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"         
+                                Cursor="Arrow"
+                                AutomationProperties.AutomationId="VerticalScrollBar"/>
+                                                <ScrollBar 
+                                x:Name="PART_HorizontalScrollBar"
+                                Orientation="Horizontal"
+                                Grid.Row="1"
+                                Minimum="0.0"
+                                Maximum="{TemplateBinding ScrollableWidth}"
+                                ViewportSize="{TemplateBinding ViewportWidth}"
+                                Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=HorizontalOffset, Mode=OneWay}"
+                                Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+                                Cursor="Arrow"
+                                AutomationProperties.AutomationId="HorizontalScrollBar"/>
+                                                <ScrollContentPresenter 
+
+                                x:Name="PART_ScrollContentPresenter"
+
+                                Margin="{TemplateBinding Padding}"
+
+                                Content="{TemplateBinding Content}"
+
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+
+                                CanContentScroll="{TemplateBinding CanContentScroll}"/>
+                                                <Rectangle 
+                                x:Name="Corner"
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Fill="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DarkAvalonEditStyle" TargetType="{x:Type avalonEdit:TextEditor}">
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+            <Setter Property="FlowDirection" Value="LeftToRight"/>
+            <!-- AvalonEdit does not support RTL, so ensure we use LTR by default -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type avalonEdit:TextEditor}">
+                        <Border
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer
+							Focusable="False"
+							Name="PART_ScrollViewer"
+							CanContentScroll="True"
+							VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
+							HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
+							Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TextArea}"
+							VerticalContentAlignment="Top"
+							HorizontalContentAlignment="Left"
+							Padding="{TemplateBinding Padding}"
+                            Style="{StaticResource DarkScrollviewerStyle}"
+						/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="WordWrap"
+						         Value="True">
+                                <Setter TargetName="PART_ScrollViewer"
+							        Property="HorizontalScrollBarVisibility"
+							        Value="Disabled" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="{x:Type avalonEdit:TextArea}" TargetType="{x:Type editing:TextArea}" x:Shared="False">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="SelectionBrush">
+                <Setter.Value>
+                    <SolidColorBrush
+					Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"
+					Opacity="0.7"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="SelectionBorder">
+                <Setter.Value>
+                    <Pen Brush="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
+				     Thickness="1"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="SelectionForeground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type editing:TextArea}">
+                        <DockPanel Focusable="False">
+                            <ItemsControl DockPanel.Dock="Left"
+						              Focusable="False"
+						              ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=LeftMargins}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                            <ContentPresenter
+							Panel.ZIndex="-1"
+							Focusable="False"
+							Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TextView}"/>
+                        </DockPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Window.Resources>
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
@@ -24,24 +168,74 @@
             <RowDefinition x:Name="rowAvalonDockManager"/>
             <RowDefinition x:Name="rowStatusStrip" Height="20"/>
         </Grid.RowDefinitions>
-        <Menu x:Name="menuStrip" Grid.Row="0">
-            <MenuItem Header="File">
-                <MenuItem Header="New" Click="MenuNew_Click"/>
-                <MenuItem Header="Open..." Click="MenuOpen_Click"/>
+        <Menu x:Name="menuStrip" Grid.Row="0" Background="#FF686868" Foreground="#FFE0E0E0" Padding="2">
+            <MenuItem Header="File" Background="#FF686868" Foreground="#FFE0E0E0">
+                <MenuItem Foreground="Black"
+                    x:Name="MenuNew" 
+                    Header="New" 
+                    Click="MenuNew_Click"
+                    />
+                <MenuItem Foreground="Black"
+                    x:Name="MenuOpen" 
+                    Header="Open..." 
+                    Click="MenuOpen_Click"
+                    />
                 <Separator/>
-                <MenuItem Header="Save" Click="MenuSave_Click"/>
-                <MenuItem Header="Save As..." Click="MenuSaveAs_Click"/>
+                <MenuItem Foreground="Black"
+                    x:Name="MenuSave" 
+                    Header="Save" 
+                    Click="MenuSave_Click"
+                    />
+                <MenuItem Foreground="Black"
+                    x:Name="MenuSaveAs" 
+                    Header="Save As..." 
+                    Click="MenuSaveAs_Click"
+                    />
+                <MenuItem Foreground="Black"
+                    x:Name="MenuSaveAll" 
+                    Header="Save All" 
+                    Click="MenuSaveAll_Click"
+                    />
                 <Separator/>
-                <MenuItem Header="Exit" Click="MenuExit_Click"/>
+                <MenuItem Foreground="Black"
+                    x:Name="MenuExit" 
+                    Header="Exit" 
+                    Click="MenuExit_Click"
+                    />
             </MenuItem>
-            <MenuItem Header="Help"/>
+            <MenuItem Header="Action" Foreground="#FFE0E0E0" >
+                <MenuItem Foreground="Black"
+                    x:Name="MenuRefreshHook" 
+                    Header="Refresh Hook" 
+                    Click="MenuRefreshHook_Click" 
+                    ToolTip="Attempts to hook onto the game. Useful if the game is launched after the script editor was launched."
+                    />
+                <Separator/>
+                <MenuItem Foreground="Black"
+                    x:Name="MenuStartScript" 
+                    Header="Start Script" 
+                    Click="MenuStartScript_Click" 
+                    ToolTip="Starts executing the script from the current tab."
+                    />
+                <MenuItem Foreground="Black"
+                    x:Name="MenuStopScript" 
+                    Header="Stop Script" 
+                    Click="MenuStopScript_Click"
+                    ToolTip="Stops executing the script from the current tab."
+                    />
+            </MenuItem>
+            <MenuItem Header="Help" IsHitTestVisible="False" OpacityMask="#3F000000">
+                
+            </MenuItem>
         </Menu>
         <local:SeToolbar x:Name="seToolbar" Grid.Row="1"/>
-        <avalonDock:DockingManager x:Name="dockingManager" Grid.Row="2">
+        <avalonDock:DockingManager x:Name="dockingManager" Grid.Row="2" Theme="{StaticResource MetroLuaTheme}">
             <avalonDock:LayoutRoot>
                 <avalonDock:LayoutPanel x:Name="adMainLayoutPanel" Orientation="Horizontal">
                     <avalonDock:LayoutDocumentPaneGroup>
-                        <local:LuaScriptTabContainer x:Name="MainLuaContainer"/>
+                        <local:LuaScriptTabContainer 
+                            x:Name="MainLuaContainer" 
+                            LuaEditorStyle="{StaticResource DarkAvalonEditStyle}"/>
                     </avalonDock:LayoutDocumentPaneGroup>
                     <avalonDock:LayoutAnchorablePaneGroup DockWidth="400">
                         <avalonDock:LayoutAnchorablePane>
@@ -52,7 +246,7 @@
                                 CanHide="False">
                                     <TextBox x:Name="ScriptOutputBox" Text="" FontSize="8pt" 
                                              IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"
-                                             AllowDrop="False" ContextMenuOpening="ScriptOutputBox_ContextMenuOpening" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"/>
+                                             AllowDrop="False" ContextMenuOpening="ScriptOutputBox_ContextMenuOpening" Background="#FF1E1E1E"/>
                             </avalonDock:LayoutAnchorable>
                         </avalonDock:LayoutAnchorablePane>
                     </avalonDock:LayoutAnchorablePaneGroup>

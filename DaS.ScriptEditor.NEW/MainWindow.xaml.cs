@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using DbgRow = System.Tuple<System.DateTime, DaS.ScriptLib.Lua.Dbg.DbgPrintType, string>;
+using MK = System.Windows.Input.ModifierKeys;
 
 namespace DaS.ScriptEditor.NEW
 {
@@ -17,13 +20,47 @@ namespace DaS.ScriptEditor.NEW
         private int DbgRowThreadUpdateInterval = 20;
         private object DbgPrintLOCK = new object();
 
+        private Dictionary<ICommand, SeButton> SeCommands = new Dictionary<ICommand, SeButton>();
+
+        public MenuItemIndexer SeMenu;
+
+        public class MenuItemIndexer
+        {
+            private readonly MainWindow main;
+            public MenuItemIndexer(MainWindow m)
+            {
+                main = m;
+            }
+
+            public MenuItem this[SeButton b]
+            {
+                get
+                {
+                    switch (b)
+                    {
+                        case SeButton.NewDoc: return main.MenuNew;
+                        case SeButton.OpenFile: return main.MenuOpen;
+                        case SeButton.SaveAllFiles: return main.MenuSaveAll;
+                        case SeButton.SaveFile: return main.MenuSave;
+                        case SeButton.Start: return main.MenuStartScript;
+                        case SeButton.Stop: return main.MenuStopScript;
+                        case SeButton.Refresh: return main.MenuRefreshHook;
+                        default: return null;
+                    }
+                }
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
 
+            SeMenu = new MenuItemIndexer(this);
+
             MainLuaContainer.AutoComplete.InitDefaultEntries(this);
 
             seToolbar.SeButtonClicked += SeToolbar_SeButtonClicked;
+            seToolbar.SeButtonEnabledChanged += SeToolbar_SeButtonEnabledChanged;
 
             TryAttachAndUpdateStr(true);
 
@@ -31,27 +68,71 @@ namespace DaS.ScriptEditor.NEW
 
             MainLuaContainer.ScriptStart += MainLuaContainer_ScriptStart;
             MainLuaContainer.ScriptStop += MainLuaContainer_ScriptStop;
+
+            InitCommandBindings();
         }
 
-        private void MainLuaContainer_ScriptStop(object sender, LuaTabSwitchEventArgs e)
+        private void SeToolbar_SeButtonEnabledChanged(object sender, SeButtonEventArgs e)
+        {
+            SeMenu[e.ButtonType]?.SeSetEnabled(seToolbar[e.ButtonType]?.IsHitTestVisible ?? false);
+        }
+
+        private void RegisterNewCommand(SeButton btn, MK modifierKey, Key key, MenuItem menuItem = null)
+        {
+            var cmd = new RoutedCommand();
+            var gesture = new KeyGesture(key, modifierKey);
+            cmd.InputGestures.Add(gesture);
+            MainLuaContainer.LuaEditor.CommandBindings.Add(new CommandBinding(cmd, OnSeCommand, SeCommandCanExecute));
+            SeCommands.Add(cmd, btn);
+
+            if (menuItem != null)
+            {
+                menuItem.InputGestureText = gesture.GetDisplayStringForCulture(System.Globalization.CultureInfo.CurrentCulture);
+            }
+        }
+
+        private void InitCommandBindings()
+        {
+            RegisterNewCommand(SeButton.SaveFile, MK.Control, Key.S, MenuSave);
+            RegisterNewCommand(SeButton.SaveAllFiles, MK.Control | MK.Shift, Key.S, MenuSaveAll);
+            RegisterNewCommand(SeButton.SaveAs, MK.Control | MK.Alt, Key.S, MenuSaveAs);
+
+            RegisterNewCommand(SeButton.NewDoc, MK.Control, Key.N, MenuNew);
+            RegisterNewCommand(SeButton.OpenFile, MK.Control, Key.O, MenuOpen);
+
+            RegisterNewCommand(SeButton.Refresh, MK.None, Key.F7, MenuRefreshHook);
+
+            //Since the script start and stop buttons are never both enabled at the same time, 
+            //they can be bound to the same key.
+            RegisterNewCommand(SeButton.Start, MK.None, Key.F5);
+            RegisterNewCommand(SeButton.Stop, MK.None, Key.F5);
+        }
+
+        private void OnSeCommand(object sender, ExecutedRoutedEventArgs e)
+        {
+            SeButtonAction(SeCommands[e.Command]);
+        }
+
+        private void SeCommandCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = seToolbar.GetButtonEnabled(SeCommands[e.Command]);
+        }
+
+        private void MainLuaContainer_ScriptStop(object sender, LuaTabEventArgs e)
         {
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                seToolbar.ButtonStart.IsEnabled = true;
-                seToolbar.ButtonStart.Opacity = 1.0;
-                seToolbar.ButtonStop.IsEnabled = false;
-                seToolbar.ButtonStop.Opacity = 0.5;
+                seToolbar.ButtonStart.SeSetEnabled(true);
+                seToolbar.ButtonStop.SeSetEnabled(false);
             }));
         }
 
-        private void MainLuaContainer_ScriptStart(object sender, LuaTabSwitchEventArgs e)
+        private void MainLuaContainer_ScriptStart(object sender, LuaTabEventArgs e)
         {
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                seToolbar.ButtonStart.IsEnabled = false;
-                seToolbar.ButtonStart.Opacity = 0.5;
-                seToolbar.ButtonStop.IsEnabled = true;
-                seToolbar.ButtonStop.Opacity = 1.0;
+                seToolbar.ButtonStart.SeSetEnabled(false);
+                seToolbar.ButtonStop.SeSetEnabled(true);
             }));
         }
 
@@ -178,48 +259,88 @@ namespace DaS.ScriptEditor.NEW
             seToolbar.UpdateDarkSoulsVersionText(ScriptLib.Injection.Hook.DARKSOULS.VersionDisplayName);
         }
 
-        private void SeButtonAction(SeButton btn)
+        private void SeButtonAction(SeButton seButton)
         {
-            switch (btn)
+            seToolbar.SetButtonEnabled(seButton, false);
+            ForceCursor = true;
+            Cursor = Cursors.Wait;
+            new Thread(new ParameterizedThreadStart((b) =>
             {
-                case SeButton.ExitEntireProgram:
-                    Close();
-                    break;
-                case SeButton.NewDoc:
-                    MainLuaContainer.AddNewTab();
-                    break;
-                case SeButton.OpenFile:
-                    if (MainLuaContainer.SelectedLuaScript != null)
-                        MainLuaContainer.SelectedLuaScript.SeOpenFile();
-                    else
-                        MainLuaContainer.SeOpenFile();
-                    break;
-                case SeButton.Refresh:
-                    TryAttachAndUpdateStr();
-                    break;
-                case SeButton.SaveAllFiles:
-                    MainLuaContainer.SaveAll();
-                    break;
-                case SeButton.SaveAs:
-                    MainLuaContainer.SelectedLuaScript.SeSaveAs();
-                    break;
-                case SeButton.SaveFile:
-                    MainLuaContainer.SelectedLuaScript.SeSave();
-                    break;
-                case SeButton.Start:
-                    MainLuaContainer.SelectedLuaScript.StartExecution();
-                    if (DbgRowThread != null)
+                Action<bool> loading = (isLoad) =>
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        DbgRowThread.Abort();
+                        if (isLoad)
+                        {
+                            ForceCursor = true;
+                            Cursor = Cursors.Wait;
+                        }
+                        else
+                        {
+                            Cursor = Cursors.Arrow;
+                            ForceCursor = false;
+                        }
+                    });
+                };
+
+                var btn = b as SeButton? ?? SeButton.None;
+
+                switch (b as SeButton? ?? SeButton.None)
+                {
+                    case SeButton.ExitEntireProgram:
+                        Close();
+                        break;
+                    case SeButton.NewDoc:
+                        Application.Current.Dispatcher.Invoke(() => MainLuaContainer.AddNewTab(loading));
+                        break;
+                    case SeButton.OpenFile:
+                        if (MainLuaContainer.SelectedLuaScript != null)
+                            MainLuaContainer.SelectedLuaScript.SeOpenFile(loading);
+                        else
+                            MainLuaContainer.SeOpenFile(loading);
+                        break;
+                    case SeButton.Refresh:
+                        Application.Current.Dispatcher.Invoke(() => TryAttachAndUpdateStr());
+                        break;
+                    case SeButton.SaveAllFiles:
+                        MainLuaContainer.SaveAll(loading);
+                        break;
+                    case SeButton.SaveAs:
+                        MainLuaContainer.SelectedLuaScript.SeSaveAs(loading);
+                        break;
+                    case SeButton.SaveFile:
+                        MainLuaContainer.SelectedLuaScript.SeSave(loading);
+                        break;
+                    case SeButton.Start:
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            MainLuaContainer.SelectedLuaScript.StartExecution(loading);
+                            if (DbgRowThread != null)
+                            {
+                                DbgRowThread.Abort();
+                            }
+                            DbgRowThread = new Thread(new ThreadStart(DbgRowUpdateThread));
+                            DbgRowThread.Start();
+                        });
+                        break;
+                    case SeButton.Stop:
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            MainLuaContainer.SelectedLuaScript.StopExecution();
+                            //FinishOutputOnStop();
+                        });
+                        break;
+                }
+
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    if (!(btn == SeButton.Start || btn == SeButton.Stop))
+                    {
+                        seToolbar.SetButtonEnabled(btn, true);
                     }
-                    DbgRowThread = new Thread(new ThreadStart(DbgRowUpdateThread));
-                    DbgRowThread.Start();
-                    break;
-                case SeButton.Stop:
-                    MainLuaContainer.SelectedLuaScript.StopExecution();
-                    //FinishOutputOnStop();
-                    break;
-            }
+                    loading(false);
+                }));
+            })).Start(seButton);
         }
 
         private void SeToolbar_SeButtonClicked(object sender, SeButtonEventArgs e)
@@ -245,6 +366,11 @@ namespace DaS.ScriptEditor.NEW
         private void MenuSaveAs_Click(object sender, RoutedEventArgs e)
         {
             SeButtonAction(SeButton.SaveAs);
+        }
+
+        private void MenuSaveAll_Click(object sender, RoutedEventArgs e)
+        {
+            SeButtonAction(SeButton.SaveAllFiles);
         }
 
         private void MenuExit_Click(object sender, RoutedEventArgs e)
@@ -280,5 +406,22 @@ namespace DaS.ScriptEditor.NEW
         {
             e.Handled = true;
         }
+
+        private void MenuRefreshHook_Click(object sender, RoutedEventArgs e)
+        {
+            SeButtonAction(SeButton.Refresh);
+        }
+
+        private void MenuStartScript_Click(object sender, RoutedEventArgs e)
+        {
+            SeButtonAction(SeButton.Start);
+        }
+
+        private void MenuStopScript_Click(object sender, RoutedEventArgs e)
+        {
+            SeButtonAction(SeButton.Stop);
+        }
+
+        
     }
 }

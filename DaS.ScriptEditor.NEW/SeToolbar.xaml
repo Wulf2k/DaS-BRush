@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:DaS.ScriptEditor.NEW"
              mc:Ignorable="d" 
              d:DesignHeight="32" d:DesignWidth="960"
-             UseLayoutRounding="True">
+             UseLayoutRounding="True"
+             Background="#FF595959">
     <UserControl.Resources>
         <BitmapImage x:Key="NewDocIcon" 
                      UriSource="Resources/Toolbar/NewDocIcon.png"/>
@@ -22,51 +23,87 @@
                      UriSource="Resources/Toolbar/StartIcon.png" />
         <BitmapImage x:Key="StopIcon" 
                      UriSource="Resources/Toolbar/StopIcon.png" />
+
+        <BitmapImage x:Key="NewDocIcon_Opacity" 
+                     UriSource="Resources/Toolbar/Opacity/NewDocIcon.png"/>
+        <BitmapImage x:Key="OpenFileIcon_Opacity" 
+                     UriSource="Resources/Toolbar/Opacity/OpenFileIcon.png" />
+        <BitmapImage x:Key="RefreshIcon_Opacity" 
+                     UriSource="Resources/Toolbar/Opacity/RefreshIcon.png" />
+        <BitmapImage x:Key="SaveAllFilesIcon_Opacity" 
+                     UriSource="Resources/Toolbar/Opacity/SaveAllFilesIcon.png" />
+        <BitmapImage x:Key="SaveFileIcon_Opacity" 
+                     UriSource="Resources/Toolbar/Opacity/SaveFileIcon.png" />
+        <BitmapImage x:Key="StartIcon_Opacity" 
+                     UriSource="Resources/Toolbar/Opacity/StartIcon.png" />
+        <BitmapImage x:Key="StopIcon_Opacity" 
+                     UriSource="Resources/Toolbar/Opacity/StopIcon.png" />
     </UserControl.Resources>
     <Grid x:Name="grid">
-        <ToolBar >
-            <Button x:Name="ButtonNewDoc" Click="ButtonClick" Padding="2,0,2,0" Height="24" Width="24">
+        <DockPanel Background="#FF595959">
+            <Button x:Name="ButtonNewDoc" Click="ButtonClick" Height="24" Width="24" Background="{x:Null}" BorderBrush="{x:Null}">
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="2" Opacity="0.5"/>
+                </Button.Effect>
                 <Button.Content>
-                    <Image Source="{StaticResource NewDocIcon}" Stretch="None"/>
+                    <Image Source="{StaticResource NewDocIcon}" Stretch="Fill" Width="16" Height="16"/>
                 </Button.Content>
             </Button>
-            <Button x:Name="ButtonOpenFile" Click="ButtonClick" Padding="2,0,2,0" Height="24" Width="24">
+            <Button x:Name="ButtonOpenFile" Click="ButtonClick" Height="24" Width="24" Background="{x:Null}" BorderBrush="{x:Null}">
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="2" Opacity="0.5"/>
+                </Button.Effect>
                 <Button.Content>
-                    <Image Source="{StaticResource OpenFileIcon}" Stretch="None" />
+                    <Image Source="{StaticResource OpenFileIcon}" Stretch="Fill" Width="16" Height="16" />
                 </Button.Content>
             </Button>
-            <Button x:Name="ButtonSaveFile" Click="ButtonClick" Padding="2,0,2,0" Height="24" Width="24">
+            <Button x:Name="ButtonSaveFile" Click="ButtonClick" Height="24" Width="24" Background="{x:Null}" BorderBrush="{x:Null}">
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="2" Opacity="0.5"/>
+                </Button.Effect>
                 <Button.Content>
-                    <Image Source="{StaticResource SaveFileIcon}" Stretch="None" />
+                    <Image Source="{StaticResource SaveFileIcon}" Stretch="Fill" Width="16" Height="16" />
                 </Button.Content>
             </Button>
-            <Button x:Name="ButtonSaveAllFiles" Click="ButtonClick" Padding="2,0,2,0" Height="24" Width="24">
+            <Button x:Name="ButtonSaveAllFiles" Click="ButtonClick" Height="24" Width="24" BorderBrush="{x:Null}" Background="{x:Null}">
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="2" Opacity="0.5"/>
+                </Button.Effect>
                 <Button.Content>
-                    <Image Source="{StaticResource SaveAllFilesIcon}" Stretch="None" />
+                    <Image Source="{StaticResource SaveAllFilesIcon}" Stretch="Fill" Height="16" Width="16" />
                 </Button.Content>
             </Button>
             <Separator/>
-            <Button x:Name="ButtonStart" Click="ButtonClick" Padding="2,0,2,0" Height="24" Width="24">
+            <Button x:Name="ButtonStart" Click="ButtonClick" Height="24" Width="24" Background="{x:Null}" BorderBrush="{x:Null}">
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="2" Opacity="0.5"/>
+                </Button.Effect>
                 <Button.Content>
-                    <Image Source="{StaticResource StartIcon}" Stretch="None" />
+                    <Image Source="{StaticResource StartIcon}" Stretch="Fill" Width="16" Height="16"/>
                 </Button.Content>
             </Button>
-            <Button x:Name="ButtonStop" Click="ButtonClick" Padding="2,0,2,0" Height="24" Width="24" IsEnabled="False" Opacity="0.5">
+            <Button x:Name="ButtonStop" Click="ButtonClick" Height="24" Width="24" IsHitTestVisible="False" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="{x:Null}" OpacityMask="#3F000000">
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="2" Opacity="0.5"/>
+                </Button.Effect>
                 <Button.Content>
-                    <Image Source="{StaticResource StopIcon}" Stretch="None" />
+                    <Image Source="{StaticResource StopIcon}" Stretch="Fill" Width="16" Height="16" />
                 </Button.Content>
             </Button>
             <Separator/>
-            <Button x:Name="ButtonRefresh" Click="ButtonClick" Padding="0,0,0,0" Height="20" Width="20">
+            <Button x:Name="ButtonRefresh" Click="ButtonClick" Height="24" Width="24" Background="{x:Null}" BorderBrush="{x:Null}">
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="2" Opacity="0.5"/>
+                </Button.Effect>
                 <Button.Content>
-                    <Image Source="{StaticResource RefreshIcon}" Stretch="None" />
+                    <Image Source="{StaticResource RefreshIcon}" Stretch="Fill" Width="16" Height="16" />
                 </Button.Content>
             </Button>
             <Label Content="Detected Dark Souls Version:" 
-                   Padding="2,0,2,0" Height="24" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                   Padding="2,0,2,0" Height="24" VerticalAlignment="Center" VerticalContentAlignment="Center" Foreground="White"/>
             <Label x:Name="DarkSoulsVersionLabel" Padding="2,0,2,0" Height="24" 
                    VerticalAlignment="Center" VerticalContentAlignment="Center" 
-                   FontWeight="Bold" Content="?DarkSoulsVersion?"/>
-        </ToolBar>
+                   FontWeight="Bold" Content="?DarkSoulsVersion?" Foreground="White"/>
+        </DockPanel>
     </Grid>
 </UserControl>

@@ -13,8 +13,8 @@
         [FLOAT]
         [DOUBLE]
         [BOOL]
-        [STRING]
-        [UNISTRING]
+        STR_ANSI
+        STR_UNI
     End Enum
 
 End Namespace

@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0"?>
 <SyntaxDefinition name="SharpLua" extensions=".slua;.lua" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 	<!-- The named colors 'Comment' and 'String' are used in SharpDevelop to detect if a line is inside a multiline string/comment -->
-	<Color name="Comment" foreground="Green" exampleText="-- comment" />
-	<Color name="String" foreground="Blue" />
+	<Color name="Comment" foreground="SeaGreen" exampleText="-- comment" />
+	<Color name="String" foreground="LightSeaGreen" />
 	<Color name="Punctuation" />
-	<Color name="MethodCall" foreground="MidnightBlue" fontWeight="bold"/>
-	<Color name="NumberLiteral" foreground="DarkBlue"/>
+	<Color name="MethodCall" foreground="#B3B3B3" fontWeight="bold"/>
+	<Color name="NumberLiteral" foreground="Aquamarine"/>
 	<Color name="NilKeyword" fontWeight="bold"/>
-	<Color name="Keywords" fontWeight="bold" foreground="Blue" />
-	<Color name="GotoKeywords" foreground="Navy" />
-	<Color name="Visibility" fontWeight="bold" foreground="Blue"/>
-	<Color name="TrueFalse" fontWeight="bold" foreground="DarkCyan" />
+	<Color name="Keywords" fontWeight="bold" foreground="DodgerBlue" />
+	<Color name="GotoKeywords" foreground="Violet" />
+	<Color name="Visibility" fontWeight="bold" foreground="Green"/>
+	<Color name="TrueFalse" fontWeight="bold" foreground="Aquamarine" />
 	
 	<RuleSet name="CommentMarkerSet">
 		<Keywords fontWeight="bold" foreground="Red">

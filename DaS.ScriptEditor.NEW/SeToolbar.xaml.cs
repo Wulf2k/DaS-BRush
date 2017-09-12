@@ -22,9 +22,16 @@ namespace DaS.ScriptEditor.NEW
     {
         public event EventHandler<SeButtonEventArgs> SeButtonClicked;
 
-        protected virtual void RaiseSeButtonClicked(SeButtonEventArgs e)
+        public event EventHandler<SeButtonEventArgs> SeButtonEnabledChanged;
+
+        protected virtual void RaiseSeButtonClicked(SeButton b)
         {
-            SeButtonClicked?.Invoke(this, e);
+            SeButtonClicked?.Invoke(this, new SeButtonEventArgs(b));
+        }
+
+        protected virtual void RaiseSeButtonEnabledChanged(SeButton b)
+        {
+            SeButtonEnabledChanged?.Invoke(this, new SeButtonEventArgs(b));
         }
 
         public SeToolbar()
@@ -34,25 +41,58 @@ namespace DaS.ScriptEditor.NEW
             ScriptLib.Injection.Hook.Init();
         }
 
+        public Button this[SeButton b]
+        {
+            get
+            {
+                switch(b)
+                {
+                    case SeButton.NewDoc: return ButtonNewDoc;
+                    case SeButton.OpenFile: return ButtonOpenFile;
+                    case SeButton.SaveAllFiles: return ButtonSaveAllFiles;
+                    case SeButton.SaveFile: return ButtonSaveFile;
+                    case SeButton.Start: return ButtonStart;
+                    case SeButton.Stop: return ButtonStop;
+                    case SeButton.Refresh: return ButtonRefresh;
+                    default: return null;
+                }
+            }
+        }
+
+        public SeButton this[Button b]
+        {
+            get
+            {
+                if (b == ButtonNewDoc) return SeButton.NewDoc;
+                else if (b == ButtonOpenFile) return SeButton.OpenFile;
+                else if (b == ButtonSaveAllFiles) return SeButton.SaveAllFiles;
+                else if (b == ButtonSaveFile) return SeButton.SaveFile;
+                else if (b == ButtonStart) return SeButton.Start;
+                else if (b == ButtonStop) return SeButton.Stop;
+                else if (b == ButtonRefresh) return SeButton.Refresh;
+                return SeButton.None;
+            }
+        }
+
         private void ButtonClick(object sender, RoutedEventArgs e)
         {
-            SeButtonEventArgs args = new SeButtonEventArgs(SeButton.None);
-            var btn = sender as Button;
-
-            if (btn == ButtonNewDoc) args.ButtonType = SeButton.NewDoc;
-            else if (btn == ButtonOpenFile) args.ButtonType = SeButton.OpenFile;
-            else if (btn == ButtonSaveAllFiles) args.ButtonType = SeButton.SaveAllFiles;
-            else if (btn == ButtonSaveFile) args.ButtonType = SeButton.SaveFile;
-            else if (btn == ButtonStart) args.ButtonType = SeButton.Start;
-            else if (btn == ButtonStop) args.ButtonType = SeButton.Stop;
-            else if (btn == ButtonRefresh) args.ButtonType = SeButton.Refresh;
-
-            RaiseSeButtonClicked(args);
+            RaiseSeButtonClicked(this[sender as Button]);
         }
 
         public void UpdateDarkSoulsVersionText(string newText)
         {
             DarkSoulsVersionLabel.Content = newText;
+        }
+
+        public void SetButtonEnabled(SeButton b, bool enabled)
+        {
+            this[b]?.SeSetEnabled(enabled);
+            RaiseSeButtonEnabledChanged(b);
+        }
+
+        public bool GetButtonEnabled(SeButton b)
+        {
+            return this[b]?.IsHitTestVisible ?? false;
         }
     }
 

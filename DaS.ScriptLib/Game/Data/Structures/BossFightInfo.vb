@@ -13,7 +13,7 @@
 
         Public Sub New(spawnFlag As EventFlag.Boss, name As String)
             Me.SpawnFlag = spawnFlag
-            Me.Name = name
+            _Name = name
         End Sub
 
     End Class

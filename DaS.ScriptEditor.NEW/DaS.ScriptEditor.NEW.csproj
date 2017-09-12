@@ -61,8 +61,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ControlExtensions.cs" />
     <Compile Include="LuaAutoComplete.cs" />
-    <Compile Include="LuaTabSwitchEventArgs.cs" />
+    <Compile Include="LuaTabEventArgs.cs" />
     <Compile Include="SeAutoCompleteEntry.cs" />
     <Compile Include="SeDocumentIO.cs" />
     <Compile Include="LuaScriptTab.cs" />
@@ -117,17 +118,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Toolbar\NewDocIcon.png" />
-    <Resource Include="Resources\Toolbar\OpenFileIcon.png" />
-    <Resource Include="Resources\Toolbar\RefreshIcon.png" />
-    <Resource Include="Resources\Toolbar\SaveAllFilesIcon.png" />
-    <Resource Include="Resources\Toolbar\StartIcon.png" />
-    <Resource Include="Resources\Toolbar\StopIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Toolbar\SaveFileIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\DaS.ScriptLib\DaS.ScriptLib.vbproj">
       <Project>{2a373330-933c-4a80-adfb-39f5e0ecbc35}</Project>
       <Name>DaS.ScriptLib</Name>
@@ -136,15 +126,42 @@
       <Project>{F55CABBB-4108-4A39-94E1-581FD46DC021}</Project>
       <Name>NLua.Net45</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Lib\Xceed.Wpf.AvalonDock.Themes.Expression\Xceed.Wpf.AvalonDock.Themes.Expression.csproj">
+      <Project>{488dd8f7-9d3c-4f53-bd1f-84a095d9bc10}</Project>
+      <Name>Xceed.Wpf.AvalonDock.Themes.Expression</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\AutoComplete\FieldIcon.png" />
     <Resource Include="Resources\AutoComplete\LuaIcon.png" />
     <Resource Include="Resources\AutoComplete\MethodIcon.png" />
     <Resource Include="Resources\AutoComplete\TypeIcon.png" />
+    <Resource Include="Resources\Toolbar\NewDocIcon.png" />
+    <Resource Include="Resources\Toolbar\Opacity\NewDocIcon.png" />
+    <Resource Include="Resources\Toolbar\Opacity\OpenFileIcon.png" />
+    <Resource Include="Resources\Toolbar\Opacity\RefreshIcon.png" />
+    <Resource Include="Resources\Toolbar\Opacity\SaveAllFilesIcon.png" />
+    <Resource Include="Resources\Toolbar\Opacity\SaveFileIcon.png" />
+    <Resource Include="Resources\Toolbar\Opacity\StartIcon.png" />
+    <Resource Include="Resources\Toolbar\Opacity\Stopicon.png" />
+    <Resource Include="Resources\Toolbar\OpenFileIcon.png" />
+    <Resource Include="Resources\Toolbar\RefreshIcon.png" />
+    <Resource Include="Resources\Toolbar\SaveAllFilesIcon.png" />
+    <Resource Include="Resources\Toolbar\SaveFileIcon.png" />
+    <Resource Include="Resources\Toolbar\StartIcon.png" />
+    <Resource Include="Resources\Toolbar\StopIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\AutoComplete\EstusIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\AshenEstus.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ScriptRunning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ScriptNotRunning.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

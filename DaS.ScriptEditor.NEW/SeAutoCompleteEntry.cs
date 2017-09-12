@@ -25,12 +25,13 @@ namespace DaS.ScriptEditor.NEW
         public SeAcType AcType { get; private set; }
         public readonly MainWindow Main;
 
-        public SeAutoCompleteEntry(MainWindow main, SeAcType acType, string text, string desc)
+        public SeAutoCompleteEntry(MainWindow main, SeAcType acType, string text, string dispText, string desc)
         {
             this.Main = main;
             this.AcType = acType;
             this.Text = text;
             this.Description = desc;
+            this.DispText = dispText;
         }
 
         public System.Windows.Media.ImageSource Image
@@ -40,10 +41,12 @@ namespace DaS.ScriptEditor.NEW
 
         public string Text { get; private set; }
 
+        public string DispText { get; private set; }
+
         // Use this property if you want to show a fancy UIElement in the list.
         public object Content
         {
-            get { return this.Text; }
+            get { return this.DispText; }
         }
 
         public object Description

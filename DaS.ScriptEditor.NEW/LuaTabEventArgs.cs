@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DaS.ScriptEditor.NEW
 {
-    public class LuaTabSwitchEventArgs : EventArgs
+    public class LuaTabEventArgs : EventArgs
     {
         public readonly LuaScriptTab Script;
 
-        public LuaTabSwitchEventArgs(LuaScriptTab script)
+        public LuaTabEventArgs(LuaScriptTab script)
         {
             Script = script;
         }

@@ -21,7 +21,7 @@
         End Function
 
         Public Function ToDword(val As Boolean) As Int32
-            Return New MutatableDword(val).Int1
+            Return New MutatableDword(val).Byte1
         End Function
 
         Public Function ToDword(b1 As Byte, b2 As Byte, b3 As Byte, b4 As Byte) As Int32

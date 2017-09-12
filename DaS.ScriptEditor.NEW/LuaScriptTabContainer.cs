@@ -14,18 +14,40 @@ using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using System.Windows.Input;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Document;
+using System.Windows.Media.Imaging;
 
 namespace DaS.ScriptEditor.NEW
 {
     public class LuaScriptTabContainer : LayoutDocumentPane
     {
+        public const string IconScriptRunning_Path = "pack://application:,,,/Resources/ScriptRunning.png";
+        public const string IconScriptNotRunning_Path = "pack://application:,,,/Resources/ScriptNotRunning.png";
+
         public TextEditor LuaEditor;
         public LuaAutoComplete AutoComplete;
 
-        public event EventHandler<LuaTabSwitchEventArgs> NewTabSelected;
-        public event EventHandler<LuaTabSwitchEventArgs> OldTabDeselected;
-        public event EventHandler<LuaTabSwitchEventArgs> ScriptStart;
-        public event EventHandler<LuaTabSwitchEventArgs> ScriptStop;
+        //public readonly ImageSource IconScriptRunning;
+        //public readonly ImageSource IconScriptNotRunning;
+
+        public Style LuaEditorStyle
+        {
+            get
+            {
+                return (Style)GetValue(LuaEditorStyleProperty);
+            }
+            set
+            {
+                SetValue(LuaEditorStyleProperty, value);
+            }
+        }
+
+        public DependencyProperty LuaEditorStyleProperty = DependencyProperty.Register("LuaEditorStyle", typeof(Style), typeof(LuaScriptTabContainer));
+
+        public event EventHandler<LuaTabEventArgs> NewTabSelected;
+        public event EventHandler<LuaTabEventArgs> OldTabDeselected;
+        public event EventHandler<LuaTabEventArgs> ScriptStart;
+        public event EventHandler<LuaTabEventArgs> ScriptStop;
+        public event EventHandler<LuaTabEventArgs> CurrentTabIsModifiedChanged;
 
         private LuaScriptTab __selectedLuaScript;
         public LuaScriptTab SelectedLuaScript
@@ -36,8 +58,8 @@ namespace DaS.ScriptEditor.NEW
             }
             set
             {
-                OnOldTabDeselected(new LuaTabSwitchEventArgs(__selectedLuaScript));
-                OnNewTabSelected(new LuaTabSwitchEventArgs(value));
+                OnOldTabDeselected(__selectedLuaScript);
+                OnNewTabSelected(value);
 
                 __selectedLuaScript = value;
             }
@@ -45,7 +67,7 @@ namespace DaS.ScriptEditor.NEW
 
         public LuaScriptTabContainer() : base()
         {
-            AddNewTab();
+            AddNewTab((dummy) => { });
         }
 
         private void InitEditor()
@@ -78,6 +100,21 @@ namespace DaS.ScriptEditor.NEW
             LuaEditor.Options.EnableTextDragDrop = false;
             LuaEditor.Options.EnableVirtualSpace = false;
             LuaEditor.Options.HighlightCurrentLine = false;
+
+            LuaEditor.TextArea.TextEntered += TextArea_TextEntered;
+
+            LuaEditor.Style = LuaEditorStyle;
+
+            LuaEditor.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x1E, 0x1E, 0x1E));
+            LuaEditor.TextArea.Caret.CaretBrush = Brushes.White;
+            LuaEditor.Foreground = Brushes.White;
+        }
+
+        private void TextArea_TextEntered(object sender, TextCompositionEventArgs e)
+        {
+            var selSc = SelectedLuaScript;
+            if (selSc != null)
+                selSc.IsModified = true;
         }
 
         public IHighlightingDefinition LoadHightLightRule()
@@ -91,24 +128,28 @@ namespace DaS.ScriptEditor.NEW
             }
         }
 
-        public LuaScriptTab AddNewTab()
+        public LuaScriptTab AddNewTab(Action<bool> loading)
         {
-            if (LuaEditor == null)
+            LuaScriptTab newTab = null;
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                InitEditor();
-                AutoComplete = new LuaAutoComplete(ref LuaEditor);
-            }
+                if (LuaEditor == null)
+                {
+                    InitEditor();
+                    AutoComplete = new LuaAutoComplete(ref LuaEditor);
+                }
 
-            var newTab = new LuaScriptTab();
+                newTab = new LuaScriptTab(this, loading);
 
-            if (ChildrenCount == 0)
-            {
-                newTab.Content = LuaEditor;
-                LuaEditor.Document = newTab.EditorDocument;
-            }
+                if (ChildrenCount == 0)
+                {
+                    newTab.Content = LuaEditor;
+                    LuaEditor.Document = newTab.EditorDocument;
+                }
 
-            Children.Add(newTab);
-            newTab.InitEvents();
+                Children.Add(newTab);
+                newTab.InitEvents();
+            });
             return newTab;
         }
 
@@ -122,11 +163,11 @@ namespace DaS.ScriptEditor.NEW
             SelectedContentIndex = Children.IndexOf(tab);
         }
 
-        public bool SaveAll()
+        public bool SaveAll(Action<bool> loading)
         {
             foreach(var thing in Children)
             {
-                if (!((thing as LuaScriptTab).SeSave()))
+                if (!((thing as LuaScriptTab).SeSave(loading)))
                 {
                     return false;
                 }
@@ -142,37 +183,47 @@ namespace DaS.ScriptEditor.NEW
             }
         }
 
-        protected virtual void OnNewTabSelected(LuaTabSwitchEventArgs e)
+        protected virtual void OnNewTabSelected(LuaScriptTab tab)
         {
-            NewTabSelected?.Invoke(this, e);
+            NewTabSelected?.Invoke(this, new LuaTabEventArgs(tab));
         }
 
-        protected virtual void OnOldTabDeselected(LuaTabSwitchEventArgs e)
+        protected virtual void OnOldTabDeselected(LuaScriptTab tab)
         {
-            OldTabDeselected?.Invoke(this, e);
+            OldTabDeselected?.Invoke(this, new LuaTabEventArgs(tab));
         }
 
-        internal void RaiseScriptStart(LuaTabSwitchEventArgs e)
+        internal void RaiseScriptStart(LuaScriptTab tab)
         {
-            if (SelectedLuaScript == e.Script)
+            if (SelectedLuaScript == tab)
             {
-                ScriptStart?.Invoke(this, e);
+                ScriptStart?.Invoke(this, new LuaTabEventArgs(tab));
             }
         }
 
-        internal void RaiseScriptStop(LuaTabSwitchEventArgs e)
+        internal void RaiseScriptStop(LuaScriptTab tab)
         {
-            if (SelectedLuaScript == e.Script)
+            if (SelectedLuaScript == tab)
             {
-                ScriptStop?.Invoke(this, e);
+                ScriptStop?.Invoke(this, new LuaTabEventArgs(tab));
+            }
+        }
+
+        internal void RaiseCurrentTabIsModifiedChanged(LuaScriptTab tab)
+        {
+            if (SelectedLuaScript == tab)
+            {
+                CurrentTabIsModifiedChanged?.Invoke(this, new LuaTabEventArgs(tab));
             }
         }
 
         /// <summary>
         /// The open file dialog will be in the directory of this tab's script if applicable.
         /// </summary>
-        public bool SeOpenFile()
+        public bool SeOpenFile(Action<bool> loading, string startDir = null)
         {
+            loading(false);
+
             var dlg = new Microsoft.Win32.OpenFileDialog()
             {
                 CheckFileExists = true,
@@ -180,20 +231,35 @@ namespace DaS.ScriptEditor.NEW
                 DefaultExt = ".lua",
                 FileName = "",
                 Filter = "Lua Scripts|*.lua",
-                InitialDirectory = new FileInfo(typeof(LuaScriptTab).Assembly.Location).Directory.FullName, //TODO: store last user save/load dir and load on startup
                 Title = "Open 1 or more Lua Script(s)",
                 CheckPathExists = true,
                 Multiselect = true,
                 ValidateNames = true
             };
 
+            if (startDir != null && Directory.Exists(startDir))
+            {
+                dlg.InitialDirectory = startDir;
+            }
+            else
+            {
+                //if (Directory.Exists("..\\..\\..\\TestLuaScripts"))
+                //{
+                //    dlg.InitialDirectory = "..\\..\\..\\TestLuaScripts"; //TODO: store last user save/load dir and load on startup
+                //}
+            }
+            
+
             if (dlg.ShowDialog() ?? false)
             {
                 foreach (var f in dlg.FileNames)
                 {
-                    var newTab = AddNewTab();
-                    newTab.SeScriptFilePath = f;
-                    newTab.INSTANT_LoadDocumentFromDisk();
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        var newTab = AddNewTab(loading);
+                        newTab.SeScriptFilePath = f;
+                        newTab.INSTANT_LoadDocumentFromDisk(loading);
+                    });
                     return true;
                 }
             }

@@ -100,7 +100,7 @@ Namespace Lua
             ctrlptr = RInt32(ctrlptr + &H28)
             ctrlptr = RInt32(ctrlptr + &H54)
 
-            WInt32(entityPtr + &H244, ctrlptr * (state And 1))
+            WInt32(entityPtr + &H244, ctrlptr * (If(state, &HFF, 0) And 1))
 
         End Sub
         <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
@@ -706,12 +706,6 @@ Namespace Lua
             Player.StablePosY.Value = Player.PosY.Value
             Player.StablePosZ.Value = Player.PosZ.Value
         End Sub
-
-        <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
-        Public Shared Function BitmaskCheck(input As ULong, mask As ULong) As Boolean
-            Return ((input And mask) = mask)
-        End Function
-
 
 #Region "Old Boss Rush Functions"
 

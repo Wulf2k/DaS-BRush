@@ -259,6 +259,11 @@ Namespace Injection
             Return RBytes(New IntPtr(addr), size)
         End Function
 
+        <NLua.LuaGlobal(Name:="RByte")>
+        Public Function RByte(ByVal addr As Integer) As Byte
+            Return RBytes(New IntPtr(addr), 1)(0)
+        End Function
+
         <NLua.LuaGlobal(Name:="RAsciiStr")>
         Public Function RAsciiStr(ByVal addr As Integer) As String
             Return RAsciiStr(CType(addr, UInteger))

@@ -266,7 +266,7 @@ Namespace Game.Data
             Next
             _BossFights = New ReadOnlyDictionary(Of EventFlag.Boss, BossFightInfo)(d)
             '"But what was the point of that?!"
-            'The point was to get around VB's lack of a non-cancer dictionary initialization syntax. Just easier to read the way I did it.
+            'The point was to get around VB's lack of a decent dictionary initialization syntax. Just easier to read the way I did it.
             'And the reason I wanted it to be dictionary is so it can hash lookup by boss name.
             __bossFights = Nothing
         End Sub

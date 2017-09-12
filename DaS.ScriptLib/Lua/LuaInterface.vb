@@ -148,6 +148,10 @@ Namespace Lua
             NLua.LuaRegistrationHelper.TaggedStaticMethods(State, GetType(Hook))
             NLua.LuaRegistrationHelper.TaggedStaticMethods(State, GetType(Dbg))
 
+            'Utils
+            State(UtilsModule.TableName) = New UtilsModule()
+            DirectCast(State(UtilsModule.TableName), UtilsModule).RegisterFunctions(State)
+
             DebugLocalsInit()
 
         End Sub
@@ -194,6 +198,16 @@ Namespace Lua
         <NLua.LuaGlobal(Name:="bool")>
         Public Function LuaQuickValueConvertBool(num As Double) As LuaBoxedVal
             Return New LuaBoxedVal(Math.Round(num) > 0)
+        End Function
+
+        <NLua.LuaGlobal(Name:="str_ansi")>
+        Public Function LuaQuickValueConvertStr_Ansi(str As String) As BoxedStringAnsi
+            Return New BoxedStringAnsi(str)
+        End Function
+
+        <NLua.LuaGlobal(Name:="str_uni")>
+        Public Function LuaQuickValueConvertStr_Uni(str As String) As BoxedStringUni
+            Return New BoxedStringUni(str)
         End Function
 
         Public Shared Function DoString(str As String, Optional chunkName As String = "chunk") As Object()

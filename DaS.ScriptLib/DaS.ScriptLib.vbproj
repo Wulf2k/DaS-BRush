@@ -75,6 +75,7 @@
     <Compile Include="Game\Mem\Player.vb" />
     <Compile Include="Game\Mem\Ptr.vb" />
     <Compile Include="Injection\Kernel.vb" />
+    <Compile Include="Injection\PSAPI.vb" />
     <Compile Include="Injection\Structures\DarkSoulsVersion.vb" />
     <Compile Include="Injection\Structures\SafeRemoteThreadHandle.vb" />
     <Compile Include="Injection\Structures\SafeDarkSoulsHandle.vb" />
@@ -82,8 +83,15 @@
     <Compile Include="Injection\Structures\SafeRemoteHandle.vb" />
     <Compile Include="Game\Data\AnimationID\Player.vb" />
     <Compile Include="Game\Data\EventFlag\Boss.vb" />
+    <Compile Include="Lua\Helpers\AutoCompleteHelper.vb" />
+    <Compile Include="Lua\Structures\LuaAutoCompleteEntry.vb" />
+    <Compile Include="Lua\Structures\[BoxedString]\BoxedStringUni.vb" />
+    <Compile Include="Lua\Structures\[BoxedString]\BoxedStringAnsi.vb" />
+    <Compile Include="Lua\Structures\[BoxedString]\BoxedString.vb" />
     <Compile Include="Lua\Structures\FuncReturnType.vb" />
     <Compile Include="Lua\Structures\LuaBoxedVal.vb" />
+    <Compile Include="Lua\Structures\LUAFAttribute.vb" />
+    <Compile Include="Lua\Structures\UtilsModule.vb" />
     <Compile Include="ModAPI\DSMod.vb" />
     <Compile Include="Injection\DSAsmCaller.vb" />
     <Compile Include="Lua\LuaInterface.vb" />
@@ -135,6 +143,7 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <EmbeddedResource Include="Resources\DarkSoulsFunctions.lua" />
+    <None Include="Resources\DarkSoulsFunctions_This.lua" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Lib\NLua\lua52.dll">
@@ -162,8 +171,6 @@
       <Name>NLua.Net45</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Lua\Helpers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

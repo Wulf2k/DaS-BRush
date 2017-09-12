@@ -5,117 +5,201 @@
 
 ]]
 
---[[
-function ActionEnd()
-    return FUNC(INT, 0x00D616D0, {});
+--TODO: Param Names
+
+---[[
+function ActionEnd(chrId)
+    return FUNC(BOOL, 0x00D616D0, {int(chrId)});
 end
 ---]]
 
---[[
-function AddActionCount()
-    return FUNC(INT, 0x00D5FC20, {});
-end
----]]
-
---[[
-function AddBlockClearBonus()
-    return FUNC(INT, 0x00D5E480, {});
+---[[char
+function AddActionCount(chrId, intB)
+    return FUNC(BOOL, 0x00D5FC20, {int(chrId), int(intB)});
 end
 ---]]
 
 ---[[
+function AddBlockClearBonus()
+    return FUNC(INT_PTR, 0x00D5E480, {});
+end
+---]]
+
+---[[char*
 function AddClearCount()
-    FUNC(VOID, 0x00D5EC20, {});
+    FUNC(BOOL_PTR, 0x00D5EC20, {});
 end
 ---]]
 
---[[
-function AddCorpseEvent()
-    return FUNC(INT, 0x00D60930, {});
+---[[
+function AddCorpseEvent(intA, intB)
+    return FUNC(INT, 0x00D60930, {int(intA), int(intB)});
 end
 ---]]
 
---[[
-function AddCurrentVowRankPoint()
-    return FUNC(INT, 0x00D600D0, {});
+--[[struct_a1_2 *__stdcall sub_D645C0(int a1, int a2)
+{
+  struct_a1_2 *result; // eax@1
+
+  result = DebgEvent_Global_obj;
+  if ( DebgEvent_Global_obj )
+    result = sub_D76CD0(DebgEvent_Global_obj, a2);
+  return result;
+}]]
+---[[TODO:Return
+function AddCustomRoutePoint(chrId, intB)
+    return FUNC(INT, 0x00D645C0, {int(chrId), int(intB)});
 end
 ---]]
 
---[[
-function AddCustomRoutePoint()
-    return FUNC(INT, 0x00D645C0, {});
-end
----]]
+--[[InfoAboutSummons *sub_D5DE20()
+{
+  InfoAboutSummons *result; // eax@2
+  unsigned int v1; // ecx@3
 
---[[
+  if ( DebgEvent_Global_obj )
+  {
+    result = info_about_summons;
+    if ( info_about_summons )
+    {
+      v1 = *&info_about_summons->gap14[72];
+      if ( v1 <= 0xFFFFFFFE )
+        *&info_about_summons->gap14[72] = v1 + 1;
+      else
+        *&info_about_summons->gap14[72] = -1;
+    }
+  }
+  return result;
+}]]
+
+---[[
 function AddDeathCount()
     return FUNC(INT, 0x00D5DE20, {});
 end
 ---]]
 
+--[[.text:00D60D30 loc_D60D30:                             ; DATA XREF: .text:0108B98Ao
+.text:00D60D30 push    edi
+.text:00D60D31 mov     edi, DebgEvent_Global_obj
+.text:00D60D37 test    edi, edi
+.text:00D60D39 jz      short loc_D60D67
+.text:00D60D3B mov     eax, [esp+8]
+.text:00D60D3F push    esi
+.text:00D60D40 push    eax
+.text:00D60D41 call    sub_D69F30
+.text:00D60D46 mov     esi, eax
+.text:00D60D48 test    esi, esi
+.text:00D60D4A jz      short loc_D60D66
+.text:00D60D4C mov     eax, [esp+10h]
+.text:00D60D50 call    sub_D6C360
+.text:00D60D55 test    eax, eax
+.text:00D60D57 jz      short loc_D60D66
+.text:00D60D59 mov     ecx, [esp+14h]
+.text:00D60D5D push    0
+.text:00D60D5F push    ecx
+.text:00D60D60 push    esi
+.text:00D60D61 call    sub_D40B70]]
 --[[
 function AddEventParts()
     return FUNC(INT, 0x00D60D30, {});
 end
 ---]]
 
+--[[.text:00D60CF0 loc_D60CF0:                             ; DATA XREF: .text:0108B9BAo
+.text:00D60CF0 push    edi
+.text:00D60CF1 mov     edi, DebgEvent_Global_obj
+.text:00D60CF7 test    edi, edi
+.text:00D60CF9 jz      short loc_D60D27
+.text:00D60CFB mov     eax, [esp+8]
+.text:00D60CFF push    esi
+.text:00D60D00 push    eax
+.text:00D60D01 call    sub_D69F30
+.text:00D60D06 mov     esi, eax
+.text:00D60D08 test    esi, esi
+.text:00D60D0A jz      short loc_D60D26
+.text:00D60D0C mov     eax, [esp+10h]
+.text:00D60D10 call    sub_D6C360
+.text:00D60D15 test    eax, eax
+.text:00D60D17 jz      short loc_D60D26
+.text:00D60D19 mov     ecx, [esp+14h]
+.text:00D60D1D push    1
+.text:00D60D1F push    ecx
+.text:00D60D20 push    esi
+.text:00D60D21 call    sub_D40B70
+.text:00D60D26
+.text:00D60D26 loc_D60D26:                             ; CODE XREF: .text:00D60D0Aj
+.text:00D60D26                                         ; .text:00D60D17j
+.text:00D60D26 pop     esi
+.text:00D60D27
+.text:00D60D27 loc_D60D27:                             ; CODE XREF: .text:00D60CF9j
+.text:00D60D27 pop     edi
+.text:00D60D28 retn    0Ch]]
 --[[
 function AddEventParts_Ignore()
     return FUNC(INT, 0x00D60CF0, {});
 end
 ---]]
 
---[[
-function AddEventSimpleTalk()
-    return FUNC(INT, 0x00D62860, {});
+---[[
+function AddEventSimpleTalk(intA, intB)
+    return FUNC(BOOL, 0x00D62860, {int(intA), int(intB)});
 end
 ---]]
 
---[[
-function AddEventSimpleTalkTimer()
-    return FUNC(INT, 0x00D62820, {});
+---[[
+function AddEventSimpleTalkTimer(intA, intB, floatC)
+    return FUNC(BOOL, 0x00D62820, {int(intA), int(intB), floatC});
 end
 ---]]
 
---[[
-function AddFieldInsFilter()
-    return FUNC(INT, 0x00D62790, {});
+---[[
+function AddFieldInsFilter(intA)
+    return FUNC(INT, 0x00D62790, {int(intA)});
 end
 ---]]
 
---[[
-function AddGeneEvent()
-    return FUNC(INT, 0x00D622B0, {});
+---[[
+function AddGeneEvent(intA, intB)
+    return FUNC(INT, 0x00D622B0, {int(intA), int(intB)});
 end
 ---]]
 
+--[[.text:00D5DB50 loc_D5DB50:                             ; DATA XREF: .text:01089A5Ao
+.text:00D5DB50 mov     ecx, info_about_summons
+.text:00D5DB56 test    ecx, ecx
+.text:00D5DB58 jz      short locret_D5DB6E
+.text:00D5DB5A mov     eax, [ecx+4Ch]
+.text:00D5DB5D cmp     eax, 0FFFFFFFEh
+.text:00D5DB60 jbe     short loc_D5DB6A
+.text:00D5DB62 mov     dword ptr [ecx+4Ch], 0FFFFFFFFh
+.text:00D5DB69 retn]]
 --[[
 function AddHelpWhiteGhost()
     return FUNC(INT, 0x00D5DB50, {});
 end
 ---]]
 
---[[
-function AddHitMaskByBit()
-    return FUNC(INT, 0x00D64D50, {});
+---[[
+function AddHitMaskByBit(chrId, byteB)
+    return FUNC(BYTE, 0x00D64D50, {int(chrId), byte(byteB)});
 end
 ---]]
 
---[[
-function AddInfomationBuffer()
-    return FUNC(INT, 0x00D64720, {});
+---[[
+function AddInfomationBuffer(probablyABufferOfSomeSort)
+    return FUNC(BYTE, 0x00D64720, {int(probablyABufferOfSomeSort)});
 end
 ---]]
 
---[[
-function AddInfomationBufferTag()
-    return FUNC(INT, 0x00D64730, {});
+---[[
+function AddInfomationBufferTag(intA, intB, intC)
+    return FUNC(BYTE, 0x00D64730, {int(intA), int(intB), int(intC)});
 end
 ---]]
 
---[[
-function AddInfomationList()
-    return FUNC(INT, 0x00D62370, {});
+---[[
+function AddInfomationList(intA, intB, intC)
+    return FUNC(BYTE, 0x00D62370, {int(intA), int(intB), int(intC)});
 end
 ---]]
 
@@ -179,21 +263,22 @@ function AddTrueDeathCount()
 end
 ---]]
 
---[[
-function BeginAction()
-    return FUNC(INT, 0x00D5FCF0, {});
+---[[NOTE: intC and intD are unused by game, and intB/intC/intD 
+-----------belong to 3 contiguous bytes of a struct.
+function BeginAction(chrId, intB, intC, intD)
+    return FUNC(BOOL, 0x00D5FCF0, {int(chrId), int(intB), int(intC), int(intD)});
 end
 ---]]
 
---[[
-function BeginLoopCheck()
-    return FUNC(INT, 0x00D5FB90, {});
+---[[Result: pointer (to whatever the check thing is probably)
+function BeginLoopCheck(chrId)
+    return FUNC(INT, 0x00D5FB90, {int(chrId)});
 end
 ---]]
 
---[[
-function CalcExcuteMultiBonus()
-    return FUNC(INT, 0x00D5F4C0, {});
+---[[
+function CalcExcuteMultiBonus(intA, floatB, intC)
+    return FUNC(INT, 0x00D5F4C0, {int(intA), floatB, int(floatC)});
 end
 ---]]
 
@@ -209,9 +294,9 @@ function CalcGetMultiWallEntityId()
 end
 ---]]
 
---[[
-function CamReset()
-    return FUNC(INT, 0x00D5FB00, {});
+---[[
+function CamReset(localPlrChrId, boolDoReset)
+    return FUNC(BOOL, 0x00D5FB00, {int(localPlrChrId), boolDoReset});
 end
 ---]]
 
@@ -239,99 +324,158 @@ function CastPointSpellPlus_Horming()
 end
 ---]]
 
---[[
-function CastTargetSpell()
-    return FUNC(INT, 0x00D65E90, {});
+---[[TODO: Check if bool, Note: calls CastTargetSpellPlus with -1 for last arg
+function CastTargetSpell(chrId, intB, intC, intD, intE)
+    return FUNC(BYTE, 0x00D65E90, {int(chrId), int(intB), int(intC), int(intD), int(intE)});
 end
 ---]]
 
---[[
-function CastTargetSpellPlus()
-    return FUNC(INT, 0x00D65E50, {});
+---[[TODO: Check if bool
+function CastTargetSpellPlus(chrId, intB, intC, intD, intE, intF)
+    return FUNC(BYTE, 0x00D65E50, {int(chrId), int(intB), int(intC), int(intD), int(intE), int(intF)});
 end
 ---]]
 
---[[
+--[[struct_a1_2 *sub_D663D0()
+{
+  struct_a1_2 *result; // eax@1
+
+  result = DebgEvent_Global_obj;
+  if ( DebgEvent_Global_obj )
+    result = sub_D792B0(DebgEvent_Global_obj);
+  return result;
+}]]
+---[[
 function ChangeGreyGhost()
     return FUNC(INT, 0x00D663D0, {});
 end
 ---]]
 
+--[[.text:00D60D70 loc_D60D70:                             ; DATA XREF: .text:0108B88Ao
+.text:00D60D70 cmp     DebgEvent_Global_obj, 0
+.text:00D60D77 jz      short locret_D60D87
+.text:00D60D79 mov     eax, [esp+8]
+.text:00D60D7D push    eax
+.text:00D60D7E mov     eax, [esp+8]
+.text:00D60D82 call    sub_D6D7E0
+.text:00D60D87
+.text:00D60D87 locret_D60D87:                          ; CODE XREF: .text:00D60D77j
+.text:00D60D87 retn    8]]
 --[[
 function ChangeInitPosAng()
     return FUNC(INT, 0x00D60D70, {});
 end
 ---]]
 
---[[
-function ChangeModel()
-    return FUNC(INT, 0x00D64C70, {});
+---[[Note: intA is not chrId
+function ChangeModel(intA, intB)
+    return FUNC(BOOL, 0x00D64C70, {int(intA), int(intB)});
 end
 ---]]
 
+--[[.text:00D61DA0 loc_D61DA0:                             ; DATA XREF: .text:0108A25Ao
+.text:00D61DA0 cmp     DebgEvent_Global_obj, 0
+.text:00D61DA7 jnz     short loc_D61DAE
+.text:00D61DA9 xor     al, al
+.text:00D61DAB retn    8
+.text:00D61DAE ; ---------------------------------------------------------------------------
+.text:00D61DAE
+.text:00D61DAE loc_D61DAE:                             ; CODE XREF: .text:00D61DA7j
+.text:00D61DAE mov     eax, [esp+4]
+.text:00D61DB2 push    ebx
+.text:00D61DB3 push    edi
+.text:00D61DB4 call    sub_D6C360
+.text:00D61DB9 mov     edi, eax
+.text:00D61DBB xor     bl, bl
+.text:00D61DBD test    edi, edi
+.text:00D61DBF jz      short loc_D61DEB
+.text:00D61DC1 mov     eax, [esp+10h]
+.text:00D61DC5 test    eax, eax
+.text:00D61DC7 jle     short loc_D61DE2
+.text:00D61DC9 call    sub_D6C360
+.text:00D61DCE test    eax, eax
+.text:00D61DD0 jz      short loc_D61DEB
+.text:00D61DD2 push    edi
+.text:00D61DD3 call    sub_CDF150
+.text:00D61DD8 add     esp, 4
+.text:00D61DDB pop     edi
+.text:00D61DDC mov     bl, al
+.text:00D61DDE pop     ebx
+.text:00D61DDF retn    8]]
 --[[
 function ChangeTarget()
     return FUNC(INT, 0x00D61DA0, {});
 end
 ---]]
 
---[[
-function ChangeThink()
-    return FUNC(INT, 0x00D658A0, {});
+---[[
+function ChangeThink(chrId, think)
+    return FUNC(BOOL, 0x00D658A0, {int(chrId), int(think)});
 end
 ---]]
 
---[[
-function ChangeWander()
-    return FUNC(INT, 0x00D61000, {});
+---[[Note: intA is not chrId
+function ChangeWander(intA)
+    return FUNC(BOOL, 0x00D61000, {int(intA)});
 end
 ---]]
 
---[[
-function CharacterAllAttachSys()
-    return FUNC(INT, 0x00D60860, {});
+---[[
+function CharacterAllAttachSys(chrId)
+    return FUNC(BOOL, 0x00D60860, {int(chrId)});
 end
 ---]]
 
---[[
-function CharactorCopyPosAng()
-    return FUNC(INT, 0x00D64190, {});
+---[[NOTE: SECOND PARAM IS ACTUALLY UNUSED IN GAME
+function CharactorCopyPosAng(chrIdA, intB, chrIdB)
+    return FUNC(BOOL, 0x00D64190, {int(chrIdA), int(intB), int(chrIdB)});
 end
 ---]]
 
---[[
-function CheckChrHit_Obj()
-    return FUNC(INT, 0x00D5EA00, {});
+---[[
+function CheckChrHit_Obj(intA, intB)
+    return FUNC(BOOL, 0x00D5EA00, {int(intA), int(intB)});
 end
 ---]]
 
---[[
-function CheckChrHit_Wall()
-    return FUNC(INT, 0x00D5EA30, {});
+---[[
+function CheckChrHit_Wall(intA, intB)
+    return FUNC(BOOL, 0x00D5EA30, {int(intA), int(intB)});
 end
 ---]]
 
---[[
-function CheckEventBody()
-    return FUNC(INT, 0x00D5EC60, {});
+---[[
+function CheckEventBody(intA)
+    return FUNC(VOID, 0x00D5EC60, {int(intA)});
 end
 ---]]
 
---[[
-function CheckEventChr_Proxy()
-    return FUNC(INT, 0x00D5E9E0, {});
+---[[
+function CheckEventChr_Proxy(intA, intB)
+    return FUNC(BOOL, 0x00D5E9E0, {int(intA), int(intB)});
 end
 ---]]
 
+--[[.text:00D5EE50 loc_D5EE50:                             ; DATA XREF: .text:0108E0BAo
+.text:00D5EE50 jmp     loc_D6B240
+.text:00D5EE50 ; ---------------------------------------------------------------------------
+.text:00D5EE55 align 10h
+.text:00D5EE60
+.text:00D5EE60 loc_D5EE60:                             ; DATA XREF: .text:0108D87Ao
+.text:00D5EE60 push    edi
+.text:00D5EE61 mov     edi, host_info_global
+.text:00D5EE67 call    sub_D2A970
+.text:00D5EE6C pop     edi
+.text:00D5EE6D retn]]
 --[[
 function CheckPenalty()
     return FUNC(INT, 0x00D5EE50, {});
 end
 ---]]
 
---[[
-function ChrDisableUpDate()
-    return FUNC(INT, 0x00D61460, {});
+---[[
+function ChrDisableUpDate(chrId, intB)
+    return FUNC(INT, 0x00D61460, {int(chrId), int(intB)});
 end
 ---]]
 
@@ -341,45 +485,78 @@ function ChrFadeIn(chrId, dur, opacity)
 end
 ---]]
 
---[[
-function ChrFadeOut()
-    return FUNC(INT, 0x00D60770, {});
+---[[
+function ChrFadeOut(chrId, dur, opacity)
+    return FUNC(INT, 0x00D60770, {int(chrId), dur, opacity});
 end
 ---]]
 
---[[
-function ChrResetAnimation()
-    return FUNC(INT, 0x00D60670, {});
+---[[
+function ChrResetAnimation(chrId)
+    return FUNC(INT, 0x00D60670, {int(chrId)});
 end
 ---]]
 
---[[
-function ChrResetRequest()
-    return FUNC(INT, 0x00D606A0, {});
+---[[
+function ChrResetRequest(chrId)
+    return FUNC(INT, 0x00D606A0, {int(chrId)});
 end
 ---]]
 
---[[
+---[[
 function ClearBossGauge()
-    return FUNC(INT, 0x00D5DD80, {});
+    return FUNC(VOID, 0x00D5DD80, {});
 end
 ---]]
 
+--[[.text:00D5EDD0 loc_D5EDD0:                             ; DATA XREF: .text:0108E95Ao
+.text:00D5EDD0 mov     eax, session_info
+.text:00D5EDD5 push    esi
+.text:00D5EDD6 mov     esi, [eax+0BD0h]
+.text:00D5EDDC push    edi
+.text:00D5EDDD lea     edi, [eax+0BD0h]
+.text:00D5EDE3 mov     dword ptr [eax+0BCCh], 0
+.text:00D5EDED test    esi, esi
+.text:00D5EDEF jz      short loc_D5EE0F
+.text:00D5EDF1 push    esi
+.text:00D5EDF2 call    sub_562C30
+.text:00D5EDF7 mov     edx, [eax]
+.text:00D5EDF9 add     esp, 4
+.text:00D5EDFC mov     ecx, eax
+.text:00D5EDFE mov     eax, [edx+34h]
+.text:00D5EE01 push    esi
+.text:00D5EE02 call    eax
+.text:00D5EE04 mov     eax, session_info
+.text:00D5EE09 mov     dword ptr [edi], 0
+.text:00D5EE0F]]
 --[[
 function ClearMyWorldState()
     return FUNC(INT, 0x00D5EDD0, {});
 end
 ---]]
 
---[[
+--[[struct_a1_2 *sub_D5EED0()
+{
+  struct_a1_2 *result; // eax@1
+
+  result = DebgEvent_Global_obj;
+  if ( DebgEvent_Global_obj )
+  {
+    result = *&DebgEvent_Global_obj[2].gap0[0];
+    if ( result )
+      result = sub_DB0460(result);
+  }
+  return result;
+}]]
+---[[
 function ClearSosSign()
     return FUNC(INT, 0x00D5EED0, {});
 end
 ---]]
 
---[[
-function ClearTarget()
-    return FUNC(INT, 0x00D613C0, {});
+---[[
+function ClearTarget(chrId)
+    return FUNC(BOOL, 0x00D613C0, {int(chrId)});
 end
 ---]]
 
@@ -1049,375 +1226,363 @@ function InvalidSfx()
 end
 ---]]
 
---[[
-function IsAction()
-    return FUNC(INT, 0x00D5FAB0, {});
+---[[
+function IsAction(chrId, byteB)
+    return FUNC(BOOL, 0x00D5FAB0, {int(chrId), byte(byteB)});
 end
 ---]]
 
---[[
-function IsAlive()
-    return FUNC(INT, 0x00D615E0, {});
+---[[
+function IsAlive(chrId)
+    return FUNC(BOOL, 0x00D615E0, {int(chrId)});
 end
 ---]]
 
---[[
+---[[
 function IsAliveMotion()
-    return FUNC(INT, 0x00D5E6A0, {});
+    return FUNC(BOOL, 0x00D5E6A0, {});
 end
 ---]]
 
---[[
-function IsAngle()
-    return FUNC(INT, 0x00D61B30, {});
+---[[
+function IsAngle(chrIdA, chrIdB, angle)
+    return FUNC(BOOL, 0x00D61B30, {int(chrIdA), int(chrIdB), angle});
 end
 ---]]
 
---[[
-function IsAnglePlus()
-    return FUNC(INT, 0x00D61AF0, {});
+---[[
+function IsAnglePlus(chrIdA, chrIdB, angleDWord, intD)
+    return FUNC(BOOL, 0x00D61AF0, {int(chrIdA), int(chrIdB), int(angleDWord), int(intD)});
 end
 ---]]
 
---[[
-function IsAppearancePlayer()
-    return FUNC(INT, 0x00D5F170, {});
+---[[
+function IsAppearancePlayer(chrId)
+    return FUNC(BOOL, 0x00D5F170, {int(chrId)});
 end
 ---]]
 
---[[
+---[[
 function IsBlackGhost()
-    return FUNC(INT, 0x00D60EF0, {});
+    return FUNC(BOOL, 0x00D60EF0, {});
 end
 ---]]
 
---[[
-function IsBlackGhost_NetPlayer()
-    return FUNC(INT, 0x00D5E8F0, {});
+---[[Note: intA is not chrId
+function IsBlackGhost_NetPlayer(intA)
+    return FUNC(BOOL, 0x00D5E8F0, {int(intA)});
 end
 ---]]
 
---[[
+---[[
 function IsClearItem()
-    return FUNC(INT, 0x00D5DCF0, {});
+    return FUNC(BOOL, 0x00D5DCF0, {});
 end
 ---]]
 
---[[
+---[[
 function IsClient()
-    return FUNC(INT, 0x00D5E2E0, {});
+    return FUNC(BOOL, 0x00D5E2E0, {});
 end
 ---]]
 
---[[
+---[[
 function IsColiseumGhost()
-    return FUNC(INT, 0x00D60EB0, {});
+    return FUNC(BOOL, 0x00D60EB0, {});
 end
 ---]]
 
---[[
-function IsCompleteEvent()
-    return FUNC(INT, 0x00D60170, {});
+---[[
+function IsCompleteEvent(eventId)
+    return FUNC(BOOL, 0x00D60170, {int(eventId)});
 end
 ---]]
 
---[[
-function IsCompleteEventValue()
-    return FUNC(INT, 0x00D60150, {});
+---[[
+function IsCompleteEventValue(eventId)
+    return FUNC(BOOL, 0x00D60150, {int(eventId)});
 end
 ---]]
 
---[[
+---[[
 function IsDead_NextGreyGhost()
-    return FUNC(INT, 0x00D5E160, {});
+    return FUNC(BOOL, 0x00D5E160, {});
 end
 ---]]
 
---[[
+---[[
 function IsDeathPenaltySkip()
-    return FUNC(INT, 0x00D5D7D0, {});
+    return FUNC(BOOL, 0x00D5D7D0, {});
 end
 ---]]
 
---[[
-function IsDestroyed()
-    return FUNC(INT, 0x00D5F0E0, {});
+---[[
+function IsDestroyed(intA)
+    return FUNC(BOOL, 0x00D5F0E0, {int(intA)});
 end
 ---]]
 
---[[
-function IsDisable()
-    return FUNC(INT, 0x00D60F70, {});
+---[[
+function IsDisable(chrId)
+    return FUNC(BOOL, 0x00D60F70, {int(chrId)});
 end
 ---]]
 
---[[
-function IsDistance()
-    return FUNC(INT, 0x00D61BA0, {});
+---[[
+function IsDistance(chrIdA, chrIdB, distance)
+    return FUNC(BOOL, 0x00D61BA0, {int(chrIdA), int(chrIdB), distance});
 end
 ---]]
 
---[[
-function IsDropCheck_Only()
-    return FUNC(INT, 0x00D60C00, {});
+---[[
+function IsDropCheck_Only(chrId, intB, intC, intD)
+    return FUNC(BOOL, 0x00D60C00, {int(chrId), int(intB), int(intC), int(intD)});
 end
 ---]]
 
---[[
-function IsEquip()
-    return FUNC(INT, 0x00D5F4F0, {});
+---[[
+function IsEquip(intA, intB)
+    return FUNC(BOOL, 0x00D5F4F0, {int(intA), int(intB)});
 end
 ---]]
 
---[[
-function IsEventAnim()
-    return FUNC(INT, 0x00D61C30, {});
+---[[
+function IsEventAnim(chrId, intB)
+    return FUNC(BOOL, 0x00D61C30, {int(chrId), int(intB)});
 end
 ---]]
 
---[[
-function IsFireDead()
-    return FUNC(INT, 0x00D60400, {});
+---[[
+function IsFireDead(chrId)
+    return FUNC(BOOL, 0x00D60400, {int(chrId)});
 end
 ---]]
 
---[[
+---[[
 function IsForceSummoned()
-    return FUNC(INT, 0x00D5EC00, {});
+    return FUNC(BOOL, 0x00D5EC00, {});
 end
 ---]]
 
---[[
+---[[
 function IsGameClient()
-    return FUNC(INT, 0x00D5EAF0, {});
+    return FUNC(BOOL, 0x00D5EAF0, {});
 end
 ---]]
 
---[[
+---[[
 function IsGreyGhost()
-    return FUNC(INT, 0x00D60F30, {});
+    return FUNC(BOOL, 0x00D60F30, {});
 end
 ---]]
 
---[[
-function IsGreyGhost_NetPlayer()
-    return FUNC(INT, 0x00D5E970, {});
+---[[
+function IsGreyGhost_NetPlayer(netPlayerPtr)
+    return FUNC(BOOL, 0x00D5E970, {int(netPlayerPtr)});
 end
 ---]]
 
---[[
+---[[
 function IsHost()
-    return FUNC(INT, 0x00D5E300, {});
+    return FUNC(BOOL, 0x00D5E300, {});
 end
 ---]]
 
---[[
+---[[
 function IsInParty()
-    return FUNC(INT, 0x00D5E1F0, {});
+    return FUNC(BOOL, 0x00D5E1F0, {});
 end
 ---]]
 
---[[
+---[[
 function IsInParty_EnemyMember()
-    return FUNC(INT, 0x00D5EEC0, {});
+    return FUNC(BOOL, 0x00D5EEC0, {});
 end
 ---]]
 
---[[
+---[[
 function IsInParty_FriendMember()
-    return FUNC(INT, 0x00D5E440, {});
+    return FUNC(BOOL, 0x00D5E440, {});
 end
 ---]]
 
---[[
+---[[
 function IsIntruder()
-    return FUNC(INT, 0x00D60ED0, {});
+    return FUNC(BOOL, 0x00D60ED0, {});
 end
 ---]]
 
---[[
-function IsInventoryEquip()
-    return FUNC(INT, 0x00D5EF40, {});
+---[[
+function IsInventoryEquip(intA, intB)
+    return FUNC(BOOL, 0x00D5EF40, {int(intA), int(intB)});
 end
 ---]]
 
---[[
-function IsJobType()
-    return FUNC(INT, 0x00D5E040, {});
+---[[
+function IsJobType(intA)
+    return FUNC(BOOL, 0x00D5E040, {int(intA)});
 end
 ---]]
 
---[[
-function IsLand()
-    return FUNC(INT, 0x00D60450, {});
+---[[
+function IsLand(chrId)
+    return FUNC(BOOL, 0x00D60450, {int(chrId)});
 end
 ---]]
 
---[[
-function IsLiveNetPlayer()
-    return FUNC(INT, 0x00D5E9B0, {});
+---[[
+function IsLiveNetPlayer(intA)
+    return FUNC(BOOL, 0x00D5E9B0, {int(intA)});
 end
 ---]]
 
---[[
+---[[
 function IsLivePlayer()
-    return FUNC(INT, 0x00D60F50, {});
+    return FUNC(BOOL, 0x00D60F50, {});
 end
 ---]]
 
---[[
-function IsLoadWait()
-    return FUNC(INT, 0x00D5D930, {});
-end
----]]
-
---[[
+--[[IDA crashes when I try to convert it to a function. meh.
 function IsMatchingMultiPlay()
     return FUNC(INT, 0x00D5ED80, {});
 end
 ---]]
 
---[[
-function IsOnline()
-    return FUNC(INT, 0x00D5E2D0, {});
-end
----]]
-
---[[
+---[[
 function IsOnlineMode()
-    return FUNC(INT, 0x00D5DD50, {});
+    return FUNC(BOOL, 0x00D5DD50, {});
 end
 ---]]
 
---[[
+---[[
 function IsPlayerAssessMenu_Tutorial()
-    return FUNC(INT, 0x00D5E010, {});
+    return FUNC(BOOL, 0x00D5E010, {});
 end
 ---]]
 
---[[
-function IsPlayerStay()
-    return FUNC(INT, 0x00D61610, {});
+---[[
+function IsPlayerStay(chrId)
+    return FUNC(BOOL, 0x00D61610, {int(chrId)});
 end
 ---]]
 
---[[
+---[[
 function IsPlayMovie()
-    return FUNC(INT, 0x00D60AF0, {});
+    return FUNC(BOOL, 0x00D60AF0, {});
 end
 ---]]
 
---[[
+---[[
 function IsPrevGreyGhost()
-    return FUNC(INT, 0x00D5E140, {});
+    return FUNC(BOOL, 0x00D5E140, {});
 end
 ---]]
 
---[[
-function IsProcessEventGoal()
-    return FUNC(INT, 0x00D61340, {});
+---[[
+function IsProcessEventGoal(chrId)
+    return FUNC(BOOL, 0x00D61340, {int(chrId)});
 end
 ---]]
 
---[[
-function IsReady_Obj()
-    return FUNC(INT, 0x00D5F370, {});
+---[[
+function IsReady_Obj(intA)
+    return FUNC(BOOL, 0x00D5F370, {int(intA)});
 end
 ---]]
 
---[[
-function IsRegionDrop()
-    return FUNC(INT, 0x00D60C30, {});
+---[[
+function IsRegionDrop(chrId, intB, intC, intD, intE)
+    return FUNC(BOOL, 0x00D60C30, {int(chrId), int(intB), int(intC), int(intD), int(intE)});
 end
 ---]]
 
---[[
-function IsRegionIn()
-    return FUNC(INT, 0x00D61020, {});
+---[[
+function IsRegionIn(chrId, intB)
+    return FUNC(BOOL, 0x00D61020, {int(chrId), int(intB)});
 end
 ---]]
 
---[[
+---[[
 function IsRevengeRequested()
-    return FUNC(INT, 0x00D5E2A0, {});
+    return FUNC(BOOL, 0x00D5E2A0, {});
 end
 ---]]
 
---[[
+---[[
 function IsReviveWait()
-    return FUNC(INT, 0x00D5E660, {});
+    return FUNC(BOOL, 0x00D5E660, {});
 end
 ---]]
 
---[[
+---[[
 function IsShow_CampMenu()
-    return FUNC(INT, 0x00D5DA20, {});
+    return FUNC(BOOL, 0x00D5DA20, {});
 end
 ---]]
 
---[[
+---[[
 function IsShowMenu()
-    return FUNC(INT, 0x00D5EA90, {});
+    return FUNC(BOOL, 0x00D5EA90, {});
 end
 ---]]
 
---[[
+---[[
 function IsShowMenu_BriefingMsg()
-    return FUNC(INT, 0x00D5DD70, {});
+    return FUNC(BOOL, 0x00D5DD70, {});
 end
 ---]]
 
---[[
+---[[
 function IsShowMenu_GenDialog()
-    return FUNC(INT, 0x00D5EA80, {});
+    return FUNC(BOOL, 0x00D5EA80, {});
 end
 ---]]
 
---[[
+---[[
 function IsShowMenu_InfoMenu()
-    return FUNC(INT, 0x00D5DB80, {});
+    return FUNC(BOOL, 0x00D5DB80, {});
 end
 ---]]
 
---[[
+---[[
 function IsShowSosMsg_Tutorial()
-    return FUNC(INT, 0x00D5E000, {});
+    return FUNC(BOOL, 0x00D5E000, {});
 end
 ---]]
 
---[[
-function IsSuccessQWC()
-    return FUNC(INT, 0x00D5F7D0, {});
+---[[
+function IsSuccessQWC(intA)
+    return FUNC(BOOL, 0x00D5F7D0, {int(intA)});
 end
 ---]]
 
---[[
+---[[
 function IsTryJoinSession()
-    return FUNC(INT, 0x00D5E2B0, {});
+    return FUNC(BOOL, 0x00D5E2B0, {});
 end
 ---]]
 
---[[
-function IsValidInstance()
-    return FUNC(INT, 0x00D5F510, {});
+---[[
+function IsValidInstance(chrId, intEnumB)
+    return FUNC(BOOL, 0x00D5F510, {int(chrId), int(intEnumB)});
 end
 ---]]
 
---[[
-function IsValidTalk()
-    return FUNC(INT, 0x00D5E5F0, {});
+---[[
+function IsValidTalk(intA)
+    return FUNC(BOOL, 0x00D5E5F0, {int(intA)});
 end
 ---]]
 
---[[
+---[[
 function IsWhiteGhost()
-    return FUNC(INT, 0x00D60F10, {});
+    return FUNC(BOOL, 0x00D60F10, {});
 end
 ---]]
 
---[[
-function IsWhiteGhost_NetPlayer()
-    return FUNC(INT, 0x00D5E930, {});
+---[[
+function IsWhiteGhost_NetPlayer(ptr)
+    return FUNC(BOOL, 0x00D5E930, {int(ptr)});
 end
 ---]]
 
@@ -1433,27 +1598,9 @@ function LockSession()
 end
 ---]]
 
---[[
-function LuaCall()
-    return FUNC(INT, 0x00D62C60, {});
-end
----]]
-
---[[
-function LuaCallStart()
-    return FUNC(INT, 0x00D66290, {});
-end
----]]
-
---[[
-function LuaCallStartPlus()
-    return FUNC(INT, 0x00D66260, {});
-end
----]]
-
---[[
-function MultiDoping_AllEventBody()
-    return FUNC(INT, 0x00D61D60, {});
+---[[TODO: ARG IS DOUBLE, LOADED INTO XMM0. Return struct_a1_2
+function MultiDoping_AllEventBody(dopeRate)
+    return FUNC(INT, 0x00D61D60, {dopeRate});
 end
 ---]]
 
@@ -2045,9 +2192,9 @@ function RepeatMessage_end()
 end
 ---]]
 
---[[
+---[[TODO: Check return type
 function RequestEnding()
-    return FUNC(INT, 0x00D5DDD0, {});
+    return FUNC(VOID, 0x00D5DDD0, {});
 end
 ---]]
 
@@ -2195,9 +2342,9 @@ function SendEventRequest()
 end
 ---]]
 
---[[
-function SetAlive()
-    return FUNC(INT, 0x00D664A0, {});
+---[[
+function SetAlive(chrId, floatB)
+    return FUNC(INT, 0x00D664A0, {int(chrId), floatB});
 end
 ---]]
 
@@ -2231,9 +2378,9 @@ function SetAreaStartMapUid()
 end
 ---]]
 
---[[
-function SetBossGauge()
-    return FUNC(INT, 0x00D60700, {});
+---[[
+function SetBossGauge(chrId, intB, intC)
+    return FUNC(INT, 0x00D60700, {int(chrId), int(intB), int(intC)});
 end
 ---]]
 
@@ -2267,9 +2414,9 @@ function SetCamModeParamTargetIdForBossLock()
 end
 ---]]
 
---[[
-function SetChrType()
-    return FUNC(INT, 0x00D60E70, {});
+---[[
+function SetChrType(chrId, type)
+    return FUNC(VOID, 0x00D60E70, {int(chrId), int(type)});
 end
 ---]]
 
@@ -2321,33 +2468,33 @@ function SetColiEnableArray()
 end
 ---]]
 
---[[
-function SetCompletelyNoMove()
-    return FUNC(INT, 0x00D604E0, {});
+---[[
+function SetCompletelyNoMove(chrId, flag)
+    return FUNC(INT, 0x00D604E0, {int(chrId), flag});
 end
 ---]]
 
---[[
-function SetDeadMode()
-    return FUNC(INT, 0x00D61430, {});
+---[[
+function SetDeadMode(chrId, flag)
+    return FUNC(INT, 0x00D61430, {int(chrId), flag});
 end
 ---]]
 
---[[
-function SetDeadMode2()
-    return FUNC(INT, 0x00D613F0, {});
+---[[
+function SetDeadMode2(chrId, flag)
+    return FUNC(INT, 0x00D613F0, {int(chrId), flag});
 end
 ---]]
 
---[[
-function SetDefaultAnimation()
-    return FUNC(INT, 0x00D5F110, {});
+---[[DUMMY
+function SetDefaultAnimation(chrId)
+    return FUNC(BOOL, 0x00D5F110, {int(chrId)});
 end
 ---]]
 
---[[
-function SetDefaultMapUid()
-    return FUNC(INT, 0x00D5F680, {});
+---[[Deductive reasoning on the arg name
+function SetDefaultMapUid(mapUid)
+    return FUNC(INT, 0x00D5F680, {int(mapUid)});
 end
 ---]]
 
@@ -2357,9 +2504,9 @@ function SetDefaultRoutePoint()
 end
 ---]]
 
---[[
-function SetDisable()
-    return FUNC(INT, 0x00D60FC0, {});
+---[[Returns chr exist
+function SetDisable(chrId, flag)
+    return FUNC(BOOL, 0x00D60FC0, {int(chrId), flag});
 end
 ---]]
 
@@ -2579,9 +2726,9 @@ function SetInfomationPriority()
 end
 ---]]
 
---[[
-function SetInsideBattleArea()
-    return FUNC(INT, 0x00D61050, {});
+---[[
+function SetInsideBattleArea(chrId, intB)
+    return FUNC(BOOL, 0x00D61050, {int(chrId), int(intB)});
 end
 ---]]
 
@@ -2807,7 +2954,8 @@ function StopLoopAnimation()
 end
 ---]]
 
---[[
+---[[RETURNS FRPGNET*. Likely the "cannot move before loading screen 
+-----just before leaving online world" function ;)
 function StopPlayer()
     return FUNC(INT, 0x00D60950, {});
 end
@@ -2819,9 +2967,9 @@ function StopPointSE()
 end
 ---]]
 
---[[
-function SubActionCount()
-    return FUNC(INT, 0x00D5FBC0, {});
+---[[
+function SubActionCount(chrId, intB)
+    return FUNC(BOOL, 0x00D5FBC0, {int(chrId), int(intB)});
 end
 ---]]
 
@@ -2873,9 +3021,9 @@ function SwitchHitMask()
 end
 ---]]
 
---[[
-function TalkNextPage()
-    return FUNC(INT, 0x00D5E640, {});
+---[[
+function TalkNextPage(intA)
+    return FUNC(BOOL, 0x00D5E640, {int(intA)});
 end
 ---]]
 
@@ -2897,13 +3045,13 @@ function TurnCharactor()
 end
 ---]]
 
---[[
+---[[struct_a2_2*
 function Tutorial_begin()
     return FUNC(INT, 0x00D5E030, {});
 end
 ---]]
 
---[[
+---[[struct_a2_2*
 function Tutorial_end()
     return FUNC(INT, 0x00D5E020, {});
 end
@@ -2921,27 +3069,27 @@ function UpDateBloodMark()
 end
 ---]]
 
---[[
-function Util_RequestLevelUp()
-    return FUNC(INT, 0x00D5D830, {});
+---[[
+function Util_RequestLevelUp(intA)
+    return FUNC(INT, 0x00D5D830, {int(intA)});
 end
 ---]]
 
---[[
-function Util_RequestLevelUpFirst()
-    return FUNC(INT, 0x00D5D850, {});
+---[[
+function Util_RequestLevelUpFirst(intA)
+    return FUNC(INT, 0x00D5D850, {int(intA)});
 end
 ---]]
 
---[[
-function Util_RequestRegene()
-    return FUNC(INT, 0x00D5D820, {});
+---[[
+function Util_RequestRegene(intA)
+    return FUNC(INT, 0x00D5D820, {int(intA)});
 end
 ---]]
 
---[[
-function Util_RequestRespawn()
-    return FUNC(INT, 0x00D5D810, {});
+---[[
+function Util_RequestRespawn(intA)
+    return FUNC(INT, 0x00D5D810, {int(intA)});
 end
 ---]]
 
@@ -2957,33 +3105,33 @@ function ValidSfx()
 end
 ---]]
 
---[[
-function VariableExpand_211_param1()
-    return FUNC(INT, 0x00D5D8C0, {});
+---[[
+function VariableExpand_211_param1(uintA)
+    return FUNC(UINT, 0x00D5D8C0, {uint(uintA)});
 end
 ---]]
 
---[[
-function VariableExpand_211_param2()
-    return FUNC(INT, 0x00D5D8B0, {});
+---[[
+function VariableExpand_211_param2(uintA)
+    return FUNC(UINT, 0x00D5D8B0, {uint(uintA)});
 end
 ---]]
 
---[[
-function VariableExpand_211_param3()
-    return FUNC(INT, 0x00D5D8A0, {});
+---[[DUMMY
+function VariableExpand_211_param3(byteA)
+    return FUNC(INT, 0x00D5D8A0, {byte(byteA)});
 end
 ---]]
 
---[[
-function VariableExpand_22_param1()
-    return FUNC(INT, 0x00D5D8E0, {});
+---[[
+function VariableExpand_22_param1(uintA)
+    return FUNC(UINT, 0x00D5D8E0, {uint(uintA)});
 end
 ---]]
 
---[[
-function VariableExpand_22_param2()
-    return FUNC(INT, 0x00D5D8D0, {});
+---[[
+function VariableExpand_22_param2(shortA)
+    return FUNC(SHORT, 0x00D5D8D0, {short(shortA)});
 end
 ---]]
 
@@ -3000,8 +3148,8 @@ end
 ---]]
 
 --[[
-function WARN()
-    return FUNC(INT, 0x00D62050, {});
+function WARN(text, intB)
+    return FUNC(INT, 0x00D62050, {str_uni(text), int(intB)});
 end
 ---]]
 

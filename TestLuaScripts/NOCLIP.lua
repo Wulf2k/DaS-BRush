@@ -1,4 +1,4 @@
-xinput_dll_offset = 0x1740000;
+xinput_dll_offset = GetIngameDllAddress("XInput1_3.dll")
 
 BTN_A        = 0x1000
 BTN_B        = 0x2000
@@ -29,6 +29,9 @@ BTN_R3       = 0x0080
 buttonBitmaskValue = 0;
 prevButtonBitmaskValue = 0;
 
+L2 = 0
+R2 = 0
+
 function CheckButton(maskTest)
     return BitmaskCheck(buttonBitmaskValue, maskTest);
 end
@@ -47,64 +50,111 @@ end
 function ReadController()
     addr = RInt32(RInt32(xinput_dll_offset + 0x10C44)) + 0x0028
     buttonBitmaskValue = RUInt16(addr);
+    
+    L2 = RByte(addr + 3) / 255.0
+    R2 = RByte(addr + 2) / 255.0
 end
 
 waitTimeBase = 400
 waitTime = 0
 
-fastForwardMult = 20
-fastForwardMultClimb = 8
+fastForwardMin = 1
+
+fastForwardIncrease = 1.1
+
+fastForwardRatio = 1.0
+
+fastForwardMax = 10
+--fastForwardMultClimb = 25
+
+prevClock = os.clock()
+
+goUpDownSpeed = 1
+
+fastForwardIncreaseTime = 3
+
+function SetCamStickToAss(stick)
+    camSpeedPtr = RInt32(0x137D6DC)
+    camSpeedPtr = RInt32(camSpeedPtr + 0x3c)
+    camSpeedPtr = RInt32(camSpeedPtr + 0x60)
+    camSpeedPtr = camSpeedPtr + 0x190
+    
+    if stick then
+        WFloat(camSpeedPtr, 1)
+    else
+        WFloat(camSpeedPtr, 0.1) --default
+    end
+end
+
+
 
 while true do 
     
-    SetDeadMode(int(10000), true);
-    SetDeadMode2(int(10000), true);
+    ChrResetAnimation(10000, true)
+    
+    SetDeadMode(10000, true);
+    SetDeadMode2(10000, true);
+    
+    if (CheckButton(BTN_R3)) then
+        deadCamPtr = RInt32(0x137D644) + 0x40;
+        WBool(deadCamPtr, false);
+    end
+    
+    curClock = os.clock()
     
     
     
+    currentFastForward = fastForwardMin + ((fastForwardMax - fastForwardMin) * fastForwardRatio)
     
-    if CheckButton(BTN_A) and CheckButton(BTN_R1) then
+    Player.Anim.DebugOverallSpeedMult.Value = currentFastForward
+    
+    ForceEntityDrawGroup(GetEntityPtr(10000));
+    
+    if CheckButton(BTN_R1) then
         SetIgnoreHit(int(10000), false);
         SetDisableGravity(int(10000), true);
-    elseif CheckButton(BTN_A) and CheckButton(BTN_L1) then
+        SetCamStickToAss(false)
+    elseif CheckButton(BTN_L1) then
         SetIgnoreHit(int(10000), false);
         SetDisableGravity(int(10000), false);
+        SetCamStickToAss(false)
     else
         SetIgnoreHit(int(10000), true);
         SetDisableGravity(int(10000), true);
+        SetCamStickToAss(true)
     end
 
     ReadController();
     
-    if CheckButton(BTN_L3) then
-        Player.Anim.DebugOverallSpeedMult.Value = fastForwardMult
-        waitTime = waitTimeBase / fastForwardMult
+    if CheckButton(BTN_A) then
+        if CheckButtonPressed(BTN_A) then
+            currentFastForward = 1
+        end
+        
+        if fastForwardRatio <= fastForwardMax then
+            fastForwardRatio = fastForwardRatio + ((curClock - prevClock) / fastForwardIncreaseTime)
+        else
+            fastForwardRatio = 1
+        end
+        
     else
         Player.Anim.DebugOverallSpeedMult.Value = 1
-        waitTime = waitTimeBase
+        fastForwardRatio = 0
     end
     
-    if CheckButton(BTN_A) then
+    playerPtr = GetEntityPtr(10000);
+    playerHeading = GetEntityRotation(playerPtr);
     
-        if CheckButton(BTN_UP) then 
-            Player.Anim.DebugOverallSpeedMult.Value = fastForwardMultClimb
-        waitTime = waitTimeBase / fastForwardMultClimb
-            ForcePlayAnimation(10000, 7011);
-            Wait(waitTime);
-            ForcePlayAnimation(10000, 7012);
-            Wait(waitTime);
-        elseif CheckButton(BTN_DOWN) then
-            Player.Anim.DebugOverallSpeedMult.Value = fastForwardMultClimb
-        waitTime = waitTimeBase / fastForwardMultClimb
-            ForcePlayAnimation(10000, 7021);
-            Wait(waitTime);
-            ForcePlayAnimation(10000, 7022);
-            Wait(waitTime);
-        end
+    if L2 > 0 then 
+        WarpEntity_Coords(playerPtr, Player.PosX.Value, Player.PosY.Value + (L2 * goUpDownSpeed * currentFastForward), Player.PosZ.Value, playerHeading)
+    end
     
+    if R2 > 0 then
+        WarpEntity_Coords(playerPtr, Player.PosX.Value, Player.PosY.Value - (R2 * goUpDownSpeed * currentFastForward), Player.PosZ.Value, playerHeading)
     end
     
     
     prevButtonBitmaskValue = buttonBitmaskValue
     
+    prevClock = curClock
 end

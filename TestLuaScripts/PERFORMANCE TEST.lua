@@ -4,10 +4,14 @@ prevTimer = 0
 prevOsClock = os.clock()
 math.randomseed(os.time())
 
+function BoolStr(boolVal)
+    if boolVal then return "true" else return "false" end
+end
+
 while true do
     --SetChrType(int(10000), int(math.random() * 1))
     --ChrResetAnimation(int(10000), false)
-    val = ForceChangeTarget(int(10000), int(10000))
+    val = BoolStr(IsEventAnim(10000, 0))
     SetLineHelpText(""..val);
     --ForcePlayLoopAnimation(10000, rand * 10000)
     

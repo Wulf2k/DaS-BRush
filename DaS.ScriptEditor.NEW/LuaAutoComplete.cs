@@ -63,12 +63,17 @@ namespace DaS.ScriptEditor.NEW
 
             foreach (var g in luai.State.Globals)
             {
-                Entries.Add(new SeAutoCompleteEntry(mw, SeAcType.Method, g.Replace("(", ""), "?Description?"));
+                Entries.Add(new SeAutoCompleteEntry(mw, SeAcType.Method, g.Replace("(", ""), "function " + g.Replace("(", ""), "?Description?"));
             }
 
-            foreach (var g in ScriptLib.Lua.LuaInterface.IngameFuncAddresses.Keys)
+            foreach (var e in ScriptLib.Lua.helpers.AutoCompleteHelper.IngameFunctionsUnmarked)
             {
-                Entries.Add(new SeAutoCompleteEntry(mw, SeAcType.Estus, g, "?Description?"));
+                Entries.Add(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
+            }
+
+            foreach (var e in ScriptLib.Lua.helpers.AutoCompleteHelper.IngameFunctionsFancy)
+            {
+                Entries.Add(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
             }
         }
 
@@ -108,6 +113,13 @@ namespace DaS.ScriptEditor.NEW
         private void FirstOpen(TextArea ta, TextCompositionEventArgs e)
         {
             InitCW();
+
+            //var next = ICSharpCode.AvalonEdit.Document.TextUtilities.GetNextCaretPosition(Editor.Document, Editor.CaretOffset, System.Windows.Documents.LogicalDirection.Backward, ICSharpCode.AvalonEdit.Document.CaretPositioningMode.WordStartOrSymbol);
+
+            //if (next >= 0 && next < Editor.Text.Length)
+            //{
+            //    CW.StartOffset = next;
+            //}
         }
 
         private void StillOpened(TextArea ta, TextCompositionEventArgs e)
@@ -163,13 +175,15 @@ namespace DaS.ScriptEditor.NEW
                 CW.CompletionList.CompletionData.Add(thing);
             }
 
+
+
+            CW.Width = 320;
+
             CW.Show();
         }
 
         private void CW_Closed(object sender, EventArgs e)
         {
-
-
             CW.CompletionList.KeyDown -= CompletionList_KeyDown;
             CW.Closed -= CW_Closed;
             Insight?.Close();

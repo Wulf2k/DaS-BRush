@@ -19,7 +19,7 @@ namespace DaS.ScriptEditor.NEW
         public const string DefaultScriptName = "New Lua Script (Untitled).lua";
 
         private bool __isModified = false;
-        private bool IsModified
+        public bool IsModified
         {
             get
             {
@@ -27,15 +27,24 @@ namespace DaS.ScriptEditor.NEW
             }
             set
             {
-                
                 __isModified = value;
+
+                if (ParentLuaContainer.SelectedLuaScript == this)
+                {
+                    ParentLuaContainer.RaiseCurrentTabIsModifiedChanged(this);
+                }
+
+                UpdateTabText();
             }
         }
         private Thread ExecThread;
 
         private void UpdateTabText()
         {
-            Title = (IsRunning ? "[" : "") + SeScriptShortName + (IsModified ? "*" : "") + (IsRunning ? "]" : "");
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Title = (IsRunning ? "[" : "") + SeScriptShortName + (IsModified ? "*" : "") + (IsRunning ? "]" : "");
+            });
         }
 
         public bool IsRunning
@@ -45,8 +54,6 @@ namespace DaS.ScriptEditor.NEW
                 return ExecThread != null && ExecThread.IsAlive;
             }
         }
-
-
 
         //LuaEditor storage:
 
@@ -68,7 +75,7 @@ namespace DaS.ScriptEditor.NEW
 
         //Constructor:
 
-        public LuaScriptTab(string scriptFileName = null) : base()
+        public LuaScriptTab(LuaScriptTabContainer parent, Action<bool> loading, string scriptFileName = null) : base()
         {
             CanFloat = false;
 
@@ -76,11 +83,30 @@ namespace DaS.ScriptEditor.NEW
 
             if (scriptFileName != null)
             {
-                INSTANT_LoadDocumentFromDisk();
+                INSTANT_LoadDocumentFromDisk(loading);
             }
+
+            parent.ScriptStart += ParentLuaContainer_ScriptStart;
+            parent.ScriptStop += ParentLuaContainer_ScriptStop;
         }
 
+        private void ParentLuaContainer_ScriptStop(object sender, LuaTabEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                UpdateTabText();
+            });
+        }
 
+        private void ParentLuaContainer_ScriptStart(object sender, LuaTabEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                UpdateTabText();
+            });
+        }
+
+        //TODO: see if this blank override was for a reason lol
         protected override void OnParentChanging(ILayoutContainer oldValue, ILayoutContainer newValue)
         {
             
@@ -95,9 +121,17 @@ namespace DaS.ScriptEditor.NEW
 
 
 
-        private void OtherThread_RunScript(string scriptText)
+        private void OtherThread_RunScript(Action<bool> loading, string scriptText)
         {
-            var luai = new ScriptLib.Lua.LuaInterface();
+            ScriptLib.Lua.LuaInterface luai = null;
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                loading(true);
+                luai = new ScriptLib.Lua.LuaInterface();
+                loading(false);
+            });
+            
             try
             {
                 luai.State.DoString(scriptText);
@@ -115,7 +149,7 @@ namespace DaS.ScriptEditor.NEW
             }
             finally
             {
-                ParentLuaContainer.RaiseScriptStop(new LuaTabSwitchEventArgs(this));
+                ParentLuaContainer.RaiseScriptStop(this);
                 luai.Dispose();
                 luai = null;
             }
@@ -123,11 +157,11 @@ namespace DaS.ScriptEditor.NEW
         }
 
 
-        public void StartExecution()
+        public void StartExecution(Action<bool> loading)
         {
             StopExecution();
 
-            ExecThread = new Thread(new ParameterizedThreadStart((script) => OtherThread_RunScript(script as string)))
+            ExecThread = new Thread(new ParameterizedThreadStart((script) => OtherThread_RunScript(loading, script as string)))
             {
                 IsBackground = true,
                 Name = "LuaScript:" + SeScriptShortName
@@ -135,7 +169,7 @@ namespace DaS.ScriptEditor.NEW
 
             ExecThread.Start(EditorDocument.Text);
 
-            ParentLuaContainer.RaiseScriptStart(new LuaTabSwitchEventArgs(this));
+            ParentLuaContainer.RaiseScriptStart(this);
         }
 
         public void StopExecution()
@@ -146,6 +180,8 @@ namespace DaS.ScriptEditor.NEW
             }
 
             ExecThread = null;
+
+            ParentLuaContainer.RaiseScriptStop(this);
         }
 
 
@@ -159,7 +195,7 @@ namespace DaS.ScriptEditor.NEW
             }
         }
 
-        private void ParentLuaContainer_OldTabDeselected(object sender, LuaTabSwitchEventArgs e)
+        private void ParentLuaContainer_OldTabDeselected(object sender, LuaTabEventArgs e)
         {
             if (e.Script == this)
             {
@@ -170,7 +206,7 @@ namespace DaS.ScriptEditor.NEW
             }
         }
 
-        private void ParentLuaContainer_NewTabSelected(object sender, LuaTabSwitchEventArgs e)
+        private void ParentLuaContainer_NewTabSelected(object sender, LuaTabEventArgs e)
         {
             if (e.Script == this)
             {
@@ -181,11 +217,11 @@ namespace DaS.ScriptEditor.NEW
 
                 if (IsRunning)
                 {
-                    ParentLuaContainer.RaiseScriptStart(new LuaTabSwitchEventArgs(this));
+                    ParentLuaContainer.RaiseScriptStart(this);
                 }
                 else
                 {
-                    ParentLuaContainer.RaiseScriptStop(new LuaTabSwitchEventArgs(this));
+                    ParentLuaContainer.RaiseScriptStop(this);
                 }
             }
         }
@@ -194,7 +230,7 @@ namespace DaS.ScriptEditor.NEW
         {
             base.OnClosing(args);
 
-            if (!SeCheckIfCanClose())
+            if (!SeCheckIfCanClose((dummy) => { }))
             {
                 args.Cancel = true;
             }
@@ -233,25 +269,25 @@ namespace DaS.ScriptEditor.NEW
         /// Saves this tab's script like you're hitting the save button. Will show a "Save As..." dialog if it is the first time saving, etc.
         /// </summary>
         /// <returns>True if the file was saved to disk in any way. False if user clicks "Cancel" to "Save As..." dialog (if applicable).</returns>
-        public bool SeSave()
+        public bool SeSave(Action<bool> loading)
         {
-            return DoCheckSaveOrSaveAs();
+            return DoCheckSaveOrSaveAs(loading);
         }
 
         /// <summary>
         /// Shows "Save As..." dialog and saves the file to disk if the user chooses to.
         /// </summary>
         /// <returns>True if user ends up saving file. False if user clicks "Cancel".</returns>
-        public bool SeSaveAs()
+        public bool SeSaveAs(Action<bool> loading)
         {
-            return ShowSaveAsDialog();
+            return ShowSaveAsDialog(loading);
         }
 
         /// <summary>
         /// Checks if this tab can close ("Save unsaved changes?" etc)
         /// </summary>
         /// <returns>True if you can close. False if you can NOT close.</returns>
-        public bool SeCheckIfCanClose()
+        public bool SeCheckIfCanClose(Action<bool> loading)
         {
             if (SeScriptFileExists && !IsModified)
             {
@@ -263,7 +299,7 @@ namespace DaS.ScriptEditor.NEW
             if (dlgResult == MessageBoxResult.Yes)
             {
                 //User decides to save. We let the default save button logic determine the result for us ;)
-                return SeSave();
+                return SeSave(loading);
             }
             else if (dlgResult == MessageBoxResult.No)
             {
@@ -277,16 +313,16 @@ namespace DaS.ScriptEditor.NEW
             }
         }
 
-        private bool DoCheckSaveOrSaveAs()
+        private bool DoCheckSaveOrSaveAs(Action<bool> loading)
         {
             if (SeScriptFileExists)
             {
-                INSTANT_SaveDocumentToDisk();
+                INSTANT_SaveDocumentToDisk(loading);
                 return true;
             }
             else
             {
-                return ShowSaveAsDialog();
+                return ShowSaveAsDialog(loading);
             }
         }
 
@@ -294,24 +330,44 @@ namespace DaS.ScriptEditor.NEW
         /// You are expected to perform any checks yourself before calling this or you will piss people off Kappa
         /// </summary>
         /// <param name="doc"></param>
-        internal void INSTANT_SaveDocumentToDisk()
+        internal void INSTANT_SaveDocumentToDisk(Action<bool> loading)
         {
-            //TODO: Make more "efficient" Kappa
-            File.WriteAllText(SeScriptFilePath, EditorDocument.Text);
+            loading(true);
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                //TODO: Make more "efficient" Kappa
+                File.WriteAllText(SeScriptFilePath, EditorDocument.Text);
+
+                IsModified = false;
+            });
+            
+            loading(false);
         }
 
         /// <summary>
         /// You are expected to perform any checks yourself before calling this or you will piss people off Keepo
         /// </summary>
         /// <param name="doc"></param>
-        internal void INSTANT_LoadDocumentFromDisk()
+        internal void INSTANT_LoadDocumentFromDisk(Action<bool> loading)
         {
-            //TODO: Make more "efficient" Keepo
-            EditorDocument.Text = File.ReadAllText(SeScriptFilePath);
+            loading(true);
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                //TODO: Make more "efficient" Keepo
+                EditorDocument.Text = File.ReadAllText(SeScriptFilePath);
+
+                IsModified = false;
+            });
+
+            loading(false);
         }
 
-        private bool ShowSaveAsDialog()
+        private bool ShowSaveAsDialog(Action<bool> loading)
         {
+            loading(false);
+
             var dlg = new Microsoft.Win32.SaveFileDialog()
             {
                 CheckFileExists = false,
@@ -336,8 +392,11 @@ namespace DaS.ScriptEditor.NEW
 
             if (doSave)
             {
-                SeScriptFilePath = dlg.FileName;
-                INSTANT_SaveDocumentToDisk();
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    SeScriptFilePath = dlg.FileName;
+                    INSTANT_SaveDocumentToDisk(loading);
+                });
                 return true;
             }
 
@@ -347,41 +406,9 @@ namespace DaS.ScriptEditor.NEW
         /// <summary>
         /// The open file dialog will be in the directory of this tab's script if applicable.
         /// </summary>
-        public bool SeOpenFile()
+        public bool SeOpenFile(Action<bool> loading)
         {
-            var dlg = new Microsoft.Win32.OpenFileDialog()
-            {
-                CheckFileExists = true,
-                AddExtension = false,
-                DefaultExt = ".lua",
-                FileName = "",
-                Filter = "Lua Scripts|*.lua",
-                InitialDirectory = new FileInfo(typeof(LuaScriptTab).Assembly.Location).Directory.FullName, //TODO: store last user save/load dir and load on startup
-                Title = "Open 1 or more Lua Script(s)",
-                CheckPathExists = true,
-                Multiselect = true,
-                ValidateNames = true
-            };
-
-            if (SeScriptFileExists)
-            {
-                var cfi = new FileInfo(SeScriptFilePath);
-                dlg.InitialDirectory = cfi.Directory.FullName;
-                dlg.FileName = cfi.Name;
-            }
-
-            if (dlg.ShowDialog() ?? false)
-            {
-                foreach (var f in dlg.FileNames)
-                {
-                    var newTab = ParentLuaContainer.AddNewTab();
-                    newTab.SeScriptFilePath = f;
-                    newTab.INSTANT_LoadDocumentFromDisk();
-                    return true;
-                }
-            }
-
-            return false;
+            return ParentLuaContainer.SeOpenFile(loading, EditorDocument.FileName != null ? new FileInfo(EditorDocument.FileName).DirectoryName : null);
         }
     }
 }

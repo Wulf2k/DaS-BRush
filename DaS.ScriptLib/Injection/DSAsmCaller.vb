@@ -254,12 +254,29 @@ Namespace Injection
                 Buffer_SquashIntoDwordResult = ToDwordLossy(arg)
 
                 arg = Nothing
-            ElseIf typ = GetType(IntPtr) Then
-                Buffer_SquashIntoDwordResult = ToDwordLossy(arg)
+            ElseIf typ = GetType(Boolean) Then
+                Buffer_SquashIntoDwordResult = If(DirectCast(arg, Boolean), 1, 0)
+            ElseIf TypeOf arg Is BoxedString Then
+                Dim bs = DirectCast(arg, BoxedString)
 
-                arg = Nothing
-            Else
-                Dim size = Marshal.SizeOf(arg)
+                Dim hand = New SafeRemoteHandle(If(bs.Uni, (bs.Str.Length + 1) * 2, bs.Str.Length + 1))
+                Dim handVal = hand.GetHandle()
+
+                If (bs.Uni) Then
+                    WUnicodeStr(handVal, bs.Str)
+                Else
+                    WAsciiStr(handVal, bs.Str)
+                End If
+
+                allocPtrList.Add(hand)
+                Buffer_SquashIntoDwordResult = handVal
+
+            ElseIf typ = GetType(IntPtr) Then
+                    Buffer_SquashIntoDwordResult = ToDwordLossy(arg)
+
+                    arg = Nothing
+                Else
+                    Dim size = Marshal.SizeOf(arg)
 
                 If size <= INT32_SIZE Then
                     Dim toDwordFailed = False
@@ -335,8 +352,8 @@ Namespace Injection
                 Case FuncReturnType.SBYTE : Return New MutatableDword(result).SByte1
                 Case FuncReturnType.FLOAT : Return New MutatableDword(result).Float1
                 Case FuncReturnType.DOUBLE : Return CType(New MutatableDword(result).Float1, Double)
-                Case FuncReturnType.STRING : Return RAsciiStr(New MutatableDword(result).Int1)
-                Case FuncReturnType.UNISTRING : Return RUnicodeStr(New MutatableDword(result).Int1)
+                Case FuncReturnType.STR_ANSI : Return RAsciiStr(New MutatableDword(result).Int1)
+                Case FuncReturnType.STR_UNI : Return RUnicodeStr(New MutatableDword(result).Int1)
                 Case Else
                     Return BitConverter.ToInt32(result, 0)
             End Select
