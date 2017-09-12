@@ -13,6 +13,7 @@ Namespace Lua.Structures
             Next
         End Sub
 
+        <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
         Public Function GetIngameDllAddress(moduleName As String) As UInteger
 
             Dim modules(255 - 1) As UInteger

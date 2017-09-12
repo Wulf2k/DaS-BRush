@@ -3,7 +3,7 @@ Imports System.Text
 
 Namespace Injection.PSAPI
 
-    Friend Module MSAPI
+    Friend Module PSAPI
 
 
         <DllImport("psapi.dll", SetLastError:=True)>
