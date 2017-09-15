@@ -715,10 +715,6 @@ Namespace Lua
 
         <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
         Public Shared Function GetEntityPtr(entityId As Integer) As Integer
-            'Return LuaInterface.Instance.CallIngameFunc(FuncReturnType.INT, &HD6C360, entityId)
-
-            'Return LuaInterface.E($"ChrFadeIn({entityId}, 0, 0)")
-
             Dim reg As New Dictionary(Of String, Object)
             reg.Add("EAX", entityId)
             Return LuaInterface.Instance.CallIngameFuncECX(FuncReturnType.INT, &HD6C360, reg, entityId)
