@@ -55,6 +55,14 @@ namespace DaS.ScriptEditor.NEW
             }
         }
 
+        private void CheckAddNewEntry(SeAutoCompleteEntry seace)
+        {
+            if (!Entries.Any(x => x.Text == seace.Text))
+            {
+                Entries.Add(seace);
+            }
+        }
+
         public void InitDefaultEntries(MainWindow mw)
         {
             Entries.Clear();
@@ -63,18 +71,25 @@ namespace DaS.ScriptEditor.NEW
 
             foreach (var g in luai.State.Globals)
             {
-                Entries.Add(new SeAutoCompleteEntry(mw, SeAcType.Method, g.Replace("(", ""), "function " + g.Replace("(", ""), "?Description?"));
-            }
-
-            foreach (var e in ScriptLib.Lua.helpers.AutoCompleteHelper.IngameFunctionsUnmarked)
-            {
-                Entries.Add(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
+                CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Method, g.Replace("(", ""), g.Replace("(", ""), "?Description?"));
             }
 
             foreach (var e in ScriptLib.Lua.helpers.AutoCompleteHelper.IngameFunctionsFancy)
             {
-                Entries.Add(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
+                CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
             }
+
+            foreach (var e in ScriptLib.Lua.helpers.AutoCompleteHelper.IngameFunctionsUnmarked)
+            {
+                CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
+            }
+
+            foreach (var e in ScriptLib.Lua.helpers.AutoCompleteHelper.LuaHelperEntries)
+            {
+                CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
+            }
+
+            Entries = Entries.OrderBy(x => x.Text).ToList();
         }
 
         private void TextArea_TextEntering(object sender, TextCompositionEventArgs e)
@@ -114,12 +129,12 @@ namespace DaS.ScriptEditor.NEW
         {
             InitCW();
 
-            //var next = ICSharpCode.AvalonEdit.Document.TextUtilities.GetNextCaretPosition(Editor.Document, Editor.CaretOffset, System.Windows.Documents.LogicalDirection.Backward, ICSharpCode.AvalonEdit.Document.CaretPositioningMode.WordStartOrSymbol);
+            var next = ICSharpCode.AvalonEdit.Document.TextUtilities.GetNextCaretPosition(Editor.Document, Editor.CaretOffset, System.Windows.Documents.LogicalDirection.Backward, ICSharpCode.AvalonEdit.Document.CaretPositioningMode.WordStart);
 
-            //if (next >= 0 && next < Editor.Text.Length)
-            //{
-            //    CW.StartOffset = next;
-            //}
+            if (next >= 0 && next < Editor.Text.Length)
+            {
+                CW.StartOffset = next;
+            }
         }
 
         private void StillOpened(TextArea ta, TextCompositionEventArgs e)

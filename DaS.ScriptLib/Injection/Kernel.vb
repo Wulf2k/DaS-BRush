@@ -40,11 +40,25 @@ Namespace Injection
                                                                     ByVal bInheritHandle As Boolean,
                                                                     ByVal dwProcessId As Int32) As IntPtr
 
-            Friend Declare Function ReadProcessMemory Lib "kernel32" (ByVal hProcess As IntPtr,
+            Private Declare Function ReadProcessMemory Lib "kernel32" (ByVal hProcess As IntPtr,
                                                                       ByVal lpBaseAddress As IntPtr,
                                                                       ByVal lpBuffer() As Byte,
                                                                       ByVal iSize As Integer,
                                                                       ByRef lpNumberOfBytesRead As Integer) As Boolean
+
+            Friend Function ReadProcessMemory_SAFE(ByVal hProcess As IntPtr,
+                                                                      ByVal lpBaseAddress As IntPtr,
+                                                                      ByVal lpBuffer() As Byte,
+                                                                      ByVal iSize As Integer,
+                                                                      ByRef lpNumberOfBytesRead As Integer) As Boolean
+
+                If VirtualProtectEx(hProcess, lpBaseAddress, iSize, PAGE_READWRITE, 0) <> 0 Then
+                    Return ReadProcessMemory(hProcess, lpBaseAddress, lpBuffer, iSize, lpNumberOfBytesRead)
+                Else
+                    Return False
+                End If
+
+            End Function
 
             'Friend Declare Function ReadProcessMemory Lib "kernel32" (ByVal hProcess As SafeDarkSoulsHandle,
             '                                                          ByVal lpBaseAddress As SafeRemoteHandle,
@@ -52,11 +66,25 @@ Namespace Injection
             '                                                          ByVal iSize As Integer,
             '                                                          ByRef lpNumberOfBytesRead As Integer) As Boolean
 
-            Friend Declare Function WriteProcessMemory Lib "kernel32" (ByVal hProcess As IntPtr,
+            Private Declare Function WriteProcessMemory Lib "kernel32" (ByVal hProcess As IntPtr,
                                                                        ByVal lpBaseAddress As IntPtr,
                                                                        ByVal lpBuffer() As Byte,
                                                                        ByVal iSize As Integer,
                                                                        ByVal lpNumberOfBytesWritten As Integer) As Boolean
+
+            Friend Function WriteProcessMemory_SAFE(ByVal hProcess As IntPtr,
+                                                                       ByVal lpBaseAddress As IntPtr,
+                                                                       ByVal lpBuffer() As Byte,
+                                                                       ByVal iSize As Integer,
+                                                                       ByVal lpNumberOfBytesWritten As Integer) As Boolean
+
+                If VirtualProtectEx(hProcess, lpBaseAddress, iSize, PAGE_READWRITE, 0) <> 0 Then
+                    Return WriteProcessMemory(hProcess, lpBaseAddress, lpBuffer, iSize, lpNumberOfBytesWritten)
+                Else
+                    Return False
+                End If
+
+            End Function
 
             'Friend Declare Function WriteProcessMemory Lib "kernel32" (ByVal hProcess As SafeDarkSoulsHandle,
             '                                                           ByVal lpBaseAddress As IntPtr,
@@ -118,11 +146,29 @@ Namespace Injection
             '                                                                  ByVal lpBaseAddress As SafeRemoteHandle,
             '                                                                  ByVal dwSize As Integer) As Boolean
 
-            Friend Declare Function WriteProcessMemory Lib "kernel32" (ByVal hProcess As IntPtr,
+            Private Declare Function WriteProcessMemory Lib "kernel32" (ByVal hProcess As IntPtr,
                                                                        ByVal lpBaseAddress As IntPtr,
                                                                        ByVal lpBuffer As IntPtr,
                                                                        ByVal iSize As Integer,
                                                                        ByVal lpNumberOfBytesWritten As Integer) As Boolean
+
+            Friend Function WriteProcessMemory_SAFE(ByVal hProcess As IntPtr,
+                                                                       ByVal lpBaseAddress As IntPtr,
+                                                                       ByVal lpBuffer As IntPtr,
+                                                                       ByVal iSize As Integer,
+                                                                       ByVal lpNumberOfBytesWritten As Integer) As Boolean
+
+                If VirtualProtectEx(hProcess, lpBaseAddress, iSize, PAGE_READWRITE, 0) <> 0 Then
+                    Return WriteProcessMemory(hProcess, lpBaseAddress, lpBuffer, iSize, lpNumberOfBytesWritten)
+                Else
+                    Return False
+                End If
+
+
+
+            End Function
+
+
 
             'Friend Declare Function WriteProcessMemory Lib "kernel32" (ByVal hProcess As SafeDarkSoulsHandle,
             '                                                           ByVal lpBaseAddress As SafeRemoteHandle,

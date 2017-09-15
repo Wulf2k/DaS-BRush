@@ -24,8 +24,8 @@ Namespace Lua.helpers
 
                     For Each trash In noDupes
                         inputList.Add(New LuaAutoCompleteEntry() With {
-                                      .CompletionText = trash,
-                                      .ListDisplayText = $"int? {trash}(...?)",
+                                      .CompletionText = trash.Trim(),
+                                      .ListDisplayText = $"{trash}(...?)",
                                       .Description = "An ingame Lua function that has not been mapped out yet. If you wish to use it, you must explicitly enforce parameter value types."
                         })
                     Next
@@ -51,8 +51,8 @@ Namespace Lua.helpers
                         Dim paramStart = line.IndexOf("(")
 
                         inputList.Add(New LuaAutoCompleteEntry() With {
-                                      .CompletionText = line.Substring(0, paramStart),
-                                      .ListDisplayText = "function " & line
+                                      .CompletionText = line.Substring(0, paramStart).Trim(),
+                                      .ListDisplayText = line
                         })
 
                     Next
@@ -63,7 +63,7 @@ Namespace Lua.helpers
             End Get
         End Property
 
-
+        Public Shared Property LuaHelperEntries As New List(Of LuaAutoCompleteEntry)
 
         Public Shared Function RemoveLuaComments(input As String) As String
 

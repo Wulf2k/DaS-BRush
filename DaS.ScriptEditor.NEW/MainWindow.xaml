@@ -246,7 +246,7 @@
                                 CanHide="False">
                                     <TextBox x:Name="ScriptOutputBox" Text="" FontSize="8pt" 
                                              IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"
-                                             AllowDrop="False" ContextMenuOpening="ScriptOutputBox_ContextMenuOpening" Background="#FF1E1E1E"/>
+                                             AllowDrop="False" ContextMenuOpening="ScriptOutputBox_ContextMenuOpening" Background="#FF1E1E1E" Foreground="#FFE0E0E0"/>
                             </avalonDock:LayoutAnchorable>
                         </avalonDock:LayoutAnchorablePane>
                     </avalonDock:LayoutAnchorablePaneGroup>

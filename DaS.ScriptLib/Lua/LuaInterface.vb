@@ -3,6 +3,8 @@ Imports NLua.Event
 Imports DaS.ScriptLib.Injection
 Imports System.Collections.ObjectModel
 Imports DaS.ScriptLib.Lua.Structures
+Imports System.Reflection
+Imports DaS.ScriptLib.Lua.helpers
 
 Namespace Lua
     Public Class LuaInterface
@@ -75,6 +77,12 @@ Namespace Lua
             End Get
         End Property
 
+        Public Shared Sub ReInitSharedInstance()
+            ____inst.Dispose()
+            ____inst = Nothing
+            ____inst = New LuaInterface()
+        End Sub
+
         'Public Shared ReadOnly LuaProxyAttributeFuncs As Dictionary(Of String, Reflection.MethodInfo)
 
         'Shared Sub New()
@@ -102,6 +110,7 @@ Namespace Lua
 
         Public ReadOnly ImportedNamespaces As String() = {
             "DaS.ScriptLib.Game.Data",
+            "DaS.ScriptLib.Game.Data.Structures",
             "DaS.ScriptLib.Game.Mem"
         }
 
@@ -118,6 +127,17 @@ Namespace Lua
             State.DoString("import = function () end", "SANDBOX")
 
             'State("FUNC") = State.RegisterFunction("FUNC", GetType(LuaInterface).GetMethod("CallIngameFunc"))
+
+            State.DoString("Module = {}")
+            If DARKSOULS.ModuleOffsets IsNot Nothing Then
+                For Each dll In DARKSOULS.ModuleOffsets
+                    State.DoString($"Module[""{dll.Key}""] = {{}}")
+
+                    For i = 1 To dll.Value.Count
+                        State.DoString($"Module[""{dll.Key}""][{i}] = {dll.Value(i - 1)}")
+                    Next
+                Next
+            End If
 
 
             'Now that's what I call redundant LUL
@@ -139,7 +159,7 @@ Namespace Lua
 
             NLua.LuaRegistrationHelper.TaggedStaticMethods(State, GetType(Funcs))
 
-            For Each typ In GetType(LuaInterface).Assembly.GetTypes().Where(Function(x) ImportedNamespaces.Contains(x.Namespace))
+            For Each typ In GetType(LuaInterface).Assembly.GetTypes().Where(Function(x) ImportedNamespaces.Contains(x.Namespace) AndAlso x.IsClass)
                 NLua.LuaRegistrationHelper.TaggedStaticMethods(State, typ)
             Next
 
@@ -153,6 +173,43 @@ Namespace Lua
             DirectCast(State(UtilsModule.TableName), UtilsModule).RegisterFunctions(State)
 
             DebugLocalsInit()
+
+            Dim player = Game.Data.Structures.Entity.GetPlayer()
+            State("player") = "Dummy"
+
+            For Each method As MethodInfo In GetType(Game.Data.Structures.Entity).GetMethods(BindingFlags.Public Or BindingFlags.Instance Or BindingFlags.InvokeMethod).
+                    Where(Function(x) (Not GetType(Object).GetMethods().Any(Function(o) o.Name = x.Name)) AndAlso (Not (x.Name.StartsWith("get_") OrElse x.Name.StartsWith("set_"))))
+
+                AutoCompleteHelper.LuaHelperEntries.Add(New LuaAutoCompleteEntry() With {
+                    .CompletionText = "player:" & method.Name,
+                    .ListDisplayText = "player:" & method.Name,
+                    .Description = "?Description?"
+                })
+            Next
+
+            For Each field As FieldInfo In GetType(Game.Data.Structures.Entity).
+                GetFields(BindingFlags.Public Or BindingFlags.Instance).
+                Where(Function(x) (Not GetType(Object).GetFields().Any(Function(o) o.Name = x.Name)) AndAlso (Not (x.Name.StartsWith("get_") OrElse x.Name.StartsWith("set_"))))
+
+                AutoCompleteHelper.LuaHelperEntries.Add(New LuaAutoCompleteEntry() With {
+                    .CompletionText = "player." & field.Name,
+                    .ListDisplayText = "player." & field.Name,
+                    .Description = "?Description?"
+                })
+            Next
+
+            For Each prop As PropertyInfo In GetType(Game.Data.Structures.Entity).
+                GetProperties(BindingFlags.Public Or BindingFlags.Instance).
+                Where(Function(x) (Not GetType(Object).GetProperties().Any(Function(o) o.Name = x.Name)) AndAlso (Not (x.Name.StartsWith("get_") OrElse x.Name.StartsWith("set_"))))
+
+                AutoCompleteHelper.LuaHelperEntries.Add(New LuaAutoCompleteEntry() With {
+                    .CompletionText = "player." & prop.Name,
+                    .ListDisplayText = "player." & prop.Name,
+                    .Description = "?Description?"
+                })
+            Next
+
+            State.DoString("player = Entity.GetPlayer()")
 
         End Sub
 
@@ -220,7 +277,20 @@ Namespace Lua
 
         <NLua.LuaGlobal(Name:="FUNC")>
         Public Function CallIngameFunc_FromLua(returnType As Double, funcAddress As Double, args As NLua.LuaTable) As Object
-            Return AsmCaller.CallIngameLua(Me, (CType(CType(returnType, Integer), FuncReturnType)), CType(funcAddress, Integer), args)
+            Return AsmCaller.CallIngameFunc_FromLua(Me, (CType(CType(returnType, Integer), FuncReturnType)), CType(funcAddress, Integer), args, Nothing)
+        End Function
+
+        <NLua.LuaGlobal(Name:="FUNC_REG")>
+        Public Function CallIngameFuncECX_FromLua(returnType As Double, funcAddress As Double, args As NLua.LuaTable, specialRegisters As NLua.LuaTable) As Object
+            Return AsmCaller.CallIngameFunc_FromLua(Me, (CType(CType(returnType, Integer), FuncReturnType)), CType(funcAddress, Integer), args, specialRegisters)
+        End Function
+
+        Public Function CallIngameFunc(returnType As FuncReturnType, funcAddress As Integer, ParamArray args As Object()) As Object
+            Return AsmCaller.CallIngameFunc(Me, returnType, funcAddress, args, Nothing)
+        End Function
+
+        Public Function CallIngameFuncECX(returnType As FuncReturnType, funcAddress As Integer, specialRegisters As Dictionary(Of String, Object), ParamArray args As Object()) As Object
+            Return AsmCaller.CallIngameFunc(Me, returnType, funcAddress, args, specialRegisters)
         End Function
 
         Public Sub DebugRegisterLocal(path As String, val As Object)

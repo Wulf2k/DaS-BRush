@@ -41,6 +41,7 @@ Namespace Injection
         Public ReadOnly Property CodeHandle As New SafeRemoteHandle(FUNCTION_CALL_ASM_BUFFER_SIZE)
 
         Private AsmLocBegin As MoveableAddressOffset
+        Private AsmLocAtECX As MoveableAddressOffset
         Private AsmLocAfterEachStackMov(BUFFER_STACK_SIZE - 1) As MoveableAddressOffset
         Private AsmLocAfterLuaFunctionCall As MoveableAddressOffset
         Private AsmLocAfterSetReturnLocation As MoveableAddressOffset
@@ -50,34 +51,22 @@ Namespace Injection
             Return AsmBuffer.ToArray()
         End Function
 
-        Private Function GetAsmDword(dword As Int32) As Byte()
-            Return BitConverter.GetBytes(dword)
-        End Function
-
-        Private Function WriteAsmDword(address As IntPtr, dword As Int32) As Boolean
-            Dim dwBytes = GetAsmDword(dword)
-            Dim oldLoc = AsmBuffer.Position
-            AsmBuffer.Position = address - CodeHandle.GetHandle()
-            AsmBuffer.Write(dwBytes, 0, INT32_SIZE)
-            AsmBuffer.Position = oldLoc
-            Return WriteAsm(address, GetAsmDword(dword), INT32_SIZE)
-        End Function
-
         Private Function WriteAsm(address As IntPtr, bytes As Byte(), count As IntPtr) As Boolean
-            Return Kernel.WriteProcessMemory(DARKSOULS.GetHandle(), address, bytes, count, Nothing) AndAlso
+            If address.ToInt32() < DARKSOULS.SafeBaseMemoryOffset Then
+                Return False
+            End If
+            Return Kernel.WriteProcessMemory_SAFE(DARKSOULS.GetHandle(), address, bytes, count, Nothing) AndAlso
                 Kernel.FlushInstructionCache(DARKSOULS.GetHandle(), address, count)
         End Function
 
         Private Function InjectEntireCodeBuffer() As Boolean
-            Return WriteAsm(CodeHandle.GetHandle(), AsmBuffer.ToArray(), FUNCTION_CALL_ASM_BUFFER_SIZE)
+            Return WriteAsm(CodeHandle.GetHandle(), AsmBuffer.ToArray(), AsmBuffer.Position)
         End Function
 
         Private Sub CompletelyReInitializeAndInjectCodeInNewLocation()
             UndoCodeInjection()
             CodeHandle.Dispose()
             _CodeHandle = New SafeRemoteHandle(FUNCTION_CALL_ASM_BUFFER_SIZE)
-            InjectEntireCodeBuffer()
-            PatchUpdateFunctionReturnAddress()
         End Sub
 
         Private Sub UndoCodeInjection()
@@ -92,45 +81,8 @@ Namespace Injection
             End Get
         End Property
 
-        ''' <summary>
-        ''' Note that this function reverses the order for you (pass the stack values as you would read
-        ''' them from left to right in the source code).
-        ''' </summary>
-        ''' <param name="stackValues"></param>
-        Private Sub PatchStackValues(stackValues As Int32())
-            If stackValues.Length > BUFFER_STACK_SIZE Then
-                Throw New ArgumentException($"Tried to write a list of stack values larger than the max stack buffer size constant (BUFFER_STACK_SIZE = 10, stackValues.Count = {stackValues.Count})", "stackValues")
-            End If
-
-            Dim stackBuffer(BUFFER_STACK_SIZE * INT32_SIZE) As Byte
-
-            For i = 0 To BUFFER_STACK_SIZE - 1
-                'Since the last thing asm.Move32 writes is the actual stack value itself, we need to simply
-                'write the value at (the location immediately after each MOV - INT32_SIZE)
-                WriteAsmDword(AsmLocAfterEachStackMov(i).Location - New IntPtr(INT32_SIZE),
-                       If(i <= (stackValues.Length - 1), stackValues(i), 0))
-                'Once we get past the length of stackValues, we write 0's to fill the rest.
-            Next
-        End Sub
-
-        Private Sub PatchLuaFunctionCallAddress(newAddress As IntPtr)
-            'public void Call(Int32 displacement) {
-            '   writer.Write(new byte[] { 0xE8 });
-            '   writer.Write(displacement - 5);
-            '}
-
-            'The '- 1' below is to account for the initial 0xE8 byte above ( FailFish )
-            WriteAsmDword(AsmLocAfterLuaFunctionCall.Location - New IntPtr(INT32_SIZE),
-                   (newAddress.ToInt32() - (AsmLocAfterLuaFunctionCall.Location.ToInt32() - INT32_SIZE - 1)) - 5)
-        End Sub
-
-        Private Sub PatchUpdateFunctionReturnAddress()
-            WriteAsmDword(AsmLocAfterSetReturnLocation.Location - New IntPtr(INT32_SIZE), CodeHandle.GetHandle() + FUNC_RETURN_ADDR_OFFSET)
-        End Sub
-
         Public Sub New()
             HookEvents()
-            InitAsmBuffer()
             CompletelyReInitializeAndInjectCodeInNewLocation()
         End Sub
 
@@ -152,45 +104,50 @@ Namespace Injection
             CompletelyReInitializeAndInjectCodeInNewLocation()
         End Sub
 
-        Private Sub InitAsmBuffer()
+        Private Sub InitAsmBuffer(funcAddr As Integer, parameters As IEnumerable(Of Object), specialRegisters As Object, allocPtrList As List(Of SafeRemoteHandle))
+            Dim args = parameters.ToArray()
+
             AsmBuffer.Position = 0
             Dim asm As New X86Writer(AsmBuffer, CodeHandle.GetHandle())
             'ASM START:
-            '(LOC)
-            AsmLocBegin = New MoveableAddressOffset(Me, asm.Position)
             asm.Push32(Reg32.EBP)
             asm.Mov32(Reg32.EBP, Reg32.ESP)
             asm.Push32(Reg32.EAX)
-            'STACK:
-            For i As Integer = (BUFFER_STACK_SIZE - 1) To 0 Step -1
-                asm.Mov32(Reg32.EAX, PLACEHOLDER_INT32)
-                '(LOC)
-                AsmLocAfterEachStackMov(i) = New MoveableAddressOffset(Me, asm.Position)
+
+            For i = args.Length - 1 To 0 Step -1
+                asm.Mov32(Reg32.EAX, SquashIntoDword(allocPtrList, args(i)))
                 asm.Push32(Reg32.EAX)
             Next
+
+            If specialRegisters IsNot Nothing Then
+                If TypeOf specialRegisters Is NLua.LuaTable Then
+                    Dim regs = DirectCast(specialRegisters, NLua.LuaTable)
+                    For Each r In regs.Keys
+                        asm.Mov32([Enum].Parse(GetType(Reg32), r), SquashIntoDword(allocPtrList, regs(r)))
+                    Next
+                ElseIf TypeOf specialRegisters Is Dictionary(Of String, Object) Then
+                    Dim regs = DirectCast(specialRegisters, Dictionary(Of String, Object))
+                    For Each r In regs.Keys
+                        asm.Mov32([Enum].Parse(GetType(Reg32), r), SquashIntoDword(allocPtrList, regs(r)))
+                    Next
+                End If
+            End If
+
             'CALL LUA FUNCTION:
-            asm.Call(New IntPtr(PLACEHOLDER_INT32))
-            '(LOC)
+            asm.Call(New IntPtr(funcAddr))
             AsmLocAfterLuaFunctionCall = New MoveableAddressOffset(Me, asm.Position)
             'SET RETURN POS:
             asm.Mov32(Reg32.EBX, CodeHandle.GetHandle().ToInt32() + FUNC_RETURN_ADDR_OFFSET)
-            '(LOC)
-            AsmLocAfterSetReturnLocation = New MoveableAddressOffset(Me, asm.Position)
             asm.Mov32(New Addr(Reg32.EBX, 0), Reg32.EAX) 'mov [ebx], eax
             asm.Pop32(Reg32.EAX)
-            For i = 1 To BUFFER_STACK_SIZE
+
+            For i = args.Length - 1 To 0 Step -1
                 asm.Pop32(Reg32.EAX)
             Next
+
             asm.Mov32(Reg32.ESP, Reg32.EBP)
             asm.Pop32(Reg32.EBP)
             asm.Retn()
-            '(LOC)
-            AsmLocAfterReturn = New MoveableAddressOffset(Me, asm.Position)
-
-            While AsmBuffer.Position < FUNCTION_CALL_ASM_BUFFER_SIZE
-                AsmBuffer.WriteByte(0)
-            End While
-
         End Sub
 
         Private Sub ____freeClrManagedResources()
@@ -224,7 +181,9 @@ Namespace Injection
 
         Private Function ExecuteAsm() As Byte()
             Dim threadHandle = New SafeRemoteThreadHandle(CodeHandle)
-            Kernel.WaitForSingleObject(threadHandle.GetHandle(), MAX_WAIT)
+            If Not threadHandle.IsClosed And Not threadHandle.IsInvalid Then
+                Kernel.WaitForSingleObject(threadHandle.GetHandle(), MAX_WAIT)
+            End If
             threadHandle.Close()
             threadHandle.Dispose()
             threadHandle = Nothing
@@ -359,58 +318,43 @@ Namespace Injection
             End Select
         End Function
 
-        Public Function CallIngameLua(luai As LuaInterface, returnType As FuncReturnType, functionAddress As Integer, args As NLua.LuaTable) As Object
-            InjectEntireCodeBuffer()
+        Public Function CallIngameFunc(luai As LuaInterface, returnType As FuncReturnType, functionAddress As Integer, args As IEnumerable(Of Object), specialRegisters As Object) As Object
+
+            If CodeHandle.IsClosed OrElse CodeHandle.IsInvalid Then
+                CompletelyReInitializeAndInjectCodeInNewLocation()
+            End If
+
+            Buffer_ParamPointerList.Clear()
+
+            InitAsmBuffer(functionAddress, args, specialRegisters, Buffer_ParamPointerList)
+
+            If Not InjectEntireCodeBuffer() Then
+                Dbg.PrintErr("WARNING: CODE INJECT FAILURE")
+            End If
 
             luai.DebugUpdate()
 
-            'GC.KeepAlive(args)
+            For Each ptr In Buffer_ParamPointerList
+                ptr.Dispose()
+            Next
 
-            Buffer_Result = FUNCCALL_ERR
-            PatchLuaFunctionCallAddress(functionAddress)
-
-            If args Is Nothing OrElse args.Values.Count = 0 Then
-                Array.Clear(Buffer_Stack, 0, BUFFER_STACK_SIZE - 1)
-                PatchStackValues(Buffer_Stack)
-            Else
-                Buffer_StackCounter = 0
-
-                'Fill in any args we have
-                For Each param In args.Values
-                    If Buffer_StackCounter < BUFFER_STACK_SIZE Then
-                        Buffer_Stack(Buffer_StackCounter) = SquashIntoDword(Buffer_ParamPointerList, param)
-                        Buffer_StackCounter += 1
-                    Else
-                        Exit For
-                    End If
-                Next
-
-                'Fill in remaining args with 0
-                While Buffer_StackCounter < BUFFER_STACK_SIZE
-                    Buffer_Stack(Buffer_StackCounter) = 0
-                    Buffer_StackCounter += 1
-                End While
-
-                PatchStackValues(Buffer_Stack)
-            End If
 
             Buffer_ResultBytes = ExecuteAsm()
+
             Buffer_Result = GetFunctionCallResult(returnType, Buffer_ResultBytes)
 
             For Each ptr In Buffer_ParamPointerList
                 ptr.Close()
                 ptr.Dispose()
             Next
+
             Buffer_ParamPointerList.Clear()
 
-            'If args IsNot Nothing Then
-            '    Dim passedArgStr = String.Join(", ", args.Values.OfType(Of Object).Select(Function(x) x.ToString()))
-            '    Lua.Dbg.Print($"Call to {LuaInterface.IngameFuncNames(functionAddress)}({passedArgStr}) returned {result.ToString()}")
-            'Else
-            '    Lua.Dbg.Print($"Call to {LuaInterface.IngameFuncNames(functionAddress)}() returned {result.ToString()}")
-            'End If
-
             Return Buffer_Result
+        End Function
+
+        Public Function CallIngameFunc_FromLua(luai As LuaInterface, returnType As FuncReturnType, functionAddress As Integer, args As NLua.LuaTable, specialRegisters As Object) As Object
+            Return CallIngameFunc(luai, returnType, functionAddress, args.Values, specialRegisters)
         End Function
 
 #Region "IDisposable Support"

@@ -1,4 +1,14 @@
-xinput_dll_offset = GetIngameDllAddress("XInput1_3.dll")
+ENTITY = player--Entity.FromName("m12_01_00_00", "c4100_0000")
+
+airAnimId = 700 --1580
+
+if (ENTITY.EventEntityID ~= 10000) then
+
+    SetDisable(10000, true)
+
+end
+
+xinput_dll_offset = Module["XINPUT1_3.DLL"][1]
 
 BTN_A        = 0x1000
 BTN_B        = 0x2000
@@ -47,12 +57,19 @@ function CheckButtonPressed(maskTest)
     return (cur and (not prev));
 end
 
+function CheckButtonReleased(maskTest)
+    cur = CheckButton(maskTest);
+    prev = CheckPrevButton(maskTest);
+    
+    return ((not cur) and prev);
+end
+
 function ReadController()
     addr = RInt32(RInt32(xinput_dll_offset + 0x10C44)) + 0x0028
     buttonBitmaskValue = RUInt16(addr);
     
-    L2 = RByte(addr + 3) / 255.0
-    R2 = RByte(addr + 2) / 255.0
+    L2 = RByte(addr + 2) / 255.0
+    R2 = RByte(addr + 3) / 255.0
 end
 
 waitTimeBase = 400
@@ -69,9 +86,14 @@ fastForwardMax = 10
 
 prevClock = os.clock()
 
-goUpDownSpeed = 1
+goUpDownSpeed = 0.25
 
 fastForwardIncreaseTime = 3
+
+fastForwardDecay = 0.9
+
+prevL2 = 0
+prevR2 = 0
 
 function SetCamStickToAss(stick)
     camSpeedPtr = RInt32(0x137D6DC)
@@ -86,75 +108,121 @@ function SetCamStickToAss(stick)
     end
 end
 
-
+prevIngameTime = 0
 
 while true do 
     
-    ChrResetAnimation(10000, true)
+    ingameTime = RInt32(RInt32(0x1378700) + 0x68)
     
-    SetDeadMode(10000, true);
-    SetDeadMode2(10000, true);
-    
-    if (CheckButton(BTN_R3)) then
-        deadCamPtr = RInt32(0x137D644) + 0x40;
-        WBool(deadCamPtr, false);
-    end
-    
-    curClock = os.clock()
-    
-    
-    
-    currentFastForward = fastForwardMin + ((fastForwardMax - fastForwardMin) * fastForwardRatio)
-    
-    Player.Anim.DebugOverallSpeedMult.Value = currentFastForward
-    
-    ForceEntityDrawGroup(GetEntityPtr(10000));
-    
-    if CheckButton(BTN_R1) then
-        SetIgnoreHit(int(10000), false);
-        SetDisableGravity(int(10000), true);
-        SetCamStickToAss(false)
-    elseif CheckButton(BTN_L1) then
-        SetIgnoreHit(int(10000), false);
-        SetDisableGravity(int(10000), false);
-        SetCamStickToAss(false)
-    else
-        SetIgnoreHit(int(10000), true);
-        SetDisableGravity(int(10000), true);
-        SetCamStickToAss(true)
-    end
-
-    ReadController();
-    
-    if CheckButton(BTN_A) then
-        if CheckButtonPressed(BTN_A) then
-            currentFastForward = 1
+    if (ingameTime ~= prevIngameTime) then
+        --ChrResetAnimation(10000, true)
+        
+        ReadController();
+        
+        SetDeadMode(ENTITY.EventEntityID, true);
+        SetDeadMode2(ENTITY.EventEntityID, true);
+        
+        if (CheckButton(BTN_R3)) then
+            deadCamPtr = RInt32(0x137D644) + 0x40;
+            WBool(deadCamPtr, false);
         end
         
-        if fastForwardRatio <= fastForwardMax then
-            fastForwardRatio = fastForwardRatio + ((curClock - prevClock) / fastForwardIncreaseTime)
+        if (CheckButtonPressed(BTN_L3)) then
+        
+            ENTITY.NoUpdate = not ENTITY.NoUpdate
+        
+        end
+        
+        ENTITY.NoMove = false
+        ENTITY.NoAttack = true
+        EnableLogic(int(ENTITY.EventEntityID), true)
+        
+        SetDisable(ENTITY.EventEntityID, false)
+        
+        ENTITY:StartControlling()
+        ENTITY:View()
+        
+        ForceEntityDrawGroup(ENTITY.Pointer)
+        
+        curClock = os.clock()
+        
+        currentFastForward = fastForwardMin + ((fastForwardMax - fastForwardMin) * fastForwardRatio)
+        
+        --ForceEntityDrawGroup(GetEntityPtr(10000));
+        
+        if (CheckButton(BTN_L1) and CheckButton(BTN_R1) and CheckButton(BTN_START) and CheckButton(BTN_L3)) then
+            ENTITY.SetDeadMode = false
+            SetDeadMode2(ENTITY.EventEntityID, false)
+            ENTITY.HP = 0
+            Wait(15000)
+            WaitForLoadEnd()
+        end
+        
+        if CheckButton(BTN_R1) then
+            SetDisableGravity(int(ENTITY.EventEntityID), true)
+            SetIgnoreHit(int(ENTITY.EventEntityID), false);
+            SetColiEnable(int(ENTITY.EventEntityID), false);
+            --SetCamStickToAss(false)
+        elseif CheckButton(BTN_L1) then
+            SetDisableGravity(int(ENTITY.EventEntityID), false)
+            SetIgnoreHit(int(ENTITY.EventEntityID), false);
+            SetColiEnable(int(ENTITY.EventEntityID), false);
+            --SetCamStickToAss(false)
         else
-            fastForwardRatio = 1
+            SetIgnoreHit(int(ENTITY.EventEntityID), true);
+            SetColiEnable(int(ENTITY.EventEntityID), true);
+            SetDisableGravity(int(ENTITY.EventEntityID), true)
+            --SetCamStickToAss(true)
         end
         
-    else
-        Player.Anim.DebugOverallSpeedMult.Value = 1
-        fastForwardRatio = 0
+        playerAnimTargetSpeed = currentFastForward
+        
+        if CheckButton(BTN_A) then
+            if CheckButtonPressed(BTN_A) then
+                currentFastForward = 1
+            end
+            
+            if fastForwardRatio <= fastForwardMax then
+                fastForwardRatio = fastForwardRatio + ((curClock - prevClock) / fastForwardIncreaseTime)
+            else
+                fastForwardRatio = fastForwardMax
+            end
+        else
+            fastForwardRatio = fastForwardRatio * fastForwardDecay
+            
+        end
+        
+        if L2 > 0 then 
+            ForcePlayAnimation(ENTITY.EventEntityID, airAnimId)
+            
+            ENTITY.PosY = ENTITY.PosY - (L2 * goUpDownSpeed * currentFastForward)
+            
+            Entity.PlayerStablePosY = player.PosY
+        elseif L2 == 0 and prevL2 > 0 then
+            ForcePlayAnimation(ENTITY.EventEntityID, -1)
+        end
+        
+        if R2 > 0 then
+            ForcePlayAnimation(ENTITY.EventEntityID, airAnimId)
+            
+            ENTITY.PosY = ENTITY.PosY + (R2 * goUpDownSpeed * currentFastForward)
+            
+            Entity.PlayerStablePosY = player.PosY
+        elseif R2 == 0 and prevR2 > 0 then
+            ForcePlayAnimation(ENTITY.EventEntityID, -1)
+            
+        end
+        
+        
+        prevButtonBitmaskValue = buttonBitmaskValue
+        
+        prevClock = curClock
+        
+        player.AnimationSpeed = playerAnimTargetSpeed
+        
+        prevL2 = L2
+        prevR2 = R2
     end
     
-    playerPtr = GetEntityPtr(10000);
-    playerHeading = GetEntityRotation(playerPtr);
-    
-    if L2 > 0 then 
-        WarpEntity_Coords(playerPtr, Player.PosX.Value, Player.PosY.Value + (L2 * goUpDownSpeed * currentFastForward), Player.PosZ.Value, playerHeading)
-    end
-    
-    if R2 > 0 then
-        WarpEntity_Coords(playerPtr, Player.PosX.Value, Player.PosY.Value - (R2 * goUpDownSpeed * currentFastForward), Player.PosZ.Value, playerHeading)
-    end
-    
-    
-    prevButtonBitmaskValue = buttonBitmaskValue
-    
-    prevClock = curClock
+    prevIngameTime = ingameTime
 end

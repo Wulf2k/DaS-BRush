@@ -2,6 +2,7 @@
 Imports DaS.ScriptLib.Game.Data.Structures
 Imports DaS.ScriptLib.Game.Mem
 Imports DaS.ScriptLib.Injection
+Imports DaS.ScriptLib.Lua.Structures
 
 Namespace Lua
 
@@ -275,6 +276,21 @@ Namespace Lua
             Return resultList.ToArray()
         End Function
         <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
+        Public Shared Function GetAllApparentEntities(ByRef table As NLua.LuaTable) As NLua.LuaTable
+
+            Dim structPtr = RInt32(&H137D644)
+            structPtr = RInt32(structPtr + &HE4)
+            Dim entityCount = RInt32(structPtr)
+            structPtr = RInt32(structPtr + 4)
+
+            For i = 0 To entityCount - 1
+                Dim ep = RInt32(structPtr + i * &H20)
+                table.Item(i + 1) = New Entity(Function() ep)
+            Next
+
+            Return table
+        End Function
+        <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
         Public Shared Function GetEntityVec3(entityPtr As Integer) As Vec3
             Return New Vec3(GetEntityPosX(entityPtr), GetEntityPosY(entityPtr), GetEntityPosZ(entityPtr))
         End Function
@@ -454,16 +470,6 @@ Namespace Lua
             WarpEntity_Coords(entityptrSrc, posX, posY, posZ, facing)
         End Sub
 
-        ''' <summary>
-        ''' TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-        ''' </summary>
-        ''' <param name="entityId">TODO</param>
-        <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
-        Public Shared Function GetEntityPtr(entityId As Integer) As Integer 'TODO
-            'TODO
-            Return LuaInterface.E("ChrFadeIn(10000)") 'TODO
-            'TODO
-        End Function 'TODO
         <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
         Public Shared Function GetEntityPtrByName(mapName As String, entName As String) As Integer
             Dim tmpStr As String = ""
@@ -659,7 +665,7 @@ Namespace Lua
             bytes2 = BitConverter.GetBytes(Convert.ToInt32(0 - ((Injected.ItemDropPtr.GetHandle() + &H3C) - (&HDC8C60))))
             Array.Copy(bytes2, 0, bytes, bytjmp, bytes2.Length)
 
-            Rtn = Kernel.WriteProcessMemory(DARKSOULS.GetHandle(), Injected.ItemDropPtr.GetHandle(), bytes, TargetBufferSize, 0)
+            Rtn = Kernel.WriteProcessMemory_SAFE(DARKSOULS.GetHandle(), Injected.ItemDropPtr.GetHandle(), bytes, TargetBufferSize, 0)
             'MsgBox(Hex(dropPtr))
             Kernel.CreateRemoteThread(DARKSOULS.GetHandle(), 0, 0, Injected.ItemDropPtr.GetHandle(), 0, 0, 0)
 
@@ -706,6 +712,17 @@ Namespace Lua
             Player.StablePosY.Value = Player.PosY.Value
             Player.StablePosZ.Value = Player.PosZ.Value
         End Sub
+
+        <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
+        Public Shared Function GetEntityPtr(entityId As Integer) As Integer
+            'Return LuaInterface.Instance.CallIngameFunc(FuncReturnType.INT, &HD6C360, entityId)
+
+            'Return LuaInterface.E($"ChrFadeIn({entityId}, 0, 0)")
+
+            Dim reg As New Dictionary(Of String, Object)
+            reg.Add("EAX", entityId)
+            Return LuaInterface.Instance.CallIngameFuncECX(FuncReturnType.INT, &HD6C360, reg, entityId)
+        End Function
 
 #Region "Old Boss Rush Functions"
 

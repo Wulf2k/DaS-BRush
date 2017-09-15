@@ -12,10 +12,16 @@ Namespace Injection.Structures
             Alloc()
         End Sub
         Private Sub Alloc()
-            SetHandle(Kernel.CreateRemoteThread(DARKSOULS.GetHandle(), 0, 0, Func.GetHandle(), 0, 0, 0))
+            Dim dsHandle = DARKSOULS.GetHandle()
+            Dim funcHandle = Func.GetHandle()
+            If funcHandle.ToInt32() < DARKSOULS.SafeBaseMemoryOffset Then
+                Return
+            End If
+
+            SetHandle(Kernel.CreateRemoteThread(dsHandle, 0, 0, funcHandle, 0, 0, 0))
         End Sub
         Public Function GetHandle() As IntPtr
-            If IsClosed Or IsInvalid Then
+            If IsClosed OrElse IsInvalid OrElse handle.ToInt32() < DARKSOULS.SafeBaseMemoryOffset Then
                 Alloc()
             End If
             Return handle
@@ -26,6 +32,11 @@ Namespace Injection.Structures
         <ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)>
         Protected Overrides Function ReleaseHandle() As Boolean
             RemoveHandler DARKSOULS.OnDetach, AddressOf DARKSOULS_OnDetach
+
+            If handle.ToInt32() < DARKSOULS.SafeBaseMemoryOffset Then
+                Return False
+            End If
+
             Return Kernel.CloseHandle(handle)
         End Function
 

@@ -1,4 +1,5 @@
-﻿Imports System.Runtime.ConstrainedExecution
+﻿Imports System.Collections.ObjectModel
+Imports System.Runtime.ConstrainedExecution
 Imports DaS.ScriptLib.Injection
 Imports DaS.ScriptLib.Injection.Structures
 Imports Microsoft.Win32.SafeHandles
@@ -10,6 +11,9 @@ Namespace Injection.Structures
 
         Friend Event OnDetach()
         Friend Event OnAttach()
+
+        Public ReadOnly Property ModuleOffsets As ReadOnlyDictionary(Of String, List(Of UInteger))
+        Public ReadOnly SafeBaseMemoryOffset As Integer = &H400000
 
         Public Shared ReadOnly CompatibleVersions As String() = New String() {
             DarkSoulsVersion.LatestRelease
@@ -56,8 +60,24 @@ Namespace Injection.Structures
             If selectedProcess IsNot Nothing Then
                 SetHandle(Kernel.OpenProcess(Kernel.PROCESS_ALL_ACCESS, False, selectedProcess.Id))
                 CheckHook()
+                Dim modulesInputDict As New Dictionary(Of String, List(Of UInteger))()
+
+                If Attached Then
+                    For Each dll As ProcessModule In selectedProcess.Modules
+                        Dim indexName = dll.ModuleName.ToUpper()
+                        If modulesInputDict.ContainsKey(indexName) Then
+                            modulesInputDict(indexName).Add(dll.BaseAddress)
+                        Else
+                            modulesInputDict.Add(indexName, New UInteger() {dll.BaseAddress}.ToList())
+                        End If
+                    Next
+                End If
+
+                _ModuleOffsets = New ReadOnlyDictionary(Of String, List(Of UInteger))(modulesInputDict)
                 selectedProcess.Dispose()
             End If
+
+            Lua.LuaInterface.ReInitSharedInstance()
 
             If Not Attached Then
                 If Not suppressMessageBox Then 'Showing 2 message boxes as soon as you start the program is too annoying.
@@ -88,14 +108,14 @@ Namespace Injection.Structures
                     Throw New Exception("FlushInstructionCache Returned False")
                 End If
 
-                Kernel.WriteProcessMemory(handle, &HBE73FE, {&H20}, 1, Nothing)
-                Kernel.WriteProcessMemory(handle, &HBE719F, {&H20}, 1, Nothing)
-                Kernel.WriteProcessMemory(handle, &HBE722B, {&H20}, 1, Nothing)
+                Kernel.WriteProcessMemory_SAFE(handle, &HBE73FE, {&H20}, 1, Nothing)
+                Kernel.WriteProcessMemory_SAFE(handle, &HBE719F, {&H20}, 1, Nothing)
+                Kernel.WriteProcessMemory_SAFE(handle, &HBE722B, {&H20}, 1, Nothing)
 
                 Lua.Funcs.SetSaveEnable(False)
             Else
                 Dim buffer(3) As Byte
-                Kernel.ReadProcessMemory(handle, &H400080, buffer, 4, Nothing)
+                Kernel.ReadProcessMemory_SAFE(handle, &H400080, buffer, 4, Nothing)
                 Dim dwBetaChk As Integer = BitConverter.ToUInt32(buffer, 0)
                 If (dwBetaChk = &HE91B11E2&) Then
                     _Version = DarkSoulsVersion.SteamWorksBeta
