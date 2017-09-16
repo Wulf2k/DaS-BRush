@@ -6,6 +6,7 @@
 * Setup your Eclipse workspace in whichever directory you'd like
 * Go to `File` -> `New` -> `Lua Project` and complete the wizard-thing:
   * Note: any time you see a dropdown box which lets you select between Lua 5.1 and Lua 5.2, be sure to set it to 5.2 (since DaS.ScriptLib uses that)
+  * Uncheck the "Create default template project ready to run" box under Targeted Execution Environment.
 +++Adding the Necessary Lib Folder to Your Lua Project:
 * Right-click your project's root node within the "Script Explorer" panel on the left and go to "Properties".
 * Go to the "Build Path" Page, which is listed underneath the "Lua" dropdown on the left of the Properties window.
