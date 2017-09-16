@@ -110,6 +110,7 @@ Namespace Lua
 
         Public ReadOnly ImportedNamespaces As String() = {
             "DaS.ScriptLib.Game.Data",
+            "DaS.ScriptLib.Game.Data.Helpers",
             "DaS.ScriptLib.Game.Data.Structures",
             "DaS.ScriptLib.Game.Mem"
         }
@@ -217,6 +218,11 @@ Namespace Lua
             Dbg.Print("line: " & e.LuaDebug.currentline & ", event: " & e.LuaDebug.eventCode)
         End Sub
 
+        <NLua.LuaGlobal(Name:="trace")>
+        Public Sub LuaTrace(str As String)
+            Console.WriteLine("LUA TRACE > " & str)
+        End Sub
+
         <NLua.LuaGlobal(Name:="unpack")>
         Public Function LuaUnpackArgs(args As NLua.LuaTable) As Object()
             Return args.Values.OfType(Of Object).Select(Function(x) E(DirectCast(x, String))).ToArray()
@@ -281,7 +287,7 @@ Namespace Lua
         End Function
 
         <NLua.LuaGlobal(Name:="FUNC_REG")>
-        Public Function CallIngameFuncECX_FromLua(returnType As Double, funcAddress As Double, args As NLua.LuaTable, specialRegisters As NLua.LuaTable) As Object
+        Public Function CallIngameFuncREG_FromLua(returnType As Double, funcAddress As Double, args As NLua.LuaTable, specialRegisters As NLua.LuaTable) As Object
             Return AsmCaller.CallIngameFunc_FromLua(Me, (CType(CType(returnType, Integer), FuncReturnType)), CType(funcAddress, Integer), args, specialRegisters)
         End Function
 
@@ -289,7 +295,7 @@ Namespace Lua
             Return AsmCaller.CallIngameFunc(Me, returnType, funcAddress, args, Nothing)
         End Function
 
-        Public Function CallIngameFuncECX(returnType As FuncReturnType, funcAddress As Integer, specialRegisters As Dictionary(Of String, Object), ParamArray args As Object()) As Object
+        Public Function CallIngameFuncREG(returnType As FuncReturnType, funcAddress As Integer, specialRegisters As Dictionary(Of String, Object), ParamArray args As Object()) As Object
             Return AsmCaller.CallIngameFunc(Me, returnType, funcAddress, args, specialRegisters)
         End Function
 

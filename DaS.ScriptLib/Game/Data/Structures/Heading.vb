@@ -5,9 +5,7 @@
         Private _ingameValue As Single
 
         Public Sub New(headingAngle As Single)
-
             HeadingValue = headingAngle
-
         End Sub
 
         Public Property PlanarValue As Double

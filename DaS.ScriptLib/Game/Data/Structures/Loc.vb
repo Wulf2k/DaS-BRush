@@ -22,9 +22,9 @@
             Me.New(pos, 0)
         End Sub
 
-        Public Sub New(posX, posY, posZ, rot)
+        Public Sub New(posX As Single, posY As Single, posZ As Single, rotHeading As Single)
             Pos = New Vec3(posX, posY, posZ)
-            Me.Rot = rot
+            Me.Rot = New Heading(rotHeading)
         End Sub
 
         Public Sub New(posX, posY, posZ)

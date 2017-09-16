@@ -1,8 +1,8 @@
-﻿--[[
-
+--[[
     NOTE: To uncomment a function, change the "--[" on top to "---["
     This uncomments the entire function immediately.
-
+    
+    TODO: REMOVE THE "---[[" ON UNCOMMENTED FUNCTIONS BECAUSE IT'S UGLY, JUST LIKE YOUR MOM.
 ]]
 
 --TODO: Param Names

@@ -7,6 +7,10 @@ Namespace Game.Data
 
         Public Shared ReadOnly Property BossFights As ReadOnlyDictionary(Of EventFlag.Boss, BossFightInfo)
 
+        Public Shared Function GetBossFight(bossFlag As Double) As BossFightInfo
+            Return BossFights(CType(CType(bossFlag, Integer), EventFlag.Boss))
+        End Function
+
         Private Shared Sub InitBossFights()
             'Note that the 5th and 6th parameters of the constructor are pre- and post- loading screen flags.
             'A negative flag ID indicates the flag should be set to false

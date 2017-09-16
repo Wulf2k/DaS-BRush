@@ -94,23 +94,25 @@ end
 
 function CancelOutOfCurPlrAnim()
     --Force idle anim to start looping
-    ForcePlayLoopAnimation(10000, Data.PlayerAnim.Idle)
+    --ForcePlayLoopAnimation(10000, Data.PlayerAnim.Idle)
     --Cancel out of the idle anim loop so that the player can move again
-    StopLoopAnimation(10000, Data.PlayerAnim.Idle)
+    --StopLoopAnimation(10000, Data.PlayerAnim.Idle)
+	ChrResetAnimation(10000)
 end
 
 function SpawnPlayerAtBoss(bossFlag)
-    boss = Misc.BossFights[bossFlag]
-    Helpers.EventFlagHelper.ApplyAll(boss.AdditionalFlags)
+    boss = Misc.GetBossFight(bossFlag)
+    EventFlagHelper.ApplyAll(boss.AdditionalFlags)
 
-    --Almost fail-proof check since we do not have all the boss rush data filled in yet.
     if bossFlag >= 0 then SetEventFlag(bossFlag, false) end
+
     --Almost fail-proof check since we do not have all the boss rush data filled in yet.
     --if boss.BonfireID >= 0 and (not boss.PlayerWarp.IsZero) then 
         --WarpNextStage_Bonfire(boss.BonfireID)
     --else
         --WarpNextStage_Bonfire(Game.Player.BonfireID.Value)
     --end
+
     SetDeadMode(10000, true)
 	WarpNextStage(boss.World, boss.Area, 0, 0, -1)
     CancelOutOfCurPlrAnim()
@@ -150,7 +152,7 @@ function SpawnPlayerAtBoss(bossFlag)
     
 
     --Begin resetting camera before FadeIn since the camera reset is smoothed out and takes a long time.
-    CamReset(10000, 1)
+    CamReset(10000, true)
     SetPlayerIsVegetable(false)
     Wait(500)
     PlayerHide(false)
@@ -159,7 +161,7 @@ function SpawnPlayerAtBoss(bossFlag)
     
     ForcePlayAnimation(10000, boss.PlayerAnim)
     
-    Game.Player.Opacity = 0
+    player.Opacity = 0
     SetDisable(10000, false)
     ChrFadeIn(10000, 0.5, 0)
     
@@ -182,9 +184,9 @@ function SpawnPlayerAtBoss(bossFlag)
 end
 
 function FightBoss(bossFlag, isFirstBoss)
-    bossName = Misc.BossFights[bossFlag].Name
+    bossName = Misc.GetBossFight(bossFlag).Name
 
-    --Dbg.PrintInfo("Fighting boss: "..bossName)
+    --PrintInfo("Fighting boss: "..bossName)
     
     visibleBossName = bossName
     if ShowBossNames == false then
@@ -201,14 +203,14 @@ function FightBoss(bossFlag, isFirstBoss)
         SpawnPlayerAtBoss(bossFlag)
 
         if isFirstBoss then
-            Helpers.BossRushHelper.StartNewBossRushTimer() 
+            BossRushHelper.StartNewBossRushTimer() 
         end
 
-        bossDead = Helpers.BossRushHelper.WaitForBossDeathByEventFlag(int(bossFlag))
+        bossDead = BossRushHelper.WaitForBossDeathByEventFlag(bossFlag)
         if bossDead then
-            Dbg.PrintInfo("Boss "..bossName.." dead")
+            PrintInfo("Boss "..bossName.." dead")
         else 
-            Dbg.PrintInfo("Player dead")
+            PrintInfo("Player dead")
         end
         
         if not bossDead then 
@@ -269,7 +271,7 @@ function BeginBossRush()
             end
         end 
     end
-    
+
     if wussOutForSure then
         ShowHUD(true)
         WInt32(RInt32(0x13786D0) + 0x154, -1) 
@@ -287,12 +289,22 @@ function BeginBossRush()
     
     MsgBoxOK("Welcome to the Boss Rush.\nSaving has been disabled.")
 
-    bossOrder = Helpers.BossRushHelper.GetBossRushOrder(BossRushOrder, BossRushExcludeBed, BossRushCustomOrder)
+	trace("Before GetBossRushOrder()")
+
+    bossOrder = BossRushHelper.GetBossRushOrder(BossRushOrder, BossRushExcludeBed, BossRushCustomOrder)
     
+	trace("After GetBossRushOrder()")
+
     isFirstBoss = true
 
+	trace("Before bossinfo for loop")
+
     for i=0,bossOrder.Length-1 do
-        continueRush = FightBoss(bossOrder[i], isFirstBoss)
+	    trace("Before boss index "..i)
+		nextBoss = bossOrder[i]
+		trace("Before fightboss "..i)
+        continueRush = FightBoss(nextBoss, isFirstBoss)
+		trace("After fightboss "..i)
         isFirstBoss = false
 
         if not continueRush then 
@@ -302,7 +314,7 @@ function BeginBossRush()
         end
     end
 
-    timerStr = Helpers.BossRushHelper.StopBossRushTimer()
+    timerStr = BossRushHelper.StopBossRushTimer()
 
     --TODO: Show all the different settings the user chose for the boss rush in this results screen.
     MsgBoxOK("Congratulations.\nCompleted in "..timerStr..".")

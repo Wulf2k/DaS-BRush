@@ -76,6 +76,7 @@ InitEntityTable()
 function RAND()
     --math.randomseed(os.time() + os.clock() + math.random())
     return ((math.random() - 0.5) * 2)
+    
 end
 
 --SEED_RAND()
@@ -134,9 +135,12 @@ function OnLoadingScreenEnd()
     SetKeyGuideTextPos(220, 150);
 end
 
+--Checks if the Player exists by checking whether the static CharData1 pointer has a value > 0
 function PlayerExists()
     return RInt32(RInt32(0x137DC70) + 0x4) ~= 0
 end
+
+if playere
 
 function MainLoop()
     InitEntityTable();

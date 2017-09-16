@@ -53,11 +53,9 @@ Namespace Game.Data.Helpers
             Return Strings.Left(TimeSpan.FromMilliseconds(Mem.GameStats.TotalPlayTime.Value).ToString, 12)
         End Function
 
-        Public Shared Function GetBossRushOrder(rushType As String, excludeBedOfChaos As Boolean, customOrder As String) As Boss()
+        Public Shared Function GetBossRushOrder(rushType As String, excludeBedOfChaos As Boolean, customOrder As String) As Integer()
 
-            Dim bossPool = Misc.BossFights.Keys.ToList()
-
-            Dim bossRushOrder As String() = {}
+            Dim bossPool = Misc.BossFights.Keys.Cast(Of Integer).ToList()
 
             If (rushType <> BossRushType.Custom) AndAlso excludeBedOfChaos Then
                 bossPool.Remove(Boss.BedOfChaos)
@@ -106,12 +104,12 @@ Namespace Game.Data.Helpers
         End Function
 
         ' Will assume boss is dead if valid data isn't saved for it in the BossInfo yet.
-        Public Shared Function WaitForBossDeathByEventFlag(bossFlag As Boss) As Boolean
-            Dim boss = Misc.BossFights(bossFlag)
+        Public Shared Function WaitForBossDeathByEventFlag(bossFlag As Double) As Boolean
+            Dim boss = Misc.BossFights(CType(CType(bossFlag, Integer), Boss))
             Dim bossIsDead = False
             Dim playerIsDead = False
             Do
-                If (LuaInterface.E($"IsCompleteEvent({CType(boss.SpawnFlag, Integer)})") = 1) Then 'boss dead
+                If (LuaInterface.E($"IsCompleteEvent({CType(boss.SpawnFlag, Integer)})")) Then 'boss dead
                     bossIsDead = True
                 ElseIf Mem.Player.HP.Value = 0 Then
                     playerIsDead = True

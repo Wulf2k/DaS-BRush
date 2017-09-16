@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2BD9587D-CAF1-4191-9C53-6DE208EA8DE1}</ProjectGuid>
+    <ProjectGuid>{99334DBF-2673-46A8-B38C-62693050264B}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>DaS.ScriptLib.QuickRunner</RootNamespace>
-    <AssemblyName>DaS.ScriptLib.QuickRunner</AssemblyName>
+    <RootNamespace>DaS.ScriptLib.Executor</RootNamespace>
+    <AssemblyName>Dark Souls Script Executor</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -30,6 +30,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>DaS.ScriptLib.Executor.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -50,7 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DaS.ScriptLib\DaS.ScriptLib.vbproj">
-      <Project>{2A373330-933C-4A80-ADFB-39F5E0ECBC35}</Project>
+      <Project>{2a373330-933c-4a80-adfb-39f5e0ecbc35}</Project>
       <Name>DaS.ScriptLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lib\NLua\Core\NLua\NLua.Net45.csproj">
