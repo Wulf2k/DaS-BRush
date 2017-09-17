@@ -1,5 +1,6 @@
---The local player character. Feel free to access at any time without fear of crashing the game, but nothing will happen if the player isn't loaded ;)
-player = Entity
+---
+-- The local player character. Feel free to access at any time without fear of crashing the game, but nothing will happen if the player isn't loaded ;)
+player = Entity.GetPlayer()
 
 --[[
     A list of all modules loaded by Dark Souls. 

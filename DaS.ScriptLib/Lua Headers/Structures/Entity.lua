@@ -1,3 +1,5 @@
+---
+-- @type EntityFlagsA
 EntityFlagsA = {
     None = 0,
     SetDeadMode = 0x2000000,
@@ -9,11 +11,15 @@ EntityFlagsA = {
     SetDisableGravity = 0x4000
 }
 
+---
+-- @type EntityFlagsB
 EntityFlagsB = {
     None = 0,
     DisableHpGauge = 0x8
 }
 
+---
+-- @type EntityDebugFlags
 EntityDebugFlags = {
     NoGoodsConsume = 0x1000000,
     DisableDrawingA = 0x100000,
@@ -31,6 +37,8 @@ EntityDebugFlags = {
     DrawHit = 0x4,
 }
 
+---
+-- @type Covenant
 Covenant = {
     None = 0,
     WayOfWhite = 1,
@@ -44,7 +52,16 @@ Covenant = {
     ChaosServant = 9
 }
 
+---
+-- @type Entity
+-- @field #EntityFlagsA FlagsA
+-- @field #EntityFlagsB FlagsB
+-- @field #EntityDebugFlags DebugFlags
+-- @field [parent=#Entity] #EntityController Controller
+-- @field #EntityController DebugController
 Entity = {
+    DebugControllerPtr = 0,
+    DebugController = EntityController,
     Covenant = 0,
     Pointer = 0,
     NPCID2 = 0,
@@ -87,6 +104,7 @@ Entity = {
     Unknown1Ptr = 0,
     CharMapDataPtr = 0,
     ControllerPtr = 0,
+    Controller = EntityController,
     AnimationPtr = 0,
     AnimationInstancePtr = 0,
     AnimInstanceTime = 0,
@@ -206,24 +224,77 @@ Entity = {
     SetSuperArmor = false,
 }
 
-function Entity:GetDebugFlag(flg) return false; end
-function Entity:SetDebugFlag(flg, state) end
-function Entity:GetFlagA(flg) return false; end
-function Entity:SetFlagA(flg, state) end
+---
+-- Gets a flag in @{Entity.DebugFlags}
+-- @param #Entity self This entity instance.
+-- @param #EntityDebugFlags flg The flag to get the state of within the @{Entity.DebugFlags} bitmask.
+-- @return #boolean The bit state (on or off)
+function Entity.GetDebugFlag(self, flg) return false; end
 
+---
+-- Sets a flag in @{Entity.DebugFlags}
+-- @param #Entity self This entity instance.
+-- @param #EntityDebugFlags flg The flag to modify in the @{Entity.DebugFlags} bitmask.
+-- @param #boolean state Bit state (on or off)
+function Entity.SetDebugFlag(self, flg, state) end
+
+---
+-- Gets a flag in @{Entity.FlagsA}
+-- @param #Entity self This entity instance.
+-- @param #EntityFlagsA flg The flag to get the state of within the @{Entity.FlagsA} bitmask.
+-- @return #boolean The bit state (on or off)
+function Entity.GetFlagA(self, flg) return false; end
+
+---
+-- Sets a flag in @{Entity.FlagsA}
+-- @param #Entity self This entity instance.
+-- @param #EntityFlagsA flg The flag to modify in the @{Entity.FlagsA} bitmask.
+-- @param #boolean state Bit state (on or off)
+function Entity.SetFlagA(self, flg, state) end
+
+---
+-- Makes the camera follow this entity.
 function Entity:View() end
-function Entity:StartControlling() end
-function Entity:StopControlling() end
+
+---
+-- Warps this entity to the given entity.
+-- @function [parent=#Entity]
+-- @param #Entity entity The entity to warp to.
 function Entity:WarpToEntity(entity) end
-function Entity:WarpToEntityPtr(entityPtr) end
+
+---
+-- Warps this entity to the entity with the given pointer.
+-- @function [parent=#Entity]
+-- @param #number entityPtr The pointer of the entity to warp to.
+function Entity.WarpToEntityPtr(entityPtr) end
+
+---
+-- Warps this entity to the entity with the given ID.
+-- @function [parent=#Entity]
+-- @param #number entityId The EventEntityID of the entity to warp to.
 function Entity:WarpToEventEntityID(entityId) end
 
+
 --Static
+
 Entity.PlayerStablePosPtr = 0
 Entity.PlayerStablePosX = 0
 Entity.PlayerStablePosY = 0
 Entity.PlayerStablePosZ = 0
 
-Entity.GetPlayer = function() return Entity(); end
-Entity.FromID = function(id) return Entity(); end
-Entity.FromName = function(mapName, entityName) return Entity(); end
+---
+-- Gets the local player.
+-- @return #Entity The player character.
+Entity.GetPlayer = function() return Entity; end
+
+---
+-- Gets an entity from the given EventEntityID.
+-- @return #Entity The entity.
+Entity.FromID = function(id) return Entity; end
+
+---
+-- Gets an entity from the given map/entity name pair.
+-- @param #string mapName The name of the map e.g. "m12_01_00_00"
+-- @param #string entityName The name of the entity e.g. "c4100_0000"
+-- @return #Entity The entity.
+Entity.FromName = function(mapName, entityName) return Entity; end

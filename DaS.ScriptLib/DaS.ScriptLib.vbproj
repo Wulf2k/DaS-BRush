@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\Data\Structures\Entity.vb" />
+    <Compile Include="Game\Data\Structures\EntityController.vb" />
     <Compile Include="Game\Data\[EntityName]\Boss.vb" />
     <Compile Include="Game\Data\[EntityName]\EntityName.vb" />
     <Compile Include="Game\Data\Helpers\BossRushHelper.vb" />

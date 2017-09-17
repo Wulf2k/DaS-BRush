@@ -46,6 +46,29 @@ Namespace Injection.Structures
             Return handle
         End Function
 
+        Private Function GetIngameDllAddress(moduleName As String) As UInteger
+
+            Dim modules(255 - 1) As UInteger
+            Dim cbNeeded As Integer = 0
+            PSAPI.EnumProcessModules(DARKSOULS.GetHandle(), modules, 4 * 1024, cbNeeded)
+
+            Dim numModules = cbNeeded / IntPtr.Size
+
+            For i = 0 To numModules - 1
+
+                Dim disModule = New IntPtr(modules(i))
+                Dim name As New Text.StringBuilder()
+                PSAPI.GetModuleBaseName(DARKSOULS.GetHandle(), disModule, name, 255)
+
+                If (name.ToString().ToUpper().Equals(moduleName.ToUpper())) Then
+                    Return modules(i)
+                End If
+
+            Next
+
+            Return 0
+        End Function
+
         Public Function TryAttachToDarkSouls(Optional suppressMessageBox As Boolean = False) As Boolean
             Dim selectedProcess As Process = Nothing
             Dim _allProcesses() As Process = Process.GetProcesses

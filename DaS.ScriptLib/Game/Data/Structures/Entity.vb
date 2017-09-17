@@ -52,7 +52,7 @@ Namespace Game.Data.Structures
     End Enum
 
     <StructLayout(LayoutKind.Explicit)>
-    Public Structure Entity
+    Public Class Entity
 
         Public ReadOnly Property Pointer As Integer
             Get
@@ -65,6 +65,24 @@ Namespace Game.Data.Structures
         Public Sub New(getOffsetFunc As Func(Of Integer))
             _getOffset = getOffsetFunc
         End Sub
+
+        Public Property DebugControllerPtr As Integer
+            Get
+                Return RInt32(RInt32(Pointer + &H28) + &H244)
+            End Get
+            Set(value As Integer)
+                WInt32(RInt32(Pointer + &H28) + &H244, value)
+            End Set
+        End Property
+
+        Public Property DebugController As EntityController
+            Get
+                Return New EntityController(Function() DebugControllerPtr)
+            End Get
+            Set(value As EntityController)
+                DebugControllerPtr = value.Pointer
+            End Set
+        End Property
 
         Public Shared Function GetPlayer() As Entity
             Return FromID(10000)
@@ -422,10 +440,22 @@ Namespace Game.Data.Structures
             End Get
         End Property
 
-        Public ReadOnly Property ControllerPtr As Integer
+        Public Property ControllerPtr As Integer
             Get
                 Return RInt32(CharMapDataPtr + &H54)
             End Get
+            Set(value As Integer)
+                WInt32(CharMapDataPtr + &H54, value)
+            End Set
+        End Property
+
+        Public Property Controller As EntityController
+            Get
+                Return New EntityController(Function() ControllerPtr)
+            End Get
+            Set(value As EntityController)
+                ControllerPtr = value.Pointer
+            End Set
         End Property
 
         'TODO: CONTROLLER
@@ -1549,14 +1579,6 @@ Namespace Game.Data.Structures
             Funcs.CamFocusEntity(Pointer)
         End Sub
 
-        Public Sub StartControlling()
-            Funcs.ControlEntity(Pointer, True)
-        End Sub
-
-        Public Sub StopControlling()
-            Funcs.ControlEntity(Pointer, False)
-        End Sub
-
         Public Sub WarpToEntity(dest As Entity)
             Funcs.WarpEntity_Entity(Pointer, dest.Pointer)
         End Sub
@@ -1569,5 +1591,5 @@ Namespace Game.Data.Structures
             Funcs.WarpEntity_Entity(Pointer, Funcs.GetEntityPtr(dest))
         End Sub
 
-    End Structure
+    End Class
 End Namespace
