@@ -522,7 +522,7 @@ Namespace Lua
             tmpptr = RInt32(tmpptr + &H7C)
 
             WUnicodeStr(tmpptr + &H3B7A, str + ChrW(0))
-            LuaInterface.DoString("RequestOpenBriefingMsg(10010721, 1)")
+            LuaInterface.DoString("RequestOpenBriefingMsg(int(10010721), 1)") 'TODO: Remove the int() after implementing RequestOpenBriefingMsg
         End Sub
 
         Public Class GenDiagResult

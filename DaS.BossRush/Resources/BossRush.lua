@@ -29,7 +29,7 @@ BossRushNgLevel = 0
 function SetPlayerIsVegetable(prot)
     DisableMove(10000, prot) --plr no move if prot
     SetColiEnable(10000, (not prot)) --plr no take dmg if prot
-    SetDisableGravity(10000, prot) --plr no fall if prot
+    SetDisableGravity(int(10000), prot) --plr no fall if prot
     DisableMapHit(10000, prot) --prevent activating col triggers if prot
 end
 
@@ -97,7 +97,7 @@ function CancelOutOfCurPlrAnim()
     --ForcePlayLoopAnimation(10000, Data.PlayerAnim.Idle)
     --Cancel out of the idle anim loop so that the player can move again
     --StopLoopAnimation(10000, Data.PlayerAnim.Idle)
-	ChrResetAnimation(10000)
+	ForcePlayAnimation(10000, -1)
 end
 
 function SpawnPlayerAtBoss(bossFlag)
@@ -121,11 +121,16 @@ function SpawnPlayerAtBoss(bossFlag)
     WaitForLoadEnd()
     BlackScreen()
 
+	
+	
     --PLAYER INVINCIBLE AND NON-INTERACTIVE
     SetPlayerIsVegetable(true)
+	
     --Bosses won't aggro on player before the screen fades in
     PlayerHide(true)
 
+	
+	
     --Almost fail-proof check since we do not have all the boss rush data filled in yet.
     --if boss.BonfireID >= 0 and (not boss.PlayerWarp.IsZero) then
         --Move player directly to warp point instantly without doing a "warp crouch"
@@ -144,7 +149,7 @@ function SpawnPlayerAtBoss(bossFlag)
     
     if not boss.PlayerWarp.IsZero then
         --if not (boss.WarpID == -1) then Wait(2000) end
-        Warp_Coords(boss.PlayerWarp.Pos.X, boss.PlayerWarp.Pos.Y, boss.PlayerWarp.Pos.Z, boss.PlayerWarp.Rot)
+        Warp_Coords(boss.PlayerWarp.Pos.X, boss.PlayerWarp.Pos.Y, boss.PlayerWarp.Pos.Z, boss.PlayerWarp.Rot.HeadingValue)
         CancelOutOfCurPlrAnim()
     end
     
@@ -167,7 +172,7 @@ function SpawnPlayerAtBoss(bossFlag)
     
     if not boss.PlayerWarp.IsZero then
         --if not (boss.WarpID == -1) then Wait(2000) end
-        Warp_Coords(boss.PlayerWarp.Pos.X, boss.PlayerWarp.Pos.Y, boss.PlayerWarp.Pos.Z, boss.PlayerWarp.Rot)
+        Warp_Coords(boss.PlayerWarp.Pos.X, boss.PlayerWarp.Pos.Y, boss.PlayerWarp.Pos.Z, boss.PlayerWarp.Rot.HeadingValue)
     end
     
     ForcePlayAnimation(10000, boss.PlayerAnim)
@@ -179,7 +184,7 @@ function SpawnPlayerAtBoss(bossFlag)
     --Almost fail-proof check since we do not have all the boss rush data filled in yet.
     if string.len(boss.EntranceLua) > 0 then
         --LUACEPTION
-        Lua.Run(boss.EntranceLua)
+        dostring(boss.EntranceLua)
     end
 end
 

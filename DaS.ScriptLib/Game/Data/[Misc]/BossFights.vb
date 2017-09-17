@@ -7,7 +7,7 @@ Namespace Game.Data
 
         Public Shared ReadOnly Property BossFights As ReadOnlyDictionary(Of EventFlag.Boss, BossFightInfo)
 
-        Public Shared Function GetBossFight(bossFlag As Double) As BossFightInfo
+        Public Shared Function GetBossFight(bossFlag As Integer) As BossFightInfo
             Return BossFights(CType(CType(bossFlag, Integer), EventFlag.Boss))
         End Function
 

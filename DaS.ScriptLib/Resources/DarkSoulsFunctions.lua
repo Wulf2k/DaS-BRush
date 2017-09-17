@@ -694,7 +694,7 @@ end
 
 ---[[
 function DisableDamage(chrId, state)
-    return FUNC(INT, 0x00D60DD0, {int(chrId), int(state)});
+    return FUNC(INT, 0x00D60DD0, {int(chrId), state});
 end
 ---]]
 
@@ -712,13 +712,13 @@ end
 
 ---[[
 function DisableMapHit(chrId, state)
-    return FUNC(INT, 0x00D61790, {int(chrId), int(state)});
+    return FUNC(INT, 0x00D61790, {int(chrId), state});
 end
 ---]]
 
 ---[[
 function DisableMove(chrId, state)
-    return FUNC(INT, 0x00D617D0, {int(chrId), int(state)});
+    return FUNC(INT, 0x00D617D0, {int(chrId), state});
 end
 ---]]
 
@@ -2600,9 +2600,9 @@ function SetEventCommandIndex()
 end
 ---]]
 
---[[
-function SetEventFlag()
-    return FUNC(INT, 0x00D60190, {});
+---[[
+function SetEventFlag(flagId, state)
+    return FUNC(INT, 0x00D60190, {int(flagId), state});
 end
 ---]]
 
