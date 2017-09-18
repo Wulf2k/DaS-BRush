@@ -17,8 +17,8 @@ function RByte(addr) return 0; end
 
 function RBool(addr) return false; end
 
-function RAsciiStr(addr) return ""; end
-function RUnicodeStr(addr) return ""; end
+function RAsciiStr(addr, maxLength) return ""; end
+function RUnicodeStr(addr, maxLength) return ""; end
 
 
 
