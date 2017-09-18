@@ -54,6 +54,8 @@ Namespace Game.Data.Structures
     <StructLayout(LayoutKind.Explicit)>
     Public Class Entity
 
+        Public Const MAX_STATNAME_LENGTH = 14
+
         Public ReadOnly Property Pointer As Integer
             Get
                 Return _getOffset()
@@ -68,10 +70,10 @@ Namespace Game.Data.Structures
 
         Public Property DebugControllerPtr As Integer
             Get
-                Return RInt32(RInt32(Pointer + &H28) + &H244)
+                Return RInt32(CharMapDataPtr + &H244)
             End Get
             Set(value As Integer)
-                WInt32(RInt32(Pointer + &H28) + &H244, value)
+                WInt32(CharMapDataPtr + &H244, value)
             End Set
         End Property
 
@@ -95,6 +97,24 @@ Namespace Game.Data.Structures
         Public Shared Function FromName(mapName As String, entityName As String) As Entity
             Return New Entity(Function() Funcs.GetEntityPtrByName(mapName, entityName))
         End Function
+
+        Public Property ModelName As String
+            Get
+                Return RAsciiStr(Pointer + &H38, 10)
+            End Get
+            Set(value As String)
+                WAsciiStr(Pointer + &H38, value.Substring(0, Math.Min(value.Length, 10)))
+            End Set
+        End Property
+
+        Public Property NPCID As Int32
+            Get
+                Return RInt32(Pointer + &H68)
+            End Get
+            Set(value As Int32)
+                WInt32(Pointer + &H68, value)
+            End Set
+        End Property
 
         Public Property NPCID2 As Int32
             Get
@@ -1321,6 +1341,15 @@ Namespace Game.Data.Structures
             End Get
             Set(value As Integer)
                 WInt32(StatsPtr + &H98, value)
+            End Set
+        End Property
+
+        Public Property StatName As String
+            Get
+                Return RUnicodeStr(Pointer + &HA0, MAX_STATNAME_LENGTH)
+            End Get
+            Set(value As String)
+                WAsciiStr(Pointer + &HA0, value.Substring(0, Math.Min(value.Length, MAX_STATNAME_LENGTH)))
             End Set
         End Property
 

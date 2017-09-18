@@ -50,8 +50,6 @@ Namespace Lua
                 WFloat(charmapdataptr + &HE4, Player.Heading.Value)
             End If
 
-
-
             WBytes(charmapdataptr + &HC8, {1})
         End Sub
         <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
@@ -487,10 +485,13 @@ Namespace Lua
             mapPtrs = tmpPtr + &H74
             mapCount = RInt32(tmpPtr + &H70)
 
+            Const maxMapNameLength As Integer = 12 'Length of "mXX_XX_XX_XX"
+            Const maxEntityNameLength As Integer = 10 'NEEDS TESTING
+
             For mapNum = 0 To mapCount - 1
                 entitiesPtr = RInt32(mapPtrs + 4 * mapNum)
 
-                tmpStr = RUnicodeStr(RInt32(RInt32(entitiesPtr + &H60) + 4))
+                tmpStr = RUnicodeStr(RInt32(RInt32(entitiesPtr + &H60) + 4), maxMapNameLength)
 
                 If tmpStr = mapName Then
                     entitiesCnt = RInt32(entitiesPtr + &H3C)
@@ -505,7 +506,7 @@ Namespace Lua
                         tmpPtr = RInt32(tmpPtr + &H28) + &H10
                         tmpPtr = RInt32(RInt32(tmpPtr + 4 * tmpCnt))
 
-                        tmpStr = RAsciiStr(tmpPtr)
+                        tmpStr = RAsciiStr(tmpPtr, maxEntityNameLength)
 
                         If tmpStr = entName Then
                             Return entityPtr

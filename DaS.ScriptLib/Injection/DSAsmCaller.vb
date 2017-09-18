@@ -311,8 +311,8 @@ Namespace Injection
                 Case FuncReturnType.SBYTE : Return New MutatableDword(result).SByte1
                 Case FuncReturnType.FLOAT : Return New MutatableDword(result).Float1
                 Case FuncReturnType.DOUBLE : Return CType(New MutatableDword(result).Float1, Double)
-                Case FuncReturnType.STR_ANSI : Return RAsciiStr(New MutatableDword(result).Int1)
-                Case FuncReturnType.STR_UNI : Return RUnicodeStr(New MutatableDword(result).Int1)
+                Case FuncReturnType.STR_ANSI : Return RAsciiStr(New MutatableDword(result).Int1, -1)
+                Case FuncReturnType.STR_UNI : Return RUnicodeStr(New MutatableDword(result).Int1, -1)
                 Case Else
                     Return BitConverter.ToInt32(result, 0)
             End Select

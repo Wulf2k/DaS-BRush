@@ -122,55 +122,65 @@ Namespace Injection
         End Function
 
         <NLua.LuaGlobal(Name:="RAsciiStr")>
-        Public Function RAsciiStr(ByVal addr As Long) As String
+        Public Function RAsciiStr(ByVal addr As Long, maxLength As Integer) As String
             If Not CheckAddress(addr) Then Return Nothing
 
-            Dim Str As String = ""
-            Dim cont As Boolean = True
+            Dim Str As New Text.StringBuilder(maxLength)
             Dim loc As Integer = 0
 
-            Dim bytes(&H10) As Byte
+            Dim nextChr = "?"c
 
-            Kernel.ReadProcessMemory_SAFE(DARKSOULS.GetHandle(), addr, bytes, &H10, vbNull)
+            If maxLength <> 0 Then
 
-            While (cont And loc < &H10)
-                If bytes(loc) > 0 Then
+                Dim bytes(1) As Byte
 
-                    Str = Str + Convert.ToChar(bytes(loc))
+                While (maxLength < 0 OrElse loc < maxLength)
+                    Kernel.ReadProcessMemory_SAFE(DARKSOULS.GetHandle(), addr, bytes, 1, vbNull)
+                    nextChr = Text.Encoding.ASCII.GetChars(bytes)(0)
+
+                    If nextChr = ChrW(0) Then
+                        Exit While
+                    Else
+                        Str.Append(nextChr)
+                    End If
 
                     loc += 1
-                Else
-                    cont = False
-                End If
-            End While
+                End While
 
-            Return Str
+            End If
+
+            Return Str.ToString()
         End Function
 
         <NLua.LuaGlobal(Name:="RUnicodeStr")>
-        Public Function RUnicodeStr(ByVal addr As Long) As String
+        Public Function RUnicodeStr(ByVal addr As Long, maxLength As Integer) As String
             If Not CheckAddress(addr) Then Return Nothing
 
-            Dim Str As String = ""
-            Dim cont As Boolean = True
+            Dim Str As New Text.StringBuilder(maxLength)
             Dim loc As Integer = 0
 
-            Dim bytes(&H20) As Byte
+            Dim nextChr = "?"c
 
-            Kernel.ReadProcessMemory_SAFE(DARKSOULS.GetHandle(), addr, bytes, &H20, vbNull)
+            If maxLength <> 0 Then
 
-            While (cont And loc < &H20)
-                If bytes(loc) > 0 Then
+                Dim bytes(2) As Byte
 
-                    Str = Str + Convert.ToChar(bytes(loc))
+                While (maxLength < 0 OrElse loc < maxLength)
+                    Kernel.ReadProcessMemory_SAFE(DARKSOULS.GetHandle(), addr, bytes, 2, vbNull)
+                    nextChr = Text.Encoding.Unicode.GetChars(bytes)(0)
 
-                    loc += 2
-                Else
-                    cont = False
-                End If
-            End While
+                    If nextChr = ChrW(0) Then
+                        Exit While
+                    Else
+                        Str.Append(nextChr)
+                    End If
 
-            Return Str
+                    loc += 1
+                End While
+
+            End If
+
+            Return Str.ToString()
         End Function
 
         <NLua.LuaGlobal(Name:="WBool")>
