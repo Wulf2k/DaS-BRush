@@ -30,7 +30,7 @@ STR_ANSI = 13
 STR_UNI = 14
 
 --Runs an in-game Lua function with the specified address and args. E.g. "FUNC(INT, 0x1234, {int(5), int(7), false});"
-function FUNC(returnType, funcAddress, argTable) end
+function (returnType, funcAddress, argTable) end
 
 --Runs an in-game Lua function with the specified address, args, and x86 register values. E.g. "FUNC(INT, 0x1234, {int(5), int(7), false}, {"EAX" = 7, "ECX" = 0x12345678});"
 function FUNC_REG(returnType, funcAddress, argTable) end

@@ -419,14 +419,6 @@ function GetClearState(...)
     return FUNC(INT, 0x00D5E580, {...});
 end
 
-function GetCurrentMapAreaNo(...)
-    return FUNC(INT, 0x00D5F650, {...});
-end
-
-function GetCurrentMapBlockNo(...)
-    return FUNC(INT, 0x00D5F620, {...});
-end
-
 function GetDeathState(...)
     return FUNC(INT, 0x00D5D800, {...});
 end

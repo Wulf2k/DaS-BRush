@@ -259,32 +259,71 @@ Namespace Lua
         End Function
         <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
         Public Shared Function GetEntityPtrList() As Integer()
-
-            Dim structPtr = RInt32(&H137D644)
-            structPtr = RInt32(structPtr + &HE4)
-            Dim entityCount = RInt32(structPtr)
-            structPtr = RInt32(structPtr + 4)
-
             Dim resultList = New List(Of Integer)
 
-            For i = 0 To entityCount - 1
-                resultList.Add(RInt32(structPtr + i * &H20))
-            Next
+            Dim tmpPtr As Integer = 0
+
+            Dim mapCount As Integer = 0
+            Dim mapPtrs As Integer = 0
+
+            Dim entitiesPtr As Integer = 0
+            Dim entitiesCnt As Integer = 0
+
+            Dim entityPtr As Integer = 0
+
+            tmpPtr = RInt32(&H137D644)
+
+            mapPtrs = tmpPtr + &H74
+            mapCount = RInt32(tmpPtr + &H70)
+
+            For mapNum = 0 To mapCount - 1
+                entitiesPtr = RInt32(mapPtrs + 4 * mapNum)
+                entitiesCnt = RInt32(entitiesPtr + &H3C)
+                entitiesPtr = RInt32(entitiesPtr + &H40)
+
+                For entityNum = 0 To entitiesCnt - 1
+                    entityPtr = RInt32(entitiesPtr + entityNum * &H20)
+
+                    resultList.Add(entityPtr)
+                Next entityNum
+
+            Next mapNum
 
             Return resultList.ToArray()
+
         End Function
         <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
         Public Shared Function GetAllApparentEntities(ByRef table As NLua.LuaTable) As NLua.LuaTable
+            Dim tmpPtr As Integer = 0
 
-            Dim structPtr = RInt32(&H137D644)
-            structPtr = RInt32(structPtr + &HE4)
-            Dim entityCount = RInt32(structPtr)
-            structPtr = RInt32(structPtr + 4)
+            Dim mapCount As Integer = 0
+            Dim mapPtrs As Integer = 0
 
-            For i = 0 To entityCount - 1
-                Dim ep = RInt32(structPtr + i * &H20)
-                table.Item(i + 1) = New Entity(Function() ep)
-            Next
+            Dim entitiesPtr As Integer = 0
+            Dim entitiesCnt As Integer = 0
+
+            Dim entityPtr As Integer = 0
+
+            tmpPtr = RInt32(&H137D644)
+
+            mapPtrs = tmpPtr + &H74
+            mapCount = RInt32(tmpPtr + &H70)
+
+            Dim entityTableNum = 1
+
+            For mapNum = 0 To mapCount - 1
+                entitiesPtr = RInt32(mapPtrs + 4 * mapNum)
+                entitiesCnt = RInt32(entitiesPtr + &H3C)
+                entitiesPtr = RInt32(entitiesPtr + &H40)
+
+                For entityNum = 0 To entitiesCnt - 1
+                    entityPtr = RInt32(entitiesPtr + entityNum * &H20)
+
+                    table.Item(entityTableNum) = New Entity(Function() entityPtr)
+                    entityTableNum += 1
+                Next entityNum
+
+            Next mapNum
 
             Return table
         End Function

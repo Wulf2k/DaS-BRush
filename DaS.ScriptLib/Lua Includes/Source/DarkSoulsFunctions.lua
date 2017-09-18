@@ -295,6 +295,20 @@ function ForceSetOmissionLevel()
 end
 
 ---
+--@param #number intA ???
+--@return #number
+function GetCurrentMapAreaNo(intA)
+    return FUNC(INT, 0x00D5F650, {int(intA)});
+end
+
+---
+--@param #number intA ???
+--@return #number
+function GetCurrentMapBlockNo(intA)
+    return FUNC(INT, 0x00D5F620, {int(intA)});
+end
+
+---
 --@return #boolean
 function IsAction(chrId, byteB)
     return FUNC(BOOL, 0x00D5FAB0, {int(chrId), byte(byteB)});
