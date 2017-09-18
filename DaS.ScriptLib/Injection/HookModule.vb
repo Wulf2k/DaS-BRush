@@ -135,7 +135,7 @@ Namespace Injection
                 Dim bytes(1) As Byte
 
                 While (maxLength < 0 OrElse loc < maxLength)
-                    Kernel.ReadProcessMemory_SAFE(DARKSOULS.GetHandle(), addr, bytes, 1, vbNull)
+                    Kernel.ReadProcessMemory_SAFE(DARKSOULS.GetHandle(), addr + loc, bytes, 1, vbNull)
                     nextChr = Text.Encoding.ASCII.GetChars(bytes)(0)
 
                     If nextChr = ChrW(0) Then
@@ -166,7 +166,7 @@ Namespace Injection
                 Dim bytes(2) As Byte
 
                 While (maxLength < 0 OrElse loc < maxLength)
-                    Kernel.ReadProcessMemory_SAFE(DARKSOULS.GetHandle(), addr, bytes, 2, vbNull)
+                    Kernel.ReadProcessMemory_SAFE(DARKSOULS.GetHandle(), addr + loc * 2, bytes, 2, vbNull)
                     nextChr = Text.Encoding.Unicode.GetChars(bytes)(0)
 
                     If nextChr = ChrW(0) Then

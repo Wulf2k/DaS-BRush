@@ -100,10 +100,10 @@ Namespace Game.Data.Structures
 
         Public Property ModelName As String
             Get
-                Return RAsciiStr(Pointer + &H38, 10)
+                Return RUnicodeStr(Pointer + &H38, 10)
             End Get
             Set(value As String)
-                WAsciiStr(Pointer + &H38, value.Substring(0, Math.Min(value.Length, 10)))
+                WUnicodeStr(Pointer + &H38, value.Substring(0, Math.Min(value.Length, 10)))
             End Set
         End Property
 
