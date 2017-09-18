@@ -135,39 +135,42 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Lua Headers\DarkSoulsFunctions.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <EmbeddedResource Include="Lua Includes\Source\DarkSoulsFunctions.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Include="Lua Includes\Header\Global.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Headers\Global.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="Lua Includes\Header\Global_Dbg.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Headers\Global_Dbg.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="Lua Includes\Header\Global_Funcs.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Headers\Global_Funcs.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="Lua Includes\Header\Global_Hook.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Headers\Global_Hook.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="Lua Includes\Header\Helpers\BossRushHelper.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Headers\Helpers\BossRushHelper.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="Lua Includes\Header\Structures\Entity.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Headers\Structures\Entity.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="Lua Includes\Header\Structures\Heading.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Headers\Structures\Heading.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="Lua Includes\Header\Structures\Loc.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Headers\Structures\Loc.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="Lua Includes\Header\Structures\Vec3.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Headers\Structures\Vec3.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="Lua Includes\Header\Utils.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Headers\Utils.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <EmbeddedResource Include="Lua Includes\Source\DarkSoulsFunctions_Unmapped.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -177,8 +180,9 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-    <EmbeddedResource Include="Resources\DarkSoulsFunctions.lua" />
-    <None Include="Resources\DarkSoulsFunctions_This.lua" />
+    <EmbeddedResource Include="Lua Includes\Source\DarkSoulsFunctions_This.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Lib\NLua\lua52.dll">

@@ -562,7 +562,11 @@ Public Class frmForm1
     End Sub
 
     Private Sub DoBossScenario(bossName As String)
-        lua.State.GetFunction("SpawnPlayerAtBoss").Call(bossName)
+        Dim byName = Data.Misc.BossFights.
+            Select(Function(kvp) New KeyValuePair(Of String, Integer)(kvp.Value.Name, CType(kvp.Key, Integer))).
+            ToDictionary(Function(kvp) kvp.Key, Function(kvp) kvp.Value)
+
+        lua.State.DoString($"SpawnPlayerAtBoss({byName(bossName)})")
     End Sub
 
     Private Sub radioStandard_CheckedChanged(sender As Object, e As EventArgs) Handles radioStandard.CheckedChanged

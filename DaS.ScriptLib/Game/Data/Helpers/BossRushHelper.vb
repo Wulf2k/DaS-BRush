@@ -64,13 +64,13 @@ Namespace Game.Data.Helpers
             If rushType = BossRushType.Standard Then
                 Return bossPool.ToArray()
             ElseIf rushType = BossRushType.Reverse Then
-                Dim reversedBossPool = New List(Of Boss)
+                Dim reversedBossPool = New List(Of Integer)
                 For i = bossPool.Count - 1 To 0 Step -1
                     reversedBossPool.Add(bossPool(i))
                 Next
                 Return reversedBossPool.ToArray()
             ElseIf rushType = BossRushType.Random Then
-                Dim randomBossPool As New List(Of Boss)
+                Dim randomBossPool As New List(Of Integer)
 
                 While randomBossPool.Count < bossPool.Count
                     Dim rand As New Random()
@@ -81,7 +81,7 @@ Namespace Game.Data.Helpers
 
                 Return randomBossPool.ToArray()
             ElseIf rushType = BossRushType.Custom Then
-                Return customOrder.Split(";").Select(Function(x) CType(Int32.Parse(x.Trim()), Boss)).ToArray()
+                Return customOrder.Split(";").Select(Function(x) Int32.Parse(x.Trim())).ToArray()
             End If
 
             Return New Boss() {}

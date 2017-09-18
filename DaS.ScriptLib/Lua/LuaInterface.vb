@@ -12,6 +12,12 @@ Namespace Lua
 
         Const INGAME_FUNC_ADDR_FILE = "IngameFunctions.txt"
 
+        Public Shared ReadOnly EmbeddedLuaScriptIncludes() As String = {
+            "DarkSoulsFunctions.lua",
+            "DarkSoulsFunctions_This.lua",
+            "DarkSoulsFunctions_Unmapped.lua"
+        }
+
         Private Shared ReadOnly Property _ingameFuncAddresses As ReadOnlyDictionary(Of String, Integer)
         Private Shared ReadOnly Property _ingameFuncNames As ReadOnlyDictionary(Of Integer, String)
 
@@ -140,7 +146,6 @@ Namespace Lua
                 Next
             End If
 
-
             'Now that's what I call redundant LUL
             Dim retTypEnumVals = [Enum].GetValues(GetType(FuncReturnType)).Cast(Of FuncReturnType)().ToArray()
 
@@ -154,17 +159,15 @@ Namespace Lua
 
             NLua.LuaRegistrationHelper.TaggedInstanceMethods(State, Me)
 
-            For Each kvp In IngameFuncAddresses
-                State.DoString($"function {kvp.Key}(...) return FUNC(INT, {kvp.Value}, {{...}}); end")
-            Next
-
             NLua.LuaRegistrationHelper.TaggedStaticMethods(State, GetType(Funcs))
 
             For Each typ In GetType(LuaInterface).Assembly.GetTypes().Where(Function(x) ImportedNamespaces.Contains(x.Namespace) AndAlso x.IsClass)
                 NLua.LuaRegistrationHelper.TaggedStaticMethods(State, typ)
             Next
 
-            State.DoString(ScriptLibResources.GetEmbeddedTextResource("DarkSoulsFunctions.lua"))
+            For Each scriptName In EmbeddedLuaScriptIncludes
+                State.DoString(ScriptLibResources.GetEmbeddedTextResource(scriptName))
+            Next
 
             NLua.LuaRegistrationHelper.TaggedStaticMethods(State, GetType(Hook))
             NLua.LuaRegistrationHelper.TaggedStaticMethods(State, GetType(Dbg))

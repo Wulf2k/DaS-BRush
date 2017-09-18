@@ -12,7 +12,7 @@
   * Under the "Target Grammar" group box:
     * Make sure the "Default one:" option is ticked. Since you previously selected "lua-5.2" as your Targeted Execution Environment, it should show "lua-5.2" next to the "Default one:" option.
 
-### Adding the DaS.ScriptLib Lua Headers folder to your project as a User Library:
+### Adding the DaS.ScriptLib Lua Includes folder to your project as a User Library:
 * Add DaS.ScriptLib to the User Libraries list:
   * From the menu bar up-top, go to `Window` -> `Preferences`
   * Go to the "User Libraries Page" under the "Lua" dropdown in the list on the left of the window.
@@ -22,9 +22,9 @@
   * Click OK.
   * Click `DaS.ScriptLib` within the User Libraries list to select/highlight it
   * Click the "Add External folder..." button on the right.
-  * Browse to the `Lua Headers` folder in your DaS-BRush folder.
-    - If you downloaded a pre-built .zip of it, it will be in `<Extracted Zip File Directory>\Lua Headers`
-    - If you cloned the GitHub repository and built the Visual Studio Solution, then folder will be located at `<Solution Directory>/Bin/Debug/Lua Headers`
+  * Browse to the `Lua Includes` folder in your DaS-BRush folder.
+    - If you downloaded a pre-built .zip of it, it will be in `<Extracted Zip File Directory>\Lua Includes`
+    - If you cloned the GitHub repository and built the Visual Studio Solution, then folder will be located at `<Solution Directory>/Bin/Debug/Lua Includes`
   * Click OK.
   * You should now see the directory you just added listed underneath DaS.ScripLib's dropdown-node-thing in the User Libraries list.
   * Click the "Apply and Close" button on the "Preferences" window.
