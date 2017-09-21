@@ -8,8 +8,9 @@ player = Entity.GetPlayer()
 ]]
 Module = {["ModuleName"] = {0x00000000, 0xFFFFFFFF --[[etc]]}}
 
-
-
+---
+--@type LUA
+LUA = {}
 
 
 
@@ -30,10 +31,16 @@ STR_ANSI = 13
 STR_UNI = 14
 
 --Runs an in-game Lua function with the specified address and args. E.g. "FUNC(INT, 0x1234, {int(5), int(7), false});"
-function (returnType, funcAddress, argTable) end
+function FUNC(returnType, funcAddress, argTable) end
 
 --Runs an in-game Lua function with the specified address, args, and x86 register values. E.g. "FUNC(INT, 0x1234, {int(5), int(7), false}, {"EAX" = 7, "ECX" = 0x12345678});"
-function FUNC_REG(returnType, funcAddress, argTable) end
+function FUNC_REG(returnType, funcAddress, argTable, regTable) end
+
+---
+--Prompts to attach debugger to Dark Souls Scripting Library.
+--The debugger selection window will likely open in the background.
+--WARNING: Execution of the Lua script is paused until you either select a debugger or cancel the selection.
+function debugger() end
 
 function trace(txt) end
 --function unpack(table) end

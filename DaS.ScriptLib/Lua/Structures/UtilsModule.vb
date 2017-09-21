@@ -89,6 +89,77 @@ Namespace Lua.Structures
             Return 0
         End Function
 
+        Private Shared ReadOnly LuaCompatibleValueTypes As List(Of Type) = {
+            GetType(String),
+            GetType(NLua.LuaFunction),
+            GetType(NLua.LuaTable),
+            GetType(Single),
+            GetType(Double),
+            GetType(Byte),
+            GetType(SByte),
+            GetType(Int16),
+            GetType(UInt16),
+            GetType(Int32),
+            GetType(UInt32),
+            GetType(Int64),
+            GetType(UInt64),
+            GetType(Boolean)
+        }.ToList()
+
+        <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
+        Public Sub BreakViewTable(table As NLua.LuaTable)
+            Throw New Exception("BreakViewTable called.")
+        End Sub
+
+        <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
+        Public Function GetClrObjMembers(lua As NLua.Lua, obj As Object) As NLua.LuaTable
+            Return GetClrObjMembers_Internal(lua, obj, 0)
+        End Function
+
+        Private Function GetClrObjMembers_Internal(lua As NLua.Lua, obj As Object, recursion As Integer) As NLua.LuaTable
+            lua.NewTable("GetClrMembers_Internal_Table_" & New Guid().ToString())
+            Dim tbl = CType(lua("GetClrMembers_Internal_Table_" & New Guid().ToString()), NLua.LuaTable)
+
+            If obj Is Nothing Then
+                Return tbl
+            ElseIf recursion > 3 Then
+                tbl(1) = "[REACHED MAX RECURSION]"
+                Return tbl
+            End If
+
+            Dim objType = obj.GetType()
+
+            If TypeOf obj Is Type Then
+                tbl(1) = "Type: " & DirectCast(obj, Type).Name
+                Return tbl
+            End If
+
+            Dim fieldArr = objType.GetFields(Reflection.BindingFlags.Public Or Reflection.BindingFlags.Instance)
+
+            For Each field In fieldArr
+                tbl(field.Name) = If(LuaCompatibleValueTypes.Contains(field.FieldType), field.GetValue(obj), GetClrObjMembers_Internal(lua, field.GetValue(obj), recursion + 1))
+            Next
+
+            Dim propArr = objType.GetProperties(Reflection.BindingFlags.Public Or Reflection.BindingFlags.Instance)
+
+            For Each prop In propArr
+                If prop.GetIndexParameters().Length > 0 Then
+                    tbl(prop.Name) = "Indexed Property: " & prop.PropertyType.Name & "["
+                Else
+                    Dim propVal As Object = "[ERROR GETTING VALUE]"
+
+                    Try
+                        propVal = prop.GetValue(obj)
+                    Catch ex As Exception
+
+                    End Try
+
+                    tbl(prop.Name) = If(LuaCompatibleValueTypes.Contains(prop.PropertyType), propVal, GetClrObjMembers_Internal(lua, propVal, recursion + 1))
+                End If
+            Next
+            Return tbl
+        End Function
+
     End Class
 
 End Namespace

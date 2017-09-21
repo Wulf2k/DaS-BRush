@@ -23,8 +23,10 @@ function SetSaveSlot(slot) end
 function SetUnknownNpcName(name) end
 function GetClosestEntityToEntity(entityPtr) return 0; end
 function GetEntityPtrList() return {}; end
---Fills the provided table with all of the currently loaded Entity Objects. WIP.
-function GetAllApparentEntities(table) return {}; end
+---
+--@param #LuaInterface luai (literally just do "GetAllCurrentlyLoadedMsbData(LUAI)" and it will work lol)
+--@return #table MSB data
+function GetAllCurrentlyLoadedMsbData(luai) return {}; end
 function GetEntityVec3(entityPtr) end
 function MoveEntityLaterallyTowardEntity(entityFromPtr, entityToPtr, speed) end
 function GetAngleBetweenEntities(entityPtrA, entityPtrB) end

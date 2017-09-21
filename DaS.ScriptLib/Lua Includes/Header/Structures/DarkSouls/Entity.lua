@@ -38,6 +38,20 @@ EntityDebugFlags = {
 }
 
 ---
+-- @type EntityMapFlagsA
+EntityMapFlagsA = {
+    None = 0,
+    EnableLogic = 0x1
+}
+
+---
+-- @type EntityMapFlagsB
+EntityMapFlagsA = {
+    None = 0,
+    DisableCollision = 0x40
+}
+
+---
 -- @type Covenant
 Covenant = {
     None = 0,
@@ -57,9 +71,14 @@ Covenant = {
 -- @field #EntityFlagsA FlagsA
 -- @field #EntityFlagsB FlagsB
 -- @field #EntityDebugFlags DebugFlags
+-- @field #EntityMapFlagsA MapFlagsA
+-- @field #EntityMapFlagsB MapFlagsB
 -- @field [parent=#Entity] #EntityController Controller
 -- @field #EntityController DebugController
 Entity = {
+    HeaderPtr = 0,
+    Header = EntityHeader,
+    DisableEventBackreadState = false,
     DebugControllerPtr = 0,
     DebugController = EntityController,
     Covenant = 0,
@@ -105,6 +124,8 @@ Entity = {
     ResistanceCurseMax = 0,
     Unknown1Ptr = 0,
     CharMapDataPtr = 0,
+    MapFlagsA = 0,
+    MapFlagsB = 0,
     ControllerPtr = 0,
     Controller = EntityController,
     AnimationPtr = 0,
@@ -117,12 +138,8 @@ Entity = {
     AnimDbgDrawBoneName = 0,
     AnimDbgDrawExtractMotion = 0,
     AnimDbgSlotLog = 0,
-    LocationPointer = 0,
-    RotationHeading = 0,
-    RotationPlanar = 0,
-    PosX = 0,
-    PosY = 0,
-    PosZ = 0,
+    LocationPtr = 0,
+    Location = EntityLocation,
     StatsPtr = 0,
     StatHP = 0,
     StatMaxHPBase = 0,
@@ -225,6 +242,8 @@ Entity = {
     SetDisableGravity = false,
     SetDrawEnable = false,
     SetSuperArmor = false,
+    DisableCollision = false,
+    EnableLogic = false,
 }
 
 ---

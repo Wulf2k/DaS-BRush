@@ -66,6 +66,12 @@
   <ItemGroup>
     <Compile Include="Game\Data\Structures\Entity.vb" />
     <Compile Include="Game\Data\Structures\EntityController.vb" />
+    <Compile Include="Game\Data\Structures\EntityLocation.vb" />
+    <Compile Include="Game\Data\Structures\Map.vb" />
+    <Compile Include="Game\Data\Structures\EntityHeader.vb" />
+    <Compile Include="Game\Data\Structures\MapEntry.vb" />
+    <Compile Include="Game\Data\Structures\WIP\MSB.vb" />
+    <Compile Include="Game\Data\Structures\WIP\MSBEntry.vb" />
     <Compile Include="Game\Data\[EntityName]\Boss.vb" />
     <Compile Include="Game\Data\[EntityName]\EntityName.vb" />
     <Compile Include="Game\Data\Helpers\BossRushHelper.vb" />
@@ -153,22 +159,37 @@
     <None Include="Lua Includes\Header\Helpers\BossRushHelper.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Includes\Header\Structures\Entity.lua">
+    <None Include="Lua Includes\Header\Structures\DarkSouls\Entity.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Includes\Header\Structures\Heading.lua">
+    <None Include="Lua Includes\Header\Structures\DarkSouls\EntityController.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Includes\Header\Structures\Loc.lua">
+    <None Include="Lua Includes\Header\Structures\DarkSouls\Heading.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Includes\Header\Structures\Vec3.lua">
+    <None Include="Lua Includes\Header\Structures\DarkSouls\Loc.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Lua Includes\Header\Structures\DarkSouls\Vec3.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Lua Includes\Header\Structures\ScriptLib\DSAsmCaller.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Lua Includes\Header\Structures\ScriptLib\LuaInterface.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Lua Includes\Header\Structures\ScriptLib\NLua_Lua.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Lua Includes\Header\Utils.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <EmbeddedResource Include="Lua Includes\Source\DarkSoulsFunctions_Unmapped.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Lua Includes\Source\GlobalLuaHelperFuncs.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <None Include="My Project\Application.myapp">

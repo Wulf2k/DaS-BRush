@@ -293,8 +293,9 @@ Namespace Lua
 
         End Function
         <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
-        Public Shared Function GetAllApparentEntities(ByRef table As NLua.LuaTable) As NLua.LuaTable
+        Public Shared Function GetAllCurrentlyLoadedMsbData(getNewTable As NLua.LuaFunction) As NLua.LuaTable
             Dim tmpPtr As Integer = 0
+            Dim tmpCnt As Integer = 0
 
             Dim mapCount As Integer = 0
             Dim mapPtrs As Integer = 0
@@ -304,28 +305,52 @@ Namespace Lua
 
             Dim entityPtr As Integer = 0
 
+            Dim tableIndexMapName = ""
+            Dim tableIndexEntityName = ""
+
             tmpPtr = RInt32(&H137D644)
 
             mapPtrs = tmpPtr + &H74
             mapCount = RInt32(tmpPtr + &H70)
 
-            Dim entityTableNum = 1
+            Const maxMapNameLength As Integer = 12 'Length of "mXX_XX_XX_XX"
+            Const maxEntityNameLength As Integer = 10 'NEEDS TESTING
+
+            Dim result = DirectCast(getNewTable.Call()(0), NLua.LuaTable)
 
             For mapNum = 0 To mapCount - 1
                 entitiesPtr = RInt32(mapPtrs + 4 * mapNum)
+
+                tableIndexMapName = RUnicodeStr(RInt32(RInt32(entitiesPtr + &H60) + 4), maxMapNameLength)
+
+                'Console.WriteLine("MAP " & tableIndexMapName)
+
                 entitiesCnt = RInt32(entitiesPtr + &H3C)
                 entitiesPtr = RInt32(entitiesPtr + &H40)
+
+                result(tableIndexMapName) = DirectCast(getNewTable.Call()(0), NLua.LuaTable)
 
                 For entityNum = 0 To entitiesCnt - 1
                     entityPtr = RInt32(entitiesPtr + entityNum * &H20)
 
-                    table.Item(entityTableNum) = New Entity(Function() entityPtr)
-                    entityTableNum += 1
+                    tmpPtr = RInt32(entityPtr + &H54)
+                    tmpCnt = RInt32(entityPtr + &H58) - 1
+
+                    tmpPtr = RInt32(tmpPtr + &H28) + &H10
+                    tmpPtr = RInt32(RInt32(tmpPtr + 4 * tmpCnt))
+
+                    tableIndexEntityName = RAsciiStr(tmpPtr, maxEntityNameLength)
+
+                    'Console.WriteLine("ENTITY " & tableIndexEntityName)
+
+                    Dim thisEntityPtr As Integer = entityPtr
+
+                    result(tableIndexMapName & "." & tableIndexEntityName) = New Entity(Function() thisEntityPtr)
                 Next entityNum
 
             Next mapNum
 
-            Return table
+            Return result
         End Function
         <NLua.LuaGlobal(Description:="?Description?")> 'TODO: Description
         Public Shared Function GetEntityVec3(entityPtr As Integer) As Vec3

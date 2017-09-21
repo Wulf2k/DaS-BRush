@@ -39,6 +39,19 @@ Namespace Game.Data.Structures
         DrawHit = &H4
     End Enum
 
+    <Flags>
+    Public Enum EntityMapFlagsA As Byte
+        None = 0
+        EnableLogic = &H1
+    End Enum
+
+    <Flags>
+    Public Enum EntityMapFlagsB As Byte
+        None = 0
+        DisableCollision = &H40
+    End Enum
+
+
     Public Enum Covenant
         WayOfWhite = 1
         PrincessGuard = 2
@@ -67,6 +80,41 @@ Namespace Game.Data.Structures
         Public Sub New(getOffsetFunc As Func(Of Integer))
             _getOffset = getOffsetFunc
         End Sub
+
+        Public Sub New(constantOffsetValue As Integer)
+            Dim offsetValueCopy As Integer = constantOffsetValue
+
+            _getOffset = Function() offsetValueCopy
+        End Sub
+
+        Public Property HeaderPtr As Integer
+            Get
+                Return RInt32(Pointer + &HC)
+            End Get
+            Set(value As Integer)
+                WInt32(Pointer + &HC, value)
+            End Set
+        End Property
+
+        Public Property Header As EntityHeader
+            Get
+                Return New EntityHeader(HeaderPtr)
+            End Get
+            Set(value As EntityHeader)
+                Header.CopyFrom(value)
+            End Set
+        End Property
+
+        Public Property DisableEventBackreadState As Boolean
+            Get
+                Return RBool(Pointer + &H14)
+            End Get
+            Set(value As Boolean)
+                WBool(Pointer + &H14, value)
+            End Set
+        End Property
+
+
 
         Public Property DebugControllerPtr As Integer
             Get
@@ -460,6 +508,24 @@ Namespace Game.Data.Structures
             End Get
         End Property
 
+        Public Property MapFlagsA As EntityMapFlagsA
+            Get
+                Return CType(RByte(CharMapDataPtr + &HC0), EntityMapFlagsB)
+            End Get
+            Set(value As EntityMapFlagsA)
+                WByte(CharMapDataPtr + &HC0, CType(value, Byte))
+            End Set
+        End Property
+
+        Public Property MapFlagsB As EntityMapFlagsB
+            Get
+                Return CType(RByte(CharMapDataPtr + &HC6), EntityMapFlagsB)
+            End Get
+            Set(value As EntityMapFlagsB)
+                WByte(CharMapDataPtr + &HC6, CType(value, Byte))
+            End Set
+        End Property
+
         Public Property ControllerPtr As Integer
             Get
                 Return RInt32(CharMapDataPtr + &H54)
@@ -565,55 +631,22 @@ Namespace Game.Data.Structures
             End Set
         End Property
 
-        Public ReadOnly Property LocationPointer As Integer
+        Public Property LocationPtr As Integer
             Get
                 Return RInt32(CharMapDataPtr + &H1C)
             End Get
-        End Property
-
-
-        Public Property RotationHeading As Double
-            Get
-                Return (RFloat(LocationPointer + &H4) / Math.PI * 180) + 180
-            End Get
-            Set(value As Double)
-                WFloat(LocationPointer + &H4, CType(value * Math.PI / 180, Single) - CType(Math.PI, Single))
+            Set(value As Integer)
+                WInt32(CharMapDataPtr + &H1C, value)
             End Set
         End Property
 
-        Public Property RotationPlanar As Double
+        Public Property Location As EntityLocation
             Get
-                Return RFloat(LocationPointer + &H4)
+                Return New EntityLocation(LocationPtr)
             End Get
-            Set(value As Double)
-                WFloat(LocationPointer + &H4, CType(value, Single))
-            End Set
-        End Property
-
-        Public Property PosX As Single
-            Get
-                Return RFloat(LocationPointer + &H10)
-            End Get
-            Set(value As Single)
-                WFloat(LocationPointer + &H10, value)
-            End Set
-        End Property
-
-        Public Property PosY As Single
-            Get
-                Return RFloat(LocationPointer + &H14)
-            End Get
-            Set(value As Single)
-                WFloat(LocationPointer + &H14, value)
-            End Set
-        End Property
-
-        Public Property PosZ As Single
-            Get
-                Return RFloat(LocationPointer + &H18)
-            End Get
-            Set(value As Single)
-                WFloat(LocationPointer + &H18, value)
+            Set(value As EntityLocation)
+                Dim fuckVb = New EntityLocation(LocationPtr)
+                fuckVb.CopyFrom(value)
             End Set
         End Property
 
@@ -1602,6 +1635,52 @@ Namespace Game.Data.Structures
                 SetFlagA(EntityFlagsA.SetSuperArmor, value)
             End Set
         End Property
+#End Region
+
+        Public Function GetMapFlagA(flg As EntityMapFlagsA) As Boolean
+            Return MapFlagsA.HasFlag(flg)
+        End Function
+
+        Public Sub SetMapFlagA(flg As EntityMapFlagsA, state As Boolean)
+            If state Then
+                MapFlagsA = MapFlagsA Or flg
+            Else
+                MapFlagsA = MapFlagsA And (Not flg)
+            End If
+        End Sub
+
+        Public Function GetMapFlagB(flg As EntityMapFlagsB) As Boolean
+            Return MapFlagsB.HasFlag(flg)
+        End Function
+
+        Public Sub SetMapFlagB(flg As EntityMapFlagsB, state As Boolean)
+            If state Then
+                MapFlagsB = MapFlagsB Or flg
+            Else
+                MapFlagsB = MapFlagsB And (Not flg)
+            End If
+        End Sub
+
+#Region "MapFlagsA and MapFlagsB"
+
+        Public Property EnableLogic As Boolean
+            Get
+                Return GetMapFlagA(EntityMapFlagsA.EnableLogic)
+            End Get
+            Set(value As Boolean)
+                SetMapFlagA(EntityMapFlagsA.EnableLogic, value)
+            End Set
+        End Property
+
+        Public Property DisableCollision As Boolean
+            Get
+                Return GetMapFlagB(EntityMapFlagsB.DisableCollision)
+            End Get
+            Set(value As Boolean)
+                SetMapFlagB(EntityMapFlagsB.DisableCollision, value)
+            End Set
+        End Property
+
 #End Region
 
         Public Sub View()

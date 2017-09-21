@@ -12,10 +12,12 @@ Namespace Lua
 
         Const INGAME_FUNC_ADDR_FILE = "IngameFunctions.txt"
 
+        'TODO: Automatically load all of these without having to add them to this list.
         Public Shared ReadOnly EmbeddedLuaScriptIncludes() As String = {
             "DarkSoulsFunctions.lua",
             "DarkSoulsFunctions_This.lua",
-            "DarkSoulsFunctions_Unmapped.lua"
+            "DarkSoulsFunctions_Unmapped.lua",
+            "GlobalLuaHelperFuncs.lua"
         }
 
         Private Shared ReadOnly Property _ingameFuncAddresses As ReadOnlyDictionary(Of String, Integer)
@@ -125,13 +127,15 @@ Namespace Lua
             _AsmCaller = New DSAsmCaller()
 
             State.LoadCLRPackage()
-            State.DoString("import ('System', 'System') ")
+            State.DoString("import ('System', 'System')")
 
             For Each ns In ImportedNamespaces
-                State.DoString($"import ('Dark Souls Scripting Library', '{ns}') ")
+                State.DoString($"import ('Dark Souls Scripting Library', '{ns}')")
             Next
 
             State.DoString("import = function () end", "SANDBOX")
+
+            State("LUA") = State
 
             'State("FUNC") = State.RegisterFunction("FUNC", GetType(LuaInterface).GetMethod("CallIngameFunc"))
 
@@ -215,15 +219,35 @@ Namespace Lua
 
             State.DoString("player = Entity.GetPlayer()")
 
+            State.DoString("printf = function(format, ...) Console.WriteLine(string.format(format, ...)); end")
+
         End Sub
 
         Private Sub LuaState_DebugHook(sender As Object, e As DebugHookEventArgs)
             Dbg.Print("line: " & e.LuaDebug.currentline & ", event: " & e.LuaDebug.eventCode)
         End Sub
 
+        ''Not a global
+        'Public Sub LuaPrintfHelper(formatStr As String, args As NLua.LuaTable)
+        '    Console.WriteLine("")
+        'End Sub
+
+        'Public Function LuaToStringPlus(anything) As String
+
+        'End Function
+
         <NLua.LuaGlobal(Name:="trace")>
         Public Sub LuaTrace(str As String)
             Console.WriteLine("LUA TRACE > " & str)
+        End Sub
+
+        <NLua.LuaGlobal(Name:="debugger")>
+        Public Sub LuaAttachDebugger()
+            Console.WriteLine("Launching Windows debugger select dialog...")
+            Beep()
+            If Not Debugger.Launch() Then
+                Console.Error.WriteLine("Debugger failed to launch after being requested within script.")
+            End If
         End Sub
 
         <NLua.LuaGlobal(Name:="unpack")>
@@ -301,6 +325,12 @@ Namespace Lua
         Public Function CallIngameFuncREG(returnType As FuncReturnType, funcAddress As Integer, specialRegisters As Dictionary(Of String, Object), ParamArray args As Object()) As Object
             Return AsmCaller.CallIngameFunc(Me, returnType, funcAddress, args, specialRegisters)
         End Function
+
+
+        Public Function GetNewAnonymousTable() As NLua.LuaTable
+            Return DirectCast(State.DoString("return {};")(0), NLua.LuaTable)
+        End Function
+
 
         Public Sub DebugRegisterLocal(path As String, val As Object)
 

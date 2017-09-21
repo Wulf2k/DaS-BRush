@@ -332,7 +332,7 @@ Namespace Injection
                 Dbg.PrintErr("WARNING: CODE INJECT FAILURE")
             End If
 
-            luai.DebugUpdate()
+            'luai.DebugUpdate()
 
             For Each ptr In Buffer_ParamPointerList
                 ptr.Dispose()
