@@ -43,15 +43,6 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Managed.X86">
-      <HintPath>..\Lib\Managed.X86\Managed.X86.dll</HintPath>
-    </Reference>
-    <Reference Include="NLua">
-      <HintPath>..\Lib\NLua\NLua.dll</HintPath>
-    </Reference>
-    <Reference Include="KeraLua">
-      <HintPath>..\Lib\NLua\KeraLua.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
@@ -73,25 +64,34 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game\AllocatedPtr\AllocatedPtr.vb" />
-    <Compile Include="Game\AllocatedPtr\IngameAllocatedPtr.vb" />
-    <Compile Include="Game\AllocatedPtr\ScriptLibAllocatedPtr.vb" />
-    <Compile Include="Main\AsmExecutor.vb" />
-    <Compile Include="Main\House of Enumeration.vb" />
-    <Compile Include="Main\ScriptRes.vb" />
-    <Compile Include="Utility Data Types\FuncInfo.vb" />
-    <Compile Include="Game\Data Types\BossFightInfo.vb" />
-    <Compile Include="Game\Data Types\EntityLocation.vb" />
-    <Compile Include="Game\Data Types\EventFlag.vb" />
-    <Compile Include="Game\Data Types\Vec3.vb" />
-    <Compile Include="Game\Data.vb" />
-    <Compile Include="Main\Lua.vb" />
-    <Compile Include="ScriptHelpers\BossRushHelper.vb" />
-    <Compile Include="ScriptHelpers\Dbg.vb" />
-    <Compile Include="Main\Funcs.vb" />
-    <Compile Include="Misc\HideFromScriptingAttribute.vb" />
-    <Compile Include="Main\Game.vb" />
-    <Compile Include="Utility Data Types\LivePtrVarBase.vb" />
+    <Compile Include="Game\Data\Structures\Heading.vb" />
+    <Compile Include="Game\Mem\GameStats.vb" />
+    <Compile Include="Game\Mem\Player.vb" />
+    <Compile Include="Game\Mem\Ptr.vb" />
+    <Compile Include="Injection\Kernel.vb" />
+    <Compile Include="Injection\Structures\DarkSoulsVersion.vb" />
+    <Compile Include="Injection\Structures\SafeRemoteThreadHandle.vb" />
+    <Compile Include="Injection\Structures\SafeDarkSoulsHandle.vb" />
+    <Compile Include="Injection\Structures\SafeMarshalledHandle.vb" />
+    <Compile Include="Injection\Structures\SafeRemoteHandle.vb" />
+    <Compile Include="Game\Data\AnimationID\Player.vb" />
+    <Compile Include="Game\Data\EventID\Boss.vb" />
+    <Compile Include="Lua\Structures\FuncReturnType.vb" />
+    <Compile Include="Lua\Structures\LuaBoxedVal.vb" />
+    <Compile Include="ModAPI\DSMod.vb" />
+    <Compile Include="Injection\DSAsmCaller.vb" />
+    <Compile Include="Lua\LuaInterface.vb" />
+    <Compile Include="Injection\Structures\MoveableAddressOffset.vb" />
+    <Compile Include="Injection\Structures\[MutatableDword]\MutatableDword.vb" />
+    <Compile Include="Lua\ScriptLibResources.vb" />
+    <Compile Include="Game\Data\Structures\Loc.vb" />
+    <Compile Include="Game\Data\Structures\EventFlag.vb" />
+    <Compile Include="Game\Data\Structures\Vec3.vb" />
+    <Compile Include="Lua\Dbg.vb" />
+    <Compile Include="Lua\Funcs.vb" />
+    <Compile Include="Injection\Structures\LivePtrVar.vb" />
+    <Compile Include="ModAPI\ModFunc.vb" />
+    <Compile Include="ModAPI\ModManager.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -107,8 +107,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Main\Proc.vb" />
-    <Compile Include="Utility Data Types\ParamInfo.vb" />
+    <Compile Include="Injection\HookModule.vb" />
+    <Compile Include="Injection\Structures\[MutatableDword]\MutatableDwordHelperModule.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -128,7 +128,7 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-    <EmbeddedResource Include="Resources\Funcs.FuncCall.LuaTemplate.lua" />
+    <EmbeddedResource Include="Resources\DarkSoulsFunctions.lua" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Lib\NLua\lua52.dll">
@@ -142,6 +142,23 @@
     <EmbeddedResource Include="Resources\CL\CL.Bonfires.txt" />
     <EmbeddedResource Include="Resources\CL\CL.Armor.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Lib\Managed.X86\Managed.X86.csproj">
+      <Project>{1aaf4b4d-2986-4f56-bebc-eec6ea0ee435}</Project>
+      <Name>Managed.X86</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib\NLua\Core\KeraLua\KeraLua.Net45.csproj">
+      <Project>{47153754-10F5-44D8-B578-F5A32B69061A}</Project>
+      <Name>KeraLua.Net45</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib\NLua\Core\NLua\NLua.Net45.csproj">
+      <Project>{f55cabbb-4108-4a39-94e1-581fd46dc021}</Project>
+      <Name>NLua.Net45</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Game\Data\Helpers\" />
+    <Folder Include="Lua\Helpers\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

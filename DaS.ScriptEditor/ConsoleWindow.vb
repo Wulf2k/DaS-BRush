@@ -1,6 +1,8 @@
 ﻿Imports System.IO
 Imports System.Reflection
 Imports DaS.ScriptLib
+Imports DaS.ScriptLib.Injection
+Imports DaS.ScriptLib.Lua
 
 Public Class ConsoleWindow
 
@@ -23,7 +25,8 @@ Public Class ConsoleWindow
     Private ReadOnly Property SplitterIsSwapped As Boolean = False
 
     Private Sub ConsoleWindow_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Game.Hook()
+        'HookModule.Hook()
+        UpdateToolStrip()
         AddTab()
         AddHandler guiRefreshTimer.Tick, AddressOf GuiRefreshTimerTick
 
@@ -32,11 +35,11 @@ Public Class ConsoleWindow
         'GetType(TabControl).InvokeMember("DoubleBuffered", BindingFlags.SetProperty Or BindingFlags.Instance Or BindingFlags.NonPublic, Nothing, cwTabs, New Object() {True})
     End Sub
 
-    Private Sub sobOutput_OnAddLine(line As String) Handles sobOutput.OnAddLine
+    Private Sub sobOutput_OnAddLine(line As String)
         IncreaseTsbtnOutputCounter()
     End Sub
 
-    Private Sub sobOutput_OnClearAllLines() Handles sobOutput.OnClearAllLines
+    Private Sub sobOutput_OnClearAllLines()
         ResetTsbtnOutputCounter()
     End Sub
 
@@ -95,13 +98,13 @@ Public Class ConsoleWindow
         Dim focusedScriptRunning As Boolean = False 'Defaults to false if no tabs are open
 
         If AreAnyTabsOpen AndAlso FocusedConsHandler IsNot Nothing Then
-            focusedScriptRunning = (FocusedConsHandler.luaRunner.State = LuaRunnerState.Running)
+            focusedScriptRunning = FocusedConsHandler.ScriptThread IsNot Nothing
         End If
 
         ToolStrip1.
             Invoke(
             Sub(isConsoling As Boolean)
-                If tsHook IsNot Nothing Then tsHook.Text = Game.DetectedDarkSoulsVersion
+                If tsHook IsNot Nothing Then tsHook.Text = DARKSOULS.VersionDisplayName
                 If tsbtnRun IsNot Nothing Then tsbtnRun.Enabled = Not isConsoling
                 If tsbtnStop IsNot Nothing Then tsbtnStop.Enabled = isConsoling
             End Sub, focusedScriptRunning)
@@ -366,8 +369,8 @@ Public Class ConsoleWindow
     End Function
 
     Private Sub tsbtnHook_Click(sender As Object, e As EventArgs) Handles tsbtnHook.Click
-        Game.Hook()
-        ToolStrip1.Invoke(Sub() tsHook.Text = Game.DetectedDarkSoulsVersion)
+        DARKSOULS.TryAttachToDarkSouls()
+        ToolStrip1.Invoke(Sub() tsHook.Text = DARKSOULS.VersionDisplayName)
     End Sub
 
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
@@ -380,24 +383,23 @@ Public Class ConsoleWindow
         Process.Start(webAddress)
     End Sub
 
-    Private Sub tsbtnRun_Click(sender As Object, e As EventArgs) Handles tsbtnRun.Click
-        If FocusedConsHandler.luaRunner.State = LuaRunnerState.Stopped Or
-            FocusedConsHandler.luaRunner.State = LuaRunnerState.Finished Then
-            FocusedConsHandler.luaRunner.StartExecution(FocusedConsHandler.cons.Text)
-            'ElseIf FocusedConsHandler.luaRunner.State = LuaRunnerState.Running Then
-            '    FocusedConsHandler.luaRunner.PauseExecution()
-            'ElseIf FocusedConsHandler.luaRunner.State = LuaRunnerState.Paused Then
-            '    FocusedConsHandler.luaRunner.ResumeExecution()
-        End If
-    End Sub
+    'TODO:NEWLUA Private Sub tsbtnRun_Click(sender As Object, e As EventArgs) Handles tsbtnRun.Click
+    '    If Not FocusedConsHandler.curMod.IsRunning Then
+    '        FocusedConsHandler.ResetMod(FocusedConsHandler.cons.Text)
+    '        'ElseIf FocusedConsHandler.luaRunner.State = LuaRunnerState.Running Then
+    '        '    FocusedConsHandler.luaRunner.PauseExecution()
+    '        'ElseIf FocusedConsHandler.luaRunner.State = LuaRunnerState.Paused Then
+    '        '    FocusedConsHandler.luaRunner.ResumeExecution()
+    '    End If
+    'End Sub
 
-    Private Sub tsbtnStop_Click(sender As Object, e As EventArgs) Handles tsbtnStop.Click
-        If FocusedConsHandler.luaRunner.State = LuaRunnerState.Running Then
-            FocusedConsHandler.luaRunner.StopExecution()
-        End If
-    End Sub
+    'TODO:NEWLUA Private Sub tsbtnStop_Click(sender As Object, e As EventArgs) Handles tsbtnStop.Click
+    '    If FocusedConsHandler.curMod.IsRunning Then
+    '        FocusedConsHandler.curMod.Stop()
+    '    End If
+    'End Sub
 
-    Private Sub cwTabs_TabIndexChanged(sender As Object, e As EventArgs) Handles cwTabs.SelectedIndexChanged
+    Private Sub cwTabs_TabIndexChanged(sender As Object, e As EventArgs)
         If Not AreAnyTabsOpen Then Return 'Yeah you'd think this wasnt needed
 
         If Not cwTabs Is Nothing AndAlso cwTabs.TabCount > 0 AndAlso cwTabs.SelectedIndex >= 0 AndAlso cwTabs.SelectedIndex < cwTabs.TabCount AndAlso Not cwTabs.SelectedTab Is Nothing Then
@@ -412,7 +414,7 @@ Public Class ConsoleWindow
         contextMenuTab.Show(cwTabs, New Point(x, y))
     End Sub
 
-    Private Sub cwTabs_MouseClick(sender As Object, e As MouseEventArgs) Handles cwTabs.MouseClick
+    Private Sub cwTabs_MouseClick(sender As Object, e As MouseEventArgs)
         If e.Button = MouseButtons.Middle Then
             For i = 0 To cwTabs.TabPages.Count - 1
                 If cwTabs.GetTabRect(i).Contains(e.X, e.Y) Then
@@ -500,17 +502,17 @@ Public Class ConsoleWindow
     Private Sub ConsoleWindow_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
         ' Checks if this is the last form open in this process
         If Application.OpenForms.Count = 0 Then
-            Game.Unhook()
+            DARKSOULS.Close()
         End If
     End Sub
 
-    Private Sub splitter_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles splitter.SplitterMoved
+    Private Sub splitter_SplitterMoved(sender As Object, e As SplitterEventArgs)
         If AreAnyTabsOpen Then
             FocusedConsHandler.cons.Select()
         End If
     End Sub
 
-    Private Sub btnHideOutput_Click(sender As Object, e As EventArgs) Handles btnHideOutput.Click
+    Private Sub btnHideOutput_Click(sender As Object, e As EventArgs)
         SplitterToggleOutputPanel()
         ResetTsbtnOutputCounter()
 
@@ -619,5 +621,27 @@ Public Class ConsoleWindow
             tslblStatus.Text = text
         End Sub
         )
+    End Sub
+
+
+    Friend Sub ExecuteScript()
+        Dim luai As New LuaInterface()
+        luai.State.DoString(FocusedConsHandler.cons.Text)
+
+        FocusedConsHandler.ScriptThread = Nothing
+    End Sub
+
+    Public Sub tsbtnRun_Click(sender As Object, e As EventArgs) Handles tsbtnRun.Click
+        If FocusedConsHandler.ScriptThread Is Nothing Then
+            FocusedConsHandler.ScriptThread = New Threading.Thread(AddressOf ExecuteScript)
+            FocusedConsHandler.ScriptThread.Start()
+        End If
+    End Sub
+
+    Public Sub tsbtnStop_Click(sender As Object, e As EventArgs) Handles tsbtnStop.Click
+        If FocusedConsHandler.ScriptThread IsNot Nothing Then
+            FocusedConsHandler.ScriptThread.Abort()
+            FocusedConsHandler.ScriptThread = Nothing
+        End If
     End Sub
 End Class

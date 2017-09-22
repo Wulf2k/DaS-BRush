@@ -96,6 +96,9 @@
     <Compile Include="AboutPopup.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="BossFightInfo.vb" />
+    <Compile Include="BossFights.vb" />
+    <Compile Include="BossRushHelper.vb" />
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
     </Compile>
