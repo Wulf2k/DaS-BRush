@@ -1148,10 +1148,10 @@ Namespace Game.Data.Structures
 
         Public Property StatEquipHelmet As Integer
             Get
-                Return RInt32(StatsPtr + &H258)
+                Return RInt32(StatsPtr + &H26C)
             End Get
             Set(value As Integer)
-                WInt32(StatsPtr + &H258, value)
+                WInt32(StatsPtr + &H26C, value)
             End Set
         End Property
 
