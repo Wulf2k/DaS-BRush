@@ -42,3 +42,7 @@ function PrintAllGlobals()
 end
 
 function thread(func, ...)
+
+    
+
+end
