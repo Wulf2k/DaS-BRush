@@ -1148,12 +1148,37 @@ Namespace Game.Data.Structures
 
         Public Property StatEquipHelmet As Integer
             Get
-                Return RInt32(StatsPtr + &H258)
+                Return RInt32(StatsPtr + &H26C)
             End Get
             Set(value As Integer)
-                WInt32(StatsPtr + &H258, value)
+                WInt32(StatsPtr + &H26C, value)
             End Set
         End Property
+        Public Property StatEquipChest As Integer
+            Get
+                Return RInt32(StatsPtr + &H270)
+            End Get
+            Set(value As Integer)
+                WInt32(StatsPtr + &H270, value)
+            End Set
+        End Property
+        Public Property StatEquipGloves As Integer
+            Get
+                Return RInt32(StatsPtr + &H274)
+            End Get
+            Set(value As Integer)
+                WInt32(StatsPtr + &H274, value)
+            End Set
+        End Property
+        Public Property StatEquipPants As Integer
+            Get
+                Return RInt32(StatsPtr + &H278)
+            End Get
+            Set(value As Integer)
+                WInt32(StatsPtr + &H278, value)
+            End Set
+        End Property
+
 
         Public Property StatAppearanceScaleHead As Single
             Get
