@@ -1137,6 +1137,8 @@ Namespace Game.Data.Structures
 
         'TODO: CHECK FOR OTHER EQUIP SLOTS
 
+        'todo: other weapons maybe ;))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+
         Public Property StatEquipRightHand2 As Integer
             Get
                 Return RInt32(StatsPtr + &H258)
@@ -1146,7 +1148,7 @@ Namespace Game.Data.Structures
             End Set
         End Property
 
-        Public Property StatEquipHelmet As Integer
+        Public Property StatEquipHead As Integer
             Get
                 Return RInt32(StatsPtr + &H26C)
             End Get
@@ -1162,7 +1164,7 @@ Namespace Game.Data.Structures
                 WInt32(StatsPtr + &H270, value)
             End Set
         End Property
-        Public Property StatEquipGloves As Integer
+        Public Property StatEquipArms As Integer
             Get
                 Return RInt32(StatsPtr + &H274)
             End Get
@@ -1170,7 +1172,7 @@ Namespace Game.Data.Structures
                 WInt32(StatsPtr + &H274, value)
             End Set
         End Property
-        Public Property StatEquipPants As Integer
+        Public Property StatEquipLegs As Integer
             Get
                 Return RInt32(StatsPtr + &H278)
             End Get
