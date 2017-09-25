@@ -5,10 +5,6 @@
         Private ReadOnly [Function] As NLua.LuaFunction
         Private ReadOnly Thread As Threading.Thread
 
-        Private ___resultLock As New Object()
-
-        Private _result As Object()
-
         Public ReadOnly Property HasReturned As Boolean = False
         Public ReadOnly Property Running As Boolean = False
 
