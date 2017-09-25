@@ -3,6 +3,12 @@
 -- @type EntityController
 EntityController = {
     Pointer = 0,
+    MoveX = 0,
+    MoveY = 0,
+    CamRotSpeedH = 0,
+    CamRotSpeedV = 0,
+    CamRotH = 0,
+    CamRotV = 0,
     R1Held_Sometimes = false,
     L2OrR1Held_Sometimes = false,
     RMouseHeld = false,
@@ -25,5 +31,8 @@ EntityController = {
     SecondsR2Held = 0,
     SecondsR1Held2 = 0,
     SecondsL1Held = 0,
-    SecondsGuarding2 = 0
+    SecondsGuarding2 = 0,
+    AnimationID = 0,
+    AIControllerPtr = 0,
+    AIController = EntityAIController
 }

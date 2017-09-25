@@ -277,6 +277,33 @@ Namespace Game.Data.Structures
             End Set
         End Property
 
+        Public Property AnimationID As Integer
+            Get
+                Return RInt32(Pointer + &H1E8)
+            End Get
+            Set(value As Integer)
+                WInt32(Pointer + &H1E8, value)
+            End Set
+        End Property
+
+        Public Property AIControllerPtr As Integer
+            Get
+                Return RInt32(Pointer + &H230)
+            End Get
+            Set(value As Integer)
+                WInt32(Pointer + &H230, value)
+            End Set
+        End Property
+
+        Public Property AIController As EntityAIController
+            Get
+                Return New EntityAIController(AIControllerPtr)
+            End Get
+            Set(value As EntityAIController)
+                AIController.CopyFrom(value)
+            End Set
+        End Property
+
     End Class
 
 End Namespace

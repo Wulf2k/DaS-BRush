@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\Data\Structures\Entity.vb" />
+    <Compile Include="Game\Data\Structures\EntityAIController.vb" />
     <Compile Include="Game\Data\Structures\EntityController.vb" />
     <Compile Include="Game\Data\Structures\EntityLocation.vb" />
     <Compile Include="Game\Data\Structures\Map.vb" />
@@ -93,6 +94,7 @@
     <Compile Include="Game\Data\EventFlag\Boss.vb" />
     <Compile Include="Lua\Helpers\AutoCompleteHelper.vb" />
     <Compile Include="Lua\Structures\LuaAutoCompleteEntry.vb" />
+    <Compile Include="Lua\Structures\LuaFuncThread.vb" />
     <Compile Include="Lua\Structures\[BoxedString]\BoxedStringUni.vb" />
     <Compile Include="Lua\Structures\[BoxedString]\BoxedStringAnsi.vb" />
     <Compile Include="Lua\Structures\[BoxedString]\BoxedString.vb" />

@@ -73,7 +73,6 @@ Covenant = {
 -- @field #EntityDebugFlags DebugFlags
 -- @field #EntityMapFlagsA MapFlagsA
 -- @field #EntityMapFlagsB MapFlagsB
--- @field [parent=#Entity] #EntityController Controller
 -- @field #EntityController DebugController
 Entity = {
     HeaderPtr = 0,

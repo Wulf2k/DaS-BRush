@@ -24,7 +24,7 @@ Namespace Injection
         Private Function CheckAddress(ByVal addr As IntPtr) As Boolean
             Dim result = False
             SyncLock LOCK_OBJ
-                result = (addr.ToInt32() >= DARKSOULS.SafeBaseMemoryOffset) AndAlso addr.ToInt32() < &H10000000 'may need adjusting
+                result = (addr.ToInt32() >= DARKSOULS.SafeBaseMemoryOffset) ' AndAlso addr.ToInt32() < &H10000000 'may need adjusting
             End SyncLock
             Return result
         End Function
@@ -202,16 +202,34 @@ Namespace Injection
             Kernel.WriteProcessMemory_SAFE(DARKSOULS.GetHandle(), addr, BitConverter.GetBytes(val), 2, Nothing)
         End Sub
 
+        <NLua.LuaGlobal(Name:="WUInt16")>
+        Public Sub WUInt16(ByVal addr As Long, val As UInt16)
+            If Not CheckAddress(addr) Then Return
+            Kernel.WriteProcessMemory_SAFE(DARKSOULS.GetHandle(), addr, BitConverter.GetBytes(val), 2, Nothing)
+        End Sub
+
         <NLua.LuaGlobal(Name:="WInt32")>
         Public Sub WInt32(ByVal addr As Long, val As Int32)
             If Not CheckAddress(addr) Then Return
             Kernel.WriteProcessMemory_SAFE(DARKSOULS.GetHandle(), addr, BitConverter.GetBytes(val), 4, Nothing)
         End Sub
 
-        <NLua.LuaGlobal(Name:="WUint32")>
+        <NLua.LuaGlobal(Name:="WUInt32")>
         Public Sub WUInt32(ByVal addr As Long, val As UInt32)
             If Not CheckAddress(addr) Then Return
             Kernel.WriteProcessMemory_SAFE(DARKSOULS.GetHandle(), addr, BitConverter.GetBytes(val), 4, Nothing)
+        End Sub
+
+        <NLua.LuaGlobal(Name:="WInt64")>
+        Public Sub WInt64(ByVal addr As Long, val As Int64)
+            If Not CheckAddress(addr) Then Return
+            Kernel.WriteProcessMemory_SAFE(DARKSOULS.GetHandle(), addr, BitConverter.GetBytes(val), 8, Nothing)
+        End Sub
+
+        <NLua.LuaGlobal(Name:="WUInt64")>
+        Public Sub WUInt64(ByVal addr As Long, val As UInt64)
+            If Not CheckAddress(addr) Then Return
+            Kernel.WriteProcessMemory_SAFE(DARKSOULS.GetHandle(), addr, BitConverter.GetBytes(val), 8, Nothing)
         End Sub
 
         <NLua.LuaGlobal(Name:="WFloat")>
