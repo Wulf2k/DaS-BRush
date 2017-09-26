@@ -40,9 +40,3 @@ end
 function PrintAllGlobals()
   dump(_G,"")
 end
-
-function thread(func, ...)
-
-    
-
-end

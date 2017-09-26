@@ -94,7 +94,7 @@
     <Compile Include="Game\Data\EventFlag\Boss.vb" />
     <Compile Include="Lua\Helpers\AutoCompleteHelper.vb" />
     <Compile Include="Lua\Structures\LuaAutoCompleteEntry.vb" />
-    <Compile Include="Lua\Structures\LuaFuncThread.vb" />
+    <Compile Include="Lua\Structures\LuaThread.vb" />
     <Compile Include="Lua\Structures\[BoxedString]\BoxedStringUni.vb" />
     <Compile Include="Lua\Structures\[BoxedString]\BoxedStringAnsi.vb" />
     <Compile Include="Lua\Structures\[BoxedString]\BoxedString.vb" />
@@ -143,9 +143,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Lua Includes\Source\DarkSoulsFunctions.lua">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
     <None Include="Lua Includes\Header\Global.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -161,10 +158,20 @@
     <None Include="Lua Includes\Header\Helpers\BossRushHelper.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Lua Includes\Header\Structures\CLR\Array.lua" />
     <None Include="Lua Includes\Header\Structures\DarkSouls\Entity.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Lua Includes\Header\Structures\DarkSouls\EntityAIController.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Lua Includes\Header\Structures\DarkSouls\EntityController.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Lua Includes\Header\Structures\DarkSouls\EntityHeader.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Lua Includes\Header\Structures\DarkSouls\EntityLocation.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Lua Includes\Header\Structures\DarkSouls\Heading.lua">
@@ -173,25 +180,46 @@
     <None Include="Lua Includes\Header\Structures\DarkSouls\Loc.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Lua Includes\Header\Structures\DarkSouls\Map.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Lua Includes\Header\Structures\DarkSouls\MapEntry.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Lua Includes\Header\Structures\DarkSouls\Vec3.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Includes\Header\Structures\ScriptLib\DSAsmCaller.lua">
+    <None Include="Lua Includes\Header\Structures\NLua\Lua.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Includes\Header\Structures\ScriptLib\LuaInterface.lua">
+    <None Include="Lua Includes\Header\Structures\NLua\LuaFunction.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Lua Includes\Header\Structures\ScriptLib\NLua_Lua.lua">
+    <None Include="Lua Includes\Header\Structures\ScriptLib\Injection\DSAsmCaller.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Lua Includes\Header\Structures\ScriptLib\Lua\LuaInterface.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Lua Includes\Header\Structures\ScriptLib\Lua\Structures\LuaThread.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Lua Includes\Header\Utils.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <EmbeddedResource Include="Lua Includes\Source\DarkSoulsFunctions_Unmapped.lua">
+    <EmbeddedResource Include="Lua Includes\Source\Source.DsFuncs.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Lua Includes\Source\GlobalLuaHelperFuncs.lua">
+    <EmbeddedResource Include="Lua Includes\Source\Source.DsFuncs_This.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Lua Includes\Source\Source.DsFuncs_Unmapped.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Lua Includes\Source\Source.Global.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Lua Includes\Source\Structures\ScriptLib\Source.Structures.LuaThread.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <None Include="My Project\Application.myapp">
@@ -203,9 +231,6 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-    <EmbeddedResource Include="Lua Includes\Source\DarkSoulsFunctions_This.lua">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Lib\NLua\lua52.dll">
@@ -233,6 +258,11 @@
       <Name>NLua.Net45</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Lua Includes\Source\Helpers\" />
+    <Folder Include="Lua Includes\Source\Structures\CLR\" />
+    <Folder Include="Lua Includes\Source\Structures\DarkSouls\" />
+    <Folder Include="Lua Includes\Source\Structures\NLua\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

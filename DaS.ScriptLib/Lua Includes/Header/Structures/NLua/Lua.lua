@@ -1,5 +1,5 @@
 ---
---@type NLua_Lua
+--@type NLua.Lua
 NLua_Lua = {
     IsExecuting = false,
     Globals = {},
@@ -12,10 +12,10 @@ function NLua_Lua:Close() end
 ]]
 
 ---
---@return #function
+--@return #NLua.LuaFunction
 function NLua_Lua:LoadString(chunk, name) end
 ---
---@return #function
+--@return #NLua.LuaFunction
 function NLua_Lua:LoadFile(name) end
 function NLua_Lua:DoString(chunk, chunkName) end
 function NLua_Lua:DoFile(fileName) end
@@ -29,7 +29,7 @@ function NLua_Lua:GetString(fullPath) end
 --@return #table
 function NLua_Lua:GetTable(fullPath) end
 ---
---@return #function
+--@return #NLua.LuaFunction
 function NLua_Lua:GetFunction(fullPath) end
 function NLua_Lua:RegisterLuaDelegateType(delegateType, luaDelegateType) end
 function NLua_Lua:RegisterLuaClassType(klass, luaClass) end
@@ -40,7 +40,7 @@ function NLua_Lua:RegisterLuaClassType(klass, luaClass) end
 function NLua_Lua:LoadCLRPackage() end
 ]]
 
-function NLua_Lua:GetFunction(delegateType, fullPath) end
+--function NLua_Lua:GetFunction(delegateType, fullPath) end
 function NLua_Lua:NewTable(fullPath) end
 function NLua_Lua:GetTableDict(table) end
 function NLua_Lua:SetDebugHook(mask, count) end
@@ -63,9 +63,11 @@ function NLua_Lua:RegisterFunction (path, target, clrFunction --[[name in NLua: 
 
 
 --[[
+
 ---
 --This will dispose of the Lua state object and instantly crash DaS.ScriptLib.Executor. Please, just don't.
 function NLua_Lua:Dispose() end
+
 ]]
 
 

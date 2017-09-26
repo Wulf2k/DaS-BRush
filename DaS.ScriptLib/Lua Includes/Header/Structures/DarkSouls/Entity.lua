@@ -194,10 +194,10 @@ Entity = {
     StatCurseLevel = 0,
     StatInvadeType = 0,
     StatEquipRightHand2 = 0,
-    StatEquipHelmet = 0,
-	StatEquipChest = 0,
-	StatEquipGloves = 0,
-	StatEquipPants = 0,
+    StatEquipHead = 0,
+    StatEquipChest = 0,
+    StatEquipArms = 0,
+    StatEquipLegs = 0,
     StatAppearanceScaleHead = 0,
     StatAppearanceScaleChest = 0,
     StatAppearanceScaleWaist = 0,
@@ -250,51 +250,52 @@ Entity = {
 
 ---
 -- Gets a flag in @{Entity.DebugFlags}
--- @param #Entity self This entity instance.
+-- @param self
 -- @param #EntityDebugFlags flg The flag to get the state of within the @{Entity.DebugFlags} bitmask.
 -- @return #boolean The bit state (on or off)
-function Entity.GetDebugFlag(self, flg) return false; end
+function Entity:GetDebugFlag(flg) return false; end
 
 ---
 -- Sets a flag in @{Entity.DebugFlags}
--- @param #Entity self This entity instance.
+-- @param self
 -- @param #EntityDebugFlags flg The flag to modify in the @{Entity.DebugFlags} bitmask.
 -- @param #boolean state Bit state (on or off)
-function Entity.SetDebugFlag(self, flg, state) end
+function Entity:SetDebugFlag(flg, state) end
 
 ---
 -- Gets a flag in @{Entity.FlagsA}
--- @param #Entity self This entity instance.
+-- @param self
 -- @param #EntityFlagsA flg The flag to get the state of within the @{Entity.FlagsA} bitmask.
 -- @return #boolean The bit state (on or off)
-function Entity.GetFlagA(self, flg) return false; end
+function Entity:GetFlagA(flg) return false; end
 
 ---
 -- Sets a flag in @{Entity.FlagsA}
--- @param #Entity self This entity instance.
+-- @param self
 -- @param #EntityFlagsA flg The flag to modify in the @{Entity.FlagsA} bitmask.
 -- @param #boolean state Bit state (on or off)
-function Entity.SetFlagA(self, flg, state) end
+function Entity:SetFlagA(flg, state) end
 
 ---
+-- @param self
 -- Makes the camera follow this entity.
 function Entity:View() end
 
 ---
 -- Warps this entity to the given entity.
--- @function [parent=#Entity]
+-- @param self
 -- @param #Entity entity The entity to warp to.
 function Entity:WarpToEntity(entity) end
 
 ---
 -- Warps this entity to the entity with the given pointer.
--- @function [parent=#Entity]
+-- @param self
 -- @param #number entityPtr The pointer of the entity to warp to.
-function Entity.WarpToEntityPtr(entityPtr) end
+function Entity:WarpToEntityPtr(entityPtr) end
 
 ---
 -- Warps this entity to the entity with the given ID.
--- @function [parent=#Entity]
+-- @param self
 -- @param #number entityId The EventEntityID of the entity to warp to.
 function Entity:WarpToEventEntityID(entityId) end
 

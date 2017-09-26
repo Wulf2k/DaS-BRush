@@ -12,14 +12,6 @@ Namespace Lua
 
         Const INGAME_FUNC_ADDR_FILE = "IngameFunctions.txt"
 
-        'TODO: Automatically load all of these without having to add them to this list.
-        Public Shared ReadOnly EmbeddedLuaScriptIncludes() As String = {
-            "DarkSoulsFunctions.lua",
-            "DarkSoulsFunctions_This.lua",
-            "DarkSoulsFunctions_Unmapped.lua",
-            "GlobalLuaHelperFuncs.lua"
-        }
-
         Private Shared ReadOnly Property _ingameFuncAddresses As ReadOnlyDictionary(Of String, Integer)
         Private Shared ReadOnly Property _ingameFuncNames As ReadOnlyDictionary(Of Integer, String)
 
@@ -120,7 +112,8 @@ Namespace Lua
             "DaS.ScriptLib.Game.Data",
             "DaS.ScriptLib.Game.Data.Helpers",
             "DaS.ScriptLib.Game.Data.Structures",
-            "DaS.ScriptLib.Game.Mem"
+            "DaS.ScriptLib.Game.Mem",
+            "DaS.ScriptLib.Lua.Structures" 'TODO: Make sure this doesn't give end-user access to something dangerous lol
         }
 
         Private Sub Init()
@@ -169,7 +162,9 @@ Namespace Lua
                 NLua.LuaRegistrationHelper.TaggedStaticMethods(State, typ)
             Next
 
-            For Each scriptName In EmbeddedLuaScriptIncludes
+            Dim allEmbeddedLuaSourceFiles = ScriptLibResources.EmbeddedResourceNames.Where(Function(x) x.ToUpper().StartsWith("SOURCE."))
+
+            For Each scriptName In allEmbeddedLuaSourceFiles
                 State.DoString(ScriptLibResources.GetEmbeddedTextResource(scriptName))
             Next
 

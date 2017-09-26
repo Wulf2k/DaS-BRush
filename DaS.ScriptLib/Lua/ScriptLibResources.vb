@@ -7,7 +7,7 @@ Namespace Lua
         Private Const NamespaceString As String = "DaS.ScriptLib"
         Private Const ResourcePathPrefix As String = NamespaceString & "."
         Private Shared ReadOnly ThisAssembly As Reflection.Assembly
-        Private Shared ReadOnly EmbeddedResourceNames As String() ' Useful for debugging lol
+        Friend Shared ReadOnly EmbeddedResourceNames As String() ' Useful for debugging lol
 
         Public Shared ReadOnly IngameFunctionsFileName As String = "IngameFunctions.txt"
 

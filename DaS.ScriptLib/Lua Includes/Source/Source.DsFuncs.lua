@@ -270,6 +270,46 @@ function DisableMove(chrId, state)
     return FUNC(INT, 0x00D617D0, {int(chrId), state});
 end
 
+function DisableCollection(...)
+    return FUNC(INT, 0x00D60A40, {...});
+end
+
+function DisableHpGauge(...)
+    return FUNC(INT, 0x00D60A00, {...});
+end
+
+function DisableInterupt(...)
+    return FUNC(INT, 0x00D612B0, {...});
+end
+
+function DivideRest(...)
+    return FUNC(INT, 0x00490520, {...});
+end
+
+function EnableAction(...)
+    return FUNC(INT, 0x00D5FD60, {...});
+end
+
+function EnableGeneratorSystem(...)
+    return FUNC(INT, 0x00D5EF20, {...});
+end
+
+function EnableHide(...)
+    return FUNC(INT, 0x00D60E00, {...});
+end
+
+function EnableInvincible(...)
+    return FUNC(INT, 0x00D60D90, {...});
+end
+
+function EnableLogic(...)
+    return FUNC(INT, 0x00D5FD90, {...});
+end
+
+function EnableObjTreasure(...)
+    return FUNC(INT, 0x00D661D0, {...});
+end
+
 ---
 --@return #number
 function ForcePlayAnimation(chrId, animId)
