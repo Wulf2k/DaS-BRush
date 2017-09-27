@@ -53,6 +53,12 @@ function AddDeathCount()
     return FUNC(INT, 0x00D5DE20, {});
 end
 
+
+function AddEventGoal(intA, intB, floatC, floatD, floatE, floatF, floatG, floatH, floatI, floatJ, floatK)
+    return FUNC(INT, 0x00D66000, {int(intA), int(intB), floatC, floatD, floatE, floatF, floatG, floatH, floatI, floatK, floatL});
+end
+
+
 ---
 --@return #boolean
 function AddEventSimpleTalk(intA, intB)
@@ -77,6 +83,11 @@ function AddGeneEvent(intA, intB)
     return FUNC(INT, 0x00D622B0, {int(intA), int(intB)});
 end
 
+
+function AddHelpWhiteGhost()
+    return FUNC(INT, 0x00D5DB50, {});
+end
+
 ---
 --@return #number
 function AddHitMaskByBit(chrId, byteB)
@@ -99,6 +110,15 @@ end
 --@return #number
 function AddInfomationList(intA, intB, intC)
     return FUNC(BYTE, 0x00D62370, {int(intA), int(intB), int(intC)});
+end
+
+
+function AddInfomationListItem(intA, intB, intC)
+    return FUNC(INT, 0x00D62350, {int(intA), int(intB), int(intC)});
+end
+
+function AddInventoryItem(ItemID, Category, Quantity)
+    return FUNC(INT, 0x00D664C0, {int(ItemID), int(Category), int(Quantity)});
 end
 
 ---
@@ -252,6 +272,24 @@ function ClearTarget(chrId)
     return FUNC(BOOL, 0x00D613C0, {int(chrId)});
 end
 
+
+function CloseGenDialog()
+    return FUNC(INT, 0x00D5E500, {});
+end
+
+
+function CloseMenu()
+    return FUNC(INT, 0x00D5ED00, {});
+end
+
+function CloseTalk(intA)
+    return FUNC(INT, 0x00D5E610, {int(intA)});
+end
+
+function CompleteEvent(intA)
+    return FUNC(INT, 0x00D660A0, {int(intA)});
+end
+
 ---
 --@return #number
 function DisableDamage(chrId, state)
@@ -346,6 +384,10 @@ end
 --@return #number
 function GetCurrentMapBlockNo(intA)
     return FUNC(INT, 0x00D5F620, {int(intA)});
+end
+
+function GetItem(intA, intB)
+    return FUNC(INT, 0x00D5E240, {int(intA), int(intB)});
 end
 
 ---
@@ -801,6 +843,10 @@ end
 --@return #boolean
 function SetInsideBattleArea(chrId, intB)
     return FUNC(BOOL, 0x00D61050, {int(chrId), int(intB)});
+end
+
+function SetTextEffect(TextEffectID)
+    return FUNC(INT, 0x00D5E430, {int(TextEffectID)});
 end
 
 ---
