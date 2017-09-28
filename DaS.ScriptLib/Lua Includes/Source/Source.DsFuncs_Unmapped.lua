@@ -1,32 +1,5 @@
 
 
-function AddEventGoal(...) : int
-    return FUNC(INT, 0x00D66000, {...});
-end
-
---[[
-.text:00D60D30 loc_D60D30:                             ; DATA XREF: .text:0108B98Ao
-.text:00D60D30 push    edi
-.text:00D60D31 mov     edi, DebgEvent_Global_obj
-.text:00D60D37 test    edi, edi
-.text:00D60D39 jz      short loc_D60D67
-.text:00D60D3B mov     eax, [esp+8]
-.text:00D60D3F push    esi
-.text:00D60D40 push    eax
-.text:00D60D41 call    sub_D69F30
-.text:00D60D46 mov     esi, eax
-.text:00D60D48 test    esi, esi
-.text:00D60D4A jz      short loc_D60D66
-.text:00D60D4C mov     eax, [esp+10h]
-.text:00D60D50 call    sub_D6C360
-.text:00D60D55 test    eax, eax
-.text:00D60D57 jz      short loc_D60D66
-.text:00D60D59 mov     ecx, [esp+14h]
-.text:00D60D5D push    0
-.text:00D60D5F push    ecx
-.text:00D60D60 push    esi
-.text:00D60D61 call    sub_D40B70
-]]
 function AddEventParts(...) : int
     return FUNC(INT, 0x00D60D30, {...});
 end
@@ -66,25 +39,6 @@ function AddEventParts_Ignore(...) : int
     return FUNC(INT, 0x00D60CF0, {...});
 end
 
---[[
-.text:00D5DB50 loc_D5DB50:                             ; DATA XREF: .text:01089A5Ao
-.text:00D5DB50 mov     ecx, info_about_summons
-.text:00D5DB56 test    ecx, ecx
-.text:00D5DB58 jz      short locret_D5DB6E
-.text:00D5DB5A mov     eax, [ecx+4Ch]
-.text:00D5DB5D cmp     eax, 0FFFFFFFEh
-.text:00D5DB60 jbe     short loc_D5DB6A
-.text:00D5DB62 mov     dword ptr [ecx+4Ch], 0FFFFFFFFh
-.text:00D5DB69 retn
-]]
-function AddHelpWhiteGhost(...) : int
-    return FUNC(INT, 0x00D5DB50, {...});
-end
-
-function AddInfomationListItem(...) : int
-    return FUNC(INT, 0x00D62350, {...});
-end
-
 function AddInfomationTimeMsgTag(...) : int
     return FUNC(INT, 0x00D646F0, {...});
 end
@@ -95,10 +49,6 @@ end
 
 function AddInfomationTosBufferPlus(...) : int
     return FUNC(INT, 0x00D646B0, {...});
-end
-
-function AddInventoryItem(...) : int
-    return FUNC(INT, 0x00D664C0, {...});
 end
 
 function AddKillBlackGhost(...) : int
@@ -243,24 +193,8 @@ function ClearMyWorldState(...) : int
     return FUNC(INT, 0x00D5EDD0, {...});
 end
 
-function CloseGenDialog(...) : int
-    return FUNC(INT, 0x00D5E500, {...});
-end
-
-function CloseMenu(...) : int
-    return FUNC(INT, 0x00D5ED00, {...});
-end
-
 function CloseRankingDialog(...) : int
     return FUNC(INT, 0x00D5D950, {...});
-end
-
-function CloseTalk(...) : int
-    return FUNC(INT, 0x00D5E610, {...});
-end
-
-function CompleteEvent(...) : int
-    return FUNC(INT, 0x00D660A0, {...});
 end
 
 function CreateCamSfx(...) : int
@@ -469,10 +403,6 @@ end
 
 function GetHpRate(...) : int
     return FUNC(INT, 0x00D5FA30, {...});
-end
-
-function GetItem(...) : int
-    return FUNC(INT, 0x00D5E240, {...});
 end
 
 function GetLadderCount(...) : int
@@ -1479,10 +1409,6 @@ end
 
 function SetTeamTypePlus(...) : int
     return FUNC(INT, 0x00D60B30, {...});
-end
-
-function SetTextEffect(...) : int
-    return FUNC(INT, 0x00D5E430, {...});
 end
 
 function SetTutorialSummonedPos(...) : int

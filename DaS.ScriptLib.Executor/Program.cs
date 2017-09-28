@@ -165,6 +165,7 @@ namespace DaS.ScriptLib.Executor
             }
             finally
             {
+                DSLua.CleanExitTrigger.Set();
                 Injection.Hook.DARKSOULS.Close();
             }
         }

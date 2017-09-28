@@ -54,6 +54,12 @@ function AddDeathCount() : int
 end
 
 ---
+--@return #number
+function AddEventGoal(a : int, b : int, c : float, d : float, e : float, f : float, g : float, h : float, i : float, j: float, k : float) : int
+    return FUNC(INT, 0x00D66000, {a, b, c, d, e, f, g, h, i, j, k});
+end
+
+---
 --@return #boolean
 function AddEventSimpleTalk(a : int, b : int) : bool
     return FUNC(BOOL, 0x00D62860, {a, b});
@@ -79,6 +85,12 @@ end
 
 ---
 --@return #number
+function AddHelpWhiteGhost() : int
+    return FUNC(INT, 0x00D5DB50, {});
+end
+
+---
+--@return #number
 function AddHitMaskByBit(chrId : int, b : byte) : byte
     return FUNC(BYTE, 0x00D64D50, {chrId, b});
 end
@@ -99,6 +111,15 @@ end
 --@return #number
 function AddInfomationList(a : int, b : int, c : int) : byte
     return FUNC(BYTE, 0x00D62370, {a, b, c});
+end
+
+
+function AddInfomationListItem(a : int, b : int, c : int) : int
+    return FUNC(INT, 0x00D62350, {a, b, c});
+end
+
+function AddInventoryItem(itemId : int, category : int, quantity : int)
+    return FUNC(INT, 0x00D664C0, {itemId, category, quantity});
 end
 
 ---
@@ -212,7 +233,7 @@ end
 
 ---
 --@return #number
-function ChrFadeIn(chrId : int : int, dur : float, opacity : float) : int
+function ChrFadeIn(chrId : int, dur : float, opacity : float) : int
     return FUNC(INT, 0x00D607E0, {chrId, dur, opacity});
 end
 
@@ -252,6 +273,23 @@ function ClearTarget(chrId : int) : bool
     return FUNC(BOOL, 0x00D613C0, {chrId});
 end
 
+
+function CloseGenDialog() : int
+    return FUNC(INT, 0x00D5E500, {});
+end
+
+function CloseMenu()
+    return FUNC(INT, 0x00D5ED00, {});
+end
+
+function CloseTalk(a : int)
+    return FUNC(INT, 0x00D5E610, {a});
+end
+
+function CompleteEvent(eventId : int)
+    return FUNC(INT, 0x00D660A0, {eventId});
+end
+
 ---
 --@return #number
 function DisableDamage(chrId : int, state : bool) : int
@@ -273,19 +311,19 @@ end
 ---
 --@return #number
 function ForcePlayAnimation(chrId : int, animId : int) : int
-    return FUNC(INT, 0x00D61CF0, {chrId, int(animId)});
+    return FUNC(INT, 0x00D61CF0, {chrId, animId});
 end
 
 ---
 --@return #number
 function ForcePlayAnimationStayCancel(chrId : int, animId : int) : int
-    return FUNC(INT, 0x00D61CA0, {chrId, int(animId)});
+    return FUNC(INT, 0x00D61CA0, {chrId, animId});
 end
 
 ---
 --@return #number
 function ForcePlayLoopAnimation(chrId : int, animId : int) : int
-    return FUNC(INT, 0x00D61C50, {chrId, int(animId)});
+    return FUNC(INT, 0x00D61C50, {chrId, animId});
 end
 
 ---
@@ -306,6 +344,10 @@ end
 --@return #number
 function GetCurrentMapBlockNo(a : int) : int
     return FUNC(INT, 0x00D5F620, {a});
+end
+
+function GetItem(a : int, b : int)
+    return FUNC(INT, 0x00D5E240, {a, b});
 end
 
 ---
@@ -641,8 +683,8 @@ end
 
 ---
 --@return #boolean
-function IsValidInstance(chrId : int, e : intnumB) : bool
-    return FUNC(BOOL, 0x00D5F510, {chrId, e});
+function IsValidInstance(chrId : int, b : int) : bool
+    return FUNC(BOOL, 0x00D5F510, {chrId, b});
 end
 
 ---
@@ -761,6 +803,10 @@ end
 --@return #boolean
 function SetInsideBattleArea(chrId : int, b : int) : bool
     return FUNC(BOOL, 0x00D61050, {chrId, b});
+end
+
+function SetTextEffect(id : int) : int
+    return FUNC(INT, 0x00D5E430, {id});
 end
 
 ---

@@ -9,11 +9,20 @@ Namespace LuaScripting
 
         Private Shared L As Lua
         Public Shared G As LuaGlobal
-        Private Shared AsmCaller As New DSAsmCaller()
 
         Public Shared ReadOnly Property DG As Object
             Get
                 Return G
+            End Get
+        End Property
+
+        Private Shared AsmCaller As New DSAsmCaller()
+
+        Private Shared StartTime As DateTime
+
+        Public Shared ReadOnly Property Clock As Double
+            Get
+                Return 1.0 * DateTime.Now.Subtract(StartTime).Ticks / TimeSpan.TicksPerSecond
             End Get
         End Property
 
@@ -49,7 +58,7 @@ Namespace LuaScripting
 
         'Private Const LOOP_INTERVAL = 5000
 
-        Private Shared CleanExitTrigger As New EventWaitHandle(False, EventResetMode.ManualReset)
+        Public Shared CleanExitTrigger As New EventWaitHandle(False, EventResetMode.ManualReset)
         'Private Shared NextEvent As DSLuaEvent = DSLuaEvent.None
 
         Private Shared EventThread As Thread
@@ -142,6 +151,7 @@ Namespace LuaScripting
         Private Shared Sub PerformCleanExit()
             ForceStopAllScripts()
             DARKSOULS.Close()
+            AsmCaller.Dispose()
         End Sub
 
         Private Shared Sub DoCleanExitWait()

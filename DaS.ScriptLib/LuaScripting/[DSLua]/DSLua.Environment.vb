@@ -86,6 +86,7 @@ Namespace LuaScripting
 
             Private Shared Sub LoadGlobalInstanceVars()
                 HelperFuncs.GlobalImportAllMethodsInType(GetType(Funcs))
+                HelperFuncs.GlobalImportAllMethodsInType(GetType(Hook))
 
                 'DG.FUNC = New Action(Of FuncReturnType, Integer, LuaTable)(AddressOf CallIngameFunc_FromLua)
                 DG.FUNC = HelperFuncs.MakeDelegateFromMethodInfo(GetType(DSLua).GetMethod("CallIngameFunc_FromLua"))
@@ -95,7 +96,7 @@ Namespace LuaScripting
 
                 'DG.FUNC_REG = New Action(Of FuncReturnType, Integer, LuaTable, LuaTable)(AddressOf CallIngameFuncREG_FromLua)
                 DG.FUNC_REG = HelperFuncs.MakeDelegateFromMethodInfo(GetType(DSLua).GetMethod("CallIngameFuncREG_FromLua"))
-                DG.player = Game.Data.Structures.Entity.GetPlayer()
+                G.DoChunk("player = Entity.GetPlayer()", "player")
                 DG.Utils = New Utils
 
                 'Dim testt = LuaToken.
@@ -108,6 +109,8 @@ Namespace LuaScripting
             Friend Shared Sub Init()
                 L = New Lua(LuaIntegerType.Int32, LuaFloatType.Float)
                 G = L.CreateEnvironment(Of LuaGlobal)()
+
+                StartTime = DateTime.Now
 
                 HelperFuncs.Temp_AllLoadedTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(Function(t) t.GetTypes()).ToList()
 
