@@ -4,7 +4,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using DbgRow = System.Tuple<System.DateTime, DaS.ScriptLib.Lua.Dbg.DbgPrintType, string>;
+using DbgRow = System.Tuple<System.DateTime, DaS.ScriptLib.LuaScripting.Dbg.DbgPrintType, string>;
 using MK = System.Windows.Input.ModifierKeys;
 
 namespace DaS.ScriptEditor.NEW
@@ -55,6 +55,8 @@ namespace DaS.ScriptEditor.NEW
         {
             InitializeComponent();
 
+            ScriptLib.LuaScripting.DSLua.Init();
+
             SeMenu = new MenuItemIndexer(this);
 
             MainLuaContainer.AutoComplete.InitDefaultEntries(this);
@@ -64,7 +66,7 @@ namespace DaS.ScriptEditor.NEW
 
             TryAttachAndUpdateStr(true);
 
-            ScriptLib.Lua.Dbg.OnPrint += Dbg_OnPrint;
+            ScriptLib.LuaScripting.Dbg.OnPrint += Dbg_OnPrint;
 
             MainLuaContainer.ScriptStart += MainLuaContainer_ScriptStart;
             MainLuaContainer.ScriptStop += MainLuaContainer_ScriptStop;
@@ -150,7 +152,7 @@ namespace DaS.ScriptEditor.NEW
                             {
                                 var nextRow = DbgRowQueue.Dequeue();
 
-                                if (nextRow.Item2 == ScriptLib.Lua.Dbg.DbgPrintType.ClearAll)
+                                if (nextRow.Item2 == ScriptLib.LuaScripting.Dbg.DbgPrintType.ClearAll)
                                 {
                                     ScriptOutputBox.Clear();
                                 }
@@ -201,13 +203,13 @@ namespace DaS.ScriptEditor.NEW
         //    }
         //}
 
-        private void Dbg_OnPrint(DateTime time, ScriptLib.Lua.Dbg.DbgPrintType type, string text)
+        private void Dbg_OnPrint(DateTime time, ScriptLib.LuaScripting.Dbg.DbgPrintType type, string text)
         {
             lock (DbgPrintLOCK)
             {
                 if (DbgRowQueue != null)
                 {
-                    if (type == ScriptLib.Lua.Dbg.DbgPrintType.ClearAll)
+                    if (type == ScriptLib.LuaScripting.Dbg.DbgPrintType.ClearAll)
                     {
                         DbgRowQueue.Clear();
                     }

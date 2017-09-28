@@ -1,6 +1,6 @@
 ﻿Imports System.Runtime.InteropServices
 Imports DaS.ScriptLib.Injection.Structures
-Imports DaS.ScriptLib.Lua
+Imports DaS.ScriptLib.LuaScripting
 Imports DaS.ScriptLib.Injection
 
 Namespace Game.Data.Structures

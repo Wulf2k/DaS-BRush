@@ -43,6 +43,12 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Neo.Lua, Version=5.3.0.0, Culture=neutral, PublicKeyToken=fdb0cd4fe8a6e3b2, processorArchitecture=MSIL">
+      <HintPath>..\packages\NeoLua.1.2.21\lib\net45\Neo.Lua.dll</HintPath>
+    </Reference>
+    <Reference Include="Neo.Lua.Desktop, Version=5.3.0.0, Culture=neutral, PublicKeyToken=fdb0cd4fe8a6e3b2, processorArchitecture=MSIL">
+      <HintPath>..\packages\NeoLua.1.2.21\lib\net45\Neo.Lua.Desktop.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
@@ -92,30 +98,29 @@
     <Compile Include="Injection\Structures\SafeRemoteHandle.vb" />
     <Compile Include="Game\Data\AnimationID\Player.vb" />
     <Compile Include="Game\Data\EventFlag\Boss.vb" />
-    <Compile Include="Lua\Helpers\AutoCompleteHelper.vb" />
-    <Compile Include="Lua\Structures\LuaAutoCompleteEntry.vb" />
-    <Compile Include="Lua\Structures\LuaThread.vb" />
-    <Compile Include="Lua\Structures\[BoxedString]\BoxedStringUni.vb" />
-    <Compile Include="Lua\Structures\[BoxedString]\BoxedStringAnsi.vb" />
-    <Compile Include="Lua\Structures\[BoxedString]\BoxedString.vb" />
-    <Compile Include="Lua\Structures\FuncReturnType.vb" />
-    <Compile Include="Lua\Structures\LuaBoxedVal.vb" />
-    <Compile Include="Lua\Structures\LUAFAttribute.vb" />
-    <Compile Include="Lua\Structures\UtilsModule.vb" />
-    <Compile Include="ModAPI\DSMod.vb" />
+    <Compile Include="LuaScripting\Helpers\AutoCompleteHelper.vb" />
+    <Compile Include="LuaScripting\[DSLua]\DSLua.Environment.vb" />
+    <Compile Include="LuaScripting\[DSLua]\DSLua.Script.vb" />
+    <Compile Include="LuaScripting\[DSLua]\DSLua.vb" />
+    <Compile Include="LuaScripting\Structures\DSLuaAutoCompleteEntry.vb" />
+    <Compile Include="LuaScripting\Structures\DSLuaThread.vb" />
+    <Compile Include="LuaScripting\Structures\[BoxedString]\BoxedStringUni.vb" />
+    <Compile Include="LuaScripting\Structures\[BoxedString]\BoxedStringAnsi.vb" />
+    <Compile Include="LuaScripting\Structures\[BoxedString]\BoxedString.vb" />
+    <Compile Include="LuaScripting\Structures\FuncReturnType.vb" />
+    <Compile Include="LuaScripting\Structures\DSLuaBoxedVal.vb" />
+    <Compile Include="LuaScripting\Structures\LUAFAttribute.vb" />
+    <Compile Include="LuaScripting\Structures\UtilsModule.vb" />
     <Compile Include="Injection\DSAsmCaller.vb" />
-    <Compile Include="Lua\LuaInterface.vb" />
     <Compile Include="Injection\Structures\MoveableAddressOffset.vb" />
     <Compile Include="Injection\Structures\[MutatableDword]\MutatableDword.vb" />
-    <Compile Include="Lua\ScriptLibResources.vb" />
+    <Compile Include="LuaScripting\ScriptLibResources.vb" />
     <Compile Include="Game\Data\Structures\Loc.vb" />
     <Compile Include="Game\Data\Helpers\EventFlagHelper.vb" />
     <Compile Include="Game\Data\Structures\Vec3.vb" />
-    <Compile Include="Lua\Dbg.vb" />
-    <Compile Include="Lua\Funcs.vb" />
+    <Compile Include="LuaScripting\Dbg.vb" />
+    <Compile Include="LuaScripting\Funcs.vb" />
     <Compile Include="Injection\Structures\LivePtrVar.vb" />
-    <Compile Include="ModAPI\ModFunc.vb" />
-    <Compile Include="ModAPI\ModManager.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -231,11 +236,9 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Lib\NLua\lua52.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <EmbeddedResource Include="Resources\CL\CL.Weapons.txt" />
     <EmbeddedResource Include="Resources\CL\CL.Rings.txt" />
     <EmbeddedResource Include="Resources\CL\CL.Goods.txt" />
@@ -248,14 +251,6 @@
     <ProjectReference Include="..\Lib\Managed.X86\Managed.X86.csproj">
       <Project>{1aaf4b4d-2986-4f56-bebc-eec6ea0ee435}</Project>
       <Name>Managed.X86</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Lib\NLua\Core\KeraLua\KeraLua.Net45.csproj">
-      <Project>{47153754-10F5-44D8-B578-F5A32B69061A}</Project>
-      <Name>KeraLua.Net45</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Lib\NLua\Core\NLua\NLua.Net45.csproj">
-      <Project>{f55cabbb-4108-4a39-94e1-581fd46dc021}</Project>
-      <Name>NLua.Net45</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

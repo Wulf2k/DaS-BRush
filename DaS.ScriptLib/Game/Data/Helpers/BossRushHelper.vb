@@ -1,5 +1,5 @@
 ﻿Imports System.Threading
-Imports DaS.ScriptLib.Lua
+Imports DaS.ScriptLib.LuaScripting
 Imports DaS.ScriptLib.Injection
 Imports DaS.ScriptLib.Game.Data.EventFlag
 
@@ -109,7 +109,7 @@ Namespace Game.Data.Helpers
             Dim bossIsDead = False
             Dim playerIsDead = False
             Do
-                If (LuaInterface.E($"IsCompleteEvent({CType(boss.SpawnFlag, Integer)})")) Then 'boss dead
+                If (DSLua.Expr($"IsCompleteEvent({CType(boss.SpawnFlag, Integer)})")) Then 'boss dead
                     bossIsDead = True
                 ElseIf Mem.Player.HP.Value = 0 Then
                     playerIsDead = True

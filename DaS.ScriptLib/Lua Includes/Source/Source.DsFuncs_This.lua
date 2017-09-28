@@ -37,27 +37,27 @@ ThisCaller = {}
   return result;
 }]]
 function ThisCaller:AddCurrentVowRankPoint(...)
-    return FUNC_REG(INT, 0x00D600D0, {...}, {ECX = int(self.Pointer)});
+    return FUNC_REG(INT, 0x00D600D0, {...}, {ECX = self.Pointer});
 end
 
 function ThisCaller:IsLoadWait(...)
-    return FUNC_REG(INT, 0x00D5D930, {...}, {ECX = int(self.Pointer)});
+    return FUNC_REG(INT, 0x00D5D930, {...}, {ECX = self.Pointer});
 end
 
 function ThisCaller:IsOnline(...)
-    return FUNC_REG(INT, 0x00D5E2D0, {...}, {ECX = int(self.Pointer)});
+    return FUNC_REG(INT, 0x00D5E2D0, {...}, {ECX = self.Pointer});
 end
 
 function ThisCaller:LuaCall(...)
-    return FUNC_REG(INT, 0x00D62C60, {...}, {ECX = int(self.Pointer)});
+    return FUNC_REG(INT, 0x00D62C60, {...}, {ECX = self.Pointer});
 end
 
 function ThisCaller:LuaCallStart(...)
-    return FUNC_REG(INT, 0x00D66290, {...}, {ECX = int(self.Pointer)});
+    return FUNC_REG(INT, 0x00D66290, {...}, {ECX = self.Pointer});
 end
 
 function ThisCaller:LuaCallStartPlus(...)
-    return FUNC_REG(INT, 0x00D66260, {...}, {ECX = int(self.Pointer)});
+    return FUNC_REG(INT, 0x00D66260, {...}, {ECX = self.Pointer});
 end
 
 ---

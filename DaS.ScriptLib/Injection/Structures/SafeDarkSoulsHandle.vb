@@ -100,8 +100,6 @@ Namespace Injection.Structures
                 selectedProcess.Dispose()
             End If
 
-            Lua.LuaInterface.ReInitSharedInstance()
-
             If Not Attached Then
                 If Not suppressMessageBox Then 'Showing 2 message boxes as soon as you start the program is too annoying.
                     System.Windows.Forms.MessageBox.
@@ -135,7 +133,7 @@ Namespace Injection.Structures
                 Kernel.WriteProcessMemory_SAFE(handle, &HBE719F, {&H20}, 1, Nothing)
                 Kernel.WriteProcessMemory_SAFE(handle, &HBE722B, {&H20}, 1, Nothing)
 
-                Lua.Funcs.SetSaveEnable(False)
+                LuaScripting.Funcs.SetSaveEnable(False)
             Else
                 Dim buffer(3) As Byte
                 Kernel.ReadProcessMemory_SAFE(handle, &H400080, buffer, 4, Nothing)

@@ -20,7 +20,7 @@ function dump(tbl,indentStr,seen)
       end
       
     elseif type(val) == "userdata" then
-      udataMembers = Utils:GetClrObjMembers(LUA, val)
+      udataMembers = Utils:GetClrObjMembers(val)
       clrTbl = {}
       if type(udataMembers) == "table" then
         clrTbl = udataMembers

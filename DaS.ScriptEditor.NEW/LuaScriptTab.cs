@@ -9,6 +9,7 @@ using System.Windows;
 using Xceed.Wpf.AvalonDock.Layout;
 using System.ComponentModel;
 using System.Threading;
+using DaS.ScriptLib.LuaScripting;
 
 namespace DaS.ScriptEditor.NEW
 {
@@ -123,18 +124,9 @@ namespace DaS.ScriptEditor.NEW
 
         private void OtherThread_RunScript(Action<bool> loading, string scriptText)
         {
-            ScriptLib.Lua.LuaInterface luai = null;
-
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                loading(true);
-                luai = new ScriptLib.Lua.LuaInterface();
-                loading(false);
-            });
-            
             try
             {
-                luai.State.DoString(scriptText);
+                DSLua.DoString(scriptText); //TODO: Make scripts execute via DSLua.G.DoChunk(scriptText, scriptName); so errors show the name of the file instead of "DSLua.DoString()"
             }
             catch (ThreadAbortException)
             {
@@ -142,7 +134,7 @@ namespace DaS.ScriptEditor.NEW
             }
             catch (Exception e)
             {
-                if (ScriptLib.Lua.Dbg.PopupErrQue(e.Message) ?? false)
+                if (ScriptLib.LuaScripting.Dbg.PopupErrQue(e.Message) ?? false)
                 {
                     throw e;
                 }
@@ -150,8 +142,8 @@ namespace DaS.ScriptEditor.NEW
             finally
             {
                 ParentLuaContainer.RaiseScriptStop(this);
-                luai.Dispose();
-                luai = null;
+                //luai.Dispose();
+                //luai = null;
             }
             
         }

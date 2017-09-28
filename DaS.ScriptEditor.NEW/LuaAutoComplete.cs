@@ -1,4 +1,5 @@
-﻿using ICSharpCode.AvalonEdit;
+﻿using DaS.ScriptLib.LuaScripting;
+using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Editing;
 using System;
@@ -67,24 +68,22 @@ namespace DaS.ScriptEditor.NEW
         {
             Entries.Clear();
 
-            var luai = new ScriptLib.Lua.LuaInterface();
-
-            foreach (var g in luai.State.Globals)
+            foreach (var kvp in DSLua.G)
             {
-                CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Method, g.Replace("(", ""), g.Replace("(", ""), "?Description?"));
+                CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Method, kvp.Key.ToString().Replace("(", ""), kvp.Key.ToString().Replace("(", ""), "?Description?"));
             }
 
-            foreach (var e in ScriptLib.Lua.helpers.AutoCompleteHelper.IngameFunctionsFancy)
+            foreach (var e in ScriptLib.LuaScripting.helpers.AutoCompleteHelper.IngameFunctionsFancy)
             {
                 CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
             }
 
-            foreach (var e in ScriptLib.Lua.helpers.AutoCompleteHelper.IngameFunctionsUnmarked)
+            foreach (var e in ScriptLib.LuaScripting.helpers.AutoCompleteHelper.IngameFunctionsUnmarked)
             {
                 CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
             }
 
-            foreach (var e in ScriptLib.Lua.helpers.AutoCompleteHelper.LuaHelperEntries)
+            foreach (var e in ScriptLib.LuaScripting.helpers.AutoCompleteHelper.LuaHelperEntries)
             {
                 CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
             }

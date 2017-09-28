@@ -1,4 +1,4 @@
-﻿Imports DaS.ScriptLib.Lua
+﻿Imports DaS.ScriptLib.LuaScripting
 
 Namespace Game.Data.Helpers
     Public Class EventFlagHelper
@@ -6,7 +6,7 @@ Namespace Game.Data.Helpers
         Public State As Boolean = False
 
         Public Sub ApplyFlag()
-            LuaInterface.E($"SetEventFlag({ID}, {State.ToString().ToLower()})")
+            DSLua.Expr($"SetEventFlag({ID}, {State.ToString().ToLower()})")
         End Sub
 
         Public Shared Sub ApplyAll(flagList As Integer())

@@ -10,8 +10,9 @@ Imports Cond = Managed.X86.X86ConditionCode
 Imports System.IO
 Imports DaS.ScriptLib.Injection
 Imports DaS.ScriptLib.Injection.Structures
-Imports DaS.ScriptLib.Lua.Structures
-Imports DaS.ScriptLib.Lua
+Imports DaS.ScriptLib.LuaScripting.Structures
+Imports DaS.ScriptLib.LuaScripting
+Imports Neo.IronLua
 
 Namespace Injection
     Public Class DSAsmCaller
@@ -120,10 +121,10 @@ Namespace Injection
             Next
 
             If specialRegisters IsNot Nothing Then
-                If TypeOf specialRegisters Is NLua.LuaTable Then
-                    Dim regs = DirectCast(specialRegisters, NLua.LuaTable)
-                    For Each r In regs.Keys
-                        asm.Mov32([Enum].Parse(GetType(Reg32), r), SquashIntoDword(allocPtrList, regs(r)))
+                If TypeOf specialRegisters Is LuaTable Then
+                    Dim regs = DirectCast(specialRegisters, LuaTable)
+                    For Each kvp In regs
+                        asm.Mov32([Enum].Parse(GetType(Reg32), kvp.Key), SquashIntoDword(allocPtrList, kvp.Value))
                     Next
                 ElseIf TypeOf specialRegisters Is Dictionary(Of String, Object) Then
                     Dim regs = DirectCast(specialRegisters, Dictionary(Of String, Object))
@@ -196,13 +197,13 @@ Namespace Injection
 
             Buffer_SquashIntoDwordResult = 0
 
-            If typ = GetType(LuaBoxedVal) Then
+            If typ = GetType(DSLuaBoxedVal) Then
                 'Sorry about this double-unbox here. Hope it doesn't create too much overhead.
                 'I tried to do it with generics but the only feasable way to do that would
                 'be to check LuaBoxedVal(Of Int32), LuaBoxedVal(Of Single), etc. one-by-one
                 'and I figured those if/else's would generate more overhead, even for other 
                 'things Not boxed inside of one of these.
-                Buffer_SquashIntoDwordResult = SquashIntoDword(allocPtrList, DirectCast(arg, LuaBoxedVal).Value)
+                Buffer_SquashIntoDwordResult = SquashIntoDword(allocPtrList, DirectCast(arg, DSLuaBoxedVal).Value)
 
                 arg = Nothing
             ElseIf typ = GetType(Int32) Then
@@ -231,11 +232,11 @@ Namespace Injection
                 Buffer_SquashIntoDwordResult = handVal
 
             ElseIf typ = GetType(IntPtr) Then
-                    Buffer_SquashIntoDwordResult = ToDwordLossy(arg)
+                Buffer_SquashIntoDwordResult = ToDwordLossy(arg)
 
-                    arg = Nothing
-                Else
-                    Dim size = Marshal.SizeOf(arg)
+                arg = Nothing
+            Else
+                Dim size = Marshal.SizeOf(arg)
 
                 If size <= INT32_SIZE Then
                     Dim toDwordFailed = False
@@ -318,7 +319,7 @@ Namespace Injection
             End Select
         End Function
 
-        Public Function CallIngameFunc(luai As LuaInterface, returnType As FuncReturnType, functionAddress As Integer, args As IEnumerable(Of Object), specialRegisters As Object) As Object
+        Public Function CallIngameFunc(returnType As FuncReturnType, functionAddress As Integer, args As IEnumerable(Of Object), specialRegisters As Object) As Object
 
             If CodeHandle.IsClosed OrElse CodeHandle.IsInvalid Then
                 CompletelyReInitializeAndInjectCodeInNewLocation()
@@ -353,8 +354,8 @@ Namespace Injection
             Return Buffer_Result
         End Function
 
-        Public Function CallIngameFunc_FromLua(luai As LuaInterface, returnType As FuncReturnType, functionAddress As Integer, args As NLua.LuaTable, specialRegisters As Object) As Object
-            Return CallIngameFunc(luai, returnType, functionAddress, args.Values, specialRegisters)
+        Public Function CallIngameFunc_FromLua(returnType As FuncReturnType, functionAddress As Integer, args As LuaTable, specialRegisters As Object) As Object
+            Return CallIngameFunc(returnType, functionAddress, args.ArrayList, specialRegisters)
         End Function
 
 #Region "IDisposable Support"

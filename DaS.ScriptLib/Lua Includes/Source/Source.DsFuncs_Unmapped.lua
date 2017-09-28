@@ -1,6 +1,6 @@
 
 
-function AddEventGoal(...)
+function AddEventGoal(...) : int
     return FUNC(INT, 0x00D66000, {...});
 end
 
@@ -27,7 +27,7 @@ end
 .text:00D60D60 push    esi
 .text:00D60D61 call    sub_D40B70
 ]]
-function AddEventParts(...)
+function AddEventParts(...) : int
     return FUNC(INT, 0x00D60D30, {...});
 end
 
@@ -62,7 +62,7 @@ end
 .text:00D60D27 pop     edi
 .text:00D60D28 retn    0Ch
 ]]
-function AddEventParts_Ignore(...)
+function AddEventParts_Ignore(...) : int
     return FUNC(INT, 0x00D60CF0, {...});
 end
 
@@ -77,71 +77,71 @@ end
 .text:00D5DB62 mov     dword ptr [ecx+4Ch], 0FFFFFFFFh
 .text:00D5DB69 retn
 ]]
-function AddHelpWhiteGhost(...)
+function AddHelpWhiteGhost(...) : int
     return FUNC(INT, 0x00D5DB50, {...});
 end
 
-function AddInfomationListItem(...)
+function AddInfomationListItem(...) : int
     return FUNC(INT, 0x00D62350, {...});
 end
 
-function AddInfomationTimeMsgTag(...)
+function AddInfomationTimeMsgTag(...) : int
     return FUNC(INT, 0x00D646F0, {...});
 end
 
-function AddInfomationTosBuffer(...)
+function AddInfomationTosBuffer(...) : int
     return FUNC(INT, 0x00D646D0, {...});
 end
 
-function AddInfomationTosBufferPlus(...)
+function AddInfomationTosBufferPlus(...) : int
     return FUNC(INT, 0x00D646B0, {...});
 end
 
-function AddInventoryItem(...)
+function AddInventoryItem(...) : int
     return FUNC(INT, 0x00D664C0, {...});
 end
 
-function AddKillBlackGhost(...)
+function AddKillBlackGhost(...) : int
     return FUNC(INT, 0x00D5DB30, {...});
 end
 
-function AddQWC(...)
+function AddQWC(...) : int
     return FUNC(INT, 0x00D5F810, {...});
 end
 
-function AddRumble(...)
+function AddRumble(...) : int
     return FUNC(INT, 0x00D640D0, {...});
 end
 
-function AddTreasureEvent(...)
+function AddTreasureEvent(...) : int
     return FUNC(INT, 0x00D5F3B0, {...});
 end
 
-function AddTrueDeathCount(...)
+function AddTrueDeathCount(...) : int
     return FUNC(INT, 0x00D5DDF0, {...});
 end
 
-function CalcGetCurrentMapEntityId(...)
+function CalcGetCurrentMapEntityId(...) : int
     return FUNC(INT, 0x00D5F230, {...});
 end
 
-function CalcGetMultiWallEntityId(...)
+function CalcGetMultiWallEntityId(...) : int
     return FUNC(INT, 0x00D5E360, {...});
 end
 
-function CastPointSpell(...)
+function CastPointSpell(...) : int
     return FUNC(INT, 0x00D65FB0, {...});
 end
 
-function CastPointSpell_Horming(...)
+function CastPointSpell_Horming(...) : int
     return FUNC(INT, 0x00D65F10, {...});
 end
 
-function CastPointSpellPlus(...)
+function CastPointSpellPlus(...) : int
     return FUNC(INT, 0x00D65F60, {...});
 end
 
-function CastPointSpellPlus_Horming(...)
+function CastPointSpellPlus_Horming(...) : int
     return FUNC(INT, 0x00D65EC0, {...});
 end
 
@@ -157,7 +157,7 @@ end
 .text:00D60D87 locret_D60D87:                          ; CODE XREF: .text:00D60D77j
 .text:00D60D87 retn    8
 ]]
-function ChangeInitPosAng(...)
+function ChangeInitPosAng(...) : int
     return FUNC(INT, 0x00D60D70, {...});
 end
 
@@ -192,7 +192,7 @@ end
 .text:00D61DDE pop     ebx
 .text:00D61DDF retn    8
 ]]
-function ChangeTarget(...)
+function ChangeTarget(...) : int
     return FUNC(INT, 0x00D61DA0, {...});
 end
 
@@ -209,11 +209,11 @@ end
 .text:00D5EE6C pop     edi
 .text:00D5EE6D retn
 ]]
-function CheckPenalty(...)
+function CheckPenalty(...) : int
     return FUNC(INT, 0x00D5EE50, {...});
 end
 
-function ChrDisableUpdate(...)
+function ChrDisableUpdate(...) : int
     return FUNC(INT, 0x00D61460, {...});
 end
 
@@ -239,1336 +239,1376 @@ end
 .text:00D5EE09 mov     dword ptr [edi], 0
 .text:00D5EE0F
 ]]
-function ClearMyWorldState(...)
+function ClearMyWorldState(...) : int
     return FUNC(INT, 0x00D5EDD0, {...});
 end
 
-function CloseGenDialog(...)
+function CloseGenDialog(...) : int
     return FUNC(INT, 0x00D5E500, {...});
 end
 
-function CloseMenu(...)
+function CloseMenu(...) : int
     return FUNC(INT, 0x00D5ED00, {...});
 end
 
-function CloseRankingDialog(...)
+function CloseRankingDialog(...) : int
     return FUNC(INT, 0x00D5D950, {...});
 end
 
-function CloseTalk(...)
+function CloseTalk(...) : int
     return FUNC(INT, 0x00D5E610, {...});
 end
 
-function CompleteEvent(...)
+function CompleteEvent(...) : int
     return FUNC(INT, 0x00D660A0, {...});
 end
 
-function CreateCamSfx(...)
+function CreateCamSfx(...) : int
     return FUNC(INT, 0x00D620B0, {...});
 end
 
-function CreateDamage_NoCollision(...)
+function CreateDamage_NoCollision(...) : int
     return FUNC(INT, 0x00D65DC0, {...});
 end
 
-function CreateEventBody(...)
+function CreateEventBody(...) : int
     return FUNC(INT, 0x00D65830, {...});
 end
 
-function CreateEventBodyPlus(...)
+function CreateEventBodyPlus(...) : int
     return FUNC(INT, 0x00D657C0, {...});
 end
 
-function CreateHeroBloodStain(...)
+function CreateHeroBloodStain(...) : int
     return FUNC(INT, 0x00D62640, {...});
 end
 
-function CreateSfx(...)
+function CreateSfx(...) : int
     return FUNC(INT, 0x00D5F000, {...});
 end
 
-function CreateSfx_DummyPoly(...)
+function CreateSfx_DummyPoly(...) : int
     return FUNC(INT, 0x00D64140, {...});
 end
 
-function CroseBriefingMsg(...)
+function CroseBriefingMsg(...) : int
     return FUNC(INT, 0x00D5E400, {...});
 end
 
-function CustomLuaCall(...)
+function CustomLuaCall(...) : int
     return FUNC(INT, 0x00D62C30, {...});
 end
 
-function CustomLuaCallStart(...)
+function CustomLuaCallStart(...) : int
     return FUNC(INT, 0x00D66240, {...});
 end
 
-function CustomLuaCallStartPlus(...)
+function CustomLuaCallStartPlus(...) : int
     return FUNC(INT, 0x00D66210, {...});
 end
 
-function DeleteCamSfx(...)
+function DeleteCamSfx(...) : int
     return FUNC(INT, 0x00D5E8A0, {...});
 end
 
-function DeleteEvent(...)
+function DeleteEvent(...) : int
     return FUNC(INT, 0x00D5EAA0, {...});
 end
 
-function DeleteObjSfxAll(...)
+function DeleteObjSfxAll(...) : int
     return FUNC(INT, 0x00D5E7B0, {...});
 end
 
-function DeleteObjSfxDmyPlyID(...)
+function DeleteObjSfxDmyPlyID(...) : int
     return FUNC(INT, 0x00D5E7F0, {...});
 end
 
-function DeleteObjSfxEventID(...)
+function DeleteObjSfxEventID(...) : int
     return FUNC(INT, 0x00D5E7D0, {...});
 end
 
-function EndAnimation(...)
+function DisableCollection(...) : int
+    return FUNC(INT, 0x00D60A40, {...});
+end
+
+function DisableHpGauge(...) : int
+    return FUNC(INT, 0x00D60A00, {...});
+end
+
+function DisableInterupt(...) : int
+    return FUNC(INT, 0x00D612B0, {...});
+end
+
+function DivideRest(...) : int
+    return FUNC(INT, 0x00490520, {...});
+end
+
+function EnableAction(...) : int
+    return FUNC(INT, 0x00D5FD60, {...});
+end
+
+function EnableGeneratorSystem(...) : int
+    return FUNC(INT, 0x00D5EF20, {...});
+end
+
+function EnableHide(...) : int
+    return FUNC(INT, 0x00D60E00, {...});
+end
+
+function EnableInvincible(...) : int
+    return FUNC(INT, 0x00D60D90, {...});
+end
+
+function EnableLogic(...) : int
+    return FUNC(INT, 0x00D5FD90, {...});
+end
+
+function EnableObjTreasure(...) : int
+    return FUNC(INT, 0x00D661D0, {...});
+end
+
+function EndAnimation(...) : int
     return FUNC(INT, 0x00D61BF0, {...});
 end
 
-function EraseEventSpecialEffect(...)
+function EraseEventSpecialEffect(...) : int
     return FUNC(INT, 0x00D61210, {...});
 end
 
-function EraseEventSpecialEffect_2(...)
+function EraseEventSpecialEffect_2(...) : int
     return FUNC(INT, 0x00D61170, {...});
 end
 
-function EventTagInsertString_forPlayerNo(...)
+function EventTagInsertString_forPlayerNo(...) : int
     return FUNC(INT, 0x00D5E820, {...});
 end
 
-function ExcutePenalty(...)
+function ExcutePenalty(...) : int
     return FUNC(INT, 0x00D5EBE0, {...});
 end
 
-function ForceChangeTarget(...)
+function ForceChangeTarget(...) : int
     return FUNC(INT, 0x00D61E00, {...});
 end
 
-function ForceDead(...)
+function ForceDead(...) : int
     return FUNC(INT, 0x00D66690, {...});
 end
 
-function ForceSetOmissionLevel(...)
+function ForceSetOmissionLevel(...) : int
     return FUNC(INT, 0x00D60CB0, {...});
 end
 
-function ForceUpdateNextFrame(...)
+function ForceUpdateNextFrame(...) : int
     return FUNC(INT, 0x00D60C90, {...});
 end
 
-function GetBountyRankPoint(...)
+function GetBountyRankPoint(...) : int
     return FUNC(INT, 0x00D60130, {...});
 end
 
-function GetClearBonus(...)
+function GetClearBonus(...) : int
     return FUNC(INT, 0x00D5DEB0, {...});
 end
 
-function GetClearCount(...)
+function GetClearCount(...) : int
     return FUNC(INT, 0x00D5E5A0, {...});
 end
 
-function GetClearState(...)
+function GetClearState(...) : int
     return FUNC(INT, 0x00D5E580, {...});
 end
 
-function GetDeathState(...)
+function GetDeathState(...) : int
     return FUNC(INT, 0x00D5D800, {...});
 end
 
-function GetDistance(...)
+function GetDistance(...) : int
     return FUNC(INT, 0x00D61B70, {...});
 end
 
-function GetEnemyPlayerId_Random(...)
+function GetEnemyPlayerId_Random(...) : int
     return FUNC(INT, 0x00D5ED10, {...});
 end
 
-function GetEventFlagValue(...)
+function GetEventFlagValue(...) : int
     return FUNC(INT, 0x00D60340, {...});
 end
 
-function GetEventGoalState(...)
+function GetEventGoalState(...) : int
     return FUNC(INT, 0x00D612F0, {...});
 end
 
-function GetEventMode(...)
+function GetEventMode(...) : int
     return FUNC(INT, 0x00D61690, {...});
 end
 
-function GetEventRequest(...)
+function GetEventRequest(...) : int
     return FUNC(INT, 0x00D610D0, {...});
 end
 
-function GetFloorMaterial(...)
+function GetFloorMaterial(...) : int
     return FUNC(INT, 0x00D60480, {...});
 end
 
-function GetGlobalQWC(...)
+function GetGlobalQWC(...) : int
     return FUNC(INT, 0x00D5F850, {...});
 end
 
-function GetHeroPoint(...)
+function GetHeroPoint(...) : int
     return FUNC(INT, 0x00D5DC50, {...});
 end
 
-function GetHostPlayerNo(...)
+function GetHostPlayerNo(...) : int
     return FUNC(INT, 0x00D5E260, {...});
 end
 
-function GetHp(...)
+function GetHp(...) : int
     return FUNC(INT, 0x00D5FA80, {...});
 end
 
-function GetHpRate(...)
+function GetHpRate(...) : int
     return FUNC(INT, 0x00D5FA30, {...});
 end
 
-function GetItem(...)
+function GetItem(...) : int
     return FUNC(INT, 0x00D5E240, {...});
 end
 
-function GetLadderCount(...)
+function GetLadderCount(...) : int
     return FUNC(INT, 0x00D64580, {...});
 end
 
-function GetLastBlockId(...)
+function GetLastBlockId(...) : int
     return FUNC(INT, 0x00D5EFC0, {...});
 end
 
-function GetLocalPlayerChrType(...)
+function GetLocalPlayerChrType(...) : int
     return FUNC(INT, 0x00D5FB70, {...});
 end
 
-function GetLocalPlayerId(...)
+function GetLocalPlayerId(...) : int
     return FUNC(INT, 0x00D5E270, {...});
 end
 
-function GetLocalPlayerInvadeType(...)
+function GetLocalPlayerInvadeType(...) : int
     return FUNC(INT, 0x00D5FB50, {...});
 end
 
-function GetLocalPlayerSoulLv(...)
+function GetLocalPlayerSoulLv(...) : int
     return FUNC(INT, 0x00D5EB30, {...});
 end
 
-function GetLocalPlayerVowType(...)
+function GetLocalPlayerVowType(...) : int
     return FUNC(INT, 0x00D5FB20, {...});
 end
 
-function GetLocalQWC(...)
+function GetLocalQWC(...) : int
     return FUNC(INT, 0x00D5F870, {...});
 end
 
-function GetMultiWallNum(...)
+function GetMultiWallNum(...) : int
     return FUNC(INT, 0x00D5DC40, {...});
 end
 
-function GetNetPlayerChrType(...)
+function GetNetPlayerChrType(...) : int
     return FUNC(INT, 0x00D5E8C0, {...});
 end
 
-function GetObjHp(...)
+function GetObjHp(...) : int
     return FUNC(INT, 0x00D5F320, {...});
 end
 
-function GetParam(...)
+function GetParam(...) : int
     return FUNC(INT, 0x00CD9FF0, {...});
 end
 
-function GetParam1(...)
+function GetParam1(...) : int
     return FUNC(INT, 0x00403B00, {...});
 end
 
-function GetParam2(...)
+function GetParam2(...) : int
     return FUNC(INT, 0x00B1CD50, {...});
 end
 
-function GetParam3(...)
+function GetParam3(...) : int
     return FUNC(INT, 0x00788EE0, {...});
 end
 
-function GetPartyMemberNum_InvadeType(...)
+function GetPartyMemberNum_InvadeType(...) : int
     return FUNC(INT, 0x00D5EBA0, {...});
 end
 
-function GetPartyMemberNum_VowType(...)
+function GetPartyMemberNum_VowType(...) : int
     return FUNC(INT, 0x00D5F3A0, {...});
 end
 
-function GetPlayerId_Random(...)
+function GetPlayerId_Random(...) : int
     return FUNC(INT, 0x00D5ED30, {...});
 end
 
-function GetPlayerNo_LotNitoMultiItem(...)
+function GetPlayerNo_LotNitoMultiItem(...) : int
     return FUNC(INT, 0x00D64100, {...});
 end
 
-function GetPlayID(...)
+function GetPlayID(...) : int
     return FUNC(INT, 0x00B0E260, {...});
 end
 
-function GetQWC(...)
+function GetQWC(...) : int
     return FUNC(INT, 0x00D5F8C0, {...});
 end
 
-function GetRandom(...)
+function GetRandom(...) : int
     return FUNC(INT, 0x00D5E0F0, {...});
 end
 
-function GetRateItem(...)
+function GetRateItem(...) : int
     return FUNC(INT, 0x00D665B0, {...});
 end
 
-function GetRateItem_IgnoreMultiPlay(...)
+function GetRateItem_IgnoreMultiPlay(...) : int
     return FUNC(INT, 0x00D66590, {...});
 end
 
-function GetReturnState(...)
+function GetReturnState(...) : int
     return FUNC(INT, 0x00D5E230, {...});
 end
 
-function GetRightCurrentWeaponId(...)
+function GetRightCurrentWeaponId(...) : int
     return FUNC(INT, 0x00D5EF80, {...});
 end
 
-function GetSoloClearBonus(...)
+function GetSoloClearBonus(...) : int
     return FUNC(INT, 0x00D5DE60, {...});
 end
 
-function GetSummonAnimId(...)
+function GetSummonAnimId(...) : int
     return FUNC(INT, 0x00D60890, {...});
 end
 
-function GetSummonBlackResult(...)
+function GetSummonBlackResult(...) : int
     return FUNC(INT, 0x00D5E530, {...});
 end
 
-function GetTargetChrID(...)
+function GetTargetChrID(...) : int
     return FUNC(INT, 0x00D64160, {...});
 end
 
-function GetTempSummonParam(...)
+function GetTempSummonParam(...) : int
     return FUNC(INT, 0x00D5DDE0, {...});
 end
 
-function GetTravelItemParamId(...)
+function GetTravelItemParamId(...) : int
     return FUNC(INT, 0x00D60440, {...});
 end
 
-function GetWhiteGhostCount(...)
+function GetWhiteGhostCount(...) : int
     return FUNC(INT, 0x00D5E3D0, {...});
 end
 
-function HasSuppleItem(...)
+function HasSuppleItem(...) : int
     return FUNC(INT, 0x00D60430, {...});
 end
 
-function HavePartyMember(...)
+function HavePartyMember(...) : int
     return FUNC(INT, 0x00D5E1D0, {...});
 end
 
-function HoverMoveVal(...)
+function HoverMoveVal(...) : int
     return FUNC(INT, 0x00D62C00, {...});
 end
 
-function HoverMoveValDmy(...)
+function HoverMoveValDmy(...) : int
     return FUNC(INT, 0x00D648E0, {...});
 end
 
-function IncrementCoopPlaySuccessCount(...)
+function IncrementCoopPlaySuccessCount(...) : int
     return FUNC(INT, 0x00D5F1D0, {...});
 end
 
-function IncrementThiefInvadePlaySuccessCount(...)
+function IncrementThiefInvadePlaySuccessCount(...) : int
     return FUNC(INT, 0x00D5F1A0, {...});
 end
 
-function InfomationMenu(...)
+function InfomationMenu(...) : int
     return FUNC(INT, 0x00D64110, {...});
 end
 
-function InitDeathState(...)
+function InitDeathState(...) : int
     return FUNC(INT, 0x00D5D7E0, {...});
 end
 
-function InvalidMyBloodMarkInfo(...)
+function InvalidMyBloodMarkInfo(...) : int
     return FUNC(INT, 0x00D60E50, {...});
 end
 
-function InvalidMyBloodMarkInfo_Tutorial(...)
+function InvalidMyBloodMarkInfo_Tutorial(...) : int
     return FUNC(INT, 0x00D60E30, {...});
 end
 
-function InvalidPointLight(...)
+function InvalidPointLight(...) : int
     return FUNC(INT, 0x00D5F060, {...});
 end
 
-function InvalidSfx(...)
+function InvalidSfx(...) : int
     return FUNC(INT, 0x00D5F780, {...});
 end
 
 ---
 --IDA crashes when I try to convert it to a function. meh.
-function IsMatchingMultiPlay(...)
+function IsMatchingMultiPlay(...) : int
     return FUNC(INT, 0x00D5ED80, {...});
 end
 
-function LeaveSession(...)
+function LeaveSession(...) : int
     return FUNC(INT, 0x00D62900, {...});
 end
 
-function LockSession(...)
+function LockSession(...) : int
     return FUNC(INT, 0x00D5EE60, {...});
 end
 
-function NoAnimeTurnCharactor(...)
+function NoAnimeTurnCharactor(...) : int
     return FUNC(INT, 0x00D61480, {...});
 end
 
-function NotNetMessage_begin(...)
+function NotNetMessage_begin(...) : int
     return FUNC(INT, 0x00D5DBE0, {...});
 end
 
-function NotNetMessage_end(...)
+function NotNetMessage_end(...) : int
     return FUNC(INT, 0x00D5DBD0, {...});
 end
 
-function ObjRootMtxMove(...)
+function ObjRootMtxMove(...) : int
     return FUNC(INT, 0x00D647A0, {...});
 end
 
-function ObjRootMtxMoveByChrDmyPoly(...)
+function ObjRootMtxMoveByChrDmyPoly(...) : int
     return FUNC(INT, 0x00D64760, {...});
 end
 
-function ObjRootMtxMoveDmyPoly(...)
+function ObjRootMtxMoveDmyPoly(...) : int
     return FUNC(INT, 0x00D64780, {...});
 end
 
-function OnActionCheckKey(...)
+function OnActionCheckKey(...) : int
     return FUNC(INT, 0x00D63B70, {...});
 end
 
-function OnActionEventRegion(...)
+function OnActionEventRegion(...) : int
     return FUNC(INT, 0x00D63C70, {...});
 end
 
-function OnActionEventRegionAttribute(...)
+function OnActionEventRegionAttribute(...) : int
     return FUNC(INT, 0x00D63BE0, {...});
 end
 
-function OnBallista(...)
+function OnBallista(...) : int
     return FUNC(INT, 0x00D5E290, {...});
 end
 
-function OnBloodMenuClose(...)
+function OnBloodMenuClose(...) : int
     return FUNC(INT, 0x00D62FF0, {...});
 end
 
-function OnBonfireEvent(...)
+function OnBonfireEvent(...) : int
     return FUNC(INT, 0x00D64B40, {...});
 end
 
-function OnCharacterAnimEnd(...)
+function OnCharacterAnimEnd(...) : int
     return FUNC(INT, 0x00D63860, {...});
 end
 
-function OnCharacterDead(...)
+function OnCharacterDead(...) : int
     return FUNC(INT, 0x00D63AB0, {...});
 end
 
-function OnCharacterHP(...)
+function OnCharacterHP(...) : int
     return FUNC(INT, 0x00D63A50, {...});
 end
 
-function OnCharacterHP_CheckAttacker(...)
+function OnCharacterHP_CheckAttacker(...) : int
     return FUNC(INT, 0x00D639E0, {...});
 end
 
-function OnCharacterHpRate(...)
+function OnCharacterHpRate(...) : int
     return FUNC(INT, 0x00D63980, {...});
 end
 
-function OnCharacterTotalDamage(...)
+function OnCharacterTotalDamage(...) : int
     return FUNC(INT, 0x00D63750, {...});
 end
 
-function OnCharacterTotalRateDamage(...)
+function OnCharacterTotalRateDamage(...) : int
     return FUNC(INT, 0x00D636C0, {...});
 end
 
-function OnCheckEzStateMessage(...)
+function OnCheckEzStateMessage(...) : int
     return FUNC(INT, 0x00D63B10, {...});
 end
 
-function OnChrAnimEnd(...)
+function OnChrAnimEnd(...) : int
     return FUNC(INT, 0x00D64570, {...});
 end
 
-function OnChrAnimEndPlus(...)
+function OnChrAnimEndPlus(...) : int
     return FUNC(INT, 0x00D637D0, {...});
 end
 
-function OnDistanceAction(...)
+function OnDistanceAction(...) : int
     return FUNC(INT, 0x00D65240, {...});
 end
 
-function OnDistanceActionAttribute(...)
+function OnDistanceActionAttribute(...) : int
     return FUNC(INT, 0x00D65190, {...});
 end
 
-function OnDistanceActionDmyPoly(...)
+function OnDistanceActionDmyPoly(...) : int
     return FUNC(INT, 0x00D64F70, {...});
 end
 
-function OnDistanceActionPlus(...)
+function OnDistanceActionPlus(...) : int
     return FUNC(INT, 0x00D650D0, {...});
 end
 
-function OnDistanceActionPlusAttribute(...)
+function OnDistanceActionPlusAttribute(...) : int
     return FUNC(INT, 0x00D65010, {...});
 end
 
-function OnDistanceJustIn(...)
+function OnDistanceJustIn(...) : int
     return FUNC(INT, 0x00D64E50, {...});
 end
 
-function OnEndFlow(...)
+function OnEndFlow(...) : int
     return FUNC(INT, 0x00D62990, {...});
 end
 
-function OnFireDamage(...)
+function OnFireDamage(...) : int
     return FUNC(INT, 0x00D634B0, {...});
 end
 
-function OnKeyTime2(...)
+function OnKeyTime2(...) : int
     return FUNC(INT, 0x00D635D0, {...});
 end
 
-function OnNetDistanceIn(...)
+function OnNetDistanceIn(...) : int
     return FUNC(INT, 0x00D62D40, {...});
 end
 
-function OnNetRegion(...)
+function OnNetRegion(...) : int
     return FUNC(INT, 0x00D625D0, {...});
 end
 
-function OnNetRegionAttr(...)
+function OnNetRegionAttr(...) : int
     return FUNC(INT, 0x00D625A0, {...});
 end
 
-function OnNetRegionAttrPlus(...)
+function OnNetRegionAttrPlus(...) : int
     return FUNC(INT, 0x00D62DA0, {...});
 end
 
-function OnNetRegionPlus(...)
+function OnNetRegionPlus(...) : int
     return FUNC(INT, 0x00D62E00, {...});
 end
 
-function OnObjAnimEnd(...)
+function OnObjAnimEnd(...) : int
     return FUNC(INT, 0x00D64560, {...});
 end
 
-function OnObjAnimEndPlus(...)
+function OnObjAnimEndPlus(...) : int
     return FUNC(INT, 0x00D64550, {...});
 end
 
-function OnObjDestroy(...)
+function OnObjDestroy(...) : int
     return FUNC(INT, 0x00D63900, {...});
 end
 
-function OnObjectDamageHit(...)
+function OnObjectDamageHit(...) : int
     return FUNC(INT, 0x00D659A0, {...});
 end
 
-function OnObjectDamageHit_NoCall(...)
+function OnObjectDamageHit_NoCall(...) : int
     return FUNC(INT, 0x00D65940, {...});
 end
 
-function OnObjectDamageHit_NoCallPlus(...)
+function OnObjectDamageHit_NoCallPlus(...) : int
     return FUNC(INT, 0x00D658E0, {...});
 end
 
-function OnPlayerActionInRegion(...)
+function OnPlayerActionInRegion(...) : int
     return FUNC(INT, 0x00D63EB0, {...});
 end
 
-function OnPlayerActionInRegionAngle(...)
+function OnPlayerActionInRegionAngle(...) : int
     return FUNC(INT, 0x00D63D90, {...});
 end
 
-function OnPlayerActionInRegionAngleAttribute(...)
+function OnPlayerActionInRegionAngleAttribute(...) : int
     return FUNC(INT, 0x00D63D00, {...});
 end
 
-function OnPlayerActionInRegionAttribute(...)
+function OnPlayerActionInRegionAttribute(...) : int
     return FUNC(INT, 0x00D63E20, {...});
 end
 
-function OnPlayerAssessMenu(...)
+function OnPlayerAssessMenu(...) : int
     return FUNC(INT, 0x00D629E0, {...});
 end
 
-function OnPlayerDistanceAngleInTarget(...)
+function OnPlayerDistanceAngleInTarget(...) : int
     return FUNC(INT, 0x00D652F0, {...});
 end
 
-function OnPlayerDistanceInTarget(...)
+function OnPlayerDistanceInTarget(...) : int
     return FUNC(INT, 0x00D65380, {...});
 end
 
-function OnPlayerDistanceOut(...)
+function OnPlayerDistanceOut(...) : int
     return FUNC(INT, 0x00D64EE0, {...});
 end
 
-function OnPlayerKill(...)
+function OnPlayerKill(...) : int
     return FUNC(INT, 0x00D63430, {...});
 end
 
-function OnRegionIn(...)
+function OnRegionIn(...) : int
     return FUNC(INT, 0x00D64050, {...});
 end
 
-function OnRegionJustIn(...)
+function OnRegionJustIn(...) : int
     return FUNC(INT, 0x00D63FC0, {...});
 end
 
-function OnRegionJustOut(...)
+function OnRegionJustOut(...) : int
     return FUNC(INT, 0x00D63F40, {...});
 end
 
-function OnRegistFunc(...)
+function OnRegistFunc(...) : int
     return FUNC(INT, 0x00D63050, {...});
 end
 
-function OnRequestMenuEnd(...)
+function OnRequestMenuEnd(...) : int
     return FUNC(INT, 0x00D62670, {...});
 end
 
-function OnRevengeMenuClose(...)
+function OnRevengeMenuClose(...) : int
     return FUNC(INT, 0x00D64AC0, {...});
 end
 
-function OnSelectMenu(...)
+function OnSelectMenu(...) : int
     return FUNC(INT, 0x00D62EF0, {...});
 end
 
-function OnSelfBloodMark(...)
+function OnSelfBloodMark(...) : int
     return FUNC(INT, 0x00D633B0, {...});
 end
 
-function OnSelfHeroBloodMark(...)
+function OnSelfHeroBloodMark(...) : int
     return FUNC(INT, 0x00D63330, {...});
 end
 
-function OnSessionIn(...)
+function OnSessionIn(...) : int
     return FUNC(INT, 0x00D63230, {...});
 end
 
-function OnSessionInfo(...)
+function OnSessionInfo(...) : int
     return FUNC(INT, 0x00D630E0, {...});
 end
 
-function OnSessionJustIn(...)
+function OnSessionJustIn(...) : int
     return FUNC(INT, 0x00D632B0, {...});
 end
 
-function OnSessionJustOut(...)
+function OnSessionJustOut(...) : int
     return FUNC(INT, 0x00D631B0, {...});
 end
 
-function OnSessionOut(...)
+function OnSessionOut(...) : int
     return FUNC(INT, 0x00D63130, {...});
 end
 
-function OnSimpleDamage(...)
+function OnSimpleDamage(...) : int
     return FUNC(INT, 0x00D63540, {...});
 end
 
-function OnTalkEvent(...)
+function OnTalkEvent(...) : int
     return FUNC(INT, 0x00D65BB0, {...});
 end
 
-function OnTalkEventAngleOut(...)
+function OnTalkEventAngleOut(...) : int
     return FUNC(INT, 0x00D65A20, {...});
 end
 
-function OnTalkEventDistIn(...)
+function OnTalkEventDistIn(...) : int
     return FUNC(INT, 0x00D65B30, {...});
 end
 
-function OnTalkEventDistOut(...)
+function OnTalkEventDistOut(...) : int
     return FUNC(INT, 0x00D65AB0, {...});
 end
 
-function OnTestEffectEndPlus(...)
+function OnTestEffectEndPlus(...) : int
     return FUNC(INT, 0x00D626C0, {...});
 end
 
-function OnTextEffectEnd(...)
+function OnTextEffectEnd(...) : int
     return FUNC(INT, 0x00D62720, {...});
 end
 
-function OnTurnCharactorEnd(...)
+function OnTurnCharactorEnd(...) : int
     return FUNC(INT, 0x00D62A30, {...});
 end
 
-function OnWanderFade(...)
+function OnWanderFade(...) : int
     return FUNC(INT, 0x00D622D0, {...});
 end
 
-function OnWanderingDemon(...)
+function OnWanderingDemon(...) : int
     return FUNC(INT, 0x00D62240, {...});
 end
 
-function OnWarpMenuClose(...)
+function OnWarpMenuClose(...) : int
     return FUNC(INT, 0x00D62F90, {...});
 end
 
-function OnYesNoDialog(...)
+function OnYesNoDialog(...) : int
     return FUNC(INT, 0x00D62E60, {...});
 end
 
-function OpenCampMenu(...)
+function OpenCampMenu(...) : int
     return FUNC(INT, 0x00D5DA80, {...});
 end
 
-function OpeningDead(...)
+function OpeningDead(...) : int
     return FUNC(INT, 0x00D66600, {...});
 end
 
-function OpeningDeadPlus(...)
+function OpeningDeadPlus(...) : int
     return FUNC(INT, 0x00D665D0, {...});
 end
 
-function OpenSOSMsg_Tutorial(...)
+function OpenSOSMsg_Tutorial(...) : int
     return FUNC(INT, 0x00D5E750, {...});
 end
 
-function ParamInitialize(...)
+function ParamInitialize(...) : int
     return FUNC(INT, 0x00D66360, {...});
 end
 
-function PauseTutorial(...)
+function PauseTutorial(...) : int
     return FUNC(INT, 0x00D5E0B0, {...});
 end
 
-function PlayerChrResetAnimation_RemoOnly(...)
+function PlayerChrResetAnimation_RemoOnly(...) : int
     return FUNC(INT, 0x00D60630, {...});
 end
 
-function PlayObjectSE(...)
+function PlayObjectSE(...) : int
     return FUNC(INT, 0x00D61660, {...});
 end
 
-function PlayPointSE(...)
+function PlayPointSE(...) : int
     return FUNC(INT, 0x00D61F00, {...});
 end
 
-function PlayTypeSE(...)
+function PlayTypeSE(...) : int
     return FUNC(INT, 0x00D61630, {...});
 end
 
-function RecallMenuEvent(...)
+function RecallMenuEvent(...) : int
     return FUNC(INT, 0x00D62780, {...});
 end
 
-function ReconstructBreak(...)
+function ReconstructBreak(...) : int
     return FUNC(INT, 0x00D66070, {...});
 end
 
-function RecoveryHeroin(...)
+function RecoveryHeroin(...) : int
     return FUNC(INT, 0x00D60740, {...});
 end
 
-function RegistObjact(...)
+function RegistObjact(...) : int
     return FUNC(INT, 0x00D5D870, {...});
 end
 
-function RegistSimpleTalk(...)
+function RegistSimpleTalk(...) : int
     return FUNC(INT, 0x00D628A0, {...});
 end
 
-function RemoveInventoryEquip(...)
+function RemoveInventoryEquip(...) : int
     return FUNC(INT, 0x00D60C70, {...});
 end
 
-function RepeatMessage_begin(...)
+function RepeatMessage_begin(...) : int
     return FUNC(INT, 0x00D5DBC0, {...});
 end
 
-function RepeatMessage_end(...)
+function RepeatMessage_end(...) : int
     return FUNC(INT, 0x00D5DBB0, {...});
 end
 
-function RequestForceUpdateNetwork(...)
+function RequestForceUpdateNetwork(...) : int
     return FUNC(INT, 0x00D60AA0, {...});
 end
 
-function RequestFullRecover(...)
+function RequestFullRecover(...) : int
     return FUNC(INT, 0x00D5DD40, {...});
 end
 
-function RequestGenerate(...)
+function RequestGenerate(...) : int
     return FUNC(INT, 0x00D5F290, {...});
 end
 
-function RequestNormalUpdateNetwork(...)
+function RequestNormalUpdateNetwork(...) : int
     return FUNC(INT, 0x00D60A70, {...});
 end
 
-function RequestOpenBriefingMsg(...)
+function RequestOpenBriefingMsg(...) : int
     return FUNC(INT, 0x00D5EB50, {...});
 end
 
-function RequestOpenBriefingMsgPlus(...)
+function RequestOpenBriefingMsgPlus(...) : int
     return FUNC(INT, 0x00D62260, {...});
 end
 
-function RequestPlayMovie(...)
+function RequestPlayMovie(...) : int
     return FUNC(INT, 0x00D65750, {...});
 end
 
-function RequestPlayMoviePlus(...)
+function RequestPlayMoviePlus(...) : int
     return FUNC(INT, 0x00D656D0, {...});
 end
 
-function RequestRemo(...)
+function RequestRemo(...) : int
     return FUNC(INT, 0x00D66440, {...});
 end
 
-function RequestRemoPlus(...)
+function RequestRemoPlus(...) : int
     return FUNC(INT, 0x00D663E0, {...});
 end
 
-function RequestUnlockTrophy(...)
+function RequestUnlockTrophy(...) : int
     return FUNC(INT, 0x00D5EBB0, {...});
 end
 
-function ReqularLeavePlayer(...)
+function ReqularLeavePlayer(...) : int
     return FUNC(INT, 0x00D5E3E0, {...});
 end
 
-function ResetCamAngle(...)
+function ResetCamAngle(...) : int
     return FUNC(INT, 0x00D5EB20, {...});
 end
 
-function ResetEventQwcSpEffect(...)
+function ResetEventQwcSpEffect(...) : int
     return FUNC(INT, 0x00D61ED0, {...});
 end
 
-function ResetSummonParam(...)
+function ResetSummonParam(...) : int
     return FUNC(INT, 0x00D5EB80, {...});
 end
 
-function ResetSyncRideObjInfo(...)
+function ResetSyncRideObjInfo(...) : int
     return FUNC(INT, 0x00D60500, {...});
 end
 
-function ResetThink(...)
+function ResetThink(...) : int
     return FUNC(INT, 0x00D61070, {...});
 end
 
-function RestorePiece(...)
+function RestorePiece(...) : int
     return FUNC(INT, 0x00D64C40, {...});
 end
 
-function ReturnMapSelect(...)
+function ReturnMapSelect(...) : int
     return FUNC(INT, 0x00D5E1C0, {...});
 end
 
-function RevivePlayer(...)
+function RevivePlayer(...) : int
     return FUNC(INT, 0x00D645E0, {...});
 end
 
-function RevivePlayerNext(...)
+function RevivePlayerNext(...) : int
     return FUNC(INT, 0x00D5E0A0, {...});
 end
 
-function SaveRequest(...)
+function SaveRequest(...) : int
     return FUNC(INT, 0x00D5EE90, {...});
 end
 
-function SaveRequest_Profile(...)
+function SaveRequest_Profile(...) : int
     return FUNC(INT, 0x00D5EE70, {...});
 end
 
-function SendEventRequest(...)
+function SendEventRequest(...) : int
     return FUNC(INT, 0x00D61130, {...});
 end
 
-function SetAliveMotion(...)
+function SetAliveMotion(...) : int
     return FUNC(INT, 0x00D5E6C0, {...});
 end
 
-function SetAlwaysDrawForEvent(...)
+function SetAlwaysDrawForEvent(...) : int
     return FUNC(INT, 0x00D60570, {...});
 end
 
-function SetAlwaysEnableBackread_forEvent(...)
+function SetAlwaysEnableBackread_forEvent(...) : int
     return FUNC(INT, 0x00D60750, {...});
 end
 
-function SetAngleFoward(...)
+function SetAngleFoward(...) : int
     return FUNC(INT, 0x00D61A80, {...});
 end
 
-function SetAreaStartMapUid(...)
+function SetAreaStartMapUid(...) : int
     return FUNC(INT, 0x00D5F720, {...});
 end
 
-function SetBossUnitJrHit(...)
+function SetBossUnitJrHit(...) : int
     return FUNC(INT, 0x00D61710, {...});
 end
 
-function SetBountyRankPoint(...)
+function SetBountyRankPoint(...) : int
     return FUNC(INT, 0x00D64E00, {...});
 end
 
-function SetBrokenPiece(...)
+function SetBrokenPiece(...) : int
     return FUNC(INT, 0x00D5F7A0, {...});
 end
 
-function SetCamModeParamTargetId(...)
+function SetCamModeParamTargetId(...) : int
     return FUNC(INT, 0x00D5DF00, {...});
 end
 
-function SetCamModeParamTargetIdForBossLock(...)
+function SetCamModeParamTargetIdForBossLock(...) : int
     return FUNC(INT, 0x00D5DEF0, {...});
 end
 
-function SetChrTypeDataGrey(...)
+function SetChrTypeDataGrey(...) : int
     return FUNC(INT, 0x00D5DFB0, {...});
 end
 
-function SetChrTypeDataGreyNext(...)
+function SetChrTypeDataGreyNext(...) : int
     return FUNC(INT, 0x00D5DF50, {...});
 end
 
-function SetClearBonus(...)
+function SetClearBonus(...) : int
     return FUNC(INT, 0x00D5F3D0, {...});
 end
 
-function SetClearItem(...)
+function SetClearItem(...) : int
     return FUNC(INT, 0x00D5DCD0, {...});
 end
 
-function SetClearSesiionCount(...)
+function SetClearSesiionCount(...) : int
     return FUNC(INT, 0x00D5E4C0, {...});
 end
 
-function SetClearState(...)
+function SetClearState(...) : int
     return FUNC(INT, 0x00D5E560, {...});
 end
 
-function SetColiEnable(...)
+function SetColiEnable(...) : int
     return FUNC(INT, 0x00D60090, {...});
 end
 
-function SetColiEnableArray(...)
+function SetColiEnableArray(...) : int
     return FUNC(INT, 0x00D64AA0, {...});
 end
 
-function SetDefaultRoutePoint(...)
+function SetDefaultRoutePoint(...) : int
     return FUNC(INT, 0x00D645A0, {...});
 end
 
-function SetDisableBackread_forEvent(...)
+function SetDisableBackread_forEvent(...) : int
     return FUNC(INT, 0x00D60AD0, {...});
 end
 
-function SetDisableDamage(...)
+function SetDisableDamage(...) : int
     return FUNC(INT, 0x00D5EC30, {...});
 end
 
-function SetDisableGravity(...)
+function SetDisableGravity(...) : int
     return FUNC(INT, 0x00D610A0, {...});
 end
 
-function SetDisableWeakDamageAnim(...)
+function SetDisableWeakDamageAnim(...) : int
     return FUNC(INT, 0x00D603D0, {...});
 end
 
-function SetDisableWeakDamageAnim_light(...)
+function SetDisableWeakDamageAnim_light(...) : int
     return FUNC(INT, 0x00D60390, {...});
 end
 
-function SetDispMask(...)
+function SetDispMask(...) : int
     return FUNC(INT, 0x00D61800, {...});
 end
 
-function SetDrawEnable(...)
+function SetDrawEnable(...) : int
     return FUNC(INT, 0x00D600B0, {...});
 end
 
-function SetDrawEnableArray(...)
+function SetDrawEnableArray(...) : int
     return FUNC(INT, 0x00D64530, {...});
 end
 
-function SetDrawGroup(...)
+function SetDrawGroup(...) : int
     return FUNC(INT, 0x00D61A00, {...});
 end
 
-function SetEnableEventPad(...)
+function SetEnableEventPad(...) : int
     return FUNC(INT, 0x00D5E420, {...});
 end
 
-function SetEventBodyBulletCorrect(...)
+function SetEventBodyBulletCorrect(...) : int
     return FUNC(INT, 0x00D5E6E0, {...});
 end
 
-function SetEventBodyMaterialSeAndSfx(...)
+function SetEventBodyMaterialSeAndSfx(...) : int
     return FUNC(INT, 0x00D5E710, {...});
 end
 
-function SetEventBodyMaxHp(...)
+function SetEventBodyMaxHp(...) : int
     return FUNC(INT, 0x00D61D70, {...});
 end
 
-function SetEventCommand(...)
+function SetEventCommand(...) : int
     return FUNC(INT, 0x00D5FCB0, {...});
 end
 
-function SetEventCommandIndex(...)
+function SetEventCommandIndex(...) : int
     return FUNC(INT, 0x00D5FC70, {...});
 end
 
-function SetEventFlagValue(...)
+function SetEventFlagValue(...) : int
     return FUNC(INT, 0x00D60360, {...});
 end
 
-function SetEventGenerate(...)
+function SetEventGenerate(...) : int
     return FUNC(INT, 0x00D604B0, {...});
 end
 
-function SetEventMovePointType(...)
+function SetEventMovePointType(...) : int
     return FUNC(INT, 0x00D60BB0, {...});
 end
 
-function SetEventSimpleTalk(...)
+function SetEventSimpleTalk(...) : int
     return FUNC(INT, 0x00D64BD0, {...});
 end
 
-function SetEventSpecialEffect(...)
+function SetEventSpecialEffect(...) : int
     return FUNC(INT, 0x00D61280, {...});
 end
 
-function SetEventSpecialEffect_2(...)
+function SetEventSpecialEffect_2(...) : int
     return FUNC(INT, 0x00D611C0, {...});
 end
 
-function SetEventSpecialEffectOwner(...)
+function SetEventSpecialEffectOwner(...) : int
     return FUNC(INT, 0x00D61240, {...});
 end
 
-function SetEventSpecialEffectOwner_2(...)
+function SetEventSpecialEffectOwner_2(...) : int
     return FUNC(INT, 0x00D61190, {...});
 end
 
-function SetEventTarget(...)
+function SetEventTarget(...) : int
     return FUNC(INT, 0x00D61AA0, {...});
 end
 
-function SetExVelocity(...)
+function SetExVelocity(...) : int
     return FUNC(INT, 0x00D61F30, {...});
 end
 
-function SetFirstSpeed(...)
+function SetFirstSpeed(...) : int
     return FUNC(INT, 0x00D61E90, {...});
 end
 
-function SetFirstSpeedPlus(...)
+function SetFirstSpeedPlus(...) : int
     return FUNC(INT, 0x00D61E50, {...});
 end
 
-function SetFlagInitState(...)
+function SetFlagInitState(...) : int
     return FUNC(INT, 0x00D5DBF0, {...});
 end
 
-function SetFootIKInterpolateType(...)
+function SetFootIKInterpolateType(...) : int
     return FUNC(INT, 0x00D60310, {...});
 end
 
-function SetForceJoinBlackRequest(...)
+function SetForceJoinBlackRequest(...) : int
     return FUNC(INT, 0x00D65DF0, {...});
 end
 
-function SetHitInfo(...)
+function SetHitInfo(...) : int
     return FUNC(INT, 0x00D61990, {...});
 end
 
-function SetHitMask(...)
+function SetHitMask(...) : int
     return FUNC(INT, 0x00D64920, {...});
 end
 
-function SetHp(...)
+function SetHp(...) : int
     return FUNC(INT, 0x00D5F9A0, {...});
 end
 
-function SetIgnoreHit(...)
+function SetIgnoreHit(...) : int
     return FUNC(INT, 0x00D61750, {...});
 end
 
-function SetInfomationPriority(...)
+function SetInfomationPriority(...) : int
     return FUNC(INT, 0x00D5DB10, {...});
 end
 
-function SetIsAnimPauseOnRemoPlayForEvent(...)
+function SetIsAnimPauseOnRemoPlayForEvent(...) : int
     return FUNC(INT, 0x00D5F300, {...});
 end
 
-function SetKeepCommandIndex(...)
+function SetKeepCommandIndex(...) : int
     return FUNC(INT, 0x00D624F0, {...});
 end
 
-function SetLoadWait(...)
+function SetLoadWait(...) : int
     return FUNC(INT, 0x00D5D940, {...});
 end
 
-function SetLockActPntInvalidateMask(...)
+function SetLockActPntInvalidateMask(...) : int
     return FUNC(INT, 0x00D608F0, {...});
 end
 
-function SetMapUid(...)
+function SetMapUid(...) : int
     return FUNC(INT, 0x00D64610, {...});
 end
 
-function SetMaxHp(...)
+function SetMaxHp(...) : int
     return FUNC(INT, 0x00D5F910, {...});
 end
 
-function SetMenuBrake(...)
+function SetMenuBrake(...) : int
     return FUNC(INT, 0x00D5DB70, {...});
 end
 
-function SetMiniBlockIndex(...)
+function SetMiniBlockIndex(...) : int
     return FUNC(INT, 0x00D5F5F0, {...});
 end
 
-function SetMovePoint(...)
+function SetMovePoint(...) : int
     return FUNC(INT, 0x00D61390, {...});
 end
 
-function SetMultiWallMapUid(...)
+function SetMultiWallMapUid(...) : int
     return FUNC(INT, 0x00D5F200, {...});
 end
 
-function SetNoNetSync(...)
+function SetNoNetSync(...) : int
     return FUNC(INT, 0x00D606D0, {...});
 end
 
-function SetObjDeactivate(...)
+function SetObjDeactivate(...) : int
     return FUNC(INT, 0x00D5F120, {...});
 end
 
-function SetObjDisableBreak(...)
+function SetObjDisableBreak(...) : int
     return FUNC(INT, 0x00D5F340, {...});
 end
 
-function SetObjEventCollisionFill(...)
+function SetObjEventCollisionFill(...) : int
     return FUNC(INT, 0x00D5FF80, {...});
 end
 
-function SetObjSfx(...)
+function SetObjSfx(...) : int
     return FUNC(INT, 0x00D62320, {...});
 end
 
-function SetReturnPointEntityId(...)
+function SetReturnPointEntityId(...) : int
     return FUNC(INT, 0x00D5DC70, {...});
 end
 
-function SetReviveWait(...)
+function SetReviveWait(...) : int
     return FUNC(INT, 0x00D5E680, {...});
 end
 
-function SetSelfBloodMapUid(...)
+function SetSelfBloodMapUid(...) : int
     return FUNC(INT, 0x00D5FFF0, {...});
 end
 
-function SetSosSignPos(...)
+function SetSosSignPos(...) : int
     return FUNC(INT, 0x00D5F570, {...});
 end
 
-function SetSosSignWarp(...)
+function SetSosSignWarp(...) : int
     return FUNC(INT, 0x00D5E070, {...});
 end
 
-function SetSpStayAndDamageAnimId(...)
+function SetSpStayAndDamageAnimId(...) : int
     return FUNC(INT, 0x00D609C0, {...});
 end
 
-function SetSpStayAndDamageAnimIdPlus(...)
+function SetSpStayAndDamageAnimIdPlus(...) : int
     return FUNC(INT, 0x00D60980, {...});
 end
 
-function SetSubMenuBrake(...)
+function SetSubMenuBrake(...) : int
     return FUNC(INT, 0x00D5D880, {...});
 end
 
-function SetSummonedPos(...)
+function SetSummonedPos(...) : int
     return FUNC(INT, 0x00D5E090, {...});
 end
 
-function SetSyncRideObjInfo(...)
+function SetSyncRideObjInfo(...) : int
     return FUNC(INT, 0x00D60520, {...});
 end
 
-function SetSystemIgnore(...)
+function SetSystemIgnore(...) : int
     return FUNC(INT, 0x00D605A0, {...});
 end
 
-function SetTalkMsg(...)
+function SetTalkMsg(...) : int
     return FUNC(INT, 0x00D5E190, {...});
 end
 
-function SetTeamType(...)
+function SetTeamType(...) : int
     return FUNC(INT, 0x00D60B50, {...});
 end
 
-function SetTeamTypeDefault(...)
+function SetTeamTypeDefault(...) : int
     return FUNC(INT, 0x00D60B00, {...});
 end
 
-function SetTeamTypePlus(...)
+function SetTeamTypePlus(...) : int
     return FUNC(INT, 0x00D60B30, {...});
 end
 
-function SetTextEffect(...)
+function SetTextEffect(...) : int
     return FUNC(INT, 0x00D5E430, {...});
 end
 
-function SetTutorialSummonedPos(...)
+function SetTutorialSummonedPos(...) : int
     return FUNC(INT, 0x00D5E080, {...});
 end
 
-function SetValidTalk(...)
+function SetValidTalk(...) : int
     return FUNC(INT, 0x00D5E5C0, {...});
 end
 
-function ShowGenDialog(...)
+function ShowGenDialog(...) : int
     return FUNC(INT, 0x00D5EEF0, {...});
 end
 
-function ShowRankingDialog(...)
+function ShowRankingDialog(...) : int
     return FUNC(INT, 0x00D5D960, {...});
 end
 
-function SOSMsgGetResult_Tutorial(...)
+function SOSMsgGetResult_Tutorial(...) : int
     return FUNC(INT, 0x00D5DA50, {...});
 end
 
-function StopLoopAnimation(...)
+function StopLoopAnimation(...) : int
     return FUNC(INT, 0x00D5FFC0, {...});
 end
 
-function StopPointSE(...)
+function StopPointSE(...) : int
     return FUNC(INT, 0x00D5EA60, {...});
 end
 
-function SubDispMaskByBit(...)
+function SubDispMaskByBit(...) : int
     return FUNC(INT, 0x00D5FEA0, {...});
 end
 
-function SubHitMask(...)
+function SubHitMask(...) : int
     return FUNC(INT, 0x00D64CA0, {...});
 end
 
-function SubHitMaskByBit(...)
+function SubHitMaskByBit(...) : int
     return FUNC(INT, 0x00D64CF0, {...});
 end
 
-function SummonBlackRequest(...)
+function SummonBlackRequest(...) : int
     return FUNC(INT, 0x00D627D0, {...});
 end
 
-function SummonedMapReload(...)
+function SummonedMapReload(...) : int
     return FUNC(INT, 0x00D60850, {...});
 end
 
-function SummonSuccess(...)
+function SummonSuccess(...) : int
     return FUNC(INT, 0x00D64BB0, {...});
 end
 
-function SwitchDispMask(...)
+function SwitchDispMask(...) : int
     return FUNC(INT, 0x00D5FF20, {...});
 end
 
-function SwitchHitMask(...)
+function SwitchHitMask(...) : int
     return FUNC(INT, 0x00D64DB0, {...});
 end
 
-function TreasureDispModeChange(...)
+function TreasureDispModeChange(...) : int
     return FUNC(INT, 0x00D64860, {...});
 end
 
-function TreasureDispModeChange2(...)
+function TreasureDispModeChange2(...) : int
     return FUNC(INT, 0x00D647C0, {...});
 end
 
-function TurnCharactor(...)
+function TurnCharactor(...) : int
     return FUNC(INT, 0x00D623A0, {...});
 end
 
-function UnLockSession(...)
+function UnLockSession(...) : int
     return FUNC(INT, 0x00D5E3F0, {...});
 end
 
-function UpDateBloodMark(...)
+function UpDateBloodMark(...) : int
     return FUNC(INT, 0x00D661F0, {...});
 end
 
-function ValidPointLight(...)
+function ValidPointLight(...) : int
     return FUNC(INT, 0x00D5F020, {...});
 end
 
-function ValidSfx(...)
+function ValidSfx(...) : int
     return FUNC(INT, 0x00D5F0A0, {...});
 end
 
-function VariableExpand_211_Param1(...)
+function VariableExpand_211_Param1(...) : int
     return FUNC(INT, 0x00D5D8C0, {...});
 end
 
-function VariableOrder_211(...)
+function VariableOrder_211(...) : int
     return FUNC(INT, 0x00D5D8F0, {...});
 end
 
-function VariableOrder_22(...)
+function VariableOrder_22(...) : int
     return FUNC(INT, 0x00D5D910, {...});
 end
 
-function WARN(...)
+function WARN(...) : int
     return FUNC(INT, 0x00D62050, {...});
 end
 
-function WarpDmy(...)
+function WarpDmy(...) : int
     return FUNC(INT, 0x00D64A70, {...});
 end
 
-function WarpNextStage_Bonfire(...)
+function WarpNextStage_Bonfire(...) : int
     return FUNC(INT, 0x00D62CA0, {...});
 end
 
-function WarpNextStageKick(...)
+function WarpNextStageKick(...) : int
     return FUNC(INT, 0x00D62930, {...});
 end
 
-function WarpRestart(...)
+function WarpRestart(...) : int
     return FUNC(INT, 0x00D62580, {...});
 end
 
-function WarpRestartNoGrey(...)
+function WarpRestartNoGrey(...) : int
     return FUNC(INT, 0x00D62550, {...});
 end
 
-function WarpSelfBloodMark(...)
+function WarpSelfBloodMark(...) : int
     return FUNC(INT, 0x00D649D0, {...});
 end

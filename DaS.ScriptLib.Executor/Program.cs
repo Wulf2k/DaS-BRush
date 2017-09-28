@@ -1,8 +1,10 @@
-﻿using System;
+﻿using DaS.ScriptLib.LuaScripting;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -39,8 +41,47 @@ namespace DaS.ScriptLib.Executor
             return result;
         }
 
+        static void DoException(Exception e, string scriptPath)
+        {
+            
+
+            if (e is Neo.IronLua.LuaException)
+            {
+                var le = (e as Neo.IronLua.LuaException);
+                Console.Error.WriteLine($"Exception (shown below) thrown at line {le.Line}, column {le.Column} of \"{new FileInfo(scriptPath).Name}\":\n");
+                Console.Error.WriteLine(e.Message);
+            }
+            else
+            {
+                Console.Error.WriteLine($"Exception (shown below) thrown while executing \"{new FileInfo(scriptPath).Name}\":\n");
+                Console.Error.WriteLine(e.Message);
+            }
+
+            foreach (var q in Neo.IronLua.LuaExceptionData.GetData(e))
+            {
+                Console.Error.WriteLine(q.ToString());
+            }
+
+            var inner = e.InnerException as Neo.IronLua.LuaException;
+
+            if (e.InnerException != null)
+            {
+                Console.Error.Write("\n\n\n");
+                DoException(e.InnerException, scriptPath);
+            }
+        }
+
         static void Main(string[] args)
         {
+            DSLua.Init();
+
+            var testScript = DSLua.Script.FromString("print(\"Initializing DSLua...\")", "INIT");
+            testScript.RunSync((e, h) =>
+            {
+                DoException(e, "INIT");
+                h.Set();
+            });
+
             string invalidArg = null;
             string targetScriptFile = null;
             bool attachDebugger = false;
@@ -107,88 +148,23 @@ namespace DaS.ScriptLib.Executor
                 }
             }
 
-            Console.WriteLine("Attempting to attach to Dark Souls process...");
-            Injection.Hook.Init();
-
-            if (!Injection.Hook.DARKSOULS.Attached)
-            {
-                string infoMsg = "Unable to attach to Dark Souls process. If Dark Souls is indeed running and you receive this error," +
-                    "please try right-clicking on the \"Dark Souls Script Editor.exe\" file and ticking the \"Run as Admin\" checkbox." +
-                    "If the problem still persists, try restarting Dark Souls, Steam, and/or Windows." +
-                    "If the problem STILL persists, contact one of the developers." +
-                    "\nDark Souls Script Executor will now exit.";
-                Console.Error.WriteLine(infoMsg);
-                MessageBox.Show(infoMsg, "Unable to attach to process");
-                return;
-            }
-            else
-            {
-                Console.WriteLine("Attached to process successfully.");
-            }
-
-            Lua.LuaInterface luai;
-
-            Console.WriteLine("Creating Lua interface...");
-
-            try
-            {
-                luai = new Lua.LuaInterface();
-            }
-            catch(Exception e)
-            {
-                if (ShowErrorAndCheckUserBreak(e, "creating Lua interface"))
-                {
-                    throw e;
-                }
-                return;
-            }
-
-            Console.WriteLine("Lua interface created successfully.");
             Console.WriteLine("Executing Lua script and redirecting all output to console...");
             Console.WriteLine();
-            Console.WriteLine("#### LUA SCRIPT OUTPUT BEGIN ###########");
-            Console.WriteLine();
 
             try
             {
-                luai.State.DoString(File.ReadAllText(args[0]));
-
-                while (luai.State.IsExecuting)
-                { 
-                    /* 
-                     * 
-                     * I don't even think this is necessary since I'm pretty sure DoString runs the actual Lua script
-                     * in the same thread from which it is called, but whatever #FuckTheSystem 
-                     * 
-                     */
-                }
-
-                Console.WriteLine();
-                Console.WriteLine("#### LUA SCRIPT OUTPUT END #############");
-
-                Console.WriteLine("Lua script finished executing successfully.");
-                Console.WriteLine("Dark Souls Script Executor will now exit.");
-                return;
-            }
-            catch(NLua.Exceptions.LuaScriptException e)
-            {
-                Console.Error.WriteLine(e.Message);
-                //MessageBox.Show(e.Message, "Lua Script Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine();
-                Console.WriteLine("#### LUA SCRIPT OUTPUT END #############");
-                Console.WriteLine();
-
-                if (ShowErrorAndCheckUserBreak(e, "executing the Lua script"))
+                var s = DSLua.Script.FromFile(args[0], true);
+                
+                s.RunSync((e, h) =>
                 {
-                    throw e;
-                }
+                    DoException(e, args[0]);
+                    h.Set();
+                });
+
+                s.FinishTrigger.WaitOne();
             }
             finally
             {
-                luai.Dispose();
                 Injection.Hook.DARKSOULS.Close();
             }
         }

@@ -5,7 +5,7 @@ Imports System.Globalization
 Imports System.Reflection
 Imports System.Runtime.CompilerServices
 Imports DaS.ScriptLib
-Imports DaS.ScriptLib.Lua
+Imports DaS.ScriptLib.LuaScripting
 Imports DaS.ScriptLib.Game.Data.Helpers
 Imports DaS.ScriptLib.Injection
 Imports DaS.ScriptLib.Game
@@ -32,7 +32,6 @@ Public Class frmForm1
 
     '50001550 = Stop Rite of Kindling dropping?
     'Check ItemLotParam for boss soul EventFlags
-
 
     Dim _originalExStyle = -1
     Dim _doubleBufferino As Boolean = True
@@ -81,8 +80,6 @@ Public Class frmForm1
     Dim playerXpos As Single
     Dim playerYpos As Single
     Dim playerZpos As Single
-
-    Public lua As New LuaInterface()
 
     Public intvar1 As Integer
     Public intvar2 As Integer
@@ -178,11 +175,11 @@ Public Class frmForm1
             End Using
         End Using
 
-        lua.State.DoString(bossRushScript)
+        DSLua.DoString(bossRushScript)
     End Sub
 
     Private Sub RefreshGUI()
-        Dim isBossRushing = lua.State.IsExecuting
+        Dim isBossRushing = If(luaThread?.IsAlive, False)
 
         btnLoadBossScenario.Enabled = Not isBossRushing
 
@@ -525,7 +522,7 @@ Public Class frmForm1
     'End Sub
 
     Private Sub btnCancelBossRush_Click(sender As Object, e As EventArgs) Handles btnCancelBossRush.Click
-        LuaInterface.E("ShowHUD(true)")
+        DSLua.DG.ShowHUD(True)
         Funcs.SetKeyGuideTextClear()
         Funcs.SetLineHelpTextClear()
         If (luaThread IsNot Nothing AndAlso luaThread.IsAlive) Then
@@ -556,7 +553,7 @@ Public Class frmForm1
         If luaThread IsNot Nothing AndAlso luaThread.IsAlive Then
             luaThread.Abort()
         End If
-        LuaInterface.E($"SetClearCount({numBossScenarioNg.Value})")
+        DSLua.DG.SetClearCount(CInt(numBossScenarioNg.Value))
         luaThread = New Thread(AddressOf DoBossScenario) With {.IsBackground = True}
         luaThread.Start(CType(comboBossList.SelectedItem, String))
     End Sub
@@ -566,7 +563,7 @@ Public Class frmForm1
             Select(Function(kvp) New KeyValuePair(Of String, Integer)(kvp.Value.Name, CType(kvp.Key, Integer))).
             ToDictionary(Function(kvp) kvp.Key, Function(kvp) kvp.Value)
 
-        lua.State.DoString($"SpawnPlayerAtBoss({byName(bossName)})")
+        DSLua.DG.SpawnPlayerAtBoss(byName(bossName))
     End Sub
 
     Private Sub radioStandard_CheckedChanged(sender As Object, e As EventArgs) Handles radioStandard.CheckedChanged
@@ -618,21 +615,19 @@ Public Class frmForm1
     End Sub
 
     Private Sub btnBeginBossRush_Click(sender As Object, e As EventArgs) Handles btnBeginBossRush.Click
-        If Not lua.State.IsExecuting Then
-            If luaThread IsNot Nothing AndAlso luaThread.IsAlive Then
-                luaThread.Abort()
-            End If
-            luaThread = New Thread(AddressOf BeginBossRushOnNewThread) With {.IsBackground = True}
-            luaThread.Start()
+        If luaThread IsNot Nothing AndAlso luaThread.IsAlive Then
+            luaThread.Abort()
         End If
+        luaThread = New Thread(AddressOf BeginBossRushOnNewThread) With {.IsBackground = True}
+        luaThread.Start()
     End Sub
 
     Private Sub BeginBossRushOnNewThread()
-        lua.State.Item("ShowBossNames") = (Not checkHideBossNames.Checked)
-        lua.State.Item("TimeBetweenBosses") = CType(numCountdown.Value, Single)
-        lua.State.Item("RandomizeBossNG") = checkRandomizeNg.Checked
-        lua.State.Item("InfiniteLives") = checkInfiniteLives.Checked
-        lua.State.Item("RefillHpEachFight") = checkHealEachFight.Checked
+        DSLua.DG.ShowBossNames = (Not checkHideBossNames.Checked)
+        DSLua.DG.TimeBetweenBosses = CType(numCountdown.Value, Single)
+        DSLua.DG.RandomizeBossNG = checkRandomizeNg.Checked
+        DSLua.DG.InfiniteLives = checkInfiniteLives.Checked
+        DSLua.DG.RefillHpEachFight = checkHealEachFight.Checked
 
         Dim bossRushOrder = ""
         If radioStandard.Checked Then
@@ -645,11 +640,11 @@ Public Class frmForm1
             bossRushOrder = "Custom"
         End If
 
-        lua.State.Item("BossRushOrder") = bossRushOrder
-        lua.State.Item("BossRushCustomOrder") = String.Join(";", GetFlpCustomBossOrderAsArray())
-        lua.State.Item("BossRushExcludeBed") = checkSkipBedOfChaos.Checked
+        DSLua.DG.BossRushOrder = bossRushOrder
+        DSLua.DG.BossRushCustomOrder = String.Join(";", GetFlpCustomBossOrderAsArray())
+        DSLua.DG.BossRushExcludeBed = checkSkipBedOfChaos.Checked
+        DSLua.DG.BeginBossRush()
 
-        lua.State.GetFunction("BeginBossRush").Call()
     End Sub
 
     Private Sub btnFlpCustomRemove_Click(sender As Object, e As EventArgs) Handles btnFlpCustomRemove.Click
