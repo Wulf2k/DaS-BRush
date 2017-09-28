@@ -1,8 +1,10 @@
 ﻿using DaS.ScriptLib.LuaScripting;
+using Neo.IronLua;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -74,6 +76,14 @@ namespace DaS.ScriptLib.Executor
         static void Main(string[] args)
         {
             DSLua.Init();
+
+            //Console.WriteLine("TESTING:");
+            //var TEST = LuaType.Clr.EnumerateMembers<MethodInfo>(LuaMethodEnumerate.Dynamic, m => m.GetType().GetMethods(BindingFlags.Instance));
+            //foreach (var test in TEST)
+            //{
+            //    Console.WriteLine(test.Name);
+            //}
+            //return;
 
             var testScript = DSLua.Script.FromString("print(\"Initializing DSLua...\")", "INIT");
             testScript.RunSync((e, h) =>

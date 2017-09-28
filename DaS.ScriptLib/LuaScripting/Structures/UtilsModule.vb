@@ -5,6 +5,8 @@ Namespace LuaScripting.Structures
 
     Public Class Utils
 
+        Public Shared ReadOnly GlobalInstance As New Utils()
+
         Public Const TableName As String = "Utils"
         Public Const MinLoadingScreenDur As Double = 3.0
 

@@ -68,6 +68,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AutoCompleteHelper.cs" />
     <Compile Include="ControlExtensions.cs" />
     <Compile Include="LuaAutoComplete.cs" />
     <Compile Include="LuaTabEventArgs.cs" />
@@ -165,6 +166,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\ScriptNotRunning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DSLuaLex\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

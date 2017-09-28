@@ -68,27 +68,24 @@ namespace DaS.ScriptEditor.NEW
         {
             Entries.Clear();
 
-            foreach (var kvp in DSLua.G)
-            {
-                CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Method, kvp.Key.ToString().Replace("(", ""), kvp.Key.ToString().Replace("(", ""), "?Description?"));
-            }
+            AutoCompleteHelper.EnumerateLuaGlobals(mw, ref Entries);
 
-            foreach (var e in ScriptLib.LuaScripting.helpers.AutoCompleteHelper.IngameFunctionsFancy)
-            {
-                CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
-            }
+            //foreach (var e in ScriptLib.LuaScripting.helpers.AutoCompleteHelper.IngameFunctionsFancy)
+            //{
+            //    CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
+            //}
 
-            foreach (var e in ScriptLib.LuaScripting.helpers.AutoCompleteHelper.IngameFunctionsUnmarked)
-            {
-                CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
-            }
+            //foreach (var e in ScriptLib.LuaScripting.helpers.AutoCompleteHelper.IngameFunctionsUnmarked)
+            //{
+            //    CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
+            //}
 
-            foreach (var e in ScriptLib.LuaScripting.helpers.AutoCompleteHelper.LuaHelperEntries)
-            {
-                CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
-            }
+            //foreach (var e in ScriptLib.LuaScripting.helpers.AutoCompleteHelper.LuaHelperEntries)
+            //{
+            //    CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
+            //}
 
-            Entries = Entries.OrderBy(x => x.Text).ToList();
+            //Entries = Entries.OrderBy(x => x.Text).ToList();
         }
 
         private void TextArea_TextEntering(object sender, TextCompositionEventArgs e)

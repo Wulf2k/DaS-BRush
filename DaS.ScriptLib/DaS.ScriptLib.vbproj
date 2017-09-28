@@ -98,7 +98,6 @@
     <Compile Include="Injection\Structures\SafeRemoteHandle.vb" />
     <Compile Include="Game\Data\AnimationID\Player.vb" />
     <Compile Include="Game\Data\EventFlag\Boss.vb" />
-    <Compile Include="LuaScripting\Helpers\AutoCompleteHelper.vb" />
     <Compile Include="LuaScripting\[DSLua]\DSLua.Environment.vb" />
     <Compile Include="LuaScripting\[DSLua]\DSLua.Script.vb" />
     <Compile Include="LuaScripting\[DSLua]\DSLua.vb" />
