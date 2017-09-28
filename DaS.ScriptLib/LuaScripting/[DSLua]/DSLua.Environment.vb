@@ -112,6 +112,8 @@ Namespace LuaScripting
 
                 StartTime = DateTime.Now
 
+                DG.os.clock = Function() DG.Clock
+
                 HelperFuncs.Temp_AllLoadedTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(Function(t) t.GetTypes()).ToList()
 
                 For Each ns In ImportedNamespaces
