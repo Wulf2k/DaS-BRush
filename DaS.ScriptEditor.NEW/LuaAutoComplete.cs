@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace DaS.ScriptEditor.NEW
 {
@@ -18,13 +19,15 @@ namespace DaS.ScriptEditor.NEW
         public bool IsOpen { get; private set; } = false;
         //Fields
         public readonly TextEditor Editor;
+        public readonly MainWindow Main;
         public List<SeAutoCompleteEntry> Entries = new List<SeAutoCompleteEntry>();
         public InsightWindow Insight { get; private set; }
 
         SeAutoCompleteEntry PrevEntry;
 
-        public LuaAutoComplete(ref TextEditor editor)
+        public LuaAutoComplete(ref TextEditor editor, ref MainWindow mainWindow)
         {
+            Main = mainWindow;
             Editor = editor;
             Editor.TextArea.TextEntered += TextArea_TextEntered;
             Editor.TextArea.TextEntering += TextArea_TextEntering;
@@ -68,7 +71,7 @@ namespace DaS.ScriptEditor.NEW
         {
             Entries.Clear();
 
-            AutoCompleteHelper.EnumerateLuaGlobals(mw, ref Entries);
+            AutoCompleteHelper.EnumerateLuaGlobals(mw, ref Entries, false);
 
             //foreach (var e in ScriptLib.LuaScripting.helpers.AutoCompleteHelper.IngameFunctionsFancy)
             //{
@@ -85,7 +88,7 @@ namespace DaS.ScriptEditor.NEW
             //    CheckAddNewEntry(new SeAutoCompleteEntry(mw, SeAcType.Estus, e.CompletionText, e.ListDisplayText, e.Description));
             //}
 
-            //Entries = Entries.OrderBy(x => x.Text).ToList();
+            Entries = Entries.OrderBy(x => x.Text).ToList();
         }
 
         private void TextArea_TextEntering(object sender, TextCompositionEventArgs e)
@@ -174,6 +177,15 @@ namespace DaS.ScriptEditor.NEW
         private void InitCW()
         {
             CW = new CompletionWindow(Editor.TextArea);
+            
+            CW.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x1E, 0x1E, 0x1E));
+            CW.CompletionList.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x1E, 0x1E, 0x1E));
+            CW.CompletionList.ListBox.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x1E, 0x1E, 0x1E));
+            CW.CompletionList.ListBox.Foreground = Brushes.White;
+            CW.CompletionList.ListBox.ItemContainerStyle = Main.Resources["CompletionBoxStyle"] as System.Windows.Style;
+
+            CW.CompletionList.ListBox.GotFocus += (o, e) => e.Handled = true;
+
             CW.CompletionList.KeyDown += CompletionList_KeyDown;
             CW.Closed += CW_Closed;
 

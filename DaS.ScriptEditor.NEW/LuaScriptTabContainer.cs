@@ -26,22 +26,10 @@ namespace DaS.ScriptEditor.NEW
         public TextEditor LuaEditor;
         public LuaAutoComplete AutoComplete;
 
+        public MainWindow Main;
+
         //public readonly ImageSource IconScriptRunning;
         //public readonly ImageSource IconScriptNotRunning;
-
-        public Style LuaEditorStyle
-        {
-            get
-            {
-                return (Style)GetValue(LuaEditorStyleProperty);
-            }
-            set
-            {
-                SetValue(LuaEditorStyleProperty, value);
-            }
-        }
-
-        public DependencyProperty LuaEditorStyleProperty = DependencyProperty.Register("LuaEditorStyle", typeof(Style), typeof(LuaScriptTabContainer));
 
         public event EventHandler<LuaTabEventArgs> NewTabSelected;
         public event EventHandler<LuaTabEventArgs> OldTabDeselected;
@@ -67,7 +55,7 @@ namespace DaS.ScriptEditor.NEW
 
         public LuaScriptTabContainer() : base()
         {
-            AddNewTab((dummy) => { });
+
         }
 
         private void InitEditor()
@@ -103,7 +91,7 @@ namespace DaS.ScriptEditor.NEW
 
             LuaEditor.TextArea.TextEntered += TextArea_TextEntered;
 
-            LuaEditor.Style = LuaEditorStyle;
+            LuaEditor.Style = Main.Resources["DarkAvalonEditStyle"] as Style;
 
             LuaEditor.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x1E, 0x1E, 0x1E));
             LuaEditor.TextArea.Caret.CaretBrush = Brushes.White;
@@ -136,7 +124,7 @@ namespace DaS.ScriptEditor.NEW
                 if (LuaEditor == null)
                 {
                     InitEditor();
-                    AutoComplete = new LuaAutoComplete(ref LuaEditor);
+                    AutoComplete = new LuaAutoComplete(ref LuaEditor, ref Main);
                 }
 
                 newTab = new LuaScriptTab(this, loading);

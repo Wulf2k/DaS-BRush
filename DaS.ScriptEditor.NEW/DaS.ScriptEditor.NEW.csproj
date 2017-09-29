@@ -37,12 +37,6 @@
     <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
       <HintPath>..\packages\AvalonEdit.5.0.3\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
-    <Reference Include="Neo.Lua, Version=5.3.0.0, Culture=neutral, PublicKeyToken=fdb0cd4fe8a6e3b2, processorArchitecture=MSIL">
-      <HintPath>..\packages\NeoLua.1.2.21\lib\net45\Neo.Lua.dll</HintPath>
-    </Reference>
-    <Reference Include="Neo.Lua.Desktop, Version=5.3.0.0, Culture=neutral, PublicKeyToken=fdb0cd4fe8a6e3b2, processorArchitecture=MSIL">
-      <HintPath>..\packages\NeoLua.1.2.21\lib\net45\Neo.Lua.Desktop.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -80,6 +74,9 @@
     <Compile Include="SeToolbar.xaml.cs">
       <DependentUpon>SeToolbar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TestingXamlCode.xaml.cs">
+      <DependentUpon>TestingXamlCode.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -93,6 +90,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="SeToolbar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TestingXamlCode.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -129,6 +130,14 @@
     <ProjectReference Include="..\DaS.ScriptLib\DaS.ScriptLib.vbproj">
       <Project>{2a373330-933c-4a80-adfb-39f5e0ecbc35}</Project>
       <Name>DaS.ScriptLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib\neolua\NeoLuaD\NeoLuaD.csproj">
+      <Project>{2fb491e8-65af-4c0d-a13e-4af73419ae0c}</Project>
+      <Name>NeoLuaD</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib\neolua\NeoLua\NeoLua.csproj">
+      <Project>{09aebb35-719e-4e32-9836-f57d7d6f1607}</Project>
+      <Name>NeoLua</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lib\Xceed.Wpf.AvalonDock.Themes.Expression\Xceed.Wpf.AvalonDock.Themes.Expression.csproj">
       <Project>{488dd8f7-9d3c-4f53-bd1f-84a095d9bc10}</Project>

@@ -35,12 +35,6 @@
     <StartupObject>DaS.ScriptLib.Executor.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Neo.Lua, Version=5.3.0.0, Culture=neutral, PublicKeyToken=fdb0cd4fe8a6e3b2, processorArchitecture=MSIL">
-      <HintPath>..\packages\NeoLua.1.2.21\lib\net45\Neo.Lua.dll</HintPath>
-    </Reference>
-    <Reference Include="Neo.Lua.Desktop, Version=5.3.0.0, Culture=neutral, PublicKeyToken=fdb0cd4fe8a6e3b2, processorArchitecture=MSIL">
-      <HintPath>..\packages\NeoLua.1.2.21\lib\net45\Neo.Lua.Desktop.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -57,12 +51,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DaS.ScriptLib\DaS.ScriptLib.vbproj">
       <Project>{2a373330-933c-4a80-adfb-39f5e0ecbc35}</Project>
       <Name>DaS.ScriptLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib\neolua\NeoLuaD\NeoLuaD.csproj">
+      <Project>{2fb491e8-65af-4c0d-a13e-4af73419ae0c}</Project>
+      <Name>NeoLuaD</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib\neolua\NeoLua\NeoLua.csproj">
+      <Project>{09aebb35-719e-4e32-9836-f57d7d6f1607}</Project>
+      <Name>NeoLua</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

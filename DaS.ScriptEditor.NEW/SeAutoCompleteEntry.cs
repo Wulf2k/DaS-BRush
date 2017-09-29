@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 using System.Windows.Media.Imaging;
+using System.Windows.Controls;
 
 namespace DaS.ScriptEditor.NEW
 {
@@ -22,22 +23,35 @@ namespace DaS.ScriptEditor.NEW
     /// completion drop down.
     public class SeAutoCompleteEntry : ICompletionData
     {
+        public const string Xmlns = @"xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'";
+        public const string XmlnsX = @"xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'";
+
+        //Note: <InlineUIContainer> can straight up just have controls inside it like <Button/>
+
+        public static TextBlock GetTextBlockElement(string inputText)
+        {
+            return System.Windows.Markup.XamlReader.Parse($@"<TextBlock {Xmlns} {XmlnsX}>{inputText}</TextBlock>") as TextBlock;
+        }
+
         public SeAcType AcType { get; private set; }
         public readonly MainWindow Main;
 
-        public SeAutoCompleteEntry(MainWindow main, SeAcType acType, string text, string dispText, string desc)
+        public SeAutoCompleteEntry(MainWindow main, SeAcType acType, string luaCompletionText, string dispText, string desc, bool useTextBlockFormatting)
         {
-            this.Main = main;
-            this.AcType = acType;
-            this.Text = text;
-            this.Description = desc;
-            this.DispText = dispText;
+            Main = main;
+            AcType = acType;
+            Text = luaCompletionText;
+            DescriptionText = desc;
+            DispText = dispText;
+            UseTextBlockFormatting = useTextBlockFormatting;
         }
 
         public System.Windows.Media.ImageSource Image
         {
             get { return Main.Resources[("AutoComplete" + AcType.ToString())] as BitmapImage; }
         }
+
+        public bool UseTextBlockFormatting { get; private set; }
 
         public string Text { get; private set; }
 
@@ -46,12 +60,34 @@ namespace DaS.ScriptEditor.NEW
         // Use this property if you want to show a fancy UIElement in the list.
         public object Content
         {
-            get { return this.DispText; }
+            get
+            {
+                if (UseTextBlockFormatting)
+                {
+                    return GetTextBlockElement(DispText);
+                }
+                else
+                {
+                    return DispText;
+                }
+            }
         }
+
+        public string DescriptionText { get; private set; }
 
         public object Description
         {
-            get; private set;
+            get
+            {
+                if (UseTextBlockFormatting)
+                {
+                    return GetTextBlockElement(DescriptionText);
+                }
+                else
+                {
+                    return DescriptionText;
+                }
+            }
         }
 
         public double Priority => 1.0;

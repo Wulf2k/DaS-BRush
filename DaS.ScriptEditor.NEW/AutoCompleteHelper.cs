@@ -32,21 +32,59 @@ namespace DaS.ScriptEditor.NEW
                 { typeof(Single), "float" },
                 { typeof(Double), "double" },
                 { typeof(LuaTable), "#table" },
+                { typeof(Object), "object" },
+                { typeof(void), "void" }
             };
+        }
+
+        public class Config
+        {
+            public static bool UseTextBlockFormatting = true;
+            public static bool UseMarkupSafeAngleBrackets = true;
+            public static bool PutSpacesBetweenGenericParameters = true;
+            public static bool PutSpacesBetweenMethodParameters = true;
+            public static bool UseNeoLuaColonTypeSpecifierFormat = true;
+        }
+
+        public static string FormatHighlightBlue(string s)
+        {
+            return $@"<Run Foreground='DodgerBlue' FontWeight='SemiBold'>{s}</Run>";
         }
 
         public static string GetFancyTypeName(Type t)
         {
             if (!t.IsGenericType)
-                return Vals.TypeDisplayNames.ContainsKey(t) ? Vals.TypeDisplayNames[t] : t.Name;
+            {
+                if (t.IsArray)
+                {
+                    var bracketStart = t.Name.IndexOf("[");
+
+                    var beforeBrackets = t.Name.Substring(0, bracketStart);
+                    var atBrackets = t.Name.Substring(bracketStart);
+
+                    var elementType = t.GetElementType();
+
+                    if (Vals.TypeDisplayNames.ContainsKey(elementType))
+                        beforeBrackets = Vals.TypeDisplayNames[elementType];
+
+                    return FormatHighlightBlue(beforeBrackets) + atBrackets;
+                }
+                    
+
+                return FormatHighlightBlue(Vals.TypeDisplayNames.ContainsKey(t) ? Vals.TypeDisplayNames[t] : t.Name);
+            }
+                
+
+            var openBracket = Config.UseMarkupSafeAngleBrackets ? "&lt;" : "<";
+            var closeBracket = Config.UseMarkupSafeAngleBrackets ? "&gt;" : ">";
 
             var sb = new StringBuilder();
-            sb.Append(t.Name.Substring(0, t.Name.LastIndexOf('`')));
-            sb.Append(t.GetGenericArguments().Aggregate("<", (string agg, Type typ) =>
+            sb.Append(FormatHighlightBlue(t.Name.Substring(0, t.Name.LastIndexOf('`'))));
+            sb.Append(t.GetGenericArguments().Aggregate(openBracket, (string agg, Type typ) =>
                 {
-                    return agg + (agg == "<" ? "" : ",") + GetFancyTypeName(typ);
+                    return agg + (agg == openBracket ? "" : (Config.PutSpacesBetweenGenericParameters ? ", " : ",")) + GetFancyTypeName(typ);
                 }));
-            sb.Append(">");
+            sb.Append(closeBracket);
 
             return sb.ToString();
         }
@@ -56,14 +94,64 @@ namespace DaS.ScriptEditor.NEW
             return t.Select(x => new KeyValuePair<string, object>(x.Key as string, x.Value)).Where(x => x.Key != null);
         }
 
-        public static bool CheckIfTypeIsDelegate(Type t)
+        public static string GetTypedMember(string memberDisplayText, string typeDisplayText)
         {
-            //<TemporaryGhettofication>
-            var tFancyName = GetFancyTypeName(t);
-            return (tFancyName.StartsWith("Delegate") || tFancyName.StartsWith("Action<") || tFancyName.StartsWith("Func<"));
-            //</TemporaryGhettofication>
+            if (string.IsNullOrWhiteSpace(memberDisplayText?.Trim()))
+                return typeDisplayText;
 
-            //TODO: THIS METHOD (VERY IMPORTANT)
+            if (Config.UseNeoLuaColonTypeSpecifierFormat)
+            {
+                if (typeDisplayText.Contains("LuaResult"))
+                    return memberDisplayText;
+
+                return memberDisplayText + " : " + typeDisplayText;
+            }
+            else
+            {
+                if (typeDisplayText.Contains("LuaResult"))
+                    return "function " + memberDisplayText;
+
+                return typeDisplayText + " " + memberDisplayText;
+            }
+        }
+
+        public static string GetFancyParameterString(ParameterInfo p)
+        {
+            var sb = new StringBuilder();
+
+            if (p.IsOptional)
+                sb.Append("[");
+            if (p.IsOut)
+                sb.Append("out ");
+            
+            sb.Append(GetTypedMember(p.Name, GetFancyTypeName(p.ParameterType)));
+
+            if (p.HasDefaultValue)
+            {
+                sb.Append(" = ");
+                if (p.DefaultValue == null)
+                {
+                    sb.Append("null");
+                }
+                else
+                {
+                    sb.Append(p.DefaultValue.ToString());
+                }
+            }
+
+            if (p.IsOptional)
+                sb.Append("]");
+
+            return sb.ToString();
+        }
+
+        public static string GetFancyMethodString(MethodInfo m)
+        {
+            var paramStr = string.Join(Config.PutSpacesBetweenMethodParameters ? ", " : ",", 
+                m.GetParameters()
+                .Where(p => p.ParameterType != typeof(System.Runtime.CompilerServices.Closure))
+                .Select(p => GetFancyParameterString(p)));
+            return GetTypedMember($"{m.Name}({paramStr})", GetFancyTypeName(m.ReturnType));
         }
 
         public static void EnumerateItemsInTable(MainWindow main, 
@@ -71,57 +159,81 @@ namespace DaS.ScriptEditor.NEW
             LuaTable t, 
             ref List<LuaTable> enumeratedTables, 
             ref List<object> enumeratedClrObjects, 
-            string memberPrefix)
+            string memberPrefix,
+            bool doRecursion)
         {
             var basicVars = GetAllBasicVarsInTable(t);
             foreach (var v in basicVars)
             {
                 var vType = v.Value.GetType();
                 var name = (!string.IsNullOrWhiteSpace(memberPrefix) ? memberPrefix + "." : "") + v.Key;
+                string dispName = null;
+                string desc = null;
 
                 SeAcType icon = SeAcType.Field;
-
                 if (vType == typeof(LuaTable))
                 {
-                    icon = SeAcType.Type;
+                    icon = SeAcType.Field;
                     var vTable = v.Value as LuaTable;
-                    if (!enumeratedTables.Contains(vTable))
+                    if (doRecursion && !enumeratedTables.Contains(vTable))
                     {
-                        EnumerateItemsInTable(main, ref entries, vTable, ref enumeratedTables, ref enumeratedClrObjects, name);
+                        EnumerateItemsInTable(main, ref entries, vTable, ref enumeratedTables, ref enumeratedClrObjects, name, doRecursion);
                     }
+                }
+                else if (vType == typeof(LuaType))
+                {
+                    var vClrType = (v.Value as LuaType).Type;
+
+                    string typeType = "type"; //I'm hilarious and original.
+
+                    if (vClrType.IsClass) typeType = "class";
+                    else if (vClrType.IsEnum) typeType = "enum";
+                    else if (vClrType.IsInterface) typeType = "interface";
+
+                    icon = SeAcType.Type;
+                    dispName = GetTypedMember($"<Bold>{name}</Bold>", FormatHighlightBlue(typeType));
                 }
                 else if (Vals.BasicTypes.Contains(vType))
                 {
                     icon = SeAcType.Field;
                 }
-                else if (CheckIfTypeIsDelegate(vType))
+                else if (typeof(Delegate).IsAssignableFrom(vType))
                 {
                     icon = SeAcType.Method;
-                    //TODO: THIS IF-BLOCK (VERY IMPORTANT)
+                    dispName = GetFancyMethodString((v.Value as Delegate).Method);
+                }
+                else if (vType == typeof(LuaMethod))
+                {
+                    icon = SeAcType.Method;
+                    dispName = GetFancyMethodString((v.Value as LuaMethod).Delegate.Method);
+                }
+                else if (vType == typeof(LuaFilePackage) || vType == typeof(LuaLibraryPackage))
+                {
+                    icon = SeAcType.Lua;
                 }
                 else
                 {
-                    icon = SeAcType.Type;
-                    if (!enumeratedClrObjects.Contains(v.Value))
+                    icon = SeAcType.Field;
+                    if (doRecursion && !enumeratedClrObjects.Contains(v.Value))
                     {
                         var vClrTable = ScriptLib.LuaScripting.Structures.Utils.GlobalInstance.GetClrObjMembers(v.Value);
-                        EnumerateItemsInTable(main, ref entries, vClrTable, ref enumeratedTables, ref enumeratedClrObjects, name);
+                        EnumerateItemsInTable(main, ref entries, vClrTable, ref enumeratedTables, ref enumeratedClrObjects, name, doRecursion);
                         enumeratedClrObjects.Add(v.Value);
                     }
                 }
 
-                var dispName = GetFancyTypeName(vType) + " " + name;
-                entries.Add(new SeAutoCompleteEntry(main, icon, name, dispName, "Value obtained directly from Lua engine's environment and therefore has no description."));
+                entries.Add(new SeAutoCompleteEntry(main, icon, name, dispName ?? GetTypedMember(name, GetFancyTypeName(vType)), 
+                    desc ?? "Value obtained directly from Lua engine's environment and therefore has no description.", Config.UseTextBlockFormatting));
             }
 
             enumeratedTables.Add(t);
         }
 
-        public static void EnumerateLuaGlobals(MainWindow main, ref List<SeAutoCompleteEntry> entries)
+        public static void EnumerateLuaGlobals(MainWindow main, ref List<SeAutoCompleteEntry> entries, bool doRecursion)
         {
             var enumeratedTables = new List<LuaTable>();
             var enumeratedClrObjects = new List<object>();
-            EnumerateItemsInTable(main, ref entries, DSLua.G, ref enumeratedTables, ref enumeratedClrObjects, null);
+            EnumerateItemsInTable(main, ref entries, DSLua.G, ref enumeratedTables, ref enumeratedClrObjects, null, doRecursion);
         }
     }
 }

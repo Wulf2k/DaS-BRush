@@ -12,6 +12,7 @@
         mc:Ignorable="d"
         Title="Dark Souls Script Editor" Width="960" Height="540" AutomationProperties.Name="DaS.ScriptEditor"
         Closed="Window_Closed" Icon="Resources/AshenEstus.ico" Background="#FF444444">
+
     <Window.Resources>
         <BitmapImage x:Key="AutoCompleteField" UriSource="Resources/AutoComplete/FieldIcon.png"/>
         <BitmapImage x:Key="AutoCompleteLua" UriSource="Resources/AutoComplete/LuaIcon.png"/>
@@ -22,16 +23,18 @@
         <BitmapImage x:Key="IconScriptNotRunning" UriSource="Resources/ScriptNotRunning.png"/>
         <customTheme:ExpressionDarkTheme x:Key="MetroLuaTheme"/>
 
+        <Style x:Key="CompletionBoxStyle" TargetType="{x:Type ListBoxItem}">
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                             Color="Transparent"/>
+            </Style.Resources>
+        </Style>
+
         <Style x:Key="DarkScrollviewerStyle" TargetType="{x:Type ScrollViewer}">
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="false">
-                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-                </Trigger>
-            </Style.Triggers>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ScrollViewer}">
-                        <Grid Background="{TemplateBinding Background}">
+                        <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -72,11 +75,11 @@
                                 ContentTemplate="{TemplateBinding ContentTemplate}"
 
                                 CanContentScroll="{TemplateBinding CanContentScroll}"/>
-                                                <Rectangle 
+                            <Rectangle 
                                 x:Name="Corner"
                                 Grid.Column="1"
                                 Grid.Row="1"
-                                Fill="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
+                                Fill="#FF1E1E1E"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -84,16 +87,16 @@
         </Style>
 
         <Style x:Key="DarkAvalonEditStyle" TargetType="{x:Type avalonEdit:TextEditor}">
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
-            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+            <Setter Property="Foreground" Value="#FF1E1E1E" />
+            <Setter Property="Background" Value="#FF1E1E1E" />
             <Setter Property="FlowDirection" Value="LeftToRight"/>
             <!-- AvalonEdit does not support RTL, so ensure we use LTR by default -->
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type avalonEdit:TextEditor}">
                         <Border
-						Background="{TemplateBinding Background}"
-						BorderBrush="{TemplateBinding BorderBrush}"
+						Background="#FF1E1E1E"
+						BorderBrush="#FF1E1E1E"
 						BorderThickness="{TemplateBinding BorderThickness}">
                             <ScrollViewer
 							Focusable="False"
@@ -136,7 +139,7 @@
 				     Thickness="1"/>
                 </Setter.Value>
             </Setter>
-            <Setter Property="SelectionForeground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
+            <Setter Property="SelectionForeground" Value="#FF1E1E1E"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type editing:TextArea}">
@@ -162,6 +165,12 @@
 
     </Window.Resources>
     <Grid x:Name="MainGrid">
+        <!--<TextBlock>
+            <RichTextBox>
+                <RichTextBox.for
+            </RichTextBox>
+        </TextBlock>-->
+        <!--<Label Content="TEST" Padding="0" />-->
         <Grid.RowDefinitions>
             <RowDefinition x:Name="gridRowMenuStrip" Height="24"/>
             <RowDefinition x:Name="rowToolStrip" Height="32"/>
@@ -234,8 +243,7 @@
                 <avalonDock:LayoutPanel x:Name="adMainLayoutPanel" Orientation="Horizontal">
                     <avalonDock:LayoutDocumentPaneGroup>
                         <local:LuaScriptTabContainer 
-                            x:Name="MainLuaContainer" 
-                            LuaEditorStyle="{StaticResource DarkAvalonEditStyle}"/>
+                            x:Name="MainLuaContainer"/>
                     </avalonDock:LayoutDocumentPaneGroup>
                     <avalonDock:LayoutAnchorablePaneGroup DockWidth="400">
                         <avalonDock:LayoutAnchorablePane>

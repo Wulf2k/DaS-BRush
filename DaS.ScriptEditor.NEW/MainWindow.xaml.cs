@@ -59,6 +59,10 @@ namespace DaS.ScriptEditor.NEW
 
             SeMenu = new MenuItemIndexer(this);
 
+            MainLuaContainer.Main = this;
+
+            MainLuaContainer.AddNewTab((x) => { });
+
             MainLuaContainer.AutoComplete.InitDefaultEntries(this);
 
             seToolbar.SeButtonClicked += SeToolbar_SeButtonClicked;
