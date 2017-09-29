@@ -76,7 +76,7 @@ Namespace LuaScripting
 
                 Public Shared Sub GlobalImportAllMethodsInType(typ As Type)
 
-                    For Each m In typ.GetMethods(BindingFlags.Public Or BindingFlags.Static Or BindingFlags.DeclaredOnly And (Not BindingFlags.Instance))
+                    For Each m In typ.GetMethods(BindingFlags.Public Or BindingFlags.Static Or BindingFlags.DeclaredOnly)
                         G(m.Name) = MakeDelegateFromMethodInfo(m)
                     Next
 
