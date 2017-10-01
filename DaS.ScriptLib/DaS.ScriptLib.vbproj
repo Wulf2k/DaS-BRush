@@ -43,14 +43,22 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Core.Presentation" />
+    <Reference Include="System.Activities.Presentation" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
@@ -64,6 +72,9 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DebugUI\DbgPropertyGrid.xaml.vb">
+      <DependentUpon>DbgPropertyGrid.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Game\Data\Structures\Entity.vb" />
     <Compile Include="Game\Data\Structures\EntityAIController.vb" />
     <Compile Include="Game\Data\Structures\EntityController.vb" />
@@ -258,6 +269,15 @@
     <Folder Include="Lua Includes\Source\Structures\CLR\" />
     <Folder Include="Lua Includes\Source\Structures\DarkSouls\" />
     <Folder Include="Lua Includes\Source\Structures\NLua\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="DebugUI\DbgPropertyGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DebugUI\WpfPropertyGrid.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

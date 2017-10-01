@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text;
 
 namespace Neo.IronLua
 {
-	#region -- class LuaGlobal ----------------------------------------------------------
+    #region -- class LuaGlobal ----------------------------------------------------------
 
-	///////////////////////////////////////////////////////////////////////////////
-	/// <summary></summary>
-	public class LuaGlobal : LuaGlobalPortable
+    ///////////////////////////////////////////////////////////////////////////////
+    /// <summary></summary>
+    public class LuaGlobal : LuaGlobalPortable
 	{
 		private LuaFilePackage io = null;
 		private LuaLibraryPackage package = null;

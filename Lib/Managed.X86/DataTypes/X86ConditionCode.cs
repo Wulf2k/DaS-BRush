@@ -7,12 +7,10 @@
  *  Alex Lyman (<mailto:mail.alex.lyman@gmail.com>)
  */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Managed.X86 {
-	public enum X86ConditionCode {
+namespace Managed.X86
+{
+    public enum X86ConditionCode {
 		Overflow = 0x0,
 
 		NoOverflow = 0x1,

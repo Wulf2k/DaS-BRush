@@ -7,12 +7,10 @@
  *  Alex Lyman (<mailto:mail.alex.lyman@gmail.com>)
  */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Managed.X86 {
-	public enum X86Register8 : byte {
+namespace Managed.X86
+{
+    public enum X86Register8 : byte {
 		AL = 0,
 		CL = 1,
 		DL = 2,

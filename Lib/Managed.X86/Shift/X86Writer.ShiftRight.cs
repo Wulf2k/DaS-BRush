@@ -7,12 +7,10 @@
  *  Alex Lyman (<mailto:mail.alex.lyman@gmail.com>)
  */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Managed.X86 {
-	partial class X86Writer {
+namespace Managed.X86
+{
+    partial class X86Writer {
 		public void Shr8(X86Register8 reg, byte count) {
 			if (count == 1) {
 				writer.Write(new byte[] { 0xD0 });

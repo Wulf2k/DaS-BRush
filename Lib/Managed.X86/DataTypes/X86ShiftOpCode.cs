@@ -7,12 +7,10 @@
  *  Alex Lyman (<mailto:mail.alex.lyman@gmail.com>)
  */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Managed.X86 {
-	public enum X86ShiftOpCode {
+namespace Managed.X86
+{
+    public enum X86ShiftOpCode {
 		SHLD = 0, // TODO: Is this value correct?
 		SHLR = 1, // TODO: Is this value correct?
 		ROL = 0,

@@ -8,11 +8,10 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Managed.X86 {
-	partial class X86Writer {
+namespace Managed.X86
+{
+    partial class X86Writer {
 		/// <summary>
 		/// Patches the instruction at the current position to go to the specified address.
 		/// 

@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Neo.IronLua
 {
-	#region -- enum ReflectionFlag ------------------------------------------------------
+    #region -- enum ReflectionFlag ------------------------------------------------------
 
-	///////////////////////////////////////////////////////////////////////////////
-	/// <summary></summary>
-	internal enum ReflectionFlag
+    ///////////////////////////////////////////////////////////////////////////////
+    /// <summary></summary>
+    internal enum ReflectionFlag
 	{
 		None = 0,
 		Static = 1,

@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="DaS.ScriptEditor.NEW.AcuiField"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DaS.ScriptEditor.NEW"
+             mc:Ignorable="d" 
+             d:DesignHeight="16" d:DesignWidth="300">
+    <Grid>
+        
+    </Grid>
+    <!--<UserControl.Style>
+        <Style TargetType="local:AcuiField">
+            --><!--<Style.Triggers>
+                <Trigger Property=""  Value="true">
+                    <Setter Property = "Foreground" Value="Green"/>
+                </Trigger>
+            </Style.Triggers>--><!--
+        </Style>
+    </UserControl.Style>-->
+</UserControl>

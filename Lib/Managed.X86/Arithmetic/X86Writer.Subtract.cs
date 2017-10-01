@@ -8,11 +8,10 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Managed.X86 {
-	partial class X86Writer {
+namespace Managed.X86
+{
+    partial class X86Writer {
 		public void Sub8(X86Register8 dest, X86Register8 src) {
 			writer.Write(new byte[] { 0x2A });
 			reg_emit8(dest, src);

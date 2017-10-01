@@ -7,12 +7,10 @@
  *  Alex Lyman (<mailto:mail.alex.lyman@gmail.com>)
  */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Managed.X86 {
-	partial class X86Writer {
+namespace Managed.X86
+{
+    partial class X86Writer {
 		public void Negate8(X86Register8 dest) {
 			writer.Write(new byte[] { 0xF6 });
 			reg_emit8((X86Register8)3, dest);

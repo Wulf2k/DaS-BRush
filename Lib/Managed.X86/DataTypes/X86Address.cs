@@ -8,12 +8,11 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
-namespace Managed.X86 {
-	public struct X86Address {
+namespace Managed.X86
+{
+    public struct X86Address {
 		public readonly X86Register32 BaseRegister;
 		public readonly Int32 Offset;
 		public readonly X86Register32 IndexRegister;

@@ -1,4 +1,13 @@
-# Using Eclipse Lua Development Tools with Dynamic Auto-completion:
+# Building Dark Souls Scripting Library
+* Launch Visual Studio 2017 **as an administrator** (right click -> "Run as administrator"
+  * The explicit administrative privelages are required for strong-key-signing the compiled executable for NeoLua, the Lua library that DaS.ScriptLib uses.
+    * This may change in the future if, upon concluding without a doubt that no NeoLua source code edits will be required, we decide to simply bundle a pre-built version of NeoLua instead.
+  * If done correctly, Visual Studio's title bar will confirm the administrative permissions: ![Image of Visual Studio title bar when ran as administrator](https://i.imgur.com/mSnKC2a.png)
+* Open the `DaS.BossRush.sln` solution file.
+* Click `Build` -> `Build Solution` in the menu bar, press F6, etc. to build the project.
+  * If you get several `Metadata file 'x' could not be found` / `could not find library 'x'` / etc errors along with one `Error signing assembly -- Access is denied.` error, then the instance of Visual Studio from which you are attempting to build the solution does not *actually* have the required administrative permissions (if you're clicking "run as administrator" and still having issues, you'll have to seek Windows-specific help for that).
+
+  ## Using Eclipse Lua Development Tools with Dynamic Auto-completion:
 ### Creating a new Lua Project in Eclipse Lua Development Tools:
 * Install the LDT (Lua Development Tools) version of Eclipse: https://eclipse.org/ldt/#installation
   - Modifications to apply to an existing installation are provided as well as standalone pre-modded versions

@@ -7,12 +7,10 @@
  *  Alex Lyman (<mailto:mail.alex.lyman@gmail.com>)
  */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Managed.X86 {
-	partial class X86Writer {
+namespace Managed.X86
+{
+    partial class X86Writer {
 		public void CmpXChg8(X86Register8 dest, X86Register8 src) {
 			writer.Write(new byte[] { 0x0F, 0xB0 });
 			reg_emit8(src, dest);

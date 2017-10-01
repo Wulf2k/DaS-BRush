@@ -9,10 +9,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Managed.X86 {
-	public class X86Label {
+namespace Managed.X86
+{
+    public class X86Label {
 		readonly X86Writer writer;
 		IntPtr? mark;
 

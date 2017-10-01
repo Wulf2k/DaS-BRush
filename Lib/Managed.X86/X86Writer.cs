@@ -8,12 +8,11 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
-namespace Managed.X86 {
-	public partial class X86Writer {
+namespace Managed.X86
+{
+    public partial class X86Writer {
 		readonly Stream stream;
 		readonly BinaryWriter writer;
 		readonly IntPtr baseAddress;

@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4EEF2FFB-9E6F-490E-B8D0-19C10451B461}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DaS.ScriptLib</RootNamespace>
+    <AssemblyName>Dark Souls Scripting Library</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Core.Presentation" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DebugUI\WpfPropertyGrid.cs" />
+    <Compile Include="DebugUI\InspectGUI.xaml.cs">
+      <DependentUpon>InspectGUI.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Game\Data\AnimationID\Player.cs" />
+    <Compile Include="Game\Data\EventFlag\Boss.cs" />
+    <Compile Include="Game\Data\Helpers\BossRushHelper.cs" />
+    <Compile Include="Game\Data\Helpers\EventFlagHelper.cs" />
+    <Compile Include="Game\Data\Structures\BossFightInfo.cs" />
+    <Compile Include="Game\Data\Structures\Entity.cs" />
+    <Compile Include="Game\Data\Structures\EntityAIController.cs" />
+    <Compile Include="Game\Data\Structures\EntityController.cs" />
+    <Compile Include="Game\Data\Structures\EntityHeader.cs" />
+    <Compile Include="Game\Data\Structures\EntityLocalPlayerMapInfo.cs" />
+    <Compile Include="Game\Data\Structures\EntityLocation.cs" />
+    <Compile Include="Game\Data\Structures\GameStats.cs" />
+    <Compile Include="Game\Data\Structures\Heading.cs" />
+    <Compile Include="Game\Data\Structures\[IngameStruct]\IngameStruct.cs" />
+    <Compile Include="Game\Data\Structures\Loc.cs" />
+    <Compile Include="Game\Data\Structures\Map.cs" />
+    <Compile Include="Game\Data\Structures\MapEntry.cs" />
+    <Compile Include="Game\Data\Structures\Vec3.cs" />
+    <Compile Include="Game\Data\Structures\WIP\MSB.cs" />
+    <Compile Include="Game\Data\Structures\WIP\MSBEntry.cs" />
+    <Compile Include="Game\Data\[EntityName]\Boss.cs" />
+    <Compile Include="Game\Data\[EntityName]\EntityName.cs" />
+    <Compile Include="Game\Data\[Misc]\BossFights.cs" />
+    <Compile Include="Game\Data\[Misc]\Misc.cs" />
+    <Compile Include="Game\Mem\Ptr.cs" />
+    <Compile Include="Injection\DSAsmCaller.cs" />
+    <Compile Include="Injection\Hook.cs" />
+    <Compile Include="Injection\Kernel.cs" />
+    <Compile Include="Injection\PSAPI.cs" />
+    <Compile Include="Injection\Structures\DarkSoulsVersion.cs" />
+    <Compile Include="Injection\Structures\MoveableAddressOffset.cs" />
+    <Compile Include="Injection\Structures\SafeDarkSoulsHandle.cs" />
+    <Compile Include="Injection\Structures\SafeMarshalledHandle.cs" />
+    <Compile Include="Injection\Structures\SafeRemoteHandle.cs" />
+    <Compile Include="Injection\Structures\SafeRemoteThreadHandle.cs" />
+    <Compile Include="Injection\Structures\MutatableDword.cs" />
+    <Compile Include="LuaScripting\Dbg.cs" />
+    <Compile Include="LuaScripting\Funcs.cs" />
+    <Compile Include="LuaScripting\Module\Utils.cs" />
+    <Compile Include="LuaScripting\ScriptLibResources.cs" />
+    <Compile Include="LuaScripting\Structures\FuncReturnType.cs" />
+    <Compile Include="LuaScripting\[DSLua]\DSLua.cs" />
+    <Compile Include="LuaScripting\[DSLua]\DSLua.Environment.cs" />
+    <Compile Include="LuaScripting\[DSLua]\DSLua.Script.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="LuaIncludes\Source\Helpers\" />
+    <Folder Include="LuaIncludes\Source\Structures\CLR\" />
+    <Folder Include="LuaIncludes\Source\Structures\DarkSouls\" />
+    <Folder Include="LuaIncludes\Source\Structures\NLua\" />
+    <Folder Include="LuaScripting\Structures\[BoxedString]\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lib\Managed.X86\Managed.X86.csproj">
+      <Project>{1aaf4b4d-2986-4f56-bebc-eec6ea0ee435}</Project>
+      <Name>Managed.X86</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib\neolua\NeoLuaD\NeoLuaD.csproj">
+      <Project>{2fb491e8-65af-4c0d-a13e-4af73419ae0c}</Project>
+      <Name>NeoLuaD</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib\neolua\NeoLua\NeoLua.csproj">
+      <Project>{09aebb35-719e-4e32-9836-f57d7d6f1607}</Project>
+      <Name>NeoLua</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="DebugUI\InspectGUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\CL\Armor.txt" />
+    <EmbeddedResource Include="Resources\CL\Bonfires.txt" />
+    <EmbeddedResource Include="Resources\CL\Bonfires1.txt" />
+    <EmbeddedResource Include="Resources\CL\Goods.txt" />
+    <EmbeddedResource Include="Resources\CL\Rings.txt" />
+    <EmbeddedResource Include="Resources\CL\Weapons.txt" />
+    <EmbeddedResource Include="Resources\IngameFunctions.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LuaIncludes\Header\Global.lua" />
+    <None Include="LuaIncludes\Header\Global_Dbg.lua" />
+    <None Include="LuaIncludes\Header\Global_Funcs.lua" />
+    <None Include="LuaIncludes\Header\Global_Hook.lua" />
+    <None Include="LuaIncludes\Header\Helpers\BossRushHelper.lua" />
+    <None Include="LuaIncludes\Header\Structures\CLR\Array.lua" />
+    <None Include="LuaIncludes\Header\Structures\DarkSouls\Entity.lua" />
+    <None Include="LuaIncludes\Header\Structures\DarkSouls\EntityAIController.lua" />
+    <None Include="LuaIncludes\Header\Structures\DarkSouls\EntityController.lua" />
+    <None Include="LuaIncludes\Header\Structures\DarkSouls\EntityHeader.lua" />
+    <None Include="LuaIncludes\Header\Structures\DarkSouls\EntityLocation.lua" />
+    <None Include="LuaIncludes\Header\Structures\DarkSouls\Heading.lua" />
+    <None Include="LuaIncludes\Header\Structures\DarkSouls\Loc.lua" />
+    <None Include="LuaIncludes\Header\Structures\DarkSouls\Map.lua" />
+    <None Include="LuaIncludes\Header\Structures\DarkSouls\MapEntry.lua" />
+    <None Include="LuaIncludes\Header\Structures\DarkSouls\Vec3.lua" />
+    <None Include="LuaIncludes\Header\Structures\NLua\Lua.lua" />
+    <None Include="LuaIncludes\Header\Structures\NLua\LuaFunction.lua" />
+    <None Include="LuaIncludes\Header\Structures\ScriptLib\Injection\DSAsmCaller.lua" />
+    <None Include="LuaIncludes\Header\Structures\ScriptLib\Lua\LuaInterface.lua" />
+    <None Include="LuaIncludes\Header\Structures\ScriptLib\Lua\Structures\LuaThread.lua" />
+    <None Include="LuaIncludes\Header\Utils.lua" />
+    <EmbeddedResource Include="LuaIncludes\Source\Source.DsFuncs.lua" />
+    <EmbeddedResource Include="LuaIncludes\Source\Source.DsFuncs_This.lua" />
+    <EmbeddedResource Include="LuaIncludes\Source\Source.DsFuncs_Unmapped.lua" />
+    <EmbeddedResource Include="LuaIncludes\Source\Source.Global.lua" />
+    <EmbeddedResource Include="LuaIncludes\Source\Structures\ScriptLib\Source.Structures.LuaThread.lua" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

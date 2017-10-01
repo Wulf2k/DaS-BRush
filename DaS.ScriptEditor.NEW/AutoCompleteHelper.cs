@@ -2,11 +2,9 @@
 using Neo.IronLua;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DaS.ScriptEditor.NEW
 {
@@ -145,13 +143,13 @@ namespace DaS.ScriptEditor.NEW
             return sb.ToString();
         }
 
-        public static string GetFancyMethodString(MethodInfo m)
+        public static string GetFancyMethodString(MethodInfo m, string methodName = null)
         {
             var paramStr = string.Join(Config.PutSpacesBetweenMethodParameters ? ", " : ",", 
                 m.GetParameters()
                 .Where(p => p.ParameterType != typeof(System.Runtime.CompilerServices.Closure))
                 .Select(p => GetFancyParameterString(p)));
-            return GetTypedMember($"{m.Name}({paramStr})", GetFancyTypeName(m.ReturnType));
+            return GetTypedMember($"{methodName ?? m.Name}({paramStr})", GetFancyTypeName(m.ReturnType));
         }
 
         public static void EnumerateItemsInTable(MainWindow main, 
@@ -200,12 +198,12 @@ namespace DaS.ScriptEditor.NEW
                 else if (typeof(Delegate).IsAssignableFrom(vType))
                 {
                     icon = SeAcType.Method;
-                    dispName = GetFancyMethodString((v.Value as Delegate).Method);
+                    dispName = GetFancyMethodString((v.Value as Delegate).Method, v.Key);
                 }
                 else if (vType == typeof(LuaMethod))
                 {
                     icon = SeAcType.Method;
-                    dispName = GetFancyMethodString((v.Value as LuaMethod).Delegate.Method);
+                    dispName = GetFancyMethodString((v.Value as LuaMethod).Delegate.Method, v.Key);
                 }
                 else if (vType == typeof(LuaFilePackage) || vType == typeof(LuaLibraryPackage))
                 {
@@ -216,7 +214,7 @@ namespace DaS.ScriptEditor.NEW
                     icon = SeAcType.Field;
                     if (doRecursion && !enumeratedClrObjects.Contains(v.Value))
                     {
-                        var vClrTable = ScriptLib.LuaScripting.Structures.Utils.GlobalInstance.GetClrObjMembers(v.Value);
+                        var vClrTable = ScriptLib.LuaScripting.Module.Utils.GetClrObjMembers(v.Value);
                         EnumerateItemsInTable(main, ref entries, vClrTable, ref enumeratedTables, ref enumeratedClrObjects, name, doRecursion);
                         enumeratedClrObjects.Add(v.Value);
                     }

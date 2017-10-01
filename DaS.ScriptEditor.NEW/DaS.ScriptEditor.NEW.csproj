@@ -62,6 +62,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AcuiField.xaml.cs">
+      <DependentUpon>AcuiField.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AutoCompleteHelper.cs" />
     <Compile Include="ControlExtensions.cs" />
     <Compile Include="LuaAutoComplete.cs" />
@@ -77,6 +80,10 @@
     <Compile Include="TestingXamlCode.xaml.cs">
       <DependentUpon>TestingXamlCode.xaml</DependentUpon>
     </Compile>
+    <Page Include="AcuiField.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -127,9 +134,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DaS.ScriptLib\DaS.ScriptLib.vbproj">
-      <Project>{2a373330-933c-4a80-adfb-39f5e0ecbc35}</Project>
-      <Name>DaS.ScriptLib</Name>
+    <ProjectReference Include="..\DaS.ScriptLib.NEW\DaS.ScriptLib.NEW.csproj">
+      <Project>{4eef2ffb-9e6f-490e-b8d0-19c10451b461}</Project>
+      <Name>DaS.ScriptLib.NEW</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lib\neolua\NeoLuaD\NeoLuaD.csproj">
       <Project>{2fb491e8-65af-4c0d-a13e-4af73419ae0c}</Project>

@@ -1,10 +1,5 @@
 ﻿using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.CodeCompletion;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xceed.Wpf.AvalonDock.Layout;
 using System.Windows;
 using ICSharpCode.AvalonEdit.Highlighting;
@@ -13,8 +8,6 @@ using System.Xml;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using System.Windows.Input;
 using System.Windows.Media;
-using ICSharpCode.AvalonEdit.Document;
-using System.Windows.Media.Imaging;
 
 namespace DaS.ScriptEditor.NEW
 {

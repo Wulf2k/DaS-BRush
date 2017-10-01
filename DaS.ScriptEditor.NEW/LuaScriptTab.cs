@@ -1,15 +1,12 @@
 ﻿using ICSharpCode.AvalonEdit.Document;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using Xceed.Wpf.AvalonDock.Layout;
 using System.ComponentModel;
 using System.Threading;
 using DaS.ScriptLib.LuaScripting;
+using System.Text;
 
 namespace DaS.ScriptEditor.NEW
 {
@@ -119,8 +116,37 @@ namespace DaS.ScriptEditor.NEW
             ParentLuaContainer.OldTabDeselected += ParentLuaContainer_OldTabDeselected;
         }
 
+        private void DoException(Exception e, StringBuilder sb = null)
+        {
+            if (sb == null)
+                sb = new StringBuilder();
 
+            var luaExceptionData = Neo.IronLua.LuaExceptionData.GetData(e);
+            var stackTrace = luaExceptionData.StackTrace;
 
+            sb.AppendLine($"Exception occurred while executing {SeScriptShortName}:\n\n{e.Message}\n\n\n\nStack Trace:\n\n{stackTrace}");
+
+            var inner = e.InnerException;
+
+            sb.AppendLine("\n\n\n\nNeoLua Exception Data:\n\n");
+
+            foreach (var d in luaExceptionData)
+            {
+                sb.AppendLine(d.ToString());
+            }
+
+            if (e.InnerException != null)
+            {
+                sb.AppendLine("\n\n\n");
+                DoException(e.InnerException, sb);
+            }
+            else
+            {
+                var msg = sb.ToString();
+                Console.WriteLine(msg);
+                MessageBox.Show(msg, "Lua Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
         private void OtherThread_RunScript(Action<bool> loading, string scriptText)
         {
@@ -134,10 +160,7 @@ namespace DaS.ScriptEditor.NEW
             }
             catch (Exception e)
             {
-                if (ScriptLib.LuaScripting.Dbg.PopupErrQue(e.Message) ?? false)
-                {
-                    throw e;
-                }
+                DoException(e);
             }
             finally
             {

@@ -7,9 +7,10 @@ Imports System.Runtime.CompilerServices
 Imports DaS.ScriptLib
 Imports DaS.ScriptLib.LuaScripting
 Imports DaS.ScriptLib.Game.Data.Helpers
-Imports DaS.ScriptLib.Injection
+Imports DaS.ScriptLib.Injection.Hook
 Imports DaS.ScriptLib.Game
 Imports DaS.ScriptLib.Game.Data
+Imports DaS.ScriptLib.Game.Data.Structures
 
 Public Class frmForm1
 
@@ -189,20 +190,20 @@ Public Class frmForm1
         Select Case tabs.TabPages(tabs.SelectedIndex).Text
             Case "Player"
 
-                lblHP.Text = Mem.Player.HP.Value & " / " & Mem.Player.MaxHP.Value
-                lblStam.Text = Mem.Player.Stamina.Value & " / " & Mem.Player.MaxStamina.Value
+                lblHP.Text = Entity.Player.HP & " / " & Entity.Player.MaxHP
+                lblStam.Text = Entity.Player.Stamina & " / " & Entity.Player.MaxStamina
 
-                lblFacing.Text = "Heading: " & ((Mem.Player.Heading.Value + Math.PI) / (Math.PI * 2) * 360).ToString("0.00") & "°"
-                lblXpos.Text = Mem.Player.PosX.Value.ToString("0.00")
-                lblYpos.Text = Mem.Player.PosY.Value.ToString("0.00")
-                lblZpos.Text = Mem.Player.PosZ.Value.ToString("0.00")
+                lblFacing.Text = "Heading: " & ((Entity.Player.Location.Heading + Math.PI) / (Math.PI * 2) * 360).ToString("0.00") & "°"
+                lblXpos.Text = Entity.Player.Location.X.ToString("0.00")
+                lblYpos.Text = Entity.Player.Location.Y.ToString("0.00")
+                lblZpos.Text = Entity.Player.Location.Z.ToString("0.00")
 
-                lblstableXpos.Text = Mem.Player.StablePosX.Value.ToString("0.00")
-                lblstableYpos.Text = Mem.Player.StablePosY.Value.ToString("0.00")
-                lblstableZpos.Text = Mem.Player.StablePosZ.Value.ToString("0.00")
+                lblstableXpos.Text = Entity.LocalPlayerMapInfo.LastStandPosX.ToString("0.00")
+                lblstableYpos.Text = Entity.LocalPlayerMapInfo.LastStandPosY.ToString("0.00")
+                lblstableZpos.Text = Entity.LocalPlayerMapInfo.LastStandPosZ.ToString("0.00")
 
                 Dim bonfireID As Integer
-                bonfireID = Mem.Player.BonfireID.Value
+                bonfireID = Entity.LocalPlayerMapInfo.BonfireID
                 If Not cmbBonfire.DroppedDown Then
                     If ScriptLibResources.clsBonfires(bonfireID) = "" Then
                         ScriptLibResources.clsBonfires.Add(bonfireID, bonfireID.ToString)
@@ -215,21 +216,21 @@ Public Class frmForm1
 
             Case "Stats"
                 Try
-                    nmbMaxHP.FuckOff(Mem.Player.Stats.MaxHP.Value)
-                    nmbMaxStam.FuckOff(Mem.Player.Stats.MaxStamina.Value)
-                    nmbVitality.FuckOff(Mem.Player.Stats.VIT.Value)
-                    nmbAttunement.FuckOff(Mem.Player.Stats.ATN.Value)
-                    nmbEnd.FuckOff(Mem.Player.Stats.ENDurance.Value)
-                    nmbStr.FuckOff(Mem.Player.Stats.STR.Value)
-                    nmbDex.FuckOff(Mem.Player.Stats.DEX.Value)
-                    nmbIntelligence.FuckOff(Mem.Player.Stats.INT.Value)
-                    nmbFaith.FuckOff(Mem.Player.Stats.FTH.Value)
-                    nmbResistance.FuckOff(Mem.Player.Stats.RES.Value)
-                    nmbHumanity.FuckOff(Mem.Player.Stats.Humanity.Value)
-                    nmbGender.FuckOff(Mem.Player.Stats.ExternalGenitals.Value)
-                    nmbClearCount.FuckOff(Mem.GameStats.ClearCount.Value)
+                    nmbMaxHP.FuckOff(Entity.Player.StatMaxHP)
+                    nmbMaxStam.FuckOff(Entity.Player.StatMaxStamina)
+                    nmbVitality.FuckOff(Entity.Player.StatVIT)
+                    nmbAttunement.FuckOff(Entity.Player.StatATN)
+                    nmbEnd.FuckOff(Entity.Player.StatEND)
+                    nmbStr.FuckOff(Entity.Player.StatSTR)
+                    nmbDex.FuckOff(Entity.Player.StatDEX)
+                    nmbIntelligence.FuckOff(Entity.Player.StatINT)
+                    nmbFaith.FuckOff(Entity.Player.StatFTH)
+                    nmbResistance.FuckOff(Entity.Player.StatRES)
+                    nmbHumanity.FuckOff(Entity.Player.StatHumanity)
+                    nmbGender.FuckOff(Entity.Player.StatGender)
+                    nmbClearCount.FuckOff(Mem.GameStats.ClearCount)
                 Catch ex As Exception
-                    Console.WriteLine("Error displaying stats.")
+                    Console.WriteLine("Error displaying Stat")
                 End Try
 
         End Select
@@ -419,51 +420,51 @@ Public Class frmForm1
     End Sub
 
     Private Sub nmbVitality_ValueChanged(sender As Object, e As EventArgs) Handles nmbVitality.ValueChanged
-        Mem.Player.Stats.VIT.Value = sender.Value
+        Entity.Player.StatVIT = sender
     End Sub
 
     Private Sub nmbAttunement_ValueChanged(sender As Object, e As EventArgs) Handles nmbAttunement.ValueChanged
-        Mem.Player.Stats.ATN.Value = sender.Value
+        Entity.Player.StatATN = sender
     End Sub
 
     Private Sub nmbEnd_ValueChanged(sender As Object, e As EventArgs) Handles nmbEnd.ValueChanged
-        Mem.Player.Stats.ENDurance.Value = sender.Value
+        Entity.Player.StatEND = sender
     End Sub
 
     Private Sub nmbStr_ValueChanged(sender As Object, e As EventArgs) Handles nmbStr.ValueChanged
-        Mem.Player.Stats.STR.Value = sender.Value
+        Entity.Player.StatSTR = sender
     End Sub
 
     Private Sub nmbDex_ValueChanged(sender As Object, e As EventArgs) Handles nmbDex.ValueChanged
-        Mem.Player.Stats.DEX.Value = sender.Value
+        Entity.Player.StatDEX = sender
     End Sub
 
     Private Sub nmbResistance_ValueChanged(sender As Object, e As EventArgs) Handles nmbResistance.ValueChanged
-        Mem.Player.Stats.RES.Value = sender.Value
+        Entity.Player.StatRES = sender
     End Sub
 
     Private Sub nmbIntelligence_ValueChanged(sender As Object, e As EventArgs) Handles nmbIntelligence.ValueChanged
-        Mem.Player.Stats.INT.Value = sender.Value
+        Entity.Player.StatINT = sender
     End Sub
 
     Private Sub nmbFaith_ValueChanged(sender As Object, e As EventArgs) Handles nmbFaith.ValueChanged
-        Mem.Player.Stats.FTH.Value = sender.Value
+        Entity.Player.StatFTH = sender
     End Sub
 
     Private Sub nmbHumanity_ValueChanged(sender As Object, e As EventArgs) Handles nmbHumanity.ValueChanged
-        Mem.Player.Stats.Humanity.Value = sender.Value
+        Entity.Player.StatHumanity = sender
     End Sub
 
     Private Sub nmbGender_ValueChanged(sender As Object, e As EventArgs) Handles nmbGender.ValueChanged
-        Mem.Player.Stats.ExternalGenitals.Value = sender.Value
+        Entity.Player.StatGender = sender
     End Sub
 
     Private Sub nmbMaxHP_ValueChanged(sender As Object, e As EventArgs) Handles nmbMaxHP.ValueChanged
-        Mem.Player.Stats.MaxHP.Value = sender.Value
+        Entity.Player.StatMaxHP = sender
     End Sub
 
     Private Sub nmbMaxStam_ValueChanged(sender As Object, e As EventArgs) Handles nmbMaxStam.ValueChanged
-        Mem.Player.Stats.MaxStamina.Value = sender.Value
+        Entity.Player.StatMaxStamina = sender
     End Sub
 
     'Private Sub btnScenarioPinwheelDefense_Click(sender As Object, e As EventArgs) Handles btnScenarioPinwheelDefense.Click
@@ -700,7 +701,7 @@ Public Class frmForm1
         Dim selStr = CType(cmbBonfire.SelectedItem, String)
         selStr = selStr.Substring(selStr.IndexOf("[") + 1)
         selStr = selStr.Substring(0, selStr.Length - 1)
-        Mem.Player.BonfireID.Value = Integer.Parse(selStr.Trim())
+        Entity.LocalPlayerMapInfo.BonfireID = Integer.Parse(selStr.Trim())
     End Sub
 
     Private Sub frmForm1_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed

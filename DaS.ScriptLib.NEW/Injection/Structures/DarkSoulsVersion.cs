@@ -1,0 +1,11 @@
+﻿namespace DaS.ScriptLib.Injection.Structures
+{
+    public enum DarkSoulsVersion
+    {
+        None,
+        LatestRelease,
+        SteamWorksBeta,
+        Debug,
+        AncientGFWL
+    }
+}

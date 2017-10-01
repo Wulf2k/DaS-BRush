@@ -8,11 +8,10 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Managed.X86 {
-	partial class X86Writer {
+namespace Managed.X86
+{
+    partial class X86Writer {
 		public void Push32(X86Register32 reg) {
 			writer.Write(new byte[] { 0xFF });
 			reg_emit32((X86Register32)6, reg);

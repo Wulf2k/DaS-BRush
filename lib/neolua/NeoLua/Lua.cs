@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Neo.IronLua
 {
-	#region -- enum LuaIntegerType ------------------------------------------------------
+    #region -- enum LuaIntegerType ------------------------------------------------------
 
-	///////////////////////////////////////////////////////////////////////////////
-	/// <summary></summary>
-	public enum LuaIntegerType : byte
+    ///////////////////////////////////////////////////////////////////////////////
+    /// <summary></summary>
+    public enum LuaIntegerType : byte
 	{
 		/// <summary></summary>
 		Int16 = 0x01,
