@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace DaS.ScriptLib.Game.Data.Structures
 {
@@ -11,6 +12,7 @@ namespace DaS.ScriptLib.Game.Data.Structures
 
         public readonly Func<int> AddressReadFunc = () => 0;
 
+        [Browsable(false)]
         public virtual int Size
         {
             get => throw new NotImplementedException();
@@ -39,6 +41,7 @@ namespace DaS.ScriptLib.Game.Data.Structures
             AddressReadFunc = () => 0;
             InitStructMembers();
         }
+
 
         public abstract void OverwriteWith(dynamic other);
     }

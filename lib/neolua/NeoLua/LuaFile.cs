@@ -54,6 +54,7 @@ namespace Neo.IronLua
 			}
 		} // func MoveNext
 
+
 		public void Reset()
 		{
 			throw new NotImplementedException();

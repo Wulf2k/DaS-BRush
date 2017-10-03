@@ -1,6 +1,7 @@
 ﻿using System;
 using DaS.ScriptLib.LuaScripting;
 using DaS.ScriptLib.Injection;
+using System.ComponentModel;
 
 namespace DaS.ScriptLib.Game.Data.Structures
 {
@@ -1138,6 +1139,7 @@ namespace DaS.ScriptLib.Game.Data.Structures
             WarpToEntity(FromID(dest));
 		}
 
+        [Browsable(false)]
         public override void OverwriteWith(dynamic other)
         {
             throw new NotImplementedException();
