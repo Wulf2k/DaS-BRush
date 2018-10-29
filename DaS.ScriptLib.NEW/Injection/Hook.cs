@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using DaS.ScriptLib.Injection.Structures;
+using System.Runtime.InteropServices;
 
 namespace DaS.ScriptLib.Injection
 {
     public static class Hook
     {
+
         public static SafeDarkSoulsHandle DARKSOULS { get; private set; } = new SafeDarkSoulsHandle();
 
         private static byte[] ByteBuffer = new byte[8];
@@ -33,6 +36,48 @@ namespace DaS.ScriptLib.Injection
             //}
             return addr >= DARKSOULS.SafeBaseMemoryOffset;
         }
+
+        public static bool InjectDll(string dllName)
+        {
+            //TODO:
+            //TODO:
+            //TODO:
+            //SECURE THIS FUCKING THIng BEFORE IT SEES THE LIGHT OF DAY
+            //TODO:
+            //TODO:
+            //TODO:
+
+            int MEM_COMMIT = 0x00001000;
+            int MEM_RESERVE = 0x00002000;
+            int PAGE_READWRITE = 4;
+
+            uint loadLibraryAddr = (uint)Kernel.GetProcAddress(Kernel.GetModuleHandle("kernel32.dll"), "LoadLibraryA");
+            uint allocMemAddress = Kernel.VirtualAllocEx(DARKSOULS.GetHandle(), 0, (int)((dllName.Length + 1) * Marshal.SizeOf(typeof(char))), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+
+            int bytesWritten = 0;
+
+            Kernel.WriteProcessMemory_SAFE(DARKSOULS.GetHandle(), allocMemAddress, Encoding.Default.GetBytes(dllName), (int)((dllName.Length + 1) * Marshal.SizeOf(typeof(char))), bytesWritten);
+
+
+            Kernel.CreateRemoteThread(DARKSOULS.GetHandle(), 0, 0, loadLibraryAddr, allocMemAddress, 0, 0);
+
+            return true;
+        }
+
+
+
+        public static bool SetDllLinePos(int lineNum, int x, int y)
+        {
+            //DLLEXPORT void TestFunc(int lineNum, int x, int y)
+            //[DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+            //static internal extern IntPtr GetProcAddress(IntPtr hModule, string procName);
+            //linePos(lineNum, x, y);
+            
+
+
+            return true;
+        }
+
 
         public static sbyte RInt8(long addr)
         {

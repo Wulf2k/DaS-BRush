@@ -27,6 +27,12 @@ namespace DaS.ScriptLib.Injection
         [DllImport("kernel32", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
         static internal extern uint CreateRemoteThread(IntPtr hProcess, uint lpThreadAttributes, int dwStackSize, uint lpStartAddress, uint lpParameter, int dwCreationFlags, uint lpThreadId);
 
+        [DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+        static internal extern IntPtr GetProcAddress(IntPtr hModule, string procName);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr GetModuleHandle(string lpModuleName);
+
         [DllImport("kernel32.dll", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
         static internal extern uint OpenProcess(int dwDesiredAcess, bool bInheritHandle, int dwProcessId);
 
